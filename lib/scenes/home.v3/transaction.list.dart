@@ -157,6 +157,7 @@ class TransactionList extends StatelessWidget {
               filter: viewModel.transactionListFilterBy,
               keyWord: viewModel.transactionSearchController.text,
               bitcoinUnit: viewModel.bitcoinUnit,
+              displayBalance: viewModel.displayBalance,
             ),
             if (state.historyTransaction.isEmpty)
               state.isSyncing

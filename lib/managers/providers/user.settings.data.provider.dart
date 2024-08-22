@@ -4,6 +4,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
@@ -11,6 +12,8 @@ import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/settings_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+
+const String displayBalanceKey = "user.settings.displayBalance";
 
 class UserSettingDataUpdated extends DataState {
   UserSettingDataUpdated();
@@ -40,9 +43,17 @@ class BitcoinUnitDataUpdated extends DataState {
   List<Object?> get props => [];
 }
 
+class DisplayBalanceUpdated extends DataState {
+  DisplayBalanceUpdated();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class UserSettingsDataProvider extends DataProvider {
   final String userID;
   final SettingsClient settingsClient;
+  final PreferencesManager shared;
 
   //
   final WalletUserSettingsQueries settingsQueries;
@@ -51,11 +62,13 @@ class UserSettingsDataProvider extends DataProvider {
 
   // need to monitor the db changes apply to this cache
   WalletUserSettings? settingsData;
+  bool displayBalance = true;
 
   UserSettingsDataProvider(
     this.userID,
     this.settingsQueries,
     this.settingsClient,
+    this.shared,
   );
 
   ProtonExchangeRate exchangeRate = defaultExchangeRate;
@@ -73,6 +86,9 @@ class UserSettingsDataProvider extends DataProvider {
 
   StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
       StreamController<BitcoinUnitDataUpdated>();
+
+  StreamController<DisplayBalanceUpdated> displayBalanceUpdateController =
+      StreamController<DisplayBalanceUpdated>();
 
   Future<WalletUserSettings?> _getFromDB() async {
     final settings = settingsQueries.getWalletUserSettings(userID);
@@ -108,6 +124,17 @@ class UserSettingsDataProvider extends DataProvider {
     }
 
     return null;
+  }
+
+  Future<void> setDisplayBalance(display) async {
+    displayBalance = display;
+    await shared.write(displayBalanceKey, displayBalance);
+    displayBalanceUpdateController.add(DisplayBalanceUpdated());
+  }
+
+  Future<bool> getDisplayBalance() async {
+    displayBalance = await shared.read(displayBalanceKey) ?? true;
+    return displayBalance;
   }
 
   void updateBitcoinUnit(BitcoinUnit bitcoinUnit) {
@@ -225,5 +252,6 @@ class UserSettingsDataProvider extends DataProvider {
     exchangeRateUpdateController.close();
     fiatCurrencyUpdateController.close();
     bitcoinUnitUpdateController.close();
+    displayBalanceUpdateController.close();
   }
 }

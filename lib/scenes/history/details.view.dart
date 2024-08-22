@@ -117,24 +117,34 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 ),
                                 Row(
                                   children: [
-                                    Text(
-                                        "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
-                                        style: FontManager
-                                            .transactionHistoryAmountTitle(
-                                                ProtonColors.textNorm)),
+                                    viewModel.displayBalance
+                                        ? Text(
+                                            "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
+                                            style: FontManager
+                                                .transactionHistoryAmountTitle(
+                                                    ProtonColors.textNorm))
+                                        : Text(
+                                            "$fiatCurrencySign$hidedBalanceString",
+                                            style: FontManager
+                                                .transactionHistoryAmountTitle(
+                                                    ProtonColors.textNorm)),
                                     const SizedBox(width: 4),
                                     Text(fiatCurrencyName,
                                         style: FontManager.body2Regular(
                                             ProtonColors.textNorm)),
                                   ],
                                 ),
-                                Text(
-                                    ExchangeCalculator.getBitcoinUnitLabel(
-                                        viewModel.userSettingsDataProvider
-                                            .bitcoinUnit,
-                                        viewModel.amount.toInt().abs()),
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.textHint)),
+                                viewModel.displayBalance
+                                    ? Text(
+                                        ExchangeCalculator.getBitcoinUnitLabel(
+                                            viewModel.userSettingsDataProvider
+                                                .bitcoinUnit,
+                                            viewModel.amount.toInt().abs()),
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textHint))
+                                    : Text(getHidedBitcoinAmountString(),
+                                        style: FontManager.body2Regular(
+                                            ProtonColors.textHint)),
                               ]),
                     const SizedBox(height: 20),
                     viewModel.isSend
@@ -318,41 +328,63 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           }
                         },
                         children: [
-                          TransactionHistoryItem(
-                            title: S.of(context).trans_metwork_fee,
-                            titleTooltip: S.of(context).trans_metwork_fee_desc,
-                            content:
-                                "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()), displayDigits: displayDigits)}",
-                            memo: ExchangeCalculator.getBitcoinUnitLabel(
-                                viewModel.userSettingsDataProvider.bitcoinUnit,
-                                viewModel.fee.toInt()),
-                            backgroundColor: ProtonColors.white,
-                            isLoading: !viewModel.initialized,
-                          ),
+                          viewModel.displayBalance
+                              ? TransactionHistoryItem(
+                                  title: S.of(context).trans_metwork_fee,
+                                  titleTooltip:
+                                      S.of(context).trans_metwork_fee_desc,
+                                  content:
+                                      "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()), displayDigits: displayDigits)}",
+                                  memo: ExchangeCalculator.getBitcoinUnitLabel(
+                                      viewModel
+                                          .userSettingsDataProvider.bitcoinUnit,
+                                      viewModel.fee.toInt()),
+                                  backgroundColor: ProtonColors.white,
+                                  isLoading: !viewModel.initialized,
+                                )
+                              : TransactionHistoryItem(
+                                  title: S.of(context).trans_metwork_fee,
+                                  titleTooltip:
+                                      S.of(context).trans_metwork_fee_desc,
+                                  content:
+                                      "$fiatCurrencyName $hidedBalanceString",
+                                  memo: getHidedBitcoinAmountString(),
+                                  backgroundColor: ProtonColors.white,
+                                  isLoading: !viewModel.initialized,
+                                ),
                           const Divider(
                             thickness: 0.2,
                             height: 1,
                           ),
-                          TransactionHistoryItem(
-                            title: S.of(context).trans_total,
-                            content: viewModel.isSend
-                                ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
-                                : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
-                            memo: viewModel.isSend
-                                ? ExchangeCalculator.getBitcoinUnitLabel(
-                                    viewModel
-                                        .userSettingsDataProvider.bitcoinUnit,
-                                    (viewModel.amount.toInt() -
-                                            viewModel.fee.toInt())
-                                        .abs())
-                                : ExchangeCalculator.getBitcoinUnitLabel(
-                                    viewModel
-                                        .userSettingsDataProvider.bitcoinUnit,
-                                    viewModel.amount.toInt() +
-                                        viewModel.fee.toInt()),
-                            backgroundColor: ProtonColors.white,
-                            isLoading: !viewModel.initialized,
-                          ),
+                          viewModel.displayBalance
+                              ? TransactionHistoryItem(
+                                  title: S.of(context).trans_total,
+                                  content: viewModel.isSend
+                                      ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
+                                      : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
+                                  memo: viewModel.isSend
+                                      ? ExchangeCalculator.getBitcoinUnitLabel(
+                                          viewModel.userSettingsDataProvider
+                                              .bitcoinUnit,
+                                          (viewModel.amount.toInt() -
+                                                  viewModel.fee.toInt())
+                                              .abs())
+                                      : ExchangeCalculator.getBitcoinUnitLabel(
+                                          viewModel.userSettingsDataProvider
+                                              .bitcoinUnit,
+                                          viewModel.amount.toInt() +
+                                              viewModel.fee.toInt()),
+                                  backgroundColor: ProtonColors.white,
+                                  isLoading: !viewModel.initialized,
+                                )
+                              : TransactionHistoryItem(
+                                  title: S.of(context).trans_total,
+                                  content:
+                                      "$fiatCurrencyName $hidedBalanceString",
+                                  memo: getHidedBitcoinAmountString(),
+                                  backgroundColor: ProtonColors.white,
+                                  isLoading: !viewModel.initialized,
+                                ),
                           const SizedBox(height: 20),
                           ButtonV5(
                               onPressed: () {
@@ -375,6 +407,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         ],
       ),
     );
+  }
+
+  String getHidedBitcoinAmountString() {
+    return "$hidedBalanceString ${viewModel.userSettingsDataProvider.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.userSettingsDataProvider.bitcoinUnit.name.toUpperCase() : "mBTC"}";
   }
 
   Widget buildSendInfo(BuildContext context) {
@@ -444,6 +480,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   exchangeRate: viewModel.exchangeRate!)
               : null,
           isLoading: !viewModel.initialized,
+          displayBalance: viewModel.displayBalance,
         ),
       const Divider(
         thickness: 0.2,
@@ -493,61 +530,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
           bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
           isLoading: !viewModel.initialized,
+          displayBalance: viewModel.displayBalance,
         ),
       ],
     );
-  }
-
-  void showNetworkFee(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: ProtonColors.white,
-        constraints: BoxConstraints(
-          minWidth: MediaQuery.of(context).size.width,
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-        ),
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                  child: Padding(
-                      padding: const EdgeInsets.all(defaultPadding),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                              "assets/images/icon/no_wallet_found.svg",
-                              fit: BoxFit.fill,
-                              width: 86,
-                              height: 87),
-                          const SizedBox(height: 10),
-                          Text(S.of(context).placeholder,
-                              style: FontManager.body1Median(
-                                  ProtonColors.textNorm)),
-                          const SizedBox(height: 5),
-                          Text(S.of(context).placeholder,
-                              style: FontManager.body2Regular(
-                                  ProtonColors.textWeak)),
-                          const SizedBox(height: 20),
-                          ButtonV5(
-                            text: S.of(context).ok,
-                            width: MediaQuery.of(context).size.width,
-                            backgroundColor: ProtonColors.protonBlue,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.white),
-                            height: 48,
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ))),
-            );
-          });
-        });
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -24,11 +25,13 @@ class BitcoinAmount {
     return (log(exchangeRate.cents.toInt()) / log(10)).round();
   }
 
-  String toFiatCurrencyString() {
+  String toFiatCurrencyString({bool displayBalance = true}) {
     final int displayDigits = getDisplayDigit();
     final double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
-    final String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
-        displayDigits: displayDigits);
+    final String amountString = displayBalance
+        ? CommonHelper.formatDouble(amountInFiatCurrency,
+            displayDigits: displayDigits)
+        : hidedBalanceString;
     final String fiatCurrencyName =
         exchangeRate.fiatCurrency.name.toUpperCase();
     if (amountInSatoshi > 0) {
@@ -37,11 +40,13 @@ class BitcoinAmount {
     return "-$fiatCurrencyName $amountString";
   }
 
-  String toFiatCurrencySignString() {
+  String toFiatCurrencySignString({bool displayBalance = true}) {
     final int displayDigits = getDisplayDigit();
     final double amountInFiatCurrency = getNotionalInFiatCurrency().abs();
-    final String amountString = CommonHelper.formatDouble(amountInFiatCurrency,
-        displayDigits: displayDigits);
+    final String amountString = displayBalance
+        ? CommonHelper.formatDouble(amountInFiatCurrency,
+            displayDigits: displayDigits)
+        : hidedBalanceString;
     final String sign =
         CommonHelper.getFiatCurrencySign(exchangeRate.fiatCurrency);
     if (amountInSatoshi > 0) {
@@ -51,7 +56,10 @@ class BitcoinAmount {
   }
 
   @override
-  String toString() {
+  String toString({bool displayBalance = true}) {
+    if (!displayBalance) {
+      return "$hidedBalanceString ${bitcoinUnit.name.toUpperCase() != "MBTC" ? bitcoinUnit.name.toUpperCase() : "mBTC"}";
+    }
     return ExchangeCalculator.getBitcoinUnitLabel(bitcoinUnit, amountInSatoshi);
   }
 }
