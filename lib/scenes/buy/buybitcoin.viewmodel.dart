@@ -8,6 +8,8 @@ import 'package:ramp_flutter/offramp_sale.dart';
 import 'package:ramp_flutter/onramp_purchase.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 import 'package:ramp_flutter/send_crypto_payload.dart';
+import 'package:sentry/sentry.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
@@ -196,7 +198,11 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     moonPay = OnRampMoonPay();
 
     loadCountry();
+    await initAddressForBuy();
+    sinkAddSafe();
+  }
 
+  Future<void> initAddressForBuy() async {
     try {
       WalletModel? walletModel;
       if (walletID.isEmpty) {
@@ -220,7 +226,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       );
       rethrow;
     }
-    sinkAddSafe();
   }
 
   @override
@@ -322,13 +327,16 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> pay(SelectedInfoModel selected) async {
     bloc.add(CheckoutLoadingEvnet());
     final check = bloc.toNumberAmount(controller.text);
-    // if (amount != check) {
     if (check == "0") {
       return bloc.add(CheckoutFinishedEvnet());
     }
     selectAmount(check);
 
     await _requestPermissions();
+
+    if (receiveAddress.isEmpty) {
+      await initAddressForBuy();
+    }
 
     if (selected.provider == GatewayProvider.ramp) {
       configuration.hostLogoUrl =
@@ -350,7 +358,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
           coordinator.pushWebview(checkOutUrl);
         }
       } catch (e, stacktrace) {
-        logger.e("banxa checkout error: $e stacktrace: $stacktrace");
+        logger.e("buybitcoin checkout error: $e stacktrace: $stacktrace");
+        Sentry.captureException(e, stackTrace: stacktrace);
       }
     } else if (selected.provider == GatewayProvider.moonPay) {
       try {
