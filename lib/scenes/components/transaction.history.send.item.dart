@@ -13,6 +13,7 @@ class TransactionHistorySendItem extends StatelessWidget {
   final String? walletAccountName;
   final BitcoinAmount? bitcoinAmount;
   final bool isLoading;
+  final bool displayBalance;
 
   const TransactionHistorySendItem({
     required this.content,
@@ -21,6 +22,7 @@ class TransactionHistorySendItem extends StatelessWidget {
     this.walletAccountName,
     this.bitcoinAmount,
     this.isLoading = false,
+    this.displayBalance = true,
   });
 
   @override
@@ -80,10 +82,14 @@ class TransactionHistorySendItem extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(bitcoinAmount!.toFiatCurrencyString(),
+                              Text(
+                                  bitcoinAmount!.toFiatCurrencyString(
+                                      displayBalance: displayBalance),
                                   style: FontManager.body2Regular(
                                       ProtonColors.textNorm)),
-                              Text(bitcoinAmount!.toString(),
+                              Text(
+                                  bitcoinAmount!
+                                      .toString(displayBalance: displayBalance),
                                   style: FontManager.body2Regular(
                                       ProtonColors.textHint)),
                             ],

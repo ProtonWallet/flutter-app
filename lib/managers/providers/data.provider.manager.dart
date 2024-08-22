@@ -197,6 +197,7 @@ class DataProviderManager extends Manager {
       userID,
       WalletUserSettingsQueries(dbConnection),
       apiService.getSettingsClient(),
+      shared,
     );
     // on ramp gateway
     gatewayDataProvider = GatewayDataProvider(
