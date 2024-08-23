@@ -7,6 +7,7 @@ class BuyBitcoinState extends Equatable {
   final bool isCurrencyLoaded;
   final bool isQuoteLoaded;
   final bool isQuoteFailed;
+  final bool isCheckingOut;
 
   /// selected
   final SelectedInfoModel selectedModel;
@@ -35,6 +36,7 @@ class BuyBitcoinState extends Equatable {
     this.isCurrencyLoaded = false,
     this.isQuoteLoaded = false,
     this.isQuoteFailed = false,
+    this.isCheckingOut = false,
     this.currencyNames = const [],
     this.quotes = const [],
     this.received = const {},
@@ -53,11 +55,13 @@ class BuyBitcoinState extends Equatable {
     Map<GatewayProvider, String>? received,
     bool? isQuoteFailed,
     bool? isQuoteLoaded,
+    bool? isCheckingOut,
     String? error,
   }) {
     return BuyBitcoinState(
       selectedModel: selectedModel ?? this.selectedModel,
       isCountryLoaded: isCountryLoaded ?? this.isCountryLoaded,
+      isCheckingOut: isCheckingOut ?? this.isCheckingOut,
       countryCodes: countryCodes ?? this.countryCodes,
       currencyNames: currencyNames ?? this.currencyNames,
       quotes: quotes ?? this.quotes,
@@ -74,6 +78,7 @@ class BuyBitcoinState extends Equatable {
   List<Object> get props => [
         isCountryLoaded,
         isCurrencyLoaded,
+        isCheckingOut,
         isQuoteLoaded,
         BuyBitcoinState,
         countryCodes,
