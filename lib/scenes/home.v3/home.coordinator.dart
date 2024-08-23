@@ -8,7 +8,6 @@ import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/delete.wallet.bloc.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
@@ -217,14 +216,6 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.walletPassphraseProvider,
     );
 
-    final ProtonRecoveryBloc protonRecoveryBloc = ProtonRecoveryBloc(
-      userManager,
-      apiServiceManager.getProtonUsersApiClient(),
-      dataProviderManager.userDataProvider,
-      apiServiceManager.getSettingsApiClient(),
-      appStateManager,
-    );
-
     final deleteWalletBloc = DeleteWalletBloc(
         dataProviderManager.walletDataProvider,
         apiServiceManager.getWalletClient(),
@@ -241,7 +232,6 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager,
       createWalletBloc,
       deleteWalletBloc,
-      protonRecoveryBloc,
       userManager,
       event,
       apiServiceManager,
