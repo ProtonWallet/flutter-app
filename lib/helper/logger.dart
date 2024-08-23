@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 var logger = Logger(
   printer: PrettyPrinter(
     methodCount: 1,
-    printTime: true,
+    dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
   ),
   output: MultiOutput([
     ConsoleOutput(),
@@ -23,7 +23,7 @@ class LoggerService {
     logger = Logger(
       printer: PrettyPrinter(
         methodCount: 1,
-        printTime: true,
+        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
       ),
       output: MultiOutput([
         ConsoleOutput(),
@@ -47,7 +47,7 @@ class LoggerService {
     logger = Logger(
       printer: PrettyPrinter(
         methodCount: 1,
-        printTime: true,
+        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
       ),
       output: MultiOutput([
         ConsoleOutput(),

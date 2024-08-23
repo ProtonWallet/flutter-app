@@ -169,6 +169,8 @@ dev_dependencies:
   drift_dev: ^2.19.1
   envied_generator: ^0.5.4+1
 
+  # for ui tests
+  golden_toolkit: ^0.15.0
   mockito: ^5.4.4
 
 #flutter launcher icons configs
@@ -218,6 +220,19 @@ flutter:
     - assets/images/wallet_creation/
     - assets/images/welcome/
     - assets/json/
+
+  fonts:
+    # we are using InterDisplay font
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-VariableFont.ttf
+
+        # - asset: assets/fonts/Inter-Bold.ttf
+        # - asset: assets/fonts/Inter-Italic.ttf
+        # - asset: assets/fonts/Inter-Light.ttf
+        # - asset: assets/fonts/Inter-Medium.ttf
+        # - asset: assets/fonts/Inter-Regular.ttf
+        # - asset: assets/fonts/Inter-SemiBold.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
