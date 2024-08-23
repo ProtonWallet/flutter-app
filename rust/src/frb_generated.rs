@@ -11231,6 +11231,7 @@ const _: fn() = || {
         let _: Option<String> = ApiWallet.Mnemonic;
         let _: Option<String> = ApiWallet.Fingerprint;
         let _: Option<String> = ApiWallet.PublicKey;
+        let _: Option<u8> = ApiWallet.MigrationRequired;
     }
     {
         let ApiWalletAccount = None::<crate::proton_api::wallet_account::ApiWalletAccount>.unwrap();
@@ -11456,6 +11457,7 @@ const _: fn() = || {
         let _: Option<crate::proton_api::proton_users::FlagsSettings> = ProtonUserSettings.Flags;
         let _: Option<crate::proton_api::proton_users::ReferralSettings> =
             ProtonUserSettings.Referral;
+        let _: Option<u32> = ProtonUserSettings.DeviceRecovery;
         let _: u32 = ProtonUserSettings.Telemetry;
         let _: u32 = ProtonUserSettings.CrashReports;
         let _: u32 = ProtonUserSettings.HideSidePanel;
@@ -12796,6 +12798,7 @@ impl SseDecode for crate::proton_api::wallet::ApiWallet {
         let mut var_mnemonic = <Option<String>>::sse_decode(deserializer);
         let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         let mut var_publicKey = <Option<String>>::sse_decode(deserializer);
+        let mut var_migrationRequired = <Option<u8>>::sse_decode(deserializer);
         return crate::proton_api::wallet::ApiWallet {
             ID: var_id,
             Name: var_name,
@@ -12807,6 +12810,7 @@ impl SseDecode for crate::proton_api::wallet::ApiWallet {
             Mnemonic: var_mnemonic,
             Fingerprint: var_fingerprint,
             PublicKey: var_publicKey,
+            MigrationRequired: var_migrationRequired,
         };
     }
 }
@@ -14963,6 +14967,7 @@ impl SseDecode for crate::proton_api::proton_users::ProtonUserSettings {
             <Option<crate::proton_api::proton_users::FlagsSettings>>::sse_decode(deserializer);
         let mut var_referral =
             <Option<crate::proton_api::proton_users::ReferralSettings>>::sse_decode(deserializer);
+        let mut var_deviceRecovery = <Option<u32>>::sse_decode(deserializer);
         let mut var_telemetry = <u32>::sse_decode(deserializer);
         let mut var_crashReports = <u32>::sse_decode(deserializer);
         let mut var_hideSidePanel = <u32>::sse_decode(deserializer);
@@ -14989,6 +14994,7 @@ impl SseDecode for crate::proton_api::proton_users::ProtonUserSettings {
             EarlyAccess: var_earlyAccess,
             Flags: var_flags,
             Referral: var_referral,
+            DeviceRecovery: var_deviceRecovery,
             Telemetry: var_telemetry,
             CrashReports: var_crashReports,
             HideSidePanel: var_hideSidePanel,
@@ -16679,6 +16685,7 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::proton_api::wallet::Api
             self.0.Mnemonic.into_into_dart().into_dart(),
             self.0.Fingerprint.into_into_dart().into_dart(),
             self.0.PublicKey.into_into_dart().into_dart(),
+            self.0.MigrationRequired.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -18087,6 +18094,7 @@ impl flutter_rust_bridge::IntoDart
             self.0.EarlyAccess.into_into_dart().into_dart(),
             self.0.Flags.into_into_dart().into_dart(),
             self.0.Referral.into_into_dart().into_dart(),
+            self.0.DeviceRecovery.into_into_dart().into_dart(),
             self.0.Telemetry.into_into_dart().into_dart(),
             self.0.CrashReports.into_into_dart().into_dart(),
             self.0.HideSidePanel.into_into_dart().into_dart(),
@@ -19714,6 +19722,7 @@ impl SseEncode for crate::proton_api::wallet::ApiWallet {
         <Option<String>>::sse_encode(self.Mnemonic, serializer);
         <Option<String>>::sse_encode(self.Fingerprint, serializer);
         <Option<String>>::sse_encode(self.PublicKey, serializer);
+        <Option<u8>>::sse_encode(self.MigrationRequired, serializer);
     }
 }
 
@@ -21430,6 +21439,7 @@ impl SseEncode for crate::proton_api::proton_users::ProtonUserSettings {
             self.Referral,
             serializer,
         );
+        <Option<u32>>::sse_encode(self.DeviceRecovery, serializer);
         <u32>::sse_encode(self.Telemetry, serializer);
         <u32>::sse_encode(self.CrashReports, serializer);
         <u32>::sse_encode(self.HideSidePanel, serializer);

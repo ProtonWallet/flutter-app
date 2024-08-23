@@ -189,6 +189,7 @@ pub struct _ProtonUserSettings {
     pub EarlyAccess: u32,
     pub Flags: Option<FlagsSettings>,
     pub Referral: Option<ReferralSettings>,
+    pub DeviceRecovery: Option<u32>,
     pub Telemetry: u32,
     pub CrashReports: u32,
     pub HideSidePanel: u32,

@@ -137,6 +137,8 @@ pub struct _ApiWallet {
     /// Wallet master public key encrypted with the WalletKey, in base64 format.
     /// Only allows fetching coins owned by wallet, no spending allowed.
     pub PublicKey: Option<String>,
+    /// Temporary field to tell clients to re-encrypt WalletKey
+    pub MigrationRequired: Option<u8>,
 }
 
 #[frb(mirror(ApiWalletKey))]
