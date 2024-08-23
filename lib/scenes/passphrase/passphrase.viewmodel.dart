@@ -9,7 +9,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/common/errors.dart';
