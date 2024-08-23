@@ -5,7 +5,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/common/errors.dart';
