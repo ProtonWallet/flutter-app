@@ -39,6 +39,9 @@ class ApiWallet {
   /// Only allows fetching coins owned by wallet, no spending allowed.
   final String? publicKey;
 
+  /// Temporary field to tell clients to re-encrypt WalletKey
+  final int? migrationRequired;
+
   const ApiWallet({
     required this.id,
     required this.name,
@@ -50,6 +53,7 @@ class ApiWallet {
     this.mnemonic,
     this.fingerprint,
     this.publicKey,
+    this.migrationRequired,
   });
 
   @override
@@ -63,7 +67,8 @@ class ApiWallet {
       status.hashCode ^
       mnemonic.hashCode ^
       fingerprint.hashCode ^
-      publicKey.hashCode;
+      publicKey.hashCode ^
+      migrationRequired.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -79,7 +84,8 @@ class ApiWallet {
           status == other.status &&
           mnemonic == other.mnemonic &&
           fingerprint == other.fingerprint &&
-          publicKey == other.publicKey;
+          publicKey == other.publicKey &&
+          migrationRequired == other.migrationRequired;
 }
 
 class ApiWalletBitcoinAddress {

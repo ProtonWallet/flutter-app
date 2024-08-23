@@ -337,6 +337,10 @@ class EventLoop extends Service implements Manager {
           /// reload protonUserSettings directly since it should not change often
           /// we can add local db if needed
           await dataProviderManager.userDataProvider.syncProtonUserSettings();
+
+          /// the deviceRecovery in userSetting will also affect enabledRecovery status
+          /// so need to sync protonUser to see if we need to update the enabledRecovery status
+          await dataProviderManager.userDataProvider.syncProtonUser();
         }
 
         if (event.protonUser != null) {

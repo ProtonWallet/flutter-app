@@ -49,8 +49,11 @@ class UserDataProvider extends DataProvider {
   }
 
   Future<void> preLoad() async {
-    await syncProtonUser(); // init Proton Recovery status
+    /// needs to load UserSettings first
+    /// since enabledRecovery will also consider
+    /// `DeviceRecovery` in userSettings
     await syncProtonUserSettings(); // init Proton 2FA status
+    await syncProtonUser(); // init Proton Recovery status
   }
 
   Future<void> syncProtonUser() async {
@@ -63,6 +66,14 @@ class UserDataProvider extends DataProvider {
     bool enabledRecovery = false;
     if (status == 3) {
       enabledRecovery = true;
+    }
+    if (!enabledRecovery) {
+      // check if user has enable device recovery
+      if (user.protonUserSettings != null) {
+        if (user.protonUserSettings!.deviceRecovery == 1) {
+          enabledRecovery = true;
+        }
+      }
     }
     if (enabledRecovery != user.enabledRecovery) {
       this.enabledRecovery(enabledRecovery);
