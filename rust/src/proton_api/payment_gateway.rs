@@ -20,6 +20,7 @@ pub enum _PaymentMethod {
     Card = 3,
     GooglePay = 4,
     InstantPayment = 5,
+    Paypal = 6,
     Unsupported,
 }
 #[frb(mirror(ApiCountry))]

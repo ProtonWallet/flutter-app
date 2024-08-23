@@ -68,6 +68,7 @@ enum PaymentMethod {
   card,
   googlePay,
   instantPayment,
+  paypal,
   unsupported,
   ;
 }

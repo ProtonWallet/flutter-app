@@ -612,10 +612,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             enable: state.isQuoteLoaded && !state.isQuoteFailed,
                             onPressed: () {
                               viewModel.focusNode.unfocus();
-                              final model = state.selectedModel.provider ==
-                                      GatewayProvider.ramp
-                                  ? viewModel.rampTCModel
-                                  : viewModel.banxaTCModel;
+                              final model = viewModel.getTCModel(
+                                state.selectedModel.provider,
+                              );
                               OnRampTCSheet.show(context, model, onConfirm: () {
                                 viewModel.pay(state.selectedModel);
                               }, onCancel: () {});

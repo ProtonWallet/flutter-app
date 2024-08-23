@@ -41,6 +41,13 @@ impl OnRampGatewayClient {
         Ok(self.inner.get_payment_methods(fiat_symbol).await?)
     }
 
+    pub async fn get_public_api_key(
+        &self,
+        provider: GatewayProvider,
+    ) -> Result<String, BridgeError> {
+        Ok(self.inner.get_public_api_key(provider).await?)
+    }
+
     pub async fn get_quotes(
         &self,
         amount: f64,

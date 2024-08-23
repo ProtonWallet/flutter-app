@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/onramp_gateway_client.dart';
@@ -29,6 +31,10 @@ class GatewayDataProvider extends DataProvider {
 
     /// update supported providers
     supportedProviders = countries.keys.toList();
+
+    if (Platform.isAndroid) {
+      supportedProviders.remove(GatewayProvider.moonPay);
+    }
 
     final Set<String> uniqueCodesSet = {"US", "CA"};
     for (var entry in countries.entries) {
