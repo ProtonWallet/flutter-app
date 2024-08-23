@@ -9,7 +9,6 @@ import 'package:ramp_flutter/onramp_purchase.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 import 'package:ramp_flutter/send_crypto_payload.dart';
 import 'package:sentry/sentry.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';

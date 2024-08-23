@@ -23,12 +23,12 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
-import 'package:wallet/managers/features/create.wallet.bloc.dart';
-import 'package:wallet/managers/features/delete.wallet.bloc.dart';
-import 'package:wallet/managers/features/wallet.balance.bloc.dart';
-import 'package:wallet/managers/features/wallet.list.bloc.dart';
-import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
-import 'package:wallet/managers/features/wallet.transaction.bloc.dart';
+import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
+import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
+import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
@@ -170,7 +170,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void selectWallet(WalletMenuModel walletMenuModel);
 
   void selectAccount(
-      WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel);
+    WalletMenuModel walletMenuModel,
+    AccountMenuModel accountMenuModel,
+  );
 
   void showMoreTransactionHistory();
 
