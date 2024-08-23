@@ -11860,8 +11860,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ApiWallet dco_decode_api_wallet(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return ApiWallet(
       id: dco_decode_String(arr[0]),
       name: dco_decode_String(arr[1]),
@@ -11873,6 +11873,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       mnemonic: dco_decode_opt_String(arr[7]),
       fingerprint: dco_decode_opt_String(arr[8]),
       publicKey: dco_decode_opt_String(arr[9]),
+      migrationRequired: dco_decode_opt_box_autoadd_u_8(arr[10]),
     );
   }
 
@@ -13408,8 +13409,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonUserSettings dco_decode_proton_user_settings(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 22)
-      throw Exception('unexpected arr length: expect 22 but see ${arr.length}');
+    if (arr.length != 23)
+      throw Exception('unexpected arr length: expect 23 but see ${arr.length}');
     return ProtonUserSettings(
       email: dco_decode_email_settings(arr[0]),
       password: dco_decode_opt_box_autoadd_password_settings(arr[1]),
@@ -13428,11 +13429,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       earlyAccess: dco_decode_u_32(arr[14]),
       flags: dco_decode_opt_box_autoadd_flags_settings(arr[15]),
       referral: dco_decode_opt_box_autoadd_referral_settings(arr[16]),
-      telemetry: dco_decode_u_32(arr[17]),
-      crashReports: dco_decode_u_32(arr[18]),
-      hideSidePanel: dco_decode_u_32(arr[19]),
-      highSecurity: dco_decode_opt_box_autoadd_high_security_settings(arr[20]),
-      sessionAccountRecovery: dco_decode_u_32(arr[21]),
+      deviceRecovery: dco_decode_opt_box_autoadd_u_32(arr[17]),
+      telemetry: dco_decode_u_32(arr[18]),
+      crashReports: dco_decode_u_32(arr[19]),
+      hideSidePanel: dco_decode_u_32(arr[20]),
+      highSecurity: dco_decode_opt_box_autoadd_high_security_settings(arr[21]),
+      sessionAccountRecovery: dco_decode_u_32(arr[22]),
     );
   }
 
@@ -15196,6 +15198,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_mnemonic = sse_decode_opt_String(deserializer);
     var var_fingerprint = sse_decode_opt_String(deserializer);
     var var_publicKey = sse_decode_opt_String(deserializer);
+    var var_migrationRequired = sse_decode_opt_box_autoadd_u_8(deserializer);
     return ApiWallet(
         id: var_id,
         name: var_name,
@@ -15206,7 +15209,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         status: var_status,
         mnemonic: var_mnemonic,
         fingerprint: var_fingerprint,
-        publicKey: var_publicKey);
+        publicKey: var_publicKey,
+        migrationRequired: var_migrationRequired);
   }
 
   @protected
@@ -17284,6 +17288,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_flags = sse_decode_opt_box_autoadd_flags_settings(deserializer);
     var var_referral =
         sse_decode_opt_box_autoadd_referral_settings(deserializer);
+    var var_deviceRecovery = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_telemetry = sse_decode_u_32(deserializer);
     var var_crashReports = sse_decode_u_32(deserializer);
     var var_hideSidePanel = sse_decode_u_32(deserializer);
@@ -17308,6 +17313,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         earlyAccess: var_earlyAccess,
         flags: var_flags,
         referral: var_referral,
+        deviceRecovery: var_deviceRecovery,
         telemetry: var_telemetry,
         crashReports: var_crashReports,
         hideSidePanel: var_hideSidePanel,
@@ -19133,6 +19139,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.mnemonic, serializer);
     sse_encode_opt_String(self.fingerprint, serializer);
     sse_encode_opt_String(self.publicKey, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.migrationRequired, serializer);
   }
 
   @protected
@@ -20829,6 +20836,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_u_32(self.earlyAccess, serializer);
     sse_encode_opt_box_autoadd_flags_settings(self.flags, serializer);
     sse_encode_opt_box_autoadd_referral_settings(self.referral, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.deviceRecovery, serializer);
     sse_encode_u_32(self.telemetry, serializer);
     sse_encode_u_32(self.crashReports, serializer);
     sse_encode_u_32(self.hideSidePanel, serializer);
