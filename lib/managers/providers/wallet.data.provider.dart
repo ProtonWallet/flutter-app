@@ -234,13 +234,16 @@ class WalletsDataProvider extends DataProvider {
     FiatCurrency fiatCurrency,
   ) async {
     var walletAccount = await walletClient.createWalletAccount(
-        walletId: walletID, req: request);
+      walletId: walletID,
+      req: request,
+    );
 
     walletAccount = await walletClient.updateWalletAccountFiatCurrency(
       walletId: walletID,
       walletAccountId: walletAccount.id,
       newFiatCurrency: fiatCurrency,
     );
+
     // TODO(fix): fix me
     final wallet = await getWallet(walletID);
     await _processApiWalletAccountData(wallet!.wallet.walletID, walletAccount);

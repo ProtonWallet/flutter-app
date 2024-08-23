@@ -195,23 +195,45 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             final settings = await userSettingsDataProvider.getSettings();
             // TODO(fix): Tempary need to use providers
             final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
-            final ProtonExchangeRate exchangeRate =
-                await ExchangeRateService.getExchangeRate(fiatCurrency);
-            estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
-              exchangeRate,
-              balance,
-            );
-            final String fiatSign =
-                CommonHelper.getFiatCurrencySign(fiatCurrency);
-            accMenuModel.currencyBalance =
-                "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
+
+            /// get exchange rate call. if failed we should show btc but balance.
+            ProtonExchangeRate? exchangeRate;
+
+            try {
+              exchangeRate = await ExchangeRateService.getExchangeRate(
+                fiatCurrency,
+              );
+            } catch (e, stacktrace) {
+              logger.e(
+                "WalletListBloc exchange rate error: $e, stacktrace: $stacktrace",
+              );
+            }
+
+            if (exchangeRate != null) {
+              estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
+                exchangeRate,
+                balance,
+              );
+            }
+
+            /// setup btcBalance
             accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
               (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
               balance,
             );
 
-            accMenuModel.emailIds =
-                await WalletManager.getAccountAddressIDs(account.accountID);
+            /// if rate is null show currencyBalance as ----
+            final fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
+            if (exchangeRate != null || balance == 0) {
+              accMenuModel.currencyBalance =
+                  "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
+            } else {
+              accMenuModel.currencyBalance = "$fiatSign ----";
+            }
+
+            accMenuModel.emailIds = await WalletManager.getAccountAddressIDs(
+              account.accountID,
+            );
             walletModel.accounts.add(accMenuModel);
           }
           walletsModel.add(walletModel);
@@ -223,7 +245,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             if (walletMenuModel.hasValidPassword) {
               for (AccountMenuModel accountMenuModel
                   in walletMenuModel.accounts) {
-                final bool hasFullSynced = await bdkTransactionDataProvider.hasFullSynced(walletMenuModel.walletModel, accountMenuModel.accountModel);
+                final bool hasFullSynced =
+                    await bdkTransactionDataProvider.hasFullSynced(
+                        walletMenuModel.walletModel,
+                        accountMenuModel.accountModel);
                 if (!hasFullSynced) {
                   /// only do full-sync when app onStart()
                   /// no-need to do partial sync since we will show cached transaction/balance

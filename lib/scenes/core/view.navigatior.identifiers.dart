@@ -26,6 +26,8 @@ enum NavID {
   buy,
   rampExternal,
   banaxExternal,
+  moonpayExternal,
+
   // upgrade
   nativeUpgrade,
   // Report bugs

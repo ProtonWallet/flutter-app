@@ -165,8 +165,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
 
     /// get new derivation path
-    final String derivationPath =
-        await walletsDataProvider.getNewDerivationPathBy(
+    final derivationPath = await walletsDataProvider.getNewDerivationPathBy(
       serverWalletID,
       scriptType,
       appConfig.coinType,
@@ -180,7 +179,10 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     final apiWalletAccount = await walletsDataProvider.createWalletAccount(
-        serverWalletID, request, fiatCurrency);
+      serverWalletID,
+      request,
+      fiatCurrency,
+    );
 
     return apiWalletAccount;
   }

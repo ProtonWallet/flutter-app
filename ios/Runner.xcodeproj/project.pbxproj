@@ -50,10 +50,11 @@
 		7548DAD72B180994002588F4 /* ProtonCoreUtilities in Frameworks */ = {isa = PBXBuildFile; productRef = 7548DAD62B180994002588F4 /* ProtonCoreUtilities */; };
 		7548DAE92B182817002588F4 /* WalletApiServiceMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAE82B182817002588F4 /* WalletApiServiceMananger.swift */; };
 		7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */; };
-		7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7548DB312B184683002588F4 /* AppCoordinator.swift */; };
 		759E12712BB56CEF00B3400B /* ProtonCoreCrypto in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12702BB56CEF00B3400B /* ProtonCoreCrypto */; };
 		759E12772BB56DBF00B3400B /* GoLibsCryptoGo in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12762BB56DBF00B3400B /* GoLibsCryptoGo */; };
 		759E12792BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation in Frameworks */ = {isa = PBXBuildFile; productRef = 759E12782BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation */; };
+		75CF52ED2C75DDDD0049F6BB /* MoonPaySdk in Frameworks */ = {isa = PBXBuildFile; productRef = 75CF52EC2C75DDDD0049F6BB /* MoonPaySdk */; };
+		75CF52F02C7705510049F6BB /* Moonpay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CF52EF2C7705510049F6BB /* Moonpay.swift */; };
 		75DD9A4D2C4FCD6A0068EF4B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DD9A4C2C4FCD6A0068EF4B /* Extensions.swift */; };
 		7881ED66DFC77AA9943FFC12 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B177F81A4556CAEF7B3768B9 /* Pods_RunnerTests.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -89,8 +90,8 @@
 		750F3B0E2BCD4F9800626388 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		7548DAE82B182817002588F4 /* WalletApiServiceMananger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletApiServiceMananger.swift; sourceTree = "<group>"; };
 		7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionHeader.swift; sourceTree = "<group>"; };
-		7548DB312B184683002588F4 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		759E127C2BB56F1E00B3400B /* FirebaseCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		75CF52EF2C7705510049F6BB /* Moonpay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Moonpay.swift; sourceTree = "<group>"; };
 		75DD9A4C2C4FCD6A0068EF4B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		75DD9A4E2C50F24A0068EF4B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
 		75DD9A4F2C50F24A0068EF4B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 				7548DAC32B180994002588F4 /* ProtonCorePasswordRequest in Frameworks */,
 				7548DAC52B180994002588F4 /* ProtonCorePayments in Frameworks */,
 				7548DAC12B180994002588F4 /* ProtonCoreObservability in Frameworks */,
+				75CF52ED2C75DDDD0049F6BB /* MoonPaySdk in Frameworks */,
 				7548DAA92B180994002588F4 /* ProtonCoreFeatures in Frameworks */,
 				7548DAD32B180994002588F4 /* ProtonCoreTroubleShooting in Frameworks */,
 				7548DAA32B180994002588F4 /* ProtonCoreDoh in Frameworks */,
@@ -215,14 +217,6 @@
 			path = Payments;
 			sourceTree = "<group>";
 		};
-		7548DB302B184644002588F4 /* Scenes */ = {
-			isa = PBXGroup;
-			children = (
-				7548DB312B184683002588F4 /* AppCoordinator.swift */,
-			);
-			path = Scenes;
-			sourceTree = "<group>";
-		};
 		75C7A62C2B0C7843004C0FB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +225,14 @@
 				B177F81A4556CAEF7B3768B9 /* Pods_RunnerTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		75CF52EE2C75DDF10049F6BB /* Moonpay */ = {
+			isa = PBXGroup;
+			children = (
+				75CF52EF2C7705510049F6BB /* Moonpay.swift */,
+			);
+			path = Moonpay;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -282,8 +284,8 @@
 				7548DAEC2B1828CB002588F4 /* AppVersionHeader.swift */,
 				750F3B0E2BCD4F9800626388 /* Environment.swift */,
 				7548DAE82B182817002588F4 /* WalletApiServiceMananger.swift */,
+				75CF52EE2C75DDF10049F6BB /* Moonpay */,
 				6377F4982C0F360700E8917D /* Payments */,
-				7548DB302B184644002588F4 /* Scenes */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -363,6 +365,7 @@
 				759E12762BB56DBF00B3400B /* GoLibsCryptoGo */,
 				759E12782BB56DBF00B3400B /* ProtonCoreCryptoGoImplementation */,
 				750D4A4D2BD2CE2A006FDC9E /* ProtonCoreCryptoGoInterface */,
+				75CF52EC2C75DDDD0049F6BB /* MoonPaySdk */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -409,6 +412,7 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
 				7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */,
+				75CF52EB2C75DDDC0049F6BB /* XCRemoteSwiftPackageReference "mobile-sdk-ios" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -570,13 +574,13 @@
 				6377F4992C0F360700E8917D /* PaymentsConstants.swift in Sources */,
 				7548DAE92B182817002588F4 /* WalletApiServiceMananger.swift in Sources */,
 				7548DAED2B1828CB002588F4 /* AppVersionHeader.swift in Sources */,
+				75CF52F02C7705510049F6BB /* Moonpay.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				6377F49A2C0F360700E8917D /* UserDefaultsServicePlanDataStorage.swift in Sources */,
 				6375439F2C133C0E00D5882A /* InMemoryTokenStorage.swift in Sources */,
 				75DD9A4D2C4FCD6A0068EF4B /* Extensions.swift in Sources */,
 				750F3B0F2BCD4F9800626388 /* Environment.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				7548DB322B184683002588F4 /* AppCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -982,6 +986,14 @@
 				version = 25.3.4;
 			};
 		};
+		75CF52EB2C75DDDC0049F6BB /* XCRemoteSwiftPackageReference "mobile-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/moonpay/mobile-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1154,6 +1166,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7548DA142B180182002588F4 /* XCRemoteSwiftPackageReference "protoncore" */;
 			productName = ProtonCoreCryptoGoImplementation;
+		};
+		75CF52EC2C75DDDD0049F6BB /* MoonPaySdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 75CF52EB2C75DDDC0049F6BB /* XCRemoteSwiftPackageReference "mobile-sdk-ios" */;
+			productName = MoonPaySdk;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

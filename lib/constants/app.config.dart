@@ -39,7 +39,7 @@ class AppConfig {
         apiEnv: ApiEnv.atlas(null),
       );
     } else if (environment.isNotEmpty) {
-      appConfig = appConfigForTestNet.copyWith(
+      appConfig = appConfigForRegtest.copyWith(
         apiEnv: ApiEnv.atlas(environment),
       );
     }
@@ -63,6 +63,17 @@ var appConfig = appConfigForProduction;
 ///predefined app config for test net
 final appConfigForTestNet = AppConfig(
   coinType: bitcoinTestnet,
+  scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
+  apiEnv: ApiEnv.atlas(null),
+  esploraWebpageUrl: esploraTestnet,
+  esploraApiUrl: esploraTestnetApi,
+  testMode: true,
+  stopGap: 50,
+);
+
+///predefined app config for regtest
+final appConfigForRegtest = AppConfig(
+  coinType: bitcoinRegtest,
   scriptTypeInfo: ScriptTypeInfo.nativeSegWit,
   apiEnv: ApiEnv.atlas(null),
   esploraWebpageUrl: esploraTestnet,
