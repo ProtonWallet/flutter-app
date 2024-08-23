@@ -21,6 +21,7 @@ import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/buy/widgets/payment.selector.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -608,9 +609,13 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                         return state;
                       },
                       builder: (context, state) {
-                        return ButtonV5(
-                            enable: state.isQuoteLoaded && !state.isQuoteFailed,
-                            onPressed: () {
+                        return ButtonV6(
+                            enable: state.isQuoteLoaded &&
+                                !state.isQuoteFailed &&
+                                !state.isCheckingOut,
+                            isLoading:
+                                state.isCheckingOut || !state.isQuoteLoaded,
+                            onPressed: () async {
                               viewModel.focusNode.unfocus();
                               final model = viewModel.getTCModel(
                                 state.selectedModel.provider,
@@ -619,8 +624,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 viewModel.pay(state.selectedModel);
                               }, onCancel: () {});
                             },
-                            text:
-                                "Buy with ${state.selectedModel.provider.enumToString()}",
+                            text: state.isCheckingOut
+                                ? "Checking out"
+                                : "Buy with ${state.selectedModel.provider.enumToString()}",
                             width: MediaQuery.of(context).size.width - 100,
                             backgroundColor: ProtonColors.protonBlue,
                             textStyle:

@@ -342,11 +342,11 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     });
 
     on<CheckoutLoadingEvnet>((event, emit) async {
-      emit(state.copyWith(isQuoteLoaded: false));
+      emit(state.copyWith(isCheckingOut: true));
     });
 
     on<CheckoutFinishedEvnet>((event, emit) async {
-      emit(state.copyWith(isQuoteLoaded: true));
+      emit(state.copyWith(isCheckingOut: false));
     });
     on<ResetError>((event, emit) async {
       emit(state.copyWith(error: event.error));
