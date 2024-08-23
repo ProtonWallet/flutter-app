@@ -141,7 +141,7 @@ class BDKTransactionDataProvider extends DataProvider {
     return isWalletSyncing[accountModel.accountID] ?? false;
   }
 
-  String getSyncCheckID(WalletModel walletModel, AccountModel accountModel){
+  String getSyncCheckID(WalletModel walletModel, AccountModel accountModel) {
     final String serverWalletID = walletModel.walletID;
     final String serverAccountID = accountModel.accountID;
     final String syncCheckID =
@@ -149,7 +149,8 @@ class BDKTransactionDataProvider extends DataProvider {
     return syncCheckID;
   }
 
-  Future<bool> hasFullSynced(WalletModel walletModel, AccountModel accountModel) async{
+  Future<bool> hasFullSynced(
+      WalletModel walletModel, AccountModel accountModel) async {
     final String syncCheckID = getSyncCheckID(walletModel, accountModel);
     return await shared.read(syncCheckID) ?? false;
   }
@@ -168,9 +169,6 @@ class BDKTransactionDataProvider extends DataProvider {
       try {
         isWalletSyncing[accountModel.accountID] = true;
         blockchain ??= await Api.createEsploraBlockchainWithApi();
-
-
-
         final FrbAccount? account = await WalletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
@@ -209,7 +207,8 @@ class BDKTransactionDataProvider extends DataProvider {
           final bool isSynced = await hasFullSynced(walletModel, accountModel);
           if (!isSynced || forceSync) {
             // when force sync reset the timmer and status. incase task failed cant restart
-            final String syncCheckID = getSyncCheckID(walletModel, accountModel);
+            final String syncCheckID =
+                getSyncCheckID(walletModel, accountModel);
             await shared.write(syncCheckID, false);
             lastSyncedTime[accountModel.accountID] = 0;
             final timeStart = DateTime.now().secondsSinceEpoch();

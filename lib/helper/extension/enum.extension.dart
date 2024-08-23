@@ -84,6 +84,27 @@ extension PaymentMethodToStringExtension on PaymentMethod {
         return "Google Pay";
       case PaymentMethod.instantPayment:
         return "Instant Payment";
+      case PaymentMethod.paypal:
+        return "Paypal";
+      case PaymentMethod.unsupported:
+        return "Unknown Payment Method";
+    }
+  }
+
+  String toMoonPayString() {
+    switch (this) {
+      case PaymentMethod.applePay:
+        return "mobile_wallet";
+      case PaymentMethod.bankTransfer:
+        return "gbp_bank_transfer";
+      case PaymentMethod.card:
+        return "credit_debit_card";
+      case PaymentMethod.googlePay:
+        return "mobile_wallet";
+      case PaymentMethod.instantPayment:
+        return "pix_instant_payment";
+      case PaymentMethod.paypal:
+        return "paypal";
       case PaymentMethod.unsupported:
         return "Unknown Payment Method";
     }
@@ -104,6 +125,8 @@ extension PaymentMethodImageExtension on PaymentMethod {
       case PaymentMethod.googlePay:
         break;
       case PaymentMethod.instantPayment:
+        break;
+      case PaymentMethod.paypal:
         break;
       case PaymentMethod.unsupported:
     }

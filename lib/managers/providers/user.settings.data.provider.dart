@@ -170,8 +170,9 @@ class UserSettingsDataProvider extends DataProvider {
           walletCreated: settings.walletCreated ? 1 : 0,
           acceptTermsAndConditions: settings.acceptTermsAndConditions ? 1 : 0,
         ));
-        final ProtonExchangeRate exchangeRate =
-            await ExchangeRateService.getExchangeRate(fiatCurrency);
+        final exchangeRate = await ExchangeRateService.getExchangeRate(
+          fiatCurrency,
+        );
         updateExchangeRate(exchangeRate);
       }
       if (notify) {
