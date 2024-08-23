@@ -25,8 +25,6 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/delete.wallet.bloc.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
-import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.dart';
@@ -49,7 +47,6 @@ import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
-import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/force.upgrade.dialog.dart';
@@ -83,7 +80,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.dataProviderManager,
     this.createWalletBloc,
     this.deleteWalletBloc,
-    this.protonRecoveryBloc,
   );
 
   int selectedPage = 0;
@@ -169,15 +165,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool showSearchHistoryTextField = false;
   bool showSearchAddressTextField = false;
 
-  ProtonUserSettings? protonUserSettings;
-
   void setOnBoard();
 
   void selectWallet(WalletMenuModel walletMenuModel);
-
-  void loadProton2FAState();
-
-  void loadProtonRecoveryState();
 
   void selectAccount(
       WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel);
@@ -265,7 +255,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
   final DeleteWalletBloc deleteWalletBloc;
-  final ProtonRecoveryBloc protonRecoveryBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = defaultExchangeRate;
 
@@ -282,7 +271,6 @@ class HomeViewModelImpl extends HomeViewModel {
     super.dataProviderManager,
     super.createWalletBloc,
     super.deleteWalletBloc,
-    super.protonRecoveryBloc,
     this.userManager,
     this.eventLoop,
     this.apiServiceManager,
@@ -305,8 +293,7 @@ class HomeViewModelImpl extends HomeViewModel {
   /// app state
   final AppStateManager appStateManager;
   StreamSubscription? _appStateSubscription;
-  StreamSubscription? _protonRecoveryStateSubscription;
-  StreamSubscription? _protonUserDataSubscription;
+  StreamSubscription? _userDataSubscription;
   StreamSubscription? _subscription;
   StreamSubscription? _blockInfoDataSubscription;
   StreamSubscription? _exclusiveInviteDataSubscription;
@@ -318,10 +305,9 @@ class HomeViewModelImpl extends HomeViewModel {
     selectedSectionChangedController.close();
     //clean up wallet ....
     _appStateSubscription?.cancel();
-    _protonUserDataSubscription?.cancel();
+    _userDataSubscription?.cancel();
     _subscription?.cancel();
     _blockInfoDataSubscription?.cancel();
-    _protonRecoveryStateSubscription?.cancel();
     _exclusiveInviteDataSubscription?.cancel();
     super.dispose();
   }
@@ -351,13 +337,6 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> initSubscription() async {
-    // recovery state
-    _protonRecoveryStateSubscription =
-        protonRecoveryBloc.stream.listen((state) {
-      hadSetupRecovery = state.isRecoveryEnabled;
-      checkPreference();
-    });
-
     /// block info
     /// listen blockheight event after app is up 3 mins
     /// since app will sync automatically when it's open
@@ -372,7 +351,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     });
     // user data
-    _protonUserDataSubscription =
+    _userDataSubscription =
         dataProviderManager.userDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
         hadSetup2FA = state.updatedData;
@@ -458,23 +437,6 @@ class HomeViewModelImpl extends HomeViewModel {
       return false;
     }
     return true;
-  }
-
-  @override
-  Future<void> loadProton2FAState() async {
-    try {
-      protonUserSettings =
-          await apiServiceManager.getProtonUsersApiClient().getUserSettings();
-    } catch (e) {
-      logger.e(e
-          .toString()); // only need to load once. keep it simple so maintain it in VM
-    }
-    if (protonUserSettings != null) {
-      if (protonUserSettings!.twoFa != null) {
-        hadSetup2FA = protonUserSettings!.twoFa!.enabled != 0;
-        checkPreference();
-      }
-    }
   }
 
   Future<void> initControllers() async {
@@ -612,9 +574,18 @@ class HomeViewModelImpl extends HomeViewModel {
         startLoadingCallback: selectDefaultWallet,
         onboardingCallback: setOnBoard,
       );
-      loadProtonRecoveryState();
-      loadProton2FAState();
+      walletListBloc.stream.listen((state) {
+        for (final walletMenuModel in state.walletsModel) {
+          if (dataProviderManager.walletDataProvider.selectedServerWalletID ==
+              walletMenuModel.walletModel.walletID) {
+            showWalletRecovery =
+                walletMenuModel.walletModel.showWalletRecovery == 1;
+            checkPreference();
+          }
+        }
+      });
       dataProviderManager.exclusiveInviteDataProvider.preLoad();
+      dataProviderManager.userDataProvider.preLoad();
 
       loadContacts();
 
@@ -1290,10 +1261,5 @@ class HomeViewModelImpl extends HomeViewModel {
         .setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
-  }
-
-  @override
-  void loadProtonRecoveryState() {
-    protonRecoveryBloc.add(LoadingRecovery());
   }
 }

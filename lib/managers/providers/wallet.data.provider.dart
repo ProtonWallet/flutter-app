@@ -438,6 +438,17 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
+  Future<void> updateShowWalletRecovery(
+      {required String walletID, required bool showWalletRecovery}) async {
+    final WalletModel? wallet = await walletDao.findByServerID(walletID);
+    if (wallet != null) {
+      wallet.showWalletRecovery = showWalletRecovery ? 1 : 0;
+      await walletDao.update(wallet);
+      walletsData = await _getFromDB();
+      dataUpdateController.add(DataUpdated("some data Updated"));
+    }
+  }
+
   Future<int> insertOrUpdateWallet({
     required String userID,
     required String name,

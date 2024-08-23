@@ -279,7 +279,15 @@ class EventLoop extends Service implements Manager {
         }
         if (event.walletSettingEvents != null) {
           for (final walletSettingEvent in event.walletSettingEvents!) {
-            final ApiWalletSettings? _ = walletSettingEvent.walletSettings;
+            final ApiWalletSettings? walletSettings =
+                walletSettingEvent.walletSettings;
+            if (walletSettings != null) {
+              await dataProviderManager.walletDataProvider
+                  .updateShowWalletRecovery(
+                walletID: walletSettings.walletId,
+                showWalletRecovery: walletSettings.showWalletRecovery ?? true,
+              );
+            }
           }
         }
         if (event.walletUserSettings != null) {
@@ -323,6 +331,18 @@ class EventLoop extends Service implements Manager {
           if (hasAction) {
             await dataProviderManager.contactsDataProvider.reloadCache();
           }
+        }
+
+        if (event.protonUserSettings != null) {
+          /// reload protonUserSettings directly since it should not change often
+          /// we can add local db if needed
+          await dataProviderManager.userDataProvider.syncProtonUserSettings();
+        }
+
+        if (event.protonUser != null) {
+          /// reload protonUser directly since it should not change often
+          /// we can add local db if needed
+          await dataProviderManager.userDataProvider.syncProtonUser();
         }
 
         /// update event id

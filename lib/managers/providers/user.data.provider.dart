@@ -7,6 +7,7 @@ import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/drift/user.keys.queries.dart';
 import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/rust/proton_api/proton_users.dart';
 
 class TwoFaUpdated extends DataUpdated<bool> {
   TwoFaUpdated({required bool updatedData}) : super(updatedData);
@@ -21,10 +22,10 @@ class ShowWalletRecoveryUpdated extends DataUpdated<bool> {
 }
 
 class ProtonWalletUser {
+  ProtonUser? protonUser;
+  ProtonUserSettings? protonUserSettings;
   bool enabled2FA;
   bool enabledRecovery;
-
-  DriftProtonUser? protonUser;
 
   ProtonWalletUser({
     this.enabled2FA = false,
@@ -39,14 +40,50 @@ class UserDataProvider extends DataProvider {
   final UserQueries userQueries;
   final UserKeysQueries userKeysQueries;
 
-  UserDataProvider(this.protonUsersClient,
-      this.userQueries,
-      this.userKeysQueries,) {
+  UserDataProvider(
+    this.protonUsersClient,
+    this.userQueries,
+    this.userKeysQueries,
+  ) {
     user = ProtonWalletUser();
   }
 
+  Future<void> preLoad() async {
+    await syncProtonUser(); // init Proton Recovery status
+    await syncProtonUserSettings(); // init Proton 2FA status
+  }
+
+  Future<void> syncProtonUser() async {
+    user.protonUser = await protonUsersClient.getUserInfo();
+    final status = user.protonUser?.mnemonicStatus;
+    // 0 - Mnemonic is disabled
+    // 1 - Mnemonic is enabled but not set
+    // 2 - Mnemonic is enabled but needs to be re-activated
+    // 3 - Mnemonic is enabled and set
+    bool enabledRecovery = false;
+    if (status == 3) {
+      enabledRecovery = true;
+    }
+    if (enabledRecovery != user.enabledRecovery) {
+      this.enabledRecovery(enabledRecovery);
+    }
+  }
+
+  Future<void> syncProtonUserSettings() async {
+    user.protonUserSettings = await protonUsersClient.getUserSettings();
+    bool enabled2FA = false;
+    if (user.protonUserSettings != null) {
+      if (user.protonUserSettings!.twoFa != null) {
+        enabled2FA = user.protonUserSettings!.twoFa!.enabled != 0;
+      }
+    }
+    if (enabled2FA != user.enabled2FA) {
+      this.enabled2FA(enabled2FA);
+    }
+  }
+
   final StreamController<DataUpdated> dataUpdateController =
-  StreamController<DataUpdated>();
+      StreamController<DataUpdated>();
 
   void enabled2FA(enable) {
     user.enabled2FA = enable;
