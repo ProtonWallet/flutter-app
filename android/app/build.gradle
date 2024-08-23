@@ -253,6 +253,7 @@ dependencies {
 
     // implementation(libs.ramp.sdk.android)
     implementation 'com.github.RampNetwork:ramp-sdk-android:4.0.1'
+//    implementation("com.moonpay.sdk:MoonPaySdk-android:1.1.2")
 
     implementation(libs.sentry.android.core)
     implementation(libs.sentry.android.timber)

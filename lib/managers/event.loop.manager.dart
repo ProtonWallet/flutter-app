@@ -346,6 +346,9 @@ class EventLoop extends Service implements Manager {
       /// handlie bitcoin address
       await handleBitcoinAddress();
 
+      /// check block height
+      await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
+
       /// move this to service
       await ExchangeRateService.runOnce(
         dataProviderManager.userSettingsDataProvider.fiatCurrency,
@@ -360,9 +363,6 @@ class EventLoop extends Service implements Manager {
       dataProviderManager.userSettingsDataProvider.updateExchangeRate(
         exchangeRate,
       );
-
-      /// check block height
-      await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
     } catch (e, stacktrace) {
       logger.e("polling error: $e stacktrace: $stacktrace");
     }
@@ -388,8 +388,9 @@ class EventLoop extends Service implements Manager {
           walletModel.walletID,
           accountModel.accountID,
         );
-        final List<String> accountAddressIDs =
-            await WalletManager.getAccountAddressIDs(accountModel.accountID);
+        final accountAddressIDs = await WalletManager.getAccountAddressIDs(
+          accountModel.accountID,
+        );
         if (accountAddressIDs.isEmpty) {
           continue;
         }

@@ -150,8 +150,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           state.supportedProviders,
         );
 
-        final quote = quotes[provider];
-        if (quote == null || quote.isEmpty) {
+        if (quotes.isEmpty) {
           final limitString = state.selectedModel.fiatCurrency.minimumAmount;
           final double max = double.tryParse(amount) ?? 0;
           final double limit = double.tryParse(limitString ?? "") ?? 0;
@@ -163,7 +162,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
             emit(state.copyWith(
               isQuoteLoaded: true,
               isQuoteFailed: true,
-              quotes: quote,
+              quotes: [],
               selectedModel: state.selectedModel.copyWith(
                 supportedPayments: [],
                 provider: provider,
@@ -171,6 +170,19 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
               received: {},
               error:
                   "The entered amount is below the required minimum limit: $limitAmount",
+            ));
+          } else {
+            emit(state.copyWith(
+              isQuoteLoaded: true,
+              isQuoteFailed: true,
+              quotes: [],
+              selectedModel: state.selectedModel.copyWith(
+                supportedPayments: [],
+                provider: provider,
+              ),
+              received: {},
+              error:
+                  "The entered amount check failed: $amount ${state.selectedModel.fiatCurrency.symbol}",
             ));
           }
           return;
@@ -201,7 +213,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           }
         }
 
-        final defaultQuotes = quotes[provider] ?? quote;
+        final defaultQuotes = quotes[provider] ?? quotes.values.first;
         var defaultQuote = defaultQuotes.first;
         var selectedPayment = defaultQuote.paymentMethod;
         final List<PaymentMethod> supportedPayments = [];
@@ -225,7 +237,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
         emit(state.copyWith(
           isQuoteLoaded: true,
           isQuoteFailed: false,
-          quotes: quote,
+          quotes: defaultQuotes,
           selectedModel: state.selectedModel.copyWith(
             paymentMethod: selectedPayment,
             quote: defaultQuote,

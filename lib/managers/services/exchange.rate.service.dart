@@ -11,8 +11,10 @@ class ExchangeRateService {
         await WalletManager.getExchangeRate(fiatCurrency, time: time);
   }
 
-  static Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
-      {int? time}) async {
+  static Future<ProtonExchangeRate> getExchangeRate(
+    FiatCurrency fiatCurrency, {
+    int? time,
+  }) async {
     final String key = getKey(fiatCurrency, time: time);
     if (!fiatCurrency2exchangeRate.containsKey(key)) {
       await runOnce(fiatCurrency, time: time);

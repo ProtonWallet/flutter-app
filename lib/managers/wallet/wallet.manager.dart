@@ -912,7 +912,8 @@ class WalletManager implements Manager {
   static FiatCurrency getAccountFiatCurrency(AccountModel? accountModel) {
     if (accountModel != null) {
       return CommonHelper.getFiatCurrencyByName(
-          accountModel.fiatCurrency.toUpperCase());
+        accountModel.fiatCurrency.toUpperCase(),
+      );
     }
     return defaultFiatCurrency;
   }

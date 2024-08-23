@@ -2,18 +2,17 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ramp_flutter/configuration.dart';
 import 'package:ramp_flutter/offramp_sale.dart';
 import 'package:ramp_flutter/onramp_purchase.dart';
 import 'package:ramp_flutter/ramp_flutter.dart';
 import 'package:ramp_flutter/send_crypto_payload.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/extension/data.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/channels/onramp.moonpay.channel.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.model.dart';
@@ -101,6 +100,25 @@ abstract class BuyBitcoinViewModel extends ViewModel<BuyBitcoinCoordinator> {
         "https://banxa.com/privacy-and-cookies-policy",
         "support@banxa.com",
       );
+
+  OnRampTCSheetModel get moonPayTCModel => OnRampTCSheetModel(
+        GatewayProvider.moonPay,
+        "https://www.moonpay.com",
+        "https://www.moonpay.com/legal/terms_of_use_row",
+        "https://www.moonpay.com/legal/cookie_policy",
+        "support.moonpay.com",
+      );
+
+  OnRampTCSheetModel getTCModel(GatewayProvider provider) {
+    if (provider == GatewayProvider.ramp) {
+      return rampTCModel;
+    } else if (provider == GatewayProvider.banxa) {
+      return banxaTCModel;
+    } else if (provider == GatewayProvider.moonPay) {
+      return moonPayTCModel;
+    }
+    return rampTCModel;
+  }
 }
 
 class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
@@ -130,6 +148,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   late final Configuration configuration;
   late final RampFlutter ramp;
 
+  /// moonpay
+  late final OnRampMoonPay moonPay;
+  late final MoonPayConfiguration moonPayConfiguration;
+
   //
   final String walletID;
   final String userEmail;
@@ -143,11 +165,14 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   @override
   bool get supportOffRamp => false;
   String apiKey = '';
+  String moonPayApiKey = "";
 
   @override
   Future<void> loadData() async {
     apiKey = Env.rampApiKey;
+    moonPayApiKey = Env.moonPayApiKey;
 
+    /// ramp
     configuration = Configuration()
       ..hostApiKey = apiKey
       ..hostAppName = "Proton Wallet"
@@ -158,6 +183,17 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       ..onSendCryptoRequested = onSendCryptoRequested
       ..onOfframpSaleCreated = onOfframpSaleCreated
       ..onRampClosed = onRampClosed;
+
+    /// moonpay
+    moonPayConfiguration = MoonPayConfiguration(
+      hostApiKey: moonPayApiKey,
+      fiatCurrency: "USD",
+      fiatValue: 200,
+      paymentMethod: PaymentMethod.card.toMoonPayString(),
+      showAddressForm: "true",
+      userAddress: "",
+    );
+    moonPay = OnRampMoonPay();
 
     loadCountry();
 
@@ -191,7 +227,10 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
   Future<void> move(NavID to) async {
     if (to == NavID.rampExternal) {
       ramp.showRamp(configuration);
-    } else if (to == NavID.banaxExternal) {}
+    } else if (to == NavID.banaxExternal) {
+    } else if (to == NavID.moonpayExternal) {
+      moonPay.showMoonPay(moonPayConfiguration);
+    }
   }
 
   void onOnrampPurchaseCreated(
@@ -210,33 +249,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   void onRampClosed() {
     logger.d("ramp closed");
-  }
-
-  Future<String> loadImageAsBase64() async {
-    // Load image bytes from asset
-    final ByteData bytes = await rootBundle.load(Assets.images.wallet.path);
-    final Uint8List list = bytes.buffer.asUint8List();
-    // Encode bytes to Base64
-    final String base64String = list.base64encode();
-    // Create data URL
-    final String dataUrl = 'data:image/png;base64,$base64String';
-    return dataUrl;
-  }
-
-  Future<String> loadAssetAsBase64(String path) async {
-    // Load image bytes from asset
-    final ByteData bytes = await rootBundle.load(path);
-    final Uint8List list = bytes.buffer.asUint8List();
-
-    // Encode bytes to Base64
-    final String base64String = list.base64encode();
-
-    return base64String;
-  }
-
-  Future<String> getBase64ImageUrl(String path) async {
-    final String base64String = await loadAssetAsBase64(path);
-    return 'data:image/png;base64,$base64String';
   }
 
   Future<void> getAddress(
@@ -330,7 +342,6 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
       configuration.selectedCountryCode = selected.country.code;
       configuration.userAddress = receiveAddress;
       configuration.variant = "auto";
-
       move(NavID.rampExternal);
     } else if (selected.provider == GatewayProvider.banxa) {
       try {
@@ -338,9 +349,22 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         if (checkOutUrl.isNotEmpty) {
           coordinator.pushWebview(checkOutUrl);
         }
-      } catch (e) {
-        logger.e(e.toString());
+      } catch (e, stacktrace) {
+        logger.e("banxa checkout error: $e stacktrace: $stacktrace");
       }
+    } else if (selected.provider == GatewayProvider.moonPay) {
+      try {
+        final moonpayAmount = double.parse(check);
+        moonPayConfiguration.fiatValue = moonpayAmount;
+      } catch (e) {
+        moonPayConfiguration.fiatValue = 200;
+      }
+      moonPayConfiguration.fiatCurrency = selected.fiatCurrency.symbol;
+      moonPayConfiguration.userAddress = receiveAddress;
+      moonPayConfiguration.paymentMethod =
+          selected.paymentMethod.toMoonPayString();
+
+      move(NavID.moonpayExternal);
     }
     bloc.add(CheckoutFinishedEvnet());
   }
