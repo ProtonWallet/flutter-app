@@ -1,5 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
-import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 

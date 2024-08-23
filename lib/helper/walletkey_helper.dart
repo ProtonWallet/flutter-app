@@ -42,8 +42,11 @@ class WalletKeyHelper {
     return SecretKey(entropy);
   }
 
-  static Future<String> encrypt(SecretKey secretKey, String plaintext,
-      {List<int>? initIV}) async {
+  static Future<String> encrypt(
+    SecretKey secretKey,
+    String plaintext, {
+    List<int>? initIV,
+  }) async {
     final Uint8List bytes = utf8.encode(plaintext); // for UTF-8 Strings
     List<int> iv = AesGcm.with256bits().newNonce();
     if (initIV != null) {

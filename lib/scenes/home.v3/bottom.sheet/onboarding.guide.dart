@@ -11,7 +11,7 @@ import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
@@ -211,7 +211,7 @@ class OnboardingGuideSheet {
                               ButtonV6(
                                   onPressed: () async {
                                     if (!isCreatingWallet) {
-                                      setState((){
+                                      setState(() {
                                         isCreatingWallet = true;
                                       });
                                       bool success = false;
@@ -240,7 +240,7 @@ class OnboardingGuideSheet {
                                                 .of(context)
                                                 .passphrase_are_not_match);
                                       }
-                                      setState((){
+                                      setState(() {
                                         isCreatingWallet = false;
                                       });
                                       // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not

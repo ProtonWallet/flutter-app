@@ -9,7 +9,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/managers/features/create.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
