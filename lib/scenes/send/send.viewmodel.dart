@@ -843,8 +843,9 @@ class SendViewModelImpl extends SendViewModel {
       }
       totalAmount += amount;
     }
-    amountTextController.text = totalAmount
-        .toStringAsFixed(displayDigit);
+    amountTextController.text = totalAmount.toStringAsFixed(
+      displayDigit,
+    );
   }
 
   @override
@@ -887,7 +888,8 @@ class SendViewModelImpl extends SendViewModel {
       }
       final network = appConfig.coinType.network;
       txBuilder = await txBuilder.setFeeRate(
-          satPerVb: BigInt.from(feeRateHighPriority.ceil()));
+        satPerVb: BigInt.from(feeRateHighPriority.ceil()),
+      );
       txBuilder = await txBuilder.constrainRecipientAmounts();
       frbDraftPsbt = await txBuilder.createDraftPsbt(
         network: network,
