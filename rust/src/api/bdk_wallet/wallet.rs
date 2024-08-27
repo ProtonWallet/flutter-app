@@ -159,6 +159,7 @@ mod test {
                 // "deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough"
                 // "certain sense kiss guide crumble hint transfer crime much stereo warm coral"
                 // "category law logic swear involve banner pink room diesel fragile sunset remove whale lounge captain code hobby lesson material current moment funny vast fade"
+                // "elbow guide topple state museum project goat split afraid rebuild hour destroy"
                 "elbow guide topple state museum project goat split afraid rebuild hour destroy"
                 .to_string();
 
@@ -180,7 +181,7 @@ mod test {
         assert!(external_path.contains(&path));
         println!("path: {}", path);
 
-        let app_version = "android-wallet@1.0.0".to_string();
+        let app_version = "android-wallet@1.0.0.72".to_string();
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let store = ProtonWalletAuthStore::new("atlas").unwrap();
         let api_service = Arc::new(
@@ -243,6 +244,35 @@ mod test {
         println!("balance: {}", balance.to_btc());
 
         let trans = frb_account.get_transactions(None, None).await.unwrap();
+
+        let mut builder = frb_account.build_tx().await.unwrap();
+        builder = builder.add_recipient(
+            Some("bc1q5x4vux7ts33kdukga7lqr7t4rf5ys0ctzlp6qn".to_string()),
+            Some(1400),
+        );
+
+        let psbt1 = builder
+            .create_draft_psbt(network, Some(false))
+            .await
+            .unwrap();
+        let psbt2 = builder
+            .create_draft_psbt(network, Some(false))
+            .await
+            .unwrap();
+
+        let psbt3: crate::api::bdk_wallet::psbt::FrbPsbt = builder
+            .create_draft_psbt(network, Some(false))
+            .await
+            .unwrap();
+
+        // let change_derivation_1 = psbt1
+        //     .unsigned_tx
+        //     .output
+        //     .iter()
+        //     .find_map(|txout| wallet.derivation_of_spk(&txout.script_pubkey))
+        //     .unwrap();
+        // assert_eq!(change_derivation_1, (KeychainKind::Internal, 0));
+
         assert!(!trans.is_empty());
     }
 
