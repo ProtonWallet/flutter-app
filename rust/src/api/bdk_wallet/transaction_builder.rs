@@ -7,8 +7,12 @@ use andromeda_bitcoin::{
 };
 use andromeda_common::Network;
 use flutter_rust_bridge::frb;
+use log::info;
 
-use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt, storage::OnchainStore};
+use super::{
+    account::FrbAccount, address::FrbAddress, local_output::FrbOutPoint, psbt::FrbPsbt,
+    storage::OnchainStore,
+};
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {
@@ -238,6 +242,20 @@ impl FrbTxBuilder {
             .inner
             .create_draft_psbt(allow_dust.unwrap_or(false))
             .await?;
+        // let transaction = psbt.extract_tx()?;
+        // info!(
+        //     "create_draft_psbt --- addr count: {:?}",
+        //     transaction.output.len()
+        // );
+        // println!(
+        //     "create_draft_psbt --- addr count: {:?}",
+        //     transaction.output.len()
+        // );
+        // for value in &transaction.output {
+        //     let addr = FrbAddress::from_script(value.script_pubkey.clone().into(), network)?;
+        //     info!("create_draft_psbt --- addr: {:?}", addr.to_string());
+        //     println!("create_draft_psbt --- addr: {:?}", addr.to_string());
+        // }
 
         FrbPsbt::from_psbt(&psbt, network)
     }
