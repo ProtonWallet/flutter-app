@@ -17,10 +17,7 @@ impl ContactsClient {
     }
 
     pub async fn get_contacts(&self) -> Result<Vec<ApiContactEmails>, BridgeError> {
-        let result = self.inner.get_contacts(Some(1000), Some(0)).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.get_contacts(Some(1000), Some(0)).await?;
+        Ok(result)
     }
 }

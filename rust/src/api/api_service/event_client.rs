@@ -27,11 +27,8 @@ impl EventClient {
         &self,
         latest_event_id: String,
     ) -> Result<Vec<ProtonEvent>, BridgeError> {
-        let result = self.inner.collect_events(latest_event_id).await;
-        match result {
-            Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.collect_events(latest_event_id).await?;
+        Ok(result.into_iter().map(|x| x.into()).collect())
     }
 
     pub async fn is_valid_token(&self) -> Result<bool, BridgeError> {

@@ -21,10 +21,7 @@ impl ExchangeRateClient {
         fiat_currency: FiatCurrency,
         time: Option<u64>,
     ) -> Result<ProtonExchangeRate, BridgeError> {
-        let result = self.inner.get_exchange_rate(fiat_currency, time).await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.get_exchange_rate(fiat_currency, time).await?;
+        Ok(result.into())
     }
 }
