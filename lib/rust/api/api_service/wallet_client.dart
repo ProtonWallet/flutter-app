@@ -71,6 +71,12 @@ abstract class WalletClient implements RustOpaqueInterface {
 
   Future<List<ApiWalletData>> getWallets();
 
+  Future<void> migrate(
+      {required String walletId,
+      required MigratedWallet migratedWallet,
+      required List<MigratedWalletAccount> migratedWalletAccounts,
+      required List<MigratedWalletTransaction> migratedWalletTransactions});
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<WalletClient> newInstance(
           {required ProtonApiService service}) =>

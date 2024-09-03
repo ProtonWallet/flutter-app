@@ -30,4 +30,8 @@ class WalletDatabase extends BaseDatabase {
     await addIndex("userID");
     await addIndex("walletID");
   }
+
+  Future<void> migration_1() async {
+    await addColumn('migrationRequired', ' INTEGER NULL');
+  }
 }
