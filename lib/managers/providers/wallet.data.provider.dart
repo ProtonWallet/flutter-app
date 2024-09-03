@@ -436,6 +436,7 @@ class WalletsDataProvider extends DataProvider {
       publickey: apiWalletData.wallet.publicKey,
       walletID: walletID,
       showWalletRecovery: showWalletRecovery ? 1 : 0,
+      migrationRequired: apiWalletData.wallet.migrationRequired ?? 0,
       initialize: true,
     );
   }
@@ -542,6 +543,7 @@ class WalletsDataProvider extends DataProvider {
     required String? publickey,
     required String fingerprint,
     required int showWalletRecovery,
+    required int migrationRequired,
     bool initialize = false,
   }) async {
     int tmpID = -1;
@@ -564,6 +566,7 @@ class WalletsDataProvider extends DataProvider {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         walletID: walletID,
         showWalletRecovery: showWalletRecovery,
+        migrationRequired: migrationRequired,
       );
       tmpID = await walletDao.insert(wallet);
       wallet.id = tmpID;
