@@ -89,7 +89,7 @@ dependencies:
   xml: ^6.5.0
   # https://docs.ramp.network/mobile/flutter-sdk
   # issues: https://developers.google.com/ml-kit/known-issues#ios_issues
-  ramp_flutter: ^3.0.0
+  ramp_flutter: ^4.0.0
   # json serializable depends on this
   json_annotation: ^4.9.0
   flutter_bloc: ^8.1.6
