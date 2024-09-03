@@ -166,6 +166,16 @@ class WalletsDataProvider extends DataProvider {
       return walletsData;
     }
 
+    await _fetchFromServer();
+
+    walletsData = await _getFromDB();
+    if (walletsData != null) {
+      return walletsData;
+    }
+    return null;
+  }
+
+  Future<void> _fetchFromServer() async {
     // try to fetch from server:
     await _fetchFromServer();
 
@@ -573,10 +583,14 @@ class WalletsDataProvider extends DataProvider {
     } else {
       tmpID = wallet.id;
       wallet.name = name;
+      wallet.mnemonic = encryptedMnemonic.base64decode();
       wallet.status = status;
       wallet.fingerprint = fingerprint;
       wallet.priority = priority;
       wallet.showWalletRecovery = showWalletRecovery;
+      wallet.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
+      wallet.migrationRequired = migrationRequired;
+
       await walletDao.update(wallet);
     }
 
@@ -617,6 +631,7 @@ class WalletsDataProvider extends DataProvider {
     if (account != null) {
       tmpID = account.id;
       account.walletID = walletID;
+      account.label = labelEncrypted.base64decode();
       account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
       account.scriptType = scriptType;
       account.fiatCurrency = fiatCurrency.name.toUpperCase();
@@ -674,5 +689,10 @@ class WalletsDataProvider extends DataProvider {
   @override
   Future<void> clear() async {
     dataUpdateController.close();
+  }
+
+  Future<void> reset() async {
+    walletsData = null;
+    await _fetchFromServer();
   }
 }
