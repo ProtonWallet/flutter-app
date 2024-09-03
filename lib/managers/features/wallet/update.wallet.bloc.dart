@@ -1,12 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/constants/constants.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/features/wallet/wallet.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -65,85 +64,40 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
       /// 1. get wallets from current cache
       final wallets = await walletsDataProvider.getWallets();
       if (wallets == null || wallets.isEmpty) {
-        // TODO(log): add log
         return;
       }
       for (final wallet in wallets) {
-        /// 2. check if wallet data need to be update
+        /// check if wallet data need to be update
         if (wallet.wallet.migrationRequired == 1) {
           try {
             final walletId = wallet.wallet.walletID;
             final walletKey = await walletKeysProvider.getWalletKey(walletId);
             if (walletKey == null) {
-              // TODO(log): add log
               return;
             }
-
+            //
             final userKey = await userManager.getUserKey(walletKey.userKeyId);
             final secretKey = WalletKeyHelper.decryptWalletKey(
               userKey,
               walletKey,
             );
 
-            final clearWalletName = await WalletKeyHelper.decrypt(
-              secretKey,
-              wallet.wallet.name,
-            );
-
-            final clearMnemonic = await WalletKeyHelper.decrypt(
-              secretKey,
-              wallet.wallet.mnemonic.base64encode(),
-            );
+            /// get first user key (primary user key)
+            final primaryUserKey = await userManager.getPrimaryKey();
 
             /// Generate a wallet secret key
             final newSecretKey = WalletKeyHelper.generateSecretKey();
-            final entropy = Uint8List.fromList(await secretKey.extractBytes());
-
-            /// get first user key (primary user key)
-            final primaryUserKey = await userManager.getPrimaryKey();
-            final String userPrivateKey = primaryUserKey.privateKey;
-            final String userKeyID = primaryUserKey.keyID;
-            final String passphrase = primaryUserKey.passphrase;
-
-            /// encrypt wallet name with wallet key
-            final String encryptedWalletName = await WalletKeyHelper.encrypt(
-              newSecretKey,
-              clearWalletName,
-            );
-
-            /// encrypt mnemonic with wallet key
-            final String encryptedMnemonic = await WalletKeyHelper.encrypt(
-              newSecretKey,
-              clearMnemonic,
-            );
-
-            /// encrypt wallet key with user private key
-            final String encryptedWalletKey = proton_crypto.encryptBinaryArmor(
-              userPrivateKey,
-              entropy,
-            );
-
-            /// sign wallet key with user private key
-            final String walletKeySignature =
-                proton_crypto.getBinarySignatureWithContext(
-              userPrivateKey,
-              passphrase,
-              entropy,
-              gpgContextWalletKey,
-            );
 
             ///update wallet, account, transactions data
 
             ///migrate wallet data
-            final migratedWallet = MigratedWallet(
-              name: encryptedWalletName,
-              userKeyId: userKeyID,
-              walletKey: encryptedWalletKey,
-              walletKeySignature: walletKeySignature,
-              mnemonic: encryptedMnemonic,
-              // shouldnt be null
-              fingerprint: wallet.wallet.fingerprint ?? "",
-            );
+            final migratedWallet = await ProtonWallet.migrateWalletData(
+                primaryUserKey,
+                secretKey,
+                newSecretKey,
+                wallet.wallet.name,
+                wallet.wallet.mnemonic.base64encode(),
+                wallet.wallet.fingerprint ?? "");
 
             ///migrate wallet account data
             final List<MigratedWalletAccount> migratedWalletAccounts = [];
@@ -173,7 +127,6 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
             for (final transaction in walletTransactions) {
               final accountID = transaction.walletAccountId;
               if (accountID == null) {
-                // TODO(log): add log
                 return;
               }
 
@@ -206,7 +159,7 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
                   break;
                 } catch (e, stacktrace) {
                   logger.i(
-                    "getHistoryTransactions error: $e stacktrace: $stacktrace",
+                    "MigrateWalletEvent error: $e stacktrace: $stacktrace",
                   );
                 }
               }
@@ -216,7 +169,7 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
                     txid = addressKey.decrypt(encryptedTransactionID);
                   } catch (e, stacktrace) {
                     logger.e(
-                      "getHistoryTransactions error: $e stacktrace: $stacktrace",
+                      "MigrateWalletEvent error: $e stacktrace: $stacktrace",
                     );
                   }
                   if (txid.isNotEmpty) {
@@ -226,16 +179,18 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
               }
 
               /// hash transaction id
-              final hashedTransID = await WalletKeyHelper.getHmacHashedString(
-                newSecretKey,
-                txid,
-              );
+              final hashedTransID = txid.isNotEmpty
+                  ? await WalletKeyHelper.getHmacHashedString(
+                      newSecretKey,
+                      txid,
+                    )
+                  : transaction.hashedTransactionId;
 
               /// pack migrated data
               final migratedWalletTransaction = MigratedWalletTransaction(
                 id: transaction.id,
                 walletAccountId: accountID,
-                hashedTransactionId: hashedTransID,
+                hashedTransactionId: hashedTransID ?? "",
                 label: encryptedLabel ?? "",
               );
               migratedWalletTransactions.add(migratedWalletTransaction);
@@ -255,8 +210,12 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
             await walletsDataProvider.reset();
             await serverTransactionDataProvider.reset(walletId);
           } catch (e, stacktrace) {
+            Sentry.captureException(
+              e,
+              stackTrace: stacktrace,
+            );
             logger.e(
-              "getHistoryTransactions error: $e stacktrace: $stacktrace",
+              "MigrateWalletEvent error: $e stacktrace: $stacktrace",
             );
           }
         }
