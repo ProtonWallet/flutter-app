@@ -15,6 +15,12 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 flutter_rust_bridge_codegen = { version = "2.1.0" }
 
 [dependencies]
+##
+aes-gcm = { version = "0.10.3", features = ["zeroize"] }
+#https://crates.io/crates/secrecy
+secrecy = "0.8.0"
+
+##
 thiserror = "1.0.61"
 rand = "0.8"
 base64 = "0.22.0"

@@ -1,4 +1,3 @@
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/models/database/base.database.dart';
 
 class AccountDatabase extends BaseDatabase {
@@ -19,20 +18,11 @@ class AccountDatabase extends BaseDatabase {
         fiatCurrency TEXT,
         priority INTEGER,
         lastUsedIndex INTEGER,
+        poolSize INTEGER DEFAULT 10,
         UNIQUE (walletID, derivationPath)
       )
     ''');
     await addIndex("walletID");
     await addIndex("accountID");
-  }
-
-  Future<void> migration_1() async {
-    // Add column `poolSize`
-    try {
-      await dropColumn("poolSize");
-    } catch (e) {
-      logger.e(e);
-    }
-    await addColumn("poolSize", "INTEGER DEFAULT 10");
   }
 }

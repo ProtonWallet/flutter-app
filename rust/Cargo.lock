@@ -50,6 +50,7 @@ dependencies = [
  "ctr",
  "ghash",
  "subtle",
+ "zeroize",
 ]
 
 [[package]]
@@ -3696,6 +3697,7 @@ dependencies = [
 name = "proton_wallet_common"
 version = "0.1.0"
 dependencies = [
+ "aes-gcm",
  "andromeda-api",
  "andromeda-bitcoin",
  "andromeda-common",
@@ -3715,6 +3717,7 @@ dependencies = [
  "openssl",
  "proton-srp",
  "rand",
+ "secrecy",
  "serde",
  "serde_json",
  "thiserror",
@@ -4234,6 +4237,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1433bd67156263443f14d603720b082dd3121779323fce20cba2aa07b874bc1b"
 dependencies = [
  "cc",
+]
+
+[[package]]
+name = "secrecy"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9bd1c54ea06cfd2f6b63219704de0b9b4f72dcc2b8fdef820be6cd799780e91e"
+dependencies = [
+ "zeroize",
 ]
 
 [[package]]
