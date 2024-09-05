@@ -9,6 +9,7 @@ pub mod common;
 pub mod proton_api;
 pub mod srp;
 // pub mod utilities;
+pub mod proton_wallet;
 
 pub use crate::common::errors::BridgeError;
 pub use crate::proton_api::*;

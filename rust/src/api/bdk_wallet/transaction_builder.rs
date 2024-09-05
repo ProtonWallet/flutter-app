@@ -7,12 +7,8 @@ use andromeda_bitcoin::{
 };
 use andromeda_common::Network;
 use flutter_rust_bridge::frb;
-use log::info;
 
-use super::{
-    account::FrbAccount, address::FrbAddress, local_output::FrbOutPoint, psbt::FrbPsbt,
-    storage::OnchainStore,
-};
+use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt, storage::OnchainStore};
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {

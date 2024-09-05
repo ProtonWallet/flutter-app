@@ -14,7 +14,6 @@ class WalletDatabase extends BaseDatabase {
           userID TEXT,
           walletID TEXT,
           name TEXT,
-          mnemonic BLOB,
           passphrase INTEGER,
           publicKey BLOB,
           imported INTEGER,

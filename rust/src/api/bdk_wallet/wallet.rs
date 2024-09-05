@@ -251,27 +251,10 @@ mod test {
             Some(1400),
         );
 
-        let psbt1 = builder
+        let _ = builder
             .create_draft_psbt(network, Some(false))
             .await
             .unwrap();
-        let psbt2 = builder
-            .create_draft_psbt(network, Some(false))
-            .await
-            .unwrap();
-
-        let psbt3: crate::api::bdk_wallet::psbt::FrbPsbt = builder
-            .create_draft_psbt(network, Some(false))
-            .await
-            .unwrap();
-
-        // let change_derivation_1 = psbt1
-        //     .unsigned_tx
-        //     .output
-        //     .iter()
-        //     .find_map(|txout| wallet.derivation_of_spk(&txout.script_pubkey))
-        //     .unwrap();
-        // assert_eq!(change_derivation_1, (KeychainKind::Internal, 0));
 
         assert!(!trans.is_empty());
     }

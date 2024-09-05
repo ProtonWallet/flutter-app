@@ -4,6 +4,8 @@ use std::{error::Error, fmt, sync::PoisonError};
 use andromeda_api::error::Error as AndromedaApiError;
 use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
 
+use crate::proton_wallet::crypto::errors::WalletCryptoError;
+
 #[derive(thiserror::Error, Debug)]
 pub enum BridgeError {
     #[error("Error when reading PROTON_API")]
@@ -40,6 +42,20 @@ pub enum BridgeError {
     /// srp errors
     #[error("An error occurred in api srp: {0}")]
     ApiSrp(String),
+
+    /// crypto errors
+    #[error("An error occurred in aes gcm crypto: {0}")]
+    AesGcm(String),
+
+    /// wallet crypto errors
+    #[error("An error occurred in wallet crypto: {0}")]
+    WalletCrypto(String),
+}
+
+impl From<WalletCryptoError> for BridgeError {
+    fn from(value: WalletCryptoError) -> Self {
+        BridgeError::WalletCrypto(format!("WalletCryptoError occurred: {:?}", value.source()))
+    }
 }
 
 /// rclock mutex lock error

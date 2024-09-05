@@ -12,4 +12,7 @@ pub mod flutter_logger;
 // proton api
 pub mod api_service;
 pub mod proton_api;
+
+// crypto
+pub mod crypto;
 pub mod srp;

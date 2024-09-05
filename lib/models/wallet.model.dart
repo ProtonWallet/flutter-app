@@ -13,7 +13,6 @@ class WalletModel {
   int id;
 
   String name;
-  Uint8List mnemonic;
   int passphrase;
   Uint8List publicKey;
   int imported;
@@ -40,7 +39,6 @@ class WalletModel {
     required this.id,
     required this.userID,
     required this.name,
-    required this.mnemonic,
     required this.passphrase,
     required this.publicKey,
     required this.imported,
@@ -59,7 +57,6 @@ class WalletModel {
       // 'id': id,
       'userID': userID,
       'name': name,
-      'mnemonic': mnemonic,
       'passphrase': passphrase,
       'publicKey': publicKey,
       'imported': imported,
@@ -79,7 +76,6 @@ class WalletModel {
       id: map['id'],
       userID: map['userID'],
       name: map['name'],
-      mnemonic: map['mnemonic'],
       passphrase: map['passphrase'],
       publicKey: map['publicKey'],
       imported: map['imported'],
