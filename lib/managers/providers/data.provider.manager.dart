@@ -171,6 +171,7 @@ class DataProviderManager extends Manager {
     walletPassphraseProvider = WalletPassphraseProvider(storage);
     // wallets and accounts
     walletDataProvider = WalletsDataProvider(
+      storage,
       DBHelper.walletDao!,
       DBHelper.accountDao!,
       DBHelper.addressDao!,
