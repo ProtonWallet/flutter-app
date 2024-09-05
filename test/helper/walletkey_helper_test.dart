@@ -36,6 +36,18 @@ void main() {
       expect(decryptText, equals(plainText));
     });
 
+    test('restore walletKey and decrypt gen from rust', () async {
+      const String plainText = "Hello world";
+      const String encryptText =
+          "fyKZ+MaHeW5d/6smiwjEyMpNNNRrVHebeCOucwdstN9Huik58dmc";
+      final SecretKey secretKey =
+          WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(
+              "TvNS0gqMraE5I1LgZbhjUyrzCYxZN5kSUi0OEszpI9Y=");
+      final String decryptText =
+          await WalletKeyHelper.decrypt(secretKey, encryptText);
+      expect(decryptText, equals(plainText));
+    });
+
     test('restore walletKey and encrypt', () async {
       const String plaintext =
           "benefit indoor helmet wine exist height grain spot rely half beef nothing";
