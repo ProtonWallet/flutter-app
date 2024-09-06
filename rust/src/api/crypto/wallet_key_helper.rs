@@ -1,7 +1,6 @@
 use crate::{
     proton_wallet::crypto::{
         mnemonic::{EncryptedWalletMnemonic, WalletMnemonic},
-        wallet_key::UnlockedWalletKey,
         wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
     },
     BridgeError,
@@ -10,23 +9,16 @@ use flutter_rust_bridge::frb;
 use rand::RngCore;
 use secrecy::ExposeSecret;
 
+use super::wallet_key::FrbUnlockedWalletKey;
+
 pub struct FrbWalletKeyHelper {}
 
 impl FrbWalletKeyHelper {
     #[frb(sync)]
-    pub fn generate_wallet_key() -> UnlockedWalletKey {
-        WalletKeyProvider::generate()
-    }
-}
-
-impl FrbWalletKeyHelper {
-    /// Generates Wallet key
-    #[frb(sync)]
-    pub fn generate_secret_key() -> UnlockedWalletKey {
-        WalletKeyProvider::generate()
+    pub fn generate_secret_key() -> FrbUnlockedWalletKey {
+        FrbUnlockedWalletKey::new(WalletKeyProvider::generate())
     }
 
-    /// Generates Wallet key output base64
     #[frb(sync)]
     pub fn generate_secret_key_as_base64() -> String {
         WalletKeyProvider::generate().to_base64()

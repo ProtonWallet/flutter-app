@@ -46,6 +46,9 @@ class ConnectivityProvider extends DataProvider {
 
   @override
   Future<void> clear() async {}
+
+  @override
+  Future<void> reload() async {}
 }
 
 extension ConnectivityResultExtension on List<ConnectivityResult> {

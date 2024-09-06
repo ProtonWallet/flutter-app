@@ -115,11 +115,10 @@ abstract class DataProvider extends Bloc<DataEvent, DataState> {
   }
 
   Future<void> clear();
-}
 
-// abstract class DataProvider {
-//   Future<void> clear();
-// }
+  /// reload data
+  Future<void> reload();
+}
 
 class DataProviderManager extends Manager {
   final SecureStorageManager storage;
@@ -294,5 +293,17 @@ class DataProviderManager extends Manager {
     await walletKeysProvider.clear();
     await contactsDataProvider.clear();
     await unleashDataProvider.clear();
+  }
+
+  @override
+  Future<void> reload() async {
+    await gatewayDataProvider.reload();
+    await userSettingsDataProvider.reload();
+    await userDataProvider.reload();
+    await walletDataProvider.reload();
+    await walletPassphraseProvider.reload();
+    await walletKeysProvider.reload();
+    await contactsDataProvider.reload();
+    await unleashDataProvider.reload();
   }
 }

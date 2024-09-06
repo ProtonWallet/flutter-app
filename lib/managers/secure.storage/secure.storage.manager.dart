@@ -62,4 +62,6 @@ class SecureStorageManager implements Manager {
 
   @override
   Future<void> login(String userID) async {}
+  @override
+  Future<void> reload() async {}
 }

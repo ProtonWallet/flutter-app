@@ -5,3 +5,9 @@ impl UserKey {
         Self {}
     }
 }
+
+impl Default for UserKey {
+    fn default() -> Self {
+        Self::new()
+    }
+}

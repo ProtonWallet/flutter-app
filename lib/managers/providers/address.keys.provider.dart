@@ -26,6 +26,7 @@ class AddressKeyProvider extends DataProvider {
         await protonEmailAddressClient.getProtonAddress();
     addresses = addresses.where((element) => element.status == 1).toList();
 
+    // TODO(improve): dont use static managers
     final userKeys = await WalletManager.userManager.getUserKeys();
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
@@ -62,5 +63,12 @@ class AddressKeyProvider extends DataProvider {
   @override
   Future<void> clear() async {
     dataUpdateController.close();
+  }
+
+  @override
+  Future<void> reload() async {
+    addressKeys = [];
+    await _fetchFromServer();
+    dataUpdateController.add(DataUpdated(DateTime.now()));
   }
 }
