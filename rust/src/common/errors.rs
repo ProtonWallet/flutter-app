@@ -104,6 +104,15 @@ impl From<proton_srp::SRPError> for BridgeError {
     }
 }
 
+impl From<proton_crypto::CryptoError> for BridgeError {
+    fn from(value: proton_crypto::CryptoError) -> Self {
+        BridgeError::Generic(format!(
+            "Proton crypto error occurred: {:?}",
+            value.source()
+        ))
+    }
+}
+
 impl From<AndromedaBitcoinError> for BridgeError {
     fn from(error: AndromedaBitcoinError) -> Self {
         if let Some(inner_error) = find_error_type::<AndromedaApiError>(&error) {
