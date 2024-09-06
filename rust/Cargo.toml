@@ -19,8 +19,18 @@ flutter_rust_bridge_codegen = { version = "2.1.0" }
 aes-gcm = { version = "0.10.3", features = ["zeroize"] }
 #https://crates.io/crates/secrecy
 secrecy = "0.8.0"
+rusqlite = { version = "0.31.0", features = [
+    "bundled",
+    "modern_sqlite",
+    "uuid",
+    "chrono",
+    "functions",
+    "trace",
+] }
+proton-sqlite3 = { version = "=0.7.6", registry = "proton_internal" }
+stash = { version = "=0.1.6", registry = "proton_internal" }
 
-##
+## old
 thiserror = "1.0.61"
 rand = "0.8"
 base64 = "0.22.0"
@@ -37,10 +47,9 @@ log = "0.4.19"
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
-proton-srp = { version = "0.4.1", registry = "proton_internal", features = [
-    "pgpinternal",
-] }
+proton-srp = { version = "0.4.1", default-features = false, registry = "proton_internal" }
 bdk_sqlite = { version = "=0.2.0" }
+proton-crypto = { path = "../vendor/proton-crypto-rs/proton-crypto" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }

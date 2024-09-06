@@ -56,23 +56,36 @@ class BuildPod {
         .toList();
 
     final libName = environment.crateInfo.packageName;
-
+    final pgpsysName = "gopenpgp-sys";
+    log.info("Output outputDir: ${outputDir}");
     // If there is static lib, use it and link it with pod
     if (staticLibs.isNotEmpty) {
       final finalTargetFile = path.join(outputDir, "lib$libName.a");
       performLipo(finalTargetFile, staticLibs.map((e) => e.path));
+      Iterable<String> out = [];
+      for (var lib in staticLibs) {
+        log.info("Output each lib: ${lib.path}, ${lib.finalFileName}");
+        final directory = File(lib.path).parent;
+        final soFiles = directory
+            .listSync()
+            .where((entity) =>
+                entity is File && entity.path.endsWith("lib$pgpsysName.a"))
+            .map((e) => e.path);
+        out = out.followedBy(soFiles);
+      }
+      final finalTargetFileNew = path.join(outputDir, "lib$pgpsysName.a");
+      performLipo(finalTargetFileNew, out);
     } else {
+      log.info("Output:  staticLibs.isNotEmpty");
       // Otherwise try to replace bundle dylib with our dylib
       final bundlePaths = [
         '$libName.framework/Versions/A/$libName',
         '$libName.framework/$libName',
       ];
-
       for (final bundlePath in bundlePaths) {
         final targetFile = path.join(outputDir, bundlePath);
         if (File(targetFile).existsSync()) {
           performLipo(targetFile, dynamicLibs.map((e) => e.path));
-
           // Replace absolute id with @rpath one so that it works properly
           // when moved to Frameworks.
           runCommand("install_name_tool", [

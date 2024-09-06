@@ -16,5 +16,6 @@ apply_cargokit(${PROJECT_NAME} ../../../../../../rust proton_wallet_common "")
 # external build triggered from this build file.
 set(rust_builder_bundled_libraries
   "${${PROJECT_NAME}_cargokit_lib}"
+  "gopenpgp-sys.dll"
   PARENT_SCOPE
 )
