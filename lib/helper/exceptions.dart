@@ -18,6 +18,8 @@ String parseSampleDisplayError(BridgeError exception) {
     andromedaBitcoin: (e) => e.field0,
     apiResponse: (e) => e.field0.error,
     apiSrp: (e) => e.field0,
+    aesGcm: (e) => e.field0,
+    walletCrypto: (e) => e.field0,
   );
 }
 

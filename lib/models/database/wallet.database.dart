@@ -14,7 +14,6 @@ class WalletDatabase extends BaseDatabase {
           userID TEXT,
           walletID TEXT,
           name TEXT,
-          mnemonic BLOB,
           passphrase INTEGER,
           publicKey BLOB,
           imported INTEGER,
@@ -25,6 +24,7 @@ class WalletDatabase extends BaseDatabase {
           modifyTime INTEGER,
           fingerprint TEXT,
           showWalletRecovery INTEGER NULL,
+          migrationRequired INTEGER NULL,
           UNIQUE (userID, walletID)
         )
     ''');

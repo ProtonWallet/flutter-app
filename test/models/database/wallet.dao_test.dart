@@ -24,7 +24,6 @@ Future<void> main() async {
         userID: "server_userid_2",
         name: 'Wallet for Test 1',
         walletID: "test_wallet_id_1",
-        mnemonic: Uint8List(0),
         passphrase: 0,
         publicKey: Uint8List(0),
         imported: WalletModel.createByProton,
@@ -35,13 +34,13 @@ Future<void> main() async {
         createTime: now.millisecondsSinceEpoch ~/ 1000,
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         showWalletRecovery: 1,
+        migrationRequired: 0,
       ));
       expect(id, 1);
       id = await appDatabase.walletDao.insert(WalletModel(
         id: -1,
         userID: "server_userid_2",
         name: 'Wallet for Test 2',
-        mnemonic: Uint8List(0),
         passphrase: 1,
         publicKey: Uint8List(0),
         imported: WalletModel.createByProton,
@@ -53,6 +52,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         walletID: "test_wallet_id_2",
         showWalletRecovery: 0,
+        migrationRequired: 0,
       ));
       expect(id, 2);
     });
@@ -130,7 +130,6 @@ Future<void> main() async {
         id: 2,
         userID: "server_userid_33",
         name: 'Wallet for Test Updated',
-        mnemonic: Uint8List(0),
         passphrase: 0,
         publicKey: Uint8List(0),
         imported: WalletModel.createByProton,
@@ -142,6 +141,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000 - 87653,
         walletID: "",
         showWalletRecovery: 0,
+        migrationRequired: 0,
       ));
       final WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);

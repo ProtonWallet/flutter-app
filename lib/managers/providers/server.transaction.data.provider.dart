@@ -263,4 +263,9 @@ class ServerTransactionDataProvider extends DataProvider {
   Future<void> clear() async {
     dataUpdateController.close();
   }
+
+  Future<void> reset(String walletId) async {
+    serverTransactionDataList = [];
+    await fetchTransactions(walletId, null, isInitializeProcess: true);
+  }
 }

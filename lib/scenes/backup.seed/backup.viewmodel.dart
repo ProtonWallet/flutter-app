@@ -156,7 +156,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
     walletsDataProvider.insertOrUpdateWallet(
       userID: userID,
       name: walletModel.name,
-      encryptedMnemonic: walletModel.mnemonic.base64encode(),
+      encryptedMnemonic: "",
       passphrase: walletModel.passphrase,
       imported: walletModel.imported,
       priority: walletModel.priority,
@@ -166,6 +166,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       publickey: walletModel.publicKey.base64encode(),
       fingerprint: walletModel.fingerprint ?? "",
       showWalletRecovery: walletModel.showWalletRecovery,
+      migrationRequired: walletModel.migrationRequired,
     );
     userDataProvider.enabledShowWalletRecovery(false);
   }

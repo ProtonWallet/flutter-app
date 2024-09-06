@@ -304,19 +304,25 @@ class WalletManager implements Manager {
   }
 
   static Future<String> getMnemonicWithID(String walletID) async {
-    final walletModel = await DBHelper.walletDao!.findByServerID(
-      walletID,
-    );
     final walletKey = await walletKeysProvider.getWalletKey(walletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
+
+    final encryptedMnemonic = await walletDataProvider.getWalletMnemonic(
+      walletID,
+    );
+    if (encryptedMnemonic == null) {
+      throw Exception("Wallet encrypted mnemonic not found");
+    }
+
     final userKey = await userManager.getUserKey(walletKey.userKeyId);
 
     final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
+
     final String mnemonic = await WalletKeyHelper.decrypt(
       secretKey,
-      base64Encode(walletModel.mnemonic),
+      encryptedMnemonic.mnemonic,
     );
     return mnemonic;
   }

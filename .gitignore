@@ -152,3 +152,5 @@ env.var.g.dart
 
 # ui tests
 test/snapshot/*/failures/
+tarpaulin-report.html
+cobertura.xml

@@ -1,7 +1,8 @@
 use andromeda_api::bitcoin_address::ApiBitcoinAddressCreationPayload;
 use andromeda_api::email_integration::ApiWalletBitcoinAddressLookup;
 pub use andromeda_api::wallet::{
-    ApiWallet, ApiWalletData, ApiWalletKey, ApiWalletSettings, TransactionType,
+    ApiWallet, ApiWalletData, ApiWalletKey, ApiWalletSettings, MigratedWallet,
+    MigratedWalletAccount, MigratedWalletTransaction, TransactionType,
 };
 use andromeda_api::wallet::{ApiWalletTransaction, CreateWalletRequestBody};
 use flutter_rust_bridge::frb;
@@ -221,4 +222,42 @@ impl From<CreateWalletReq> for CreateWalletRequestBody {
             IsAutoCreated: req.is_auto_created,
         }
     }
+}
+
+#[frb(mirror(MigratedWallet))]
+#[allow(non_snake_case)]
+pub struct _MigratedWallet {
+    /// Name of the wallet, encrypted
+    pub Name: String,
+    /// Encrypted user Id
+    pub UserKeyID: String,
+    /// Base64 encoded binary data
+    pub WalletKey: String,
+    /// Detached signature of the encrypted AES-GCM 256 key used to encrypt the
+    /// mnemonic or public key, as armored PGP
+    pub WalletKeySignature: String,
+    /// Wallet mnemonic encrypted with the WalletKey, in base64 format
+    pub Mnemonic: String,
+    pub Fingerprint: String,
+}
+
+#[frb(mirror(MigratedWalletAccount))]
+#[allow(non_snake_case)]
+pub struct _MigratedWalletAccount {
+    // Wallet account ID
+    pub ID: String,
+    // Encrypted Label
+    pub Label: String,
+}
+
+#[frb(mirror(MigratedWalletTransaction))]
+#[allow(non_snake_case)]
+pub struct _MigratedWalletTransaction {
+    // Wallet ID
+    pub ID: String,
+    pub WalletAccountID: String,
+    // encrypted transaction ID
+    pub HashedTransactionID: String,
+    // encrypted label
+    pub Label: String,
 }

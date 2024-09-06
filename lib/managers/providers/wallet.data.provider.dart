@@ -7,6 +7,8 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/extension/strings.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/models/wallet.mnemonic.dart';
+import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/address.dao.impl.dart';
@@ -26,6 +28,8 @@ class WalletData {
 }
 
 class WalletsDataProvider extends DataProvider {
+  final SecureStorageManager storage;
+  final key = "proton_wallet_mn_provider_key";
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
 
@@ -48,6 +52,7 @@ class WalletsDataProvider extends DataProvider {
   List<WalletData>? walletsData;
 
   WalletsDataProvider(
+    this.storage,
     this.walletDao,
     this.accountDao,
     this.addressDao,
@@ -85,6 +90,72 @@ class WalletsDataProvider extends DataProvider {
     return null;
   }
 
+  Future<WalletMnemonic?> getWalletMnemonic(String walletID) async {
+    var found = await _searchFromKeychain(walletID);
+    if (found != null) {
+      return found;
+    }
+
+    // fetch from server
+    await _fetchFromServer();
+
+    found = await _searchFromKeychain(walletID);
+    if (found != null) {
+      return found;
+    }
+    return null;
+  }
+
+  Future<WalletMnemonic?> _searchFromKeychain(String walletID) async {
+    final walletMnemonics = await _getWalletMnemonics();
+    if (walletMnemonics != null) {
+      final key = walletMnemonics
+          .where((key) => key.walletID == walletID)
+          .toList()
+          .firstOrNull;
+      return key;
+    }
+    return null;
+  }
+
+  /// fetch from local cache
+  Future<List<WalletMnemonic>?> _getWalletMnemonics() async {
+    final json = await storage.get(key);
+    if (json.isEmpty) {
+      return null;
+    }
+    try {
+      final walletMnemonics = await WalletMnemonic.loadJsonString(json);
+      return walletMnemonics;
+    } catch (e, stacktrace) {
+      logger.e("$e stacktrace: $stacktrace");
+    }
+    return null;
+  }
+
+  Future<void> saveWalletMnemonics(List<WalletMnemonic> values) async {
+    if (values.isEmpty) {
+      logger.e("walle mnemonic is empty");
+      return;
+    }
+
+    var walletMnemonics = await _getWalletMnemonics();
+
+    final Map<String, WalletMnemonic> mergedMap = {};
+    // Insert items from list1 first
+    for (final key in walletMnemonics ?? []) {
+      mergedMap[key.walletID] = key;
+    }
+
+    for (final key in values) {
+      mergedMap[key.walletID] = key;
+    }
+
+    walletMnemonics = mergedMap.values.toList();
+    final jsonString = WalletMnemonic.toJsonString(walletMnemonics);
+    await storage.set(key, jsonString);
+  }
+
   Future<List<WalletData>?> getWallets() async {
     if (walletsData != null) {
       return walletsData;
@@ -95,15 +166,26 @@ class WalletsDataProvider extends DataProvider {
       return walletsData;
     }
 
+    await _fetchFromServer();
+
+    walletsData = await _getFromDB();
+    if (walletsData != null) {
+      return walletsData;
+    }
+    return null;
+  }
+
+  Future<void> _fetchFromServer() async {
     // try to fetch from server:
     final List<ApiWalletData> apiWallets = await walletClient.getWallets();
     for (ApiWalletData apiWalletData in apiWallets.reversed) {
       // update and insert wallet
       final String serverWalletID = apiWalletData.wallet.id;
       await _processApiWalletData(apiWalletData);
-      final List<ApiWalletAccount> apiWalletAccts =
-          await walletClient.getWalletAccounts(
-              walletId: apiWalletData.wallet.id); // this id is serverWalletID
+      final apiWalletAccts = await walletClient.getWalletAccounts(
+        walletId: apiWalletData.wallet.id,
+      );
+      // this id is serverWalletID
       for (ApiWalletAccount apiWalletAcct in apiWalletAccts) {
         final String serverAccountID = apiWalletAcct.id;
         await _processApiWalletAccountData(serverWalletID, apiWalletAcct);
@@ -117,12 +199,6 @@ class WalletsDataProvider extends DataProvider {
         }
       }
     }
-
-    walletsData = await _getFromDB();
-    if (walletsData != null) {
-      return walletsData;
-    }
-    return null;
   }
 
   Future<WalletData?> getWallet(String walletID) async {
@@ -359,6 +435,7 @@ class WalletsDataProvider extends DataProvider {
       publickey: apiWalletData.wallet.publicKey,
       walletID: walletID,
       showWalletRecovery: showWalletRecovery ? 1 : 0,
+      migrationRequired: apiWalletData.wallet.migrationRequired ?? 0,
       initialize: true,
     );
   }
@@ -465,6 +542,7 @@ class WalletsDataProvider extends DataProvider {
     required String? publickey,
     required String fingerprint,
     required int showWalletRecovery,
+    required int migrationRequired,
     bool initialize = false,
   }) async {
     int tmpID = -1;
@@ -476,7 +554,6 @@ class WalletsDataProvider extends DataProvider {
         id: -1,
         userID: userID,
         name: name,
-        mnemonic: encryptedMnemonic.base64decode(),
         passphrase: passphrase,
         publicKey: uPubKey,
         imported: imported,
@@ -488,6 +565,7 @@ class WalletsDataProvider extends DataProvider {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         walletID: walletID,
         showWalletRecovery: showWalletRecovery,
+        migrationRequired: migrationRequired,
       );
       tmpID = await walletDao.insert(wallet);
       wallet.id = tmpID;
@@ -498,7 +576,19 @@ class WalletsDataProvider extends DataProvider {
       wallet.fingerprint = fingerprint;
       wallet.priority = priority;
       wallet.showWalletRecovery = showWalletRecovery;
+      wallet.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
+      wallet.migrationRequired = migrationRequired;
+
       await walletDao.update(wallet);
+    }
+
+    if (encryptedMnemonic.isNotEmpty) {
+      // save wallet mnemonic
+      final mnemonic = WalletMnemonic(
+        walletID: walletID,
+        mnemonic: encryptedMnemonic,
+      );
+      await saveWalletMnemonics([mnemonic]);
     }
 
     if (!initialize) {
@@ -529,6 +619,7 @@ class WalletsDataProvider extends DataProvider {
     if (account != null) {
       tmpID = account.id;
       account.walletID = walletID;
+      account.label = labelEncrypted.base64decode();
       account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
       account.scriptType = scriptType;
       account.fiatCurrency = fiatCurrency.name.toUpperCase();
@@ -586,5 +677,10 @@ class WalletsDataProvider extends DataProvider {
   @override
   Future<void> clear() async {
     dataUpdateController.close();
+  }
+
+  Future<void> reset() async {
+    walletsData = null;
+    await _fetchFromServer();
   }
 }

@@ -11,6 +11,7 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/update.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
@@ -221,6 +222,15 @@ class HomeCoordinator extends Coordinator {
         apiServiceManager.getWalletClient(),
         apiServiceManager.getProtonUsersApiClient());
 
+    final updateWalletBloc = UpdateWalletBloc(
+      userManager,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.walletKeysProvider,
+      apiServiceManager.getWalletClient(),
+      dataProviderManager.serverTransactionDataProvider,
+      dataProviderManager.addressKeyProvider,
+    );
+
     /// build locker overlay view
     final overlayView = LockCoordinator().start();
 
@@ -232,6 +242,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager,
       createWalletBloc,
       deleteWalletBloc,
+      updateWalletBloc,
       userManager,
       event,
       apiServiceManager,

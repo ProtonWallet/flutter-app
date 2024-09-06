@@ -5,7 +5,8 @@ use andromeda_api::{
     settings::FiatCurrencySymbol as FiatCurrency,
     wallet::{
         ApiEmailAddress, ApiWallet, ApiWalletAccount, ApiWalletData, ApiWalletSettings,
-        CreateWalletTransactionRequestBody, WalletTransactionFlag,
+        CreateWalletTransactionRequestBody, MigratedWallet, MigratedWalletAccount,
+        MigratedWalletTransaction, WalletMigrateRequestBody, WalletTransactionFlag,
     },
 };
 
@@ -32,23 +33,36 @@ impl WalletClient {
 
     // wallets
     pub async fn get_wallets(&self) -> Result<Vec<ApiWalletData>, BridgeError> {
-        let result: Result<Vec<andromeda_api::wallet::ApiWalletData>, andromeda_api::error::Error> =
-            self.inner.get_wallets().await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.get_wallets().await?;
+        Ok(result)
+    }
+
+    // wallet migration
+    pub async fn migrate(
+        &self,
+        wallet_id: String,
+        migrated_wallet: MigratedWallet,
+        migrated_wallet_accounts: Vec<MigratedWalletAccount>,
+        migrated_wallet_transactions: Vec<MigratedWalletTransaction>,
+    ) -> Result<(), BridgeError> {
+        let wallet_migrate_request = WalletMigrateRequestBody {
+            Wallet: migrated_wallet,
+            WalletAccounts: migrated_wallet_accounts,
+            WalletTransactions: migrated_wallet_transactions,
+        };
+        let result = self
+            .inner
+            .migrate(wallet_id, wallet_migrate_request)
+            .await?;
+        Ok(result)
     }
 
     pub async fn create_wallet(
         &self,
         wallet_req: CreateWalletReq,
     ) -> Result<ApiWalletData, BridgeError> {
-        let result = self.inner.create_wallet(wallet_req.into()).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.create_wallet(wallet_req.into()).await?;
+        Ok(result)
     }
 
     pub async fn update_wallet_name(
@@ -56,19 +70,13 @@ impl WalletClient {
         wallet_id: String,
         new_name: String,
     ) -> Result<ApiWallet, BridgeError> {
-        let result = self.inner.update_wallet_name(wallet_id, new_name).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.update_wallet_name(wallet_id, new_name).await?;
+        Ok(result)
     }
 
     pub async fn delete_wallet(&self, wallet_id: String) -> Result<(), BridgeError> {
-        let result = self.inner.delete_wallet(wallet_id).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.delete_wallet(wallet_id).await?;
+        Ok(result)
     }
 
     // wallet accounts
@@ -76,11 +84,8 @@ impl WalletClient {
         &self,
         wallet_id: String,
     ) -> Result<Vec<ApiWalletAccount>, BridgeError> {
-        let result = self.inner.get_wallet_accounts(wallet_id).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.get_wallet_accounts(wallet_id).await?;
+        Ok(result)
     }
 
     pub async fn get_wallet_account_addresses(
@@ -91,11 +96,8 @@ impl WalletClient {
         let result = self
             .inner
             .get_wallet_account_addresses(wallet_id, wallet_account_id)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn create_wallet_account(
@@ -106,11 +108,8 @@ impl WalletClient {
         let result = self
             .inner
             .create_wallet_account(wallet_id, req.into())
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn update_wallet_account_label(
@@ -122,11 +121,8 @@ impl WalletClient {
         let result = self
             .inner
             .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn update_wallet_accounts_order(
@@ -137,11 +133,8 @@ impl WalletClient {
         let result = self
             .inner
             .update_wallet_accounts_order(wallet_id, wallet_account_ids)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn update_wallet_account_last_used_index(
@@ -153,11 +146,8 @@ impl WalletClient {
         let result = self
             .inner
             .update_wallet_account_last_used_index(wallet_id, wallet_account_id, last_used_index)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn update_wallet_account_fiat_currency(
@@ -169,11 +159,8 @@ impl WalletClient {
         let result = self
             .inner
             .update_wallet_account_fiat_currency(wallet_id, wallet_account_id, new_fiat_currency)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn delete_wallet_account(
@@ -184,11 +171,8 @@ impl WalletClient {
         let result = self
             .inner
             .delete_wallet_account(wallet_id, wallet_account_id)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     /// wallet email related
@@ -201,11 +185,8 @@ impl WalletClient {
         let result = self
             .inner
             .add_email_address(wallet_id, wallet_account_id, address_id)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn remove_email_address(
@@ -217,11 +198,8 @@ impl WalletClient {
         let result = self
             .inner
             .remove_email_address(wallet_id, wallet_account_id, address_id)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     /// Wallet transaction related
@@ -235,11 +213,8 @@ impl WalletClient {
         let result = self
             .inner
             .get_wallet_transactions(wallet_id, wallet_account_id, hashed_txids)
-            .await;
-        match result {
-            Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into_iter().map(|v| v.into()).collect())
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -263,11 +238,8 @@ impl WalletClient {
         let result = self
             .inner
             .create_wallet_transaction(wallet_id, wallet_account_id, payload)
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn update_wallet_transaction_label(
@@ -285,11 +257,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 label,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn update_external_wallet_transaction_sender(
@@ -307,11 +276,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 sender,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn set_wallet_transaction_private_flag(
@@ -328,11 +294,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 WalletTransactionFlag::Private,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn set_wallet_transaction_suspicious_flag(
@@ -349,11 +312,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 WalletTransactionFlag::Suspicious,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn delete_wallet_transaction_private_flag(
@@ -370,11 +330,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 WalletTransactionFlag::Private,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn delete_wallet_transaction_suspicious_flag(
@@ -391,11 +348,8 @@ impl WalletClient {
                 wallet_transaction_id,
                 WalletTransactionFlag::Suspicious,
             )
-            .await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result.into())
     }
 
     pub async fn delete_wallet_transactions(
@@ -407,21 +361,15 @@ impl WalletClient {
         let result = self
             .inner
             .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
-            .await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+            .await?;
+        Ok(result)
     }
 
     pub async fn disable_show_wallet_recovery(
         &self,
         wallet_id: String,
     ) -> Result<ApiWalletSettings, BridgeError> {
-        let result = self.inner.disable_show_wallet_recovery(wallet_id).await;
-        match result {
-            Ok(response) => Ok(response),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.disable_show_wallet_recovery(wallet_id).await?;
+        Ok(result)
     }
 }
