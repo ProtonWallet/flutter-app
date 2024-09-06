@@ -47,7 +47,7 @@ class WalletKeyHelper {
     String plaintext, {
     List<int>? initIV,
   }) async {
-    final Uint8List bytes = utf8.encode(plaintext); // for UTF-8 Strings
+    final Uint8List bytes = utf8.encode(plaintext);
     List<int> iv = AesGcm.with256bits().newNonce();
     if (initIV != null) {
       iv = initIV;

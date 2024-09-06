@@ -43,6 +43,7 @@ import 'api/bdk_wallet/transaction_details_txin.dart';
 import 'api/bdk_wallet/transaction_details_txop.dart';
 import 'api/bdk_wallet/transactions.dart';
 import 'api/bdk_wallet/wallet.dart';
+import 'api/crypto/wallet_key_helper.dart';
 import 'api/flutter_logger.dart';
 import 'api/proton_api.dart';
 import 'api/rust_api.dart';
@@ -77,6 +78,7 @@ import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
 import 'proton_api/wallet_settings.dart';
+import 'proton_wallet/crypto/wallet_key.dart';
 import 'srp/proofs.dart';
 
 abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
@@ -242,6 +244,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_TransactionClientPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransactionClientPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_UnlockedWalletKeyPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKeyPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_WalletClientPtr => wire
@@ -457,6 +463,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   TransactionClient
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransactionClient(
+          dynamic raw);
+
+  @protected
+  UnlockedWalletKey
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
           dynamic raw);
 
   @protected
@@ -931,6 +942,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  UnlockedWalletKey
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+          dynamic raw);
+
+  @protected
   WalletClient
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
           dynamic raw);
@@ -1051,6 +1067,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   HighSecuritySettings dco_decode_box_autoadd_high_security_settings(
       dynamic raw);
+
+  @protected
+  MigratedWallet dco_decode_box_autoadd_migrated_wallet(dynamic raw);
 
   @protected
   OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
@@ -1174,6 +1193,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   FrbPsbtRecipient dco_decode_frb_psbt_recipient(dynamic raw);
 
   @protected
+  FrbWalletKeyHelper dco_decode_frb_wallet_key_helper(dynamic raw);
+
+  @protected
   GatewayProvider dco_decode_gateway_provider(dynamic raw);
 
   @protected
@@ -1281,6 +1303,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<FrbPsbtRecipient> dco_decode_list_frb_psbt_recipient(dynamic raw);
 
   @protected
+  List<MigratedWalletAccount> dco_decode_list_migrated_wallet_account(
+      dynamic raw);
+
+  @protected
+  List<MigratedWalletTransaction> dco_decode_list_migrated_wallet_transaction(
+      dynamic raw);
+
+  @protected
   List<MnemonicUserKey> dco_decode_list_mnemonic_user_key(dynamic raw);
 
   @protected
@@ -1351,6 +1381,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry dco_decode_log_entry(dynamic raw);
+
+  @protected
+  MigratedWallet dco_decode_migrated_wallet(dynamic raw);
+
+  @protected
+  MigratedWalletAccount dco_decode_migrated_wallet_account(dynamic raw);
+
+  @protected
+  MigratedWalletTransaction dco_decode_migrated_wallet_transaction(dynamic raw);
 
   @protected
   MnemonicAuth dco_decode_mnemonic_auth(dynamic raw);
@@ -1861,6 +1900,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  UnlockedWalletKey
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+          SseDeserializer deserializer);
+
+  @protected
   WalletClient
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
           SseDeserializer deserializer);
@@ -2330,6 +2374,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  UnlockedWalletKey
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+          SseDeserializer deserializer);
+
+  @protected
   WalletClient
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
           SseDeserializer deserializer);
@@ -2463,6 +2512,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   HighSecuritySettings sse_decode_box_autoadd_high_security_settings(
+      SseDeserializer deserializer);
+
+  @protected
+  MigratedWallet sse_decode_box_autoadd_migrated_wallet(
       SseDeserializer deserializer);
 
   @protected
@@ -2602,6 +2655,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   FrbPsbtRecipient sse_decode_frb_psbt_recipient(SseDeserializer deserializer);
 
   @protected
+  FrbWalletKeyHelper sse_decode_frb_wallet_key_helper(
+      SseDeserializer deserializer);
+
+  @protected
   GatewayProvider sse_decode_gateway_provider(SseDeserializer deserializer);
 
   @protected
@@ -2722,6 +2779,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<MigratedWalletAccount> sse_decode_list_migrated_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  List<MigratedWalletTransaction> sse_decode_list_migrated_wallet_transaction(
+      SseDeserializer deserializer);
+
+  @protected
   List<MnemonicUserKey> sse_decode_list_mnemonic_user_key(
       SseDeserializer deserializer);
 
@@ -2806,6 +2871,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry sse_decode_log_entry(SseDeserializer deserializer);
+
+  @protected
+  MigratedWallet sse_decode_migrated_wallet(SseDeserializer deserializer);
+
+  @protected
+  MigratedWalletAccount sse_decode_migrated_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  MigratedWalletTransaction sse_decode_migrated_wallet_transaction(
+      SseDeserializer deserializer);
 
   @protected
   MnemonicAuth sse_decode_mnemonic_auth(SseDeserializer deserializer);
@@ -3353,6 +3429,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+          UnlockedWalletKey self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
           WalletClient self, SseSerializer serializer);
 
@@ -3825,6 +3906,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+          UnlockedWalletKey self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
           WalletClient self, SseSerializer serializer);
 
@@ -3965,6 +4051,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_high_security_settings(
       HighSecuritySettings self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_migrated_wallet(
+      MigratedWallet self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_onchain_store_factory(
@@ -4109,6 +4199,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       FrbPsbtRecipient self, SseSerializer serializer);
 
   @protected
+  void sse_encode_frb_wallet_key_helper(
+      FrbWalletKeyHelper self, SseSerializer serializer);
+
+  @protected
   void sse_encode_gateway_provider(
       GatewayProvider self, SseSerializer serializer);
 
@@ -4233,6 +4327,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<FrbPsbtRecipient> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_migrated_wallet_account(
+      List<MigratedWalletAccount> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_migrated_wallet_transaction(
+      List<MigratedWalletTransaction> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_mnemonic_user_key(
       List<MnemonicUserKey> self, SseSerializer serializer);
 
@@ -4318,6 +4420,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet(
+      MigratedWallet self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet_account(
+      MigratedWalletAccount self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet_transaction(
+      MigratedWalletTransaction self, SseSerializer serializer);
 
   @protected
   void sse_encode_mnemonic_auth(MnemonicAuth self, SseSerializer serializer);
@@ -5985,6 +6099,38 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransactionClient');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransactionClient =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTransactionClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKeyPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKeyPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKeyPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKey =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerUnlockedWalletKeyPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

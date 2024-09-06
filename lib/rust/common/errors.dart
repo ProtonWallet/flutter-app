@@ -55,6 +55,16 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.apiSrp(
     String field0,
   ) = BridgeError_ApiSrp;
+
+  /// crypto errors
+  const factory BridgeError.aesGcm(
+    String field0,
+  ) = BridgeError_AesGcm;
+
+  /// wallet crypto errors
+  const factory BridgeError.walletCrypto(
+    String field0,
+  ) = BridgeError_WalletCrypto;
 }
 
 class ResponseError {

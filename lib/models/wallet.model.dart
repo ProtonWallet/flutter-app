@@ -13,7 +13,6 @@ class WalletModel {
   int id;
 
   String name;
-  Uint8List mnemonic;
   int passphrase;
   Uint8List publicKey;
   int imported;
@@ -36,11 +35,12 @@ class WalletModel {
   /// From walletSettings
   int showWalletRecovery = 1;
 
+  int migrationRequired = 0;
+
   WalletModel({
     required this.id,
     required this.userID,
     required this.name,
-    required this.mnemonic,
     required this.passphrase,
     required this.publicKey,
     required this.imported,
@@ -52,6 +52,7 @@ class WalletModel {
     required this.modifyTime,
     required this.walletID,
     required this.showWalletRecovery,
+    required this.migrationRequired,
   });
 
   Map<String, dynamic> toMap() {
@@ -59,7 +60,6 @@ class WalletModel {
       // 'id': id,
       'userID': userID,
       'name': name,
-      'mnemonic': mnemonic,
       'passphrase': passphrase,
       'publicKey': publicKey,
       'imported': imported,
@@ -71,6 +71,7 @@ class WalletModel {
       'modifyTime': modifyTime,
       'walletID': walletID,
       'showWalletRecovery': showWalletRecovery,
+      'migrationRequired': migrationRequired,
     };
   }
 
@@ -79,7 +80,6 @@ class WalletModel {
       id: map['id'],
       userID: map['userID'],
       name: map['name'],
-      mnemonic: map['mnemonic'],
       passphrase: map['passphrase'],
       publicKey: map['publicKey'],
       imported: map['imported'],
@@ -91,6 +91,7 @@ class WalletModel {
       modifyTime: map['modifyTime'],
       walletID: map['walletID'] ?? "",
       showWalletRecovery: map['showWalletRecovery'] ?? 1,
+      migrationRequired: map['migrationRequired'] ?? 0,
     );
   }
 }

@@ -50,13 +50,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     this.walletKeysProvider,
     this.walletPassphraseProvider,
   ) : super(CreateWalletState()) {
-    on<CreateWalletEvent>((event, emit) async {
-      // int walletID = await processWalletData(
-      //     walletData, walletName, encryptedMnemonic, fingerprint, walletType);
-      // await WalletManager.setWalletKey([walletData.walletKey]);
-      // await WalletManager.addWalletAccount(
-      //     walletID, appConfig.scriptTypeInfo, "My wallet account", fiatCurrency);
-    });
+    on<CreateWalletEvent>((event, emit) async {});
   }
 
   ///### None block functions

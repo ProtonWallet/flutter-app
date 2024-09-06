@@ -302,6 +302,107 @@ class EmailIntegrationBitcoinAddress {
           bitcoinAddressSignature == other.bitcoinAddressSignature;
 }
 
+class MigratedWallet {
+  /// Name of the wallet, encrypted
+  final String name;
+
+  /// Encrypted user Id
+  final String userKeyId;
+
+  /// Base64 encoded binary data
+  final String walletKey;
+
+  /// Detached signature of the encrypted AES-GCM 256 key used to encrypt the
+  /// mnemonic or public key, as armored PGP
+  final String walletKeySignature;
+
+  /// Wallet mnemonic encrypted with the WalletKey, in base64 format
+  final String mnemonic;
+  final String fingerprint;
+
+  const MigratedWallet({
+    required this.name,
+    required this.userKeyId,
+    required this.walletKey,
+    required this.walletKeySignature,
+    required this.mnemonic,
+    required this.fingerprint,
+  });
+
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      userKeyId.hashCode ^
+      walletKey.hashCode ^
+      walletKeySignature.hashCode ^
+      mnemonic.hashCode ^
+      fingerprint.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MigratedWallet &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          userKeyId == other.userKeyId &&
+          walletKey == other.walletKey &&
+          walletKeySignature == other.walletKeySignature &&
+          mnemonic == other.mnemonic &&
+          fingerprint == other.fingerprint;
+}
+
+class MigratedWalletAccount {
+  final String id;
+  final String label;
+
+  const MigratedWalletAccount({
+    required this.id,
+    required this.label,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ label.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MigratedWalletAccount &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          label == other.label;
+}
+
+class MigratedWalletTransaction {
+  final String id;
+  final String walletAccountId;
+  final String hashedTransactionId;
+  final String label;
+
+  const MigratedWalletTransaction({
+    required this.id,
+    required this.walletAccountId,
+    required this.hashedTransactionId,
+    required this.label,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      walletAccountId.hashCode ^
+      hashedTransactionId.hashCode ^
+      label.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MigratedWalletTransaction &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          walletAccountId == other.walletAccountId &&
+          hashedTransactionId == other.hashedTransactionId &&
+          label == other.label;
+}
+
 enum TransactionType {
   notSend,
   protonToProtonSend,
