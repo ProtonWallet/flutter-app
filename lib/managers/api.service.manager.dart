@@ -126,6 +126,9 @@ class ProtonApiServiceManager implements Manager {
     await initalOldApiService();
   }
 
+  @override
+  Future<void> reload() async {}
+
   /// # get clients
 
   /// get user api client

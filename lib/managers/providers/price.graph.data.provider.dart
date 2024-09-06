@@ -22,4 +22,7 @@ class PriceGraphDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {}
+
+  @override
+  Future<void> reload() async {}
 }

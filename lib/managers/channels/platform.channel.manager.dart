@@ -155,4 +155,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> login(String userID) async {}
+
+  @override
+  Future<void> reload() async {}
 }

@@ -268,4 +268,7 @@ class ServerTransactionDataProvider extends DataProvider {
     serverTransactionDataList = [];
     await fetchTransactions(walletId, null, isInitializeProcess: true);
   }
+
+  @override
+  Future<void> reload() async {}
 }

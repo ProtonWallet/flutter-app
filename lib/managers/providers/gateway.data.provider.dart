@@ -197,4 +197,7 @@ class GatewayDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {}
+
+  @override
+  Future<void> reload() async {}
 }

@@ -57,4 +57,9 @@ class BalanceDataProvider extends DataProvider {
   Future<void> clear() async {
     // dataUpdateController.close();
   }
+
+  @override
+  Future<void> reload() {
+    throw UnimplementedError();
+  }
 }

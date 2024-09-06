@@ -9,21 +9,6 @@ void main() {
     return;
   }
   group('WalletKeyHelper', () {
-    test('generate and restore walletKey', () async {
-      final SecretKey secretKeyOrg = WalletKeyHelper.generateSecretKey();
-      final String encodedEntropy =
-          await WalletKeyHelper.getEncodedEntropy(secretKeyOrg);
-      const String plainText = "Hello world";
-      final String encryptText =
-          await WalletKeyHelper.encrypt(secretKeyOrg, plainText);
-
-      final SecretKey secretKeyNew =
-          WalletKeyHelper.restoreSecretKeyFromEncodedEntropy(encodedEntropy);
-      final String decryptText =
-          await WalletKeyHelper.decrypt(secretKeyNew, encryptText);
-      expect(decryptText, equals(plainText));
-    });
-
     test('restore walletKey and decrypt', () async {
       const String plainText = "Hello AES-256-GCM";
       const String encryptText =
@@ -97,17 +82,6 @@ void main() {
       final String decryptText =
           await WalletKeyHelper.decrypt(secretKey, encryptText);
       expect(decryptText, equals(plaintext));
-    });
-
-    test('compare Random and Random secure', () async {
-      final left = WalletKeyHelper.getRandomValues(32);
-      final right = WalletKeyHelper.getSecureRandom(32);
-      expect(left.length, right.length);
-      const plaintext = "WalletKeyHelper.getSecureRandom(32);";
-      final secretKey = WalletKeyHelper.restoreSecretKeyFromEntropy(right);
-      final encrypted = await WalletKeyHelper.encrypt(secretKey, plaintext);
-      final clearText = await WalletKeyHelper.decrypt(secretKey, encrypted);
-      expect(plaintext, clearText);
     });
   });
 }

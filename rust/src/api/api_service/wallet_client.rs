@@ -50,11 +50,10 @@ impl WalletClient {
             WalletAccounts: migrated_wallet_accounts,
             WalletTransactions: migrated_wallet_transactions,
         };
-        let result = self
+        Ok(self
             .inner
             .migrate(wallet_id, wallet_migrate_request)
-            .await?;
-        Ok(result)
+            .await?)
     }
 
     pub async fn create_wallet(
@@ -75,8 +74,7 @@ impl WalletClient {
     }
 
     pub async fn delete_wallet(&self, wallet_id: String) -> Result<(), BridgeError> {
-        let result = self.inner.delete_wallet(wallet_id).await?;
-        Ok(result)
+        Ok(self.inner.delete_wallet(wallet_id).await?)
     }
 
     // wallet accounts
@@ -168,11 +166,10 @@ impl WalletClient {
         wallet_id: String,
         wallet_account_id: String,
     ) -> Result<(), BridgeError> {
-        let result = self
+        Ok(self
             .inner
             .delete_wallet_account(wallet_id, wallet_account_id)
-            .await?;
-        Ok(result)
+            .await?)
     }
 
     /// wallet email related
@@ -358,11 +355,10 @@ impl WalletClient {
         wallet_account_id: String,
         wallet_transaction_id: String,
     ) -> Result<(), BridgeError> {
-        let result = self
+        Ok(self
             .inner
             .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
-            .await?;
-        Ok(result)
+            .await?)
     }
 
     pub async fn disable_show_wallet_recovery(

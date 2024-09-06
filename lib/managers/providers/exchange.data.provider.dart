@@ -49,4 +49,7 @@ class ExchangeDataProvider extends DataProvider {
     }
     return key;
   }
+
+  @override
+  Future<void> reload() async {}
 }

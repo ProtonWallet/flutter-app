@@ -201,6 +201,9 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   @override
+  Future<void> reload() async {}
+
+  @override
   Future<void> login(String userID) async {
     userDataProvider = UserDataProvider(
       apiServiceManager.getProtonUsersApiClient(),
