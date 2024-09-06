@@ -177,17 +177,6 @@ class WalletsDataProvider extends DataProvider {
 
   Future<void> _fetchFromServer() async {
     // try to fetch from server:
-    await _fetchFromServer();
-
-    walletsData = await _getFromDB();
-    if (walletsData != null) {
-      return walletsData;
-    }
-    return null;
-  }
-
-  Future<void> _fetchFromServer() async {
-    // try to fetch from server:
     final List<ApiWalletData> apiWallets = await walletClient.getWallets();
     for (ApiWalletData apiWalletData in apiWallets.reversed) {
       // update and insert wallet
@@ -583,7 +572,6 @@ class WalletsDataProvider extends DataProvider {
     } else {
       tmpID = wallet.id;
       wallet.name = name;
-      wallet.mnemonic = encryptedMnemonic.base64decode();
       wallet.status = status;
       wallet.fingerprint = fingerprint;
       wallet.priority = priority;
