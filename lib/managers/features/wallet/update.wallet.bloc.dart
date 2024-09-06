@@ -82,6 +82,13 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
               walletKey,
             );
 
+            final walletMnemonic = await walletsDataProvider.getWalletMnemonic(
+              walletId,
+            );
+            if (walletMnemonic == null) {
+              return;
+            }
+
             /// get first user key (primary user key)
             final primaryUserKey = await userManager.getPrimaryKey();
 
@@ -89,14 +96,14 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
             final newSecretKey = WalletKeyHelper.generateSecretKey();
 
             ///update wallet, account, transactions data
-
+            ///
             ///migrate wallet data
             final migratedWallet = await ProtonWallet.migrateWalletData(
                 primaryUserKey,
                 secretKey,
                 newSecretKey,
                 wallet.wallet.name,
-                wallet.wallet.mnemonic.base64encode(),
+                walletMnemonic.mnemonic,
                 wallet.wallet.fingerprint ?? "");
 
             ///migrate wallet account data

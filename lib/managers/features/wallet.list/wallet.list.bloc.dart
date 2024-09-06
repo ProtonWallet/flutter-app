@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -271,8 +272,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       } on BridgeError catch (e, stacktrace) {
         logger.e("WalletListBloc error: $e, stacktrace: $stacktrace");
         appStateManager.updateStateFrom(e);
-      } catch (e) {
-        logger.e(e.toString());
+      } catch (e, stacktrace) {
+        logger.e("WalletListBloc error: $e, stacktrace: $stacktrace");
+        Sentry.captureException(e, stackTrace: stacktrace);
       }
     });
 
