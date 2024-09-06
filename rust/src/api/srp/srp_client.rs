@@ -3,7 +3,11 @@ use std::str::from_utf8;
 // srp_client.rs
 use flutter_rust_bridge::frb;
 
-use proton_srp::{self, mailbox_password_hash, SRPAuth, SRPProofB64, SRPVerifierB64};
+use proton_crypto::{
+    new_srp_provider,
+    srp::{SRPProvider, SRPVerifierB64},
+};
+use proton_srp::{mailbox_password_hash, SRPAuth, SRPProofB64};
 
 use crate::BridgeError;
 
@@ -32,9 +36,11 @@ impl SrpClient {
         salt_opt: Option<String>,
         server_modulus: String,
     ) -> Result<SRPVerifierB64, BridgeError> {
+        let srp_provider = new_srp_provider();
         let salt: Option<&str> = salt_opt.as_deref();
-        let verifier = SRPAuth::generate_random_verifier(&password, salt, &server_modulus)?;
-        Ok(verifier.into())
+        let verifier = srp_provider.generate_random_verifer(&password, salt, &server_modulus)?;
+
+        Ok(verifier)
     }
 
     pub fn compute_key_password(password: String, salt: Vec<u8>) -> Result<String, BridgeError> {

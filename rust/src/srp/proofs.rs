@@ -1,6 +1,8 @@
 use flutter_rust_bridge::frb;
 
-pub use proton_srp::{SRPProofB64, SRPVerifierB64};
+pub use proton_srp::SRPProofB64;
+
+pub use proton_crypto::srp::SRPVerifierB64;
 
 #[frb(mirror(SRPProofB64))]
 pub struct _SRPProofB64 {
