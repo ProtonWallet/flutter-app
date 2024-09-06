@@ -119,7 +119,7 @@ SPEC CHECKSUMS:
   package_info_plus: fa739dd842b393193c5ca93c26798dff6e3d0e0c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   proton_crypto: 882de21478c88afeb51f70797f689338d7a42509
-  rust_builder: 8886481b4bbba7b0dc935a94451a9d7a2a7f129a
+  rust_builder: 5957f1cf6598cb9ac376a2a7dbc3c08179c8774c
   share_plus: 36537c04ce0c3e3f5bd297ce4318b6d5ee5fd6cf
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec

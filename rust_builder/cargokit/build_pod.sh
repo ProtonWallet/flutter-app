@@ -38,6 +38,7 @@ export CARGOKIT_TOOL_TEMP_DIR=$TARGET_TEMP_DIR/build_tool
 export CARGOKIT_ROOT_PROJECT_DIR=$SRCROOT
 
 export CARGO_REGISTRIES_PROTON_INTERNAL_INDEX="sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/" 
+export CARGO_REGISTRIES_PROTON_INDEX="sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/" 
 
 FLUTTER_EXPORT_BUILD_ENVIRONMENT=(
   "$PODS_ROOT/../Flutter/ephemeral/flutter_export_environment.sh" # macOS

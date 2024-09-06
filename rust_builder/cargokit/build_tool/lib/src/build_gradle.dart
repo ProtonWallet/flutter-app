@@ -38,10 +38,23 @@ class BuildGradle {
       final libs = artifacts[target]!;
       final outputDir = path.join(Environment.outputDir, target.android!);
       Directory(outputDir).createSync(recursive: true);
-
+      log.info("Output:  $outputDir");
       for (final lib in libs) {
         if (lib.type == AritifactType.dylib) {
-          File(lib.path).copySync(path.join(outputDir, lib.finalFileName));
+          // workaround with gopenpgp-sys
+          //File(lib.path).copySync(path.join(outputDir, "libgopenpgp-sys.so"));
+          //File(lib.path).copySync(path.join(outputDir, lib.finalFileName));
+          final directory = File(lib.path).parent;
+          final soFiles = directory
+              .listSync()
+              .where((entity) => entity is File && entity.path.endsWith('.so'));
+          for (var entity in soFiles) {
+            var file = entity as File;
+            var fileName = path.basename(file.path);
+            var destinationPath = path.join(outputDir, fileName);
+            file.copySync(destinationPath);
+            log.info('Copied ${file.path} to $destinationPath');
+          }
         }
       }
     }
