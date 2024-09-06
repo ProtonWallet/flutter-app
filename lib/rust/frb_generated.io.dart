@@ -1069,6 +1069,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  MigratedWallet dco_decode_box_autoadd_migrated_wallet(dynamic raw);
+
+  @protected
   OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
 
   @protected
@@ -1300,6 +1303,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<FrbPsbtRecipient> dco_decode_list_frb_psbt_recipient(dynamic raw);
 
   @protected
+  List<MigratedWalletAccount> dco_decode_list_migrated_wallet_account(
+      dynamic raw);
+
+  @protected
+  List<MigratedWalletTransaction> dco_decode_list_migrated_wallet_transaction(
+      dynamic raw);
+
+  @protected
   List<MnemonicUserKey> dco_decode_list_mnemonic_user_key(dynamic raw);
 
   @protected
@@ -1370,6 +1381,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry dco_decode_log_entry(dynamic raw);
+
+  @protected
+  MigratedWallet dco_decode_migrated_wallet(dynamic raw);
+
+  @protected
+  MigratedWalletAccount dco_decode_migrated_wallet_account(dynamic raw);
+
+  @protected
+  MigratedWalletTransaction dco_decode_migrated_wallet_transaction(dynamic raw);
 
   @protected
   MnemonicAuth dco_decode_mnemonic_auth(dynamic raw);
@@ -2495,6 +2515,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  MigratedWallet sse_decode_box_autoadd_migrated_wallet(
+      SseDeserializer deserializer);
+
+  @protected
   OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
       SseDeserializer deserializer);
 
@@ -2755,6 +2779,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<MigratedWalletAccount> sse_decode_list_migrated_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  List<MigratedWalletTransaction> sse_decode_list_migrated_wallet_transaction(
+      SseDeserializer deserializer);
+
+  @protected
   List<MnemonicUserKey> sse_decode_list_mnemonic_user_key(
       SseDeserializer deserializer);
 
@@ -2839,6 +2871,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LogEntry sse_decode_log_entry(SseDeserializer deserializer);
+
+  @protected
+  MigratedWallet sse_decode_migrated_wallet(SseDeserializer deserializer);
+
+  @protected
+  MigratedWalletAccount sse_decode_migrated_wallet_account(
+      SseDeserializer deserializer);
+
+  @protected
+  MigratedWalletTransaction sse_decode_migrated_wallet_transaction(
+      SseDeserializer deserializer);
 
   @protected
   MnemonicAuth sse_decode_mnemonic_auth(SseDeserializer deserializer);
@@ -4010,6 +4053,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       HighSecuritySettings self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_migrated_wallet(
+      MigratedWallet self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_onchain_store_factory(
       OnchainStoreFactory self, SseSerializer serializer);
 
@@ -4280,6 +4327,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       List<FrbPsbtRecipient> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_migrated_wallet_account(
+      List<MigratedWalletAccount> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_migrated_wallet_transaction(
+      List<MigratedWalletTransaction> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_mnemonic_user_key(
       List<MnemonicUserKey> self, SseSerializer serializer);
 
@@ -4365,6 +4420,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet(
+      MigratedWallet self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet_account(
+      MigratedWalletAccount self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_migrated_wallet_transaction(
+      MigratedWalletTransaction self, SseSerializer serializer);
 
   @protected
   void sse_encode_mnemonic_auth(MnemonicAuth self, SseSerializer serializer);

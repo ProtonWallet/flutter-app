@@ -25,10 +25,7 @@ impl EmailIntegrationClient {
         &self,
         email: String,
     ) -> Result<EmailIntegrationBitcoinAddress, BridgeError> {
-        let result = self.inner.lookup_bitcoin_address(email).await;
-        match result {
-            Ok(response) => Ok(response.into()),
-            Err(err) => Err(err.into()),
-        }
+        let result = self.inner.lookup_bitcoin_address(email).await?;
+        Ok(result.into())
     }
 }

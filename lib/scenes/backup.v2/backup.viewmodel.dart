@@ -69,6 +69,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       publickey: walletModel.publicKey.base64encode(),
       fingerprint: walletModel.fingerprint ?? "",
       showWalletRecovery: walletModel.showWalletRecovery,
+      migrationRequired: walletModel.migrationRequired,
     );
     userDataProvider.enabledShowWalletRecovery(false);
   }
