@@ -313,4 +313,7 @@ class BDKTransactionDataProvider extends DataProvider {
     await shared.write("proton_wallet_app_k_sync_error_count", 0);
     await shared.write("proton_wallet_app_k_sync_error_timmer", 0);
   }
+
+  @override
+  Future<void> reload() async {}
 }

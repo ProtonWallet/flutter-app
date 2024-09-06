@@ -112,4 +112,7 @@ class WalletKeysProvider extends DataProvider {
     walletKeys = null;
     await _fetchFromServer();
   }
+
+  @override
+  Future<void> reload() async {}
 }

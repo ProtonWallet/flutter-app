@@ -30,7 +30,7 @@ impl WalletMnemonic {
     }
 
     pub fn as_utf8_string(&self) -> Result<SecretString, WalletCryptoError> {
-        let plaintext = str::from_utf8(&self.mnemonic.expose_secret())?.to_string();
+        let plaintext = str::from_utf8(self.mnemonic.expose_secret())?.to_string();
         Ok(SecretString::new(plaintext))
     }
 }
@@ -51,9 +51,8 @@ impl WalletMnemonic {
         &self,
         key: &UnlockedWalletKey,
     ) -> Result<EncryptedWalletMnemonic, WalletCryptoError> {
-        Ok(key
-            .encrypt(self.mnemonic.expose_secret())
-            .map(EncryptedWalletMnemonic::new)?)
+        key.encrypt(self.mnemonic.expose_secret())
+            .map(EncryptedWalletMnemonic::new)
     }
 }
 
@@ -88,6 +87,6 @@ impl EncryptedWalletMnemonic {
         &self,
         key: &UnlockedWalletKey,
     ) -> Result<WalletMnemonic, WalletCryptoError> {
-        Ok(key.decrypt(&self.0).map(WalletMnemonic::new)?)
+        key.decrypt(&self.0).map(WalletMnemonic::new)
     }
 }

@@ -24,7 +24,7 @@ mod test {
     fn test_transaction_label_encrypt_decrypt() {
         let wallet_key = WalletKeyProvider::generate();
         let transaction_label_str = "Hello world";
-        let trans_label = TransactionLabel::new_from_str(&transaction_label_str);
+        let trans_label = TransactionLabel::new_from_str(transaction_label_str);
         let encrypted_label = trans_label.encrypt_with(&wallet_key).unwrap();
         let output = encrypted_label.to_base64();
         assert!(!output.is_empty());

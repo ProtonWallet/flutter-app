@@ -10,3 +10,9 @@ impl UserKeyStorage {
         Ok(())
     }
 }
+
+impl Default for UserKeyStorage {
+    fn default() -> Self {
+        Self::new()
+    }
+}
