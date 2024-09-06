@@ -24,14 +24,11 @@ class WalletDatabase extends BaseDatabase {
           modifyTime INTEGER,
           fingerprint TEXT,
           showWalletRecovery INTEGER NULL,
+          migrationRequired INTEGER NULL,
           UNIQUE (userID, walletID)
         )
     ''');
     await addIndex("userID");
     await addIndex("walletID");
-  }
-
-  Future<void> migration_1() async {
-    await addColumn('migrationRequired', ' INTEGER NULL');
   }
 }
