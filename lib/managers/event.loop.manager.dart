@@ -248,6 +248,7 @@ class EventLoop extends Service implements Manager {
                 walletID: walletID,
                 publickey: null,
                 showWalletRecovery: walletData.isImported == 0 ? 1 : 0,
+                migrationRequired: walletData.migrationRequired ?? 0,
               );
             }
           }

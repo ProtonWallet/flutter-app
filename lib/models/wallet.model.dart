@@ -35,6 +35,8 @@ class WalletModel {
   /// From walletSettings
   int showWalletRecovery = 1;
 
+  int migrationRequired = 0;
+
   WalletModel({
     required this.id,
     required this.userID,
@@ -50,6 +52,7 @@ class WalletModel {
     required this.modifyTime,
     required this.walletID,
     required this.showWalletRecovery,
+    required this.migrationRequired,
   });
 
   Map<String, dynamic> toMap() {
@@ -68,6 +71,7 @@ class WalletModel {
       'modifyTime': modifyTime,
       'walletID': walletID,
       'showWalletRecovery': showWalletRecovery,
+      'migrationRequired': migrationRequired,
     };
   }
 
@@ -87,6 +91,7 @@ class WalletModel {
       modifyTime: map['modifyTime'],
       walletID: map['walletID'] ?? "",
       showWalletRecovery: map['showWalletRecovery'] ?? 1,
+      migrationRequired: map['migrationRequired'] ?? 0,
     );
   }
 }

@@ -166,7 +166,6 @@ class WalletsDataProvider extends DataProvider {
       return walletsData;
     }
 
-    // try to fetch from server:
     await _fetchFromServer();
 
     walletsData = await _getFromDB();
@@ -436,6 +435,7 @@ class WalletsDataProvider extends DataProvider {
       publickey: apiWalletData.wallet.publicKey,
       walletID: walletID,
       showWalletRecovery: showWalletRecovery ? 1 : 0,
+      migrationRequired: apiWalletData.wallet.migrationRequired ?? 0,
       initialize: true,
     );
   }
@@ -542,6 +542,7 @@ class WalletsDataProvider extends DataProvider {
     required String? publickey,
     required String fingerprint,
     required int showWalletRecovery,
+    required int migrationRequired,
     bool initialize = false,
   }) async {
     int tmpID = -1;
@@ -564,6 +565,7 @@ class WalletsDataProvider extends DataProvider {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         walletID: walletID,
         showWalletRecovery: showWalletRecovery,
+        migrationRequired: migrationRequired,
       );
       tmpID = await walletDao.insert(wallet);
       wallet.id = tmpID;
@@ -574,6 +576,9 @@ class WalletsDataProvider extends DataProvider {
       wallet.fingerprint = fingerprint;
       wallet.priority = priority;
       wallet.showWalletRecovery = showWalletRecovery;
+      wallet.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
+      wallet.migrationRequired = migrationRequired;
+
       await walletDao.update(wallet);
     }
 
@@ -614,6 +619,7 @@ class WalletsDataProvider extends DataProvider {
     if (account != null) {
       tmpID = account.id;
       account.walletID = walletID;
+      account.label = labelEncrypted.base64decode();
       account.modifyTime = now.millisecondsSinceEpoch ~/ 1000;
       account.scriptType = scriptType;
       account.fiatCurrency = fiatCurrency.name.toUpperCase();
@@ -671,5 +677,10 @@ class WalletsDataProvider extends DataProvider {
   @override
   Future<void> clear() async {
     dataUpdateController.close();
+  }
+
+  Future<void> reset() async {
+    walletsData = null;
+    await _fetchFromServer();
   }
 }

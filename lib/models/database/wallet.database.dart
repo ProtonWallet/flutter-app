@@ -24,6 +24,7 @@ class WalletDatabase extends BaseDatabase {
           modifyTime INTEGER,
           fingerprint TEXT,
           showWalletRecovery INTEGER NULL,
+          migrationRequired INTEGER NULL,
           UNIQUE (userID, walletID)
         )
     ''');

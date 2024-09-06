@@ -107,4 +107,9 @@ class WalletKeysProvider extends DataProvider {
   Future<void> clear() async {
     dataUpdateController.close();
   }
+
+  Future<void> reset() async {
+    walletKeys = null;
+    await _fetchFromServer();
+  }
 }
