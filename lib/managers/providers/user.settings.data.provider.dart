@@ -255,4 +255,7 @@ class UserSettingsDataProvider extends DataProvider {
     bitcoinUnitUpdateController.close();
     displayBalanceUpdateController.close();
   }
+
+  @override
+  Future<void> reload() async {}
 }

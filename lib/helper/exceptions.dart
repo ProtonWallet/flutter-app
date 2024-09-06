@@ -7,6 +7,13 @@ ResponseError? parseResponseError(BridgeError exception) {
   );
 }
 
+/// extensions
+extension ResponseErrorCheck on ResponseError {
+  bool isMissingLockedScope() {
+    return code == 9101;
+  }
+}
+
 String parseSampleDisplayError(BridgeError exception) {
   return exception.map(
     apiLock: (e) => e.field0,

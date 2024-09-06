@@ -76,4 +76,7 @@ class UnleashDataProvider extends DataProvider {
   Future<void> clear() async {
     unleashClient.stop();
   }
+
+  @override
+  Future<void> reload() async {}
 }

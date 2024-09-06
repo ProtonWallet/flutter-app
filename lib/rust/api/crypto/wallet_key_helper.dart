@@ -5,8 +5,8 @@
 
 import '../../common/errors.dart';
 import '../../frb_generated.dart';
-import '../../proton_wallet/crypto/wallet_key.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'wallet_key.dart';
 
 class FrbWalletKeyHelper {
   const FrbWalletKeyHelper();
@@ -25,16 +25,11 @@ class FrbWalletKeyHelper {
           .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperEncrypt(
               base64SecureKey: base64SecureKey, plaintext: plaintext);
 
-  /// Generates Wallet key
-  static UnlockedWalletKey generateSecretKey() => RustLib.instance.api
+  static FrbUnlockedWalletKey generateSecretKey() => RustLib.instance.api
       .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKey();
 
-  /// Generates Wallet key output base64
   static String generateSecretKeyAsBase64() => RustLib.instance.api
       .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKeyAsBase64();
-
-  static UnlockedWalletKey generateWalletKey() => RustLib.instance.api
-      .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGenerateWalletKey();
 
   /// Cryptographically secure pseudo-random number generation (CSPRNG).
   static Uint8List getSecureRandom({required BigInt length}) => RustLib

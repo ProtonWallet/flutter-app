@@ -273,4 +273,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   Future<void> clear() async {
     accountID2AddressesInfo.clear();
   }
+
+  @override
+  Future<void> reload() async {}
 }

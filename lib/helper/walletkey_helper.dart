@@ -8,11 +8,12 @@ import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/users/user.key.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 
 class WalletKeyHelper {
   static SecretKey generateSecretKey() {
-    final SecretKey secretKey = SecretKey(getSecureRandom(32));
-    return secretKey;
+    final frbSecretKey = FrbWalletKeyHelper.generateSecretKey();
+    return SecretKey(frbSecretKey.toEntropy());
   }
 
   /// generate random values
@@ -24,10 +25,8 @@ class WalletKeyHelper {
   }
 
   /// cryptographically secure pseudo-random number generation (CSPRNG)
-  static Uint8List getSecureRandom(int length) {
-    final Random secureRandom = Random.secure();
-    final bytes = List.generate(length, (_) => secureRandom.nextInt(256));
-    return Uint8List.fromList(bytes);
+  static Uint8List getSecureRandom(BigInt length) {
+    return FrbWalletKeyHelper.getSecureRandom(length: length);
   }
 
   static Future<String> getEncodedEntropy(SecretKey secretKey) async {

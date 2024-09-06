@@ -33,7 +33,7 @@ pub trait Label {
     where
         Self: Sized,
     {
-        BASE64_STANDARD.encode(&self.as_bytes())
+        BASE64_STANDARD.encode(self.as_bytes())
     }
 
     /// Pre-implemented
@@ -42,7 +42,7 @@ pub trait Label {
     where
         Self: Sized,
     {
-        Ok(str::from_utf8(&self.as_bytes())?.to_string())
+        Ok(str::from_utf8(self.as_bytes())?.to_string())
     }
 
     /// Pre-implemented
@@ -63,7 +63,7 @@ pub trait Label {
     where
         Self: Sized,
     {
-        key.encrypt(&self.as_bytes()).map(EncryptedLabel::new)
+        key.encrypt(self.as_bytes()).map(EncryptedLabel::new)
     }
 }
 

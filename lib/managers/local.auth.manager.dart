@@ -71,4 +71,7 @@ class LocalAuthManager implements Manager {
   Future<void> logout() async {
     userID = null;
   }
+
+  @override
+  Future<void> reload() async {}
 }

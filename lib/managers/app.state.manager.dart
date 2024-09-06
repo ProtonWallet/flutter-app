@@ -267,12 +267,12 @@ class AppStateManager extends DataProvider implements Manager {
 
   @override
   Future<void> login(String userID) async {}
-
   @override
   Future<void> init() async {}
-
   @override
   Future<void> logout() async {}
+  @override
+  Future<void> reload() async {}
 }
 
 //final backoff = ExponentialBackoff(base: 1000, randomInterval: 500);

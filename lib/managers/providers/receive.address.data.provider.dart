@@ -115,4 +115,7 @@ class ReceiveAddressDataProvider extends DataProvider {
     id2AddressInfo.clear();
     dataUpdateController.close();
   }
+
+  @override
+  Future<void> reload() async {}
 }
