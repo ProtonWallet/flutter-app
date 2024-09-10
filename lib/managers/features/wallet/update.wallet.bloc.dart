@@ -191,14 +191,14 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
                       newSecretKey,
                       txid,
                     )
-                  : transaction.hashedTransactionId;
+                  : null;
 
               /// pack migrated data
               final migratedWalletTransaction = MigratedWalletTransaction(
                 id: transaction.id,
                 walletAccountId: accountID,
-                hashedTransactionId: hashedTransID ?? "",
-                label: encryptedLabel ?? "",
+                hashedTransactionId: hashedTransID,
+                label: encryptedLabel,
               );
               migratedWalletTransactions.add(migratedWalletTransaction);
             }

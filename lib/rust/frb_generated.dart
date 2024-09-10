@@ -13300,8 +13300,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return MigratedWalletTransaction(
       id: dco_decode_String(arr[0]),
       walletAccountId: dco_decode_String(arr[1]),
-      hashedTransactionId: dco_decode_String(arr[2]),
-      label: dco_decode_String(arr[3]),
+      hashedTransactionId: dco_decode_opt_String(arr[2]),
+      label: dco_decode_opt_String(arr[3]),
     );
   }
 
@@ -17038,8 +17038,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_id = sse_decode_String(deserializer);
     var var_walletAccountId = sse_decode_String(deserializer);
-    var var_hashedTransactionId = sse_decode_String(deserializer);
-    var var_label = sse_decode_String(deserializer);
+    var var_hashedTransactionId = sse_decode_opt_String(deserializer);
+    var var_label = sse_decode_opt_String(deserializer);
     return MigratedWalletTransaction(
         id: var_id,
         walletAccountId: var_walletAccountId,
@@ -20817,8 +20817,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.id, serializer);
     sse_encode_String(self.walletAccountId, serializer);
-    sse_encode_String(self.hashedTransactionId, serializer);
-    sse_encode_String(self.label, serializer);
+    sse_encode_opt_String(self.hashedTransactionId, serializer);
+    sse_encode_opt_String(self.label, serializer);
   }
 
   @protected
