@@ -375,14 +375,14 @@ class MigratedWalletAccount {
 class MigratedWalletTransaction {
   final String id;
   final String walletAccountId;
-  final String hashedTransactionId;
-  final String label;
+  final String? hashedTransactionId;
+  final String? label;
 
   const MigratedWalletTransaction({
     required this.id,
     required this.walletAccountId,
-    required this.hashedTransactionId,
-    required this.label,
+    this.hashedTransactionId,
+    this.label,
   });
 
   @override

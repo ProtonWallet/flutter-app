@@ -11705,8 +11705,8 @@ const _: fn() = || {
             None::<crate::proton_api::wallet::MigratedWalletTransaction>.unwrap();
         let _: String = MigratedWalletTransaction.ID;
         let _: String = MigratedWalletTransaction.WalletAccountID;
-        let _: String = MigratedWalletTransaction.HashedTransactionID;
-        let _: String = MigratedWalletTransaction.Label;
+        let _: Option<String> = MigratedWalletTransaction.HashedTransactionID;
+        let _: Option<String> = MigratedWalletTransaction.Label;
     }
     {
         let MnemonicAuth = None::<crate::proton_api::proton_users::MnemonicAuth>.unwrap();
@@ -14562,8 +14562,8 @@ impl SseDecode for crate::proton_api::wallet::MigratedWalletTransaction {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_id = <String>::sse_decode(deserializer);
         let mut var_walletAccountId = <String>::sse_decode(deserializer);
-        let mut var_hashedTransactionId = <String>::sse_decode(deserializer);
-        let mut var_label = <String>::sse_decode(deserializer);
+        let mut var_hashedTransactionId = <Option<String>>::sse_decode(deserializer);
+        let mut var_label = <Option<String>>::sse_decode(deserializer);
         return crate::proton_api::wallet::MigratedWalletTransaction {
             ID: var_id,
             WalletAccountID: var_walletAccountId,
@@ -21429,8 +21429,8 @@ impl SseEncode for crate::proton_api::wallet::MigratedWalletTransaction {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.ID, serializer);
         <String>::sse_encode(self.WalletAccountID, serializer);
-        <String>::sse_encode(self.HashedTransactionID, serializer);
-        <String>::sse_encode(self.Label, serializer);
+        <Option<String>>::sse_encode(self.HashedTransactionID, serializer);
+        <Option<String>>::sse_encode(self.Label, serializer);
     }
 }
 
