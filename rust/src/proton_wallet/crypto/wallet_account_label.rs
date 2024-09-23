@@ -1,7 +1,10 @@
-use super::label::{EncryptedLabel, Label};
+use super::{
+    binary::Binary,
+    label::{EncryptedLabel, Label},
+};
 
 pub struct WalletAccountLabel(Vec<u8>);
-impl Label for WalletAccountLabel {
+impl Binary for WalletAccountLabel {
     fn new(data: Vec<u8>) -> Self {
         Self(data)
     }
@@ -10,14 +13,15 @@ impl Label for WalletAccountLabel {
         &self.0
     }
 }
-
+impl Label for WalletAccountLabel {}
 pub type EncryptedWalletAccountLabel = EncryptedLabel<WalletAccountLabel>;
 
 #[cfg(test)]
 mod tests {
 
-    use crate::proton_wallet::crypto::wallet_key_provider::{
-        WalletKeyInterface, WalletKeyProvider,
+    use crate::proton_wallet::crypto::{
+        binary::EncryptedBinary,
+        wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
     };
 
     use super::*;

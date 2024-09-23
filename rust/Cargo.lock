@@ -130,10 +130,12 @@ version = "0.1.0"
 dependencies = [
  "andromeda-common",
  "async-std",
+ "async-trait",
  "base64 0.22.1",
  "bitcoin",
  "cfg-if",
  "log",
+ "mockall",
  "muon",
  "serde",
  "serde_json",
@@ -3813,6 +3815,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "proton-crypto-account"
+version = "0.6.1"
+dependencies = [
+ "base64 0.22.1",
+ "futures",
+ "hex",
+ "proton-crypto",
+ "serde",
+ "serde_json",
+ "serde_repr",
+ "thiserror",
+ "zeroize",
+]
+
+[[package]]
 name = "proton-sqlite3"
 version = "0.7.6"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
@@ -3872,6 +3889,7 @@ dependencies = [
  "andromeda-bitcoin",
  "andromeda-common",
  "assert_matches",
+ "async-trait",
  "base64 0.22.1",
  "bdk_sqlite",
  "chrono",
@@ -3886,6 +3904,7 @@ dependencies = [
  "mockall",
  "openssl",
  "proton-crypto",
+ "proton-crypto-account",
  "proton-sqlite3",
  "proton-srp 0.4.1",
  "rand",

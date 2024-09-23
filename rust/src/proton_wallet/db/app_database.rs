@@ -1,10 +1,7 @@
-use log::{error, info, warn};
-use rusqlite::{Connection, Result};
-use std::collections::BTreeMap;
-use std::fs;
-use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex};
+// place holder
 
+use rusqlite::{Connection, Result};
+use std::sync::{Arc, Mutex};
 // use super::migration_container::MigrationContainer;
 
 pub struct AppDatabase {
@@ -21,6 +18,12 @@ pub struct AppDatabase {
     // bitcoin_address_dao: Option<BitcoinAddressDaoImpl>,
     // transaction_info_dao: Option<TransactionInfoDaoImpl>,
     // exchange_rate_dao: Option<ExchangeRateDaoImpl>,
+}
+
+impl Default for AppDatabase {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl AppDatabase {
