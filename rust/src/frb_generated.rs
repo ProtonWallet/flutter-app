@@ -64,6 +64,7 @@ use crate::api::bdk_wallet::transaction_details_txop::*;
 use crate::api::bdk_wallet::transactions::*;
 use crate::api::bdk_wallet::wallet::*;
 use crate::api::crypto::wallet_key::*;
+use crate::api::proton_wallet::storage::user_key_store::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
 use flutter_rust_bridge::{Handler, IntoIntoDart};
@@ -76,7 +77,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 635704639;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1413025692;
 
 // Section: executor
 
@@ -11110,6 +11111,111 @@ fn wire__crate__api__proton_api__update_wallet_transaction_label_impl(
         },
     )
 }
+fn wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_clear_auth_dart_callback_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "FrbUserKeyStore_clear_auth_dart_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, ()>((move || async move {
+                        let mut api_that_guard = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that_guard = api_that_guard.unwrap();
+ let output_ok = Result::<_,()>::Ok({ crate::api::proton_wallet::storage::user_key_store::FrbUserKeyStore::clear_auth_dart_callback(&*api_that_guard).await; })?;   Ok(output_ok)
+                    })().await)
+                } })
+}
+fn wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_new_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "FrbUserKeyStore_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(
+                    crate::api::proton_wallet::storage::user_key_store::FrbUserKeyStore::new(),
+                )?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_set_get_primary_user_key_callback_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "FrbUserKeyStore_set_get_primary_user_key_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>>::sse_decode(&mut deserializer);
+let api_callback = decode_DartFn_Inputs_String_Output_proton_user_key_AnyhowException(<flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer));deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, ()>((move || async move {
+                        let mut api_that_guard = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, true)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref_mut().await),
+                _ => unreachable!(),
+            }
+        }
+        let mut api_that_guard = api_that_guard.unwrap();
+ let output_ok = Result::<_,()>::Ok({ crate::api::proton_wallet::storage::user_key_store::FrbUserKeyStore::set_get_primary_user_key_callback(&mut *api_that_guard, api_callback).await; })?;   Ok(output_ok)
+                    })().await)
+                } })
+}
+fn wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_set_get_user_keys_callback_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "FrbUserKeyStore_set_get_user_keys_callback", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>>::sse_decode(&mut deserializer);
+let api_callback = decode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(<flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer));deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, ()>((move || async move {
+                        let mut api_that_guard = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, true)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref_mut().await),
+                _ => unreachable!(),
+            }
+        }
+        let mut api_that_guard = api_that_guard.unwrap();
+ let output_ok = Result::<_,()>::Ok({ crate::api::proton_wallet::storage::user_key_store::FrbUserKeyStore::set_get_user_keys_callback(&mut *api_that_guard, api_callback).await; })?;   Ok(output_ok)
+                    })().await)
+                } })
+}
 fn wire__crate__api__rust_api__api_address_from_script_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -11882,6 +11988,85 @@ const _: fn() = || {
 
 // Section: related_funcs
 
+fn decode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
+    dart_opaque: flutter_rust_bridge::DartOpaque,
+) -> impl Fn(
+    String,
+) -> flutter_rust_bridge::DartFnFuture<Vec<crate::proton_api::proton_users::ProtonUserKey>> {
+    use flutter_rust_bridge::IntoDart;
+
+    async fn body(
+        dart_opaque: flutter_rust_bridge::DartOpaque,
+        arg0: String,
+    ) -> Vec<crate::proton_api::proton_users::ProtonUserKey> {
+        let args = vec![arg0.into_into_dart().into_dart()];
+        let message = FLUTTER_RUST_BRIDGE_HANDLER
+            .dart_fn_invoke(dart_opaque, args)
+            .await;
+
+        let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+        let action = deserializer.cursor.read_u8().unwrap();
+        let ans = match action {
+            0 => std::result::Result::Ok(
+                <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(
+                    &mut deserializer,
+                ),
+            ),
+            1 => std::result::Result::Err(
+                <flutter_rust_bridge::for_generated::anyhow::Error>::sse_decode(&mut deserializer),
+            ),
+            _ => unreachable!(),
+        };
+        deserializer.end();
+        let ans = ans.expect("Dart throws exception but Rust side assume it is not failable");
+        ans
+    }
+
+    move |arg0: String| {
+        flutter_rust_bridge::for_generated::convert_into_dart_fn_future(body(
+            dart_opaque.clone(),
+            arg0,
+        ))
+    }
+}
+fn decode_DartFn_Inputs_String_Output_proton_user_key_AnyhowException(
+    dart_opaque: flutter_rust_bridge::DartOpaque,
+) -> impl Fn(String) -> flutter_rust_bridge::DartFnFuture<crate::proton_api::proton_users::ProtonUserKey>
+{
+    use flutter_rust_bridge::IntoDart;
+
+    async fn body(
+        dart_opaque: flutter_rust_bridge::DartOpaque,
+        arg0: String,
+    ) -> crate::proton_api::proton_users::ProtonUserKey {
+        let args = vec![arg0.into_into_dart().into_dart()];
+        let message = FLUTTER_RUST_BRIDGE_HANDLER
+            .dart_fn_invoke(dart_opaque, args)
+            .await;
+
+        let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+        let action = deserializer.cursor.read_u8().unwrap();
+        let ans = match action {
+            0 => std::result::Result::Ok(
+                <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer),
+            ),
+            1 => std::result::Result::Err(
+                <flutter_rust_bridge::for_generated::anyhow::Error>::sse_decode(&mut deserializer),
+            ),
+            _ => unreachable!(),
+        };
+        deserializer.end();
+        let ans = ans.expect("Dart throws exception but Rust side assume it is not failable");
+        ans
+    }
+
+    move |arg0: String| {
+        flutter_rust_bridge::for_generated::convert_into_dart_fn_future(body(
+            dart_opaque.clone(),
+            arg0,
+        ))
+    }
+}
 fn decode_DartFn_Inputs_child_session_Output_String_AnyhowException(
     dart_opaque: flutter_rust_bridge::DartOpaque,
 ) -> impl Fn(crate::proton_api::auth_credential::ChildSession) -> flutter_rust_bridge::DartFnFuture<String>
@@ -12010,6 +12195,9 @@ flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUnlockedWalletKey>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>
@@ -12366,6 +12554,16 @@ impl SseDecode for FrbUnlockedWalletKey {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
             flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUnlockedWalletKey>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode for FrbUserKeyStore {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>,
         >>::sse_decode(deserializer);
         return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
     }
@@ -12895,6 +13093,16 @@ impl SseDecode
 
 impl SseDecode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUnlockedWalletKey>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -16142,16 +16350,19 @@ fn pde_ffi_dispatcher_primary_impl(
 277 => wire__crate__api__proton_api__update_wallet_account_label_impl(port, ptr, rust_vec_len, data_len),
 278 => wire__crate__api__proton_api__update_wallet_name_impl(port, ptr, rust_vec_len, data_len),
 279 => wire__crate__api__proton_api__update_wallet_transaction_label_impl(port, ptr, rust_vec_len, data_len),
-280 => wire__crate__api__rust_api__api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
-281 => wire__crate__api__rust_api__api_create_address_impl(port, ptr, rust_vec_len, data_len),
-282 => wire__crate__api__rust_api__api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
-283 => wire__crate__api__rust_api__api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
-284 => wire__crate__api__rust_api__api_create_script_impl(port, ptr, rust_vec_len, data_len),
-285 => wire__crate__api__rust_api__api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
-286 => wire__crate__api__rust_api__api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
-287 => wire__crate__api__srp__srp_client__srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
-288 => wire__crate__api__srp__srp_client__srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
-289 => wire__crate__api__srp__srp_client__srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
+280 => wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_clear_auth_dart_callback_impl(port, ptr, rust_vec_len, data_len),
+282 => wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_set_get_primary_user_key_callback_impl(port, ptr, rust_vec_len, data_len),
+283 => wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_set_get_user_keys_callback_impl(port, ptr, rust_vec_len, data_len),
+284 => wire__crate__api__rust_api__api_address_from_script_impl(port, ptr, rust_vec_len, data_len),
+285 => wire__crate__api__rust_api__api_create_address_impl(port, ptr, rust_vec_len, data_len),
+286 => wire__crate__api__rust_api__api_create_derivation_path_impl(port, ptr, rust_vec_len, data_len),
+287 => wire__crate__api__rust_api__api_create_esplora_blockchain_with_api_impl(port, ptr, rust_vec_len, data_len),
+288 => wire__crate__api__rust_api__api_create_script_impl(port, ptr, rust_vec_len, data_len),
+289 => wire__crate__api__rust_api__api_generate_seed_from_string_impl(port, ptr, rust_vec_len, data_len),
+290 => wire__crate__api__rust_api__api_generate_seed_from_word_count_impl(port, ptr, rust_vec_len, data_len),
+291 => wire__crate__api__srp__srp_client__srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
+292 => wire__crate__api__srp__srp_client__srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
+293 => wire__crate__api__srp__srp_client__srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -16275,7 +16486,8 @@ fn pde_ffi_dispatcher_sync_impl(
 244 => wire__crate__api__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_impl(ptr, rust_vec_len, data_len),
 245 => wire__crate__api__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_as_base64_impl(ptr, rust_vec_len, data_len),
 246 => wire__crate__api__crypto__wallet_key_helper__frb_wallet_key_helper_get_secure_random_impl(ptr, rust_vec_len, data_len),
-290 => wire__crate__api__srp__srp_client__srp_client_new_impl(ptr, rust_vec_len, data_len),
+281 => wire__crate__api__proton_wallet__storage__user_key_store__FrbUserKeyStore_new_impl(ptr, rust_vec_len, data_len),
+294 => wire__crate__api__srp__srp_client__srp_client_new_impl(ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -16778,6 +16990,21 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
 
 impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<FrbUnlockedWalletKey>> for FrbUnlockedWalletKey {
     fn into_into_dart(self) -> FrbWrapper<FrbUnlockedWalletKey> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<FrbUserKeyStore> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<FrbUserKeyStore> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<FrbUserKeyStore>> for FrbUserKeyStore {
+    fn into_into_dart(self) -> FrbWrapper<FrbUserKeyStore> {
         self.into()
     }
 }
@@ -19553,6 +19780,13 @@ impl SseEncode for FrbUnlockedWalletKey {
     }
 }
 
+impl SseEncode for FrbUserKeyStore {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
 impl SseEncode for FrbWallet {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -20076,6 +20310,17 @@ impl SseEncode
 
 impl SseEncode
     for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUnlockedWalletKey>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -22582,6 +22827,7 @@ mod io {
     use crate::api::bdk_wallet::transactions::*;
     use crate::api::bdk_wallet::wallet::*;
     use crate::api::crypto::wallet_key::*;
+    use crate::api::proton_wallet::storage::user_key_store::*;
     use flutter_rust_bridge::for_generated::byteorder::{
         NativeEndian, ReadBytesExt, WriteBytesExt,
     };
@@ -23024,6 +23270,20 @@ mod io {
         ptr: *const std::ffi::c_void,
     ) {
         MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUnlockedWalletKey>>::decrement_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
+    pub extern "C" fn frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUserKeyStore(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>::increment_strong_count(ptr as _);
+    }
+
+    #[no_mangle]
+    pub extern "C" fn frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUserKeyStore(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbUserKeyStore>>::decrement_strong_count(ptr as _);
     }
 
     #[no_mangle]

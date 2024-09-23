@@ -3,6 +3,7 @@ use std::{error::Error, fmt, sync::PoisonError};
 // errors.rs
 use andromeda_api::error::Error as AndromedaApiError;
 use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
+use proton_crypto_account::proton_crypto;
 
 use crate::proton_wallet::crypto::errors::WalletCryptoError;
 

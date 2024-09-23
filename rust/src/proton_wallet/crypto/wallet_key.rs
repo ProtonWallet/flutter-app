@@ -1,13 +1,25 @@
+use core::str;
+use std::io::Write;
+
 use aes_gcm::{
     aead::{Aead, KeyInit},
     AeadCore, Aes256Gcm, Key, Nonce,
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
-
-use super::{
-    errors::WalletCryptoError,
-    wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
+use proton_crypto::crypto::{
+    DetachedSignatureVariant, EncryptorDetachedSignatureWriter, UnixTimestamp,
 };
+use proton_crypto_account::{
+    keys::{DecryptedUserKey, UnlockedUserKey},
+    proton_crypto::crypto::{
+        AsPublicKeyRef, DataEncoding, Decryptor, DecryptorSync, Encryptor, EncryptorSync,
+        PGPProviderSync, VerifiedData,
+    },
+};
+
+use super::errors::WalletCryptoError;
+
+const SIGNATURE_CONTEXT_WALLET_KEY: &str = "wallet.key";
 
 // UnlockedWalletKey represents a key that can be used to encrypt and decrypt data.
 // Wrapped in a tuple struct, it hides its internal representation while still allowing
@@ -15,10 +27,61 @@ use super::{
 pub struct UnlockedWalletKey(pub(crate) Key<Aes256Gcm>);
 
 impl UnlockedWalletKey {
-    // TODO(feat): integrate user_key
-    // Locks the wallet, returning a LockedWalletKey. A placeholder for now.
-    pub fn lock_with(&self) -> LockedWalletKey {
-        LockedWalletKey("".to_string())
+    pub fn new(bytes: &[u8]) -> Self {
+        let key: Key<Aes256Gcm> = *Key::<Aes256Gcm>::from_slice(bytes);
+        UnlockedWalletKey(key)
+    }
+
+    /// Locks the wallet, returning a `LockedWalletKey`.
+    ///
+    /// This method encrypts the wallet data using the provided unlocked private keys,
+    /// and attaches a detached signature for integrity verification.
+    ///
+    /// # Parameters:
+    /// - `provider`: The cryptographic provider that supplies encryption and signing capabilities (e.g., PGP).
+    /// - `user_key`: The unlocked user key, which provides both the public key for encryption and the private key for signing.
+    ///
+    /// # Returns:
+    /// - `Ok(LockedWalletKey)`: On success, returns the encrypted wallet data and its associated detached signature.
+    /// - `Err(WalletCryptoError)`: If any error occurs during encryption or signing, it returns a `WalletCryptoError`.
+    pub fn lock_with<T: PGPProviderSync>(
+        &self,
+        provider: &T,
+        user_key: &UnlockedUserKey<T>,
+    ) -> Result<LockedWalletKey, WalletCryptoError> {
+        // Buffer to store encrypted data
+        let mut result_data: Vec<u8> = Vec::new();
+        let signing_context =
+            provider.new_signing_context(SIGNATURE_CONTEXT_WALLET_KEY.to_owned(), true);
+        // Create an encryptor using the public key for encryption and private key for signing.
+        let mut encryptor_writer = provider
+            .new_encryptor()
+            .with_encryption_key(user_key.as_public_key()) // Encrypt with the public key
+            .with_signing_key(user_key.as_ref()) // Sign with the private key
+            .with_signing_context(&signing_context)
+            .encrypt_stream_with_detached_signature(
+                // Output the encrypted data here
+                &mut result_data,
+                // Signature format for the encrypted data
+                DetachedSignatureVariant::Plaintext,
+                DataEncoding::Armor,
+            )?;
+
+        // Write the raw wallet data into the encryption stream.
+        encryptor_writer.write_all(self.as_bytes())?;
+
+        // Finalize the encryption process and retrieve the detached signature.
+        let detached_signature = encryptor_writer.finalize_with_detached_signature()?;
+
+        // Convert both the encrypted data and the detached signature to UTF-8 strings.
+        let encrypted = str::from_utf8(&result_data)?; // Convert encrypted bytes to string
+        let signature = str::from_utf8(&detached_signature)?; // Convert signature bytes to string
+
+        // Return the locked wallet as a `LockedWalletKey`, containing both the encrypted data and its signature.
+        Ok(LockedWalletKey::new(
+            encrypted.to_string(),
+            signature.to_string(),
+        ))
     }
 
     // Converts the key to a Base64 encoded string.
@@ -130,25 +193,98 @@ impl UnlockedWalletKey {
     }
 }
 
-pub struct LockedWalletKey(String);
+// armored wallet key
+pub struct LockedWalletKey {
+    encrypted: String,
+    signature: String,
+}
 impl LockedWalletKey {
-    pub fn as_bytes(&self) -> &[u8] {
-        self.0.as_bytes()
+    pub fn new(armored: String, signature: String) -> Self {
+        LockedWalletKey {
+            encrypted: armored,
+            signature,
+        }
     }
 
-    // TODO(feat): integrate user_key
-    pub fn unlock_with(&self) -> UnlockedWalletKey {
-        WalletKeyProvider::generate()
+    pub fn get_armored(&self) -> String {
+        self.encrypted.clone()
+    }
+
+    pub fn get_signature(&self) -> String {
+        self.signature.clone()
+    }
+}
+impl LockedWalletKey {
+    /// Unlocks the encrypted wallet key using the provided decryption keys.
+    ///
+    /// This method verifies the integrity of the encrypted wallet data using the detached signature
+    /// and decrypts it using the provided `user_keys`.
+    ///
+    /// # Parameters:
+    /// - `provider`: The cryptographic provider that will handle decryption and signature verification.
+    /// - `user_keys`: The decrypted user keys that will be used to decrypt the encrypted wallet data.
+    ///    This is passed as a reference to an array of decrypted keys.
+    ///
+    /// # Returns:
+    /// - `Ok(UnlockedWalletKey)`: On success, returns the decrypted wallet key.
+    /// - `Err(WalletCryptoError)`: If any step of decryption or verification fails, returns an error.
+    ///
+    /// # Notes: must try all user keys to unlock the wallet key
+    pub fn unlock_with<T: PGPProviderSync>(
+        &self,
+        provider: &T,
+        user_keys: impl AsRef<[DecryptedUserKey<T::PrivateKey, T::PublicKey>]>,
+    ) -> Result<UnlockedWalletKey, WalletCryptoError> {
+        let verification_context = provider.new_verification_context(
+            SIGNATURE_CONTEXT_WALLET_KEY.to_owned(),
+            true,
+            UnixTimestamp::zero(),
+        );
+
+        let decrypted_result = provider
+            .new_decryptor()
+            // Use the provided user keys for decryption
+            .with_decryption_key_refs(user_keys.as_ref())
+            // Use the same keys for signature verification
+            .with_verification_key_refs(user_keys.as_ref())
+            // Attach the detached signature to verify
+            // The signature is in Armor encoding and must be checked for integrity (true).
+            .with_detached_signature_ref(
+                // Signature data to verify
+                self.signature.as_bytes(),
+                DetachedSignatureVariant::Plaintext,
+                true,
+            )
+            .with_verification_context(&verification_context)
+            // Decrypt the encrypted wallet data.
+            .decrypt(&self.encrypted, DataEncoding::Armor)?;
+
+        // Verify that the decryption was successful and that the signature was valid.
+        // This will throw an error if the signature verification failed.
+        decrypted_result.verification_result()?;
+
+        let bytes = decrypted_result.as_bytes();
+        Ok(UnlockedWalletKey::new(bytes))
     }
 }
 
 #[cfg(test)]
 mod test {
-    use crate::proton_wallet::crypto::{
-        mnemonic::{EncryptedWalletMnemonic, WalletMnemonic},
-        wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
+    use crate::{
+        mocks::user_keys::tests::{
+            get_test_user_2_locked_user_key, get_test_user_2_locked_user_key_secret,
+            get_test_user_3_locked_user_key, get_test_user_3_locked_user_key_secret,
+        },
+        proton_wallet::crypto::{
+            errors::WalletCryptoError,
+            mnemonic::{EncryptedWalletMnemonic, WalletMnemonic},
+            private_key::LockedPrivateKeys,
+            wallet_key::LockedWalletKey,
+            wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
+        },
     };
     use aes_gcm::{aead::Aead, AeadCore, Aes256Gcm};
+    use proton_crypto::new_pgp_provider;
     use secrecy::ExposeSecret;
 
     #[test]
@@ -165,7 +301,6 @@ mod test {
             .unwrap();
         let plaintext = cipher.decrypt(&nonce, ciphertext.as_ref()).unwrap();
         assert_eq!(&plaintext, b"plaintext message");
-        println!("Encryption and decryption were successful!");
     }
 
     #[test]
@@ -175,7 +310,8 @@ mod test {
             86, 74, 233, 105, 58, 246, 122, 231, 97, 212, 118, 239, 154,
         ];
 
-        let wallet_key = WalletKeyProvider::restore(&key_bytes);
+        let wallet_key = WalletKeyProvider::restore(&key_bytes).unwrap();
+        assert_eq!(wallet_key.to_entropy(), key_bytes);
         let cipher = wallet_key.get_cipher();
         let nonce = Aes256Gcm::generate_nonce(&mut rand::rngs::OsRng);
         let ciphertext = cipher
@@ -183,7 +319,6 @@ mod test {
             .unwrap();
         let plaintext = cipher.decrypt(&nonce, ciphertext.as_ref()).unwrap();
         assert_eq!(&plaintext, b"plaintext message");
-        println!("Encryption and decryption were successful!");
     }
 
     #[test]
@@ -198,7 +333,6 @@ mod test {
             .unwrap();
         let plaintext = cipher.decrypt(&nonce, ciphertext.as_ref()).unwrap();
         assert_eq!(&plaintext, b"plaintext message");
-        println!("Encryption and decryption were successful!");
     }
     #[test]
     fn test_decryption() {
@@ -213,6 +347,29 @@ mod test {
             clean_text.as_utf8_string().unwrap().expose_secret(),
             plain_text
         );
+
+        let bad_byte_key = [
+            239, 203, 93, 93, 253, 145, 0, 82, 0, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
+            29, 164, 144, 177, 0, 205, 128, 0, 38, 59, 33, 146, 218,
+        ];
+        let wallet_key = WalletKeyProvider::restore(&bad_byte_key).unwrap();
+        let error = encrypted_body.decrypt_with(&wallet_key).err();
+        assert!(error.is_some());
+        match error {
+            Some(WalletCryptoError::AesGcm(msg)) => {
+                assert!(!msg.is_empty());
+            }
+            _ => panic!("Expected WalletCryptoError::AesGcm variant"),
+        }
+
+        let bad_encrypted_data = [239, 203, 93, 93, 253, 145, 0];
+        let encrypted_body = EncryptedWalletMnemonic::new(bad_encrypted_data.to_vec());
+        let error = encrypted_body.decrypt_with(&wallet_key).err();
+        assert!(error.is_some());
+        match error {
+            Some(WalletCryptoError::InvalidDataSize) => {}
+            _ => panic!("Expected (WalletCryptoError::InvalidDataSize"),
+        }
     }
 
     #[test]
@@ -220,10 +377,8 @@ mod test {
         let wallet_key = WalletKeyProvider::generate();
         let encoded_entropy = wallet_key.to_base64();
         let plain_text = "Hello world";
-        println!("encoded_entropy: {}", encoded_entropy);
         let plant_body = WalletMnemonic::new_from_str(plain_text);
         let encrypted_body = plant_body.encrypt_with(&wallet_key).unwrap();
-        println!("encrypted_body: {:?}", encrypted_body.to_base64());
         let check_wallet_key = WalletKeyProvider::restore_base64(&encoded_entropy).unwrap();
         let decrypted_body = encrypted_body.decrypt_with(&check_wallet_key).unwrap();
         assert_eq!(
@@ -239,12 +394,140 @@ mod test {
             239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
             29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218,
         ];
-        let wallet_key = WalletKeyProvider::restore(&byte_key);
+        let wallet_key = WalletKeyProvider::restore(&byte_key).unwrap();
 
         let plant_body = WalletMnemonic::new_from_str(plaintext);
         let encrypted_body = plant_body.encrypt_with(&wallet_key).unwrap();
 
         let clear_text_boidy = encrypted_body.decrypt_with(&wallet_key).unwrap();
         assert!(clear_text_boidy.as_utf8_string().unwrap().expose_secret() == plaintext);
+    }
+
+    #[test]
+    fn test_lock_wallet_key() {
+        let byte_key = [
+            239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
+            29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218,
+        ];
+        let wallet_key = WalletKeyProvider::restore(&byte_key).unwrap();
+
+        // user key to lock the wallet
+        let provider = new_pgp_provider();
+        let locked_user_key = get_test_user_2_locked_user_key();
+        let key_secret = get_test_user_2_locked_user_key_secret();
+        let locked_keys = LockedPrivateKeys::from_primary(locked_user_key);
+        let unlocked_user_keys = locked_keys.unlock_with(&provider, &key_secret);
+        assert!(!unlocked_user_keys.user_keys.is_empty());
+        let locked_wallet_key = wallet_key
+            .lock_with(&provider, unlocked_user_keys.user_keys.first().unwrap())
+            .unwrap();
+        let armored_message = locked_wallet_key.get_armored();
+        assert!(!armored_message.is_empty());
+        let armored_signature = locked_wallet_key.get_signature();
+        assert!(!armored_signature.is_empty());
+    }
+
+    #[test]
+    fn test_unlock_wallet_key() {
+        let byte_key = [
+            239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
+            29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218,
+        ];
+        // restore the wallet key
+        let armored_encrypted_message = "-----BEGIN PGP MESSAGE-----\n\nwV4DcsIsGT18EWcSAQdA470+uQXoFiWdZpCsAEgbMdjJRCjMqszNbtJQzvszrWEw\na/SJbREBGGix0byD0wz1OXHCDHHDuk42xpaXdK+16Q8aL3qYdDvL3o2foUTkR+sQ\n0lEB8m4dH4rLSeb/XPO3vFrFWhNTo6HEqsi2LDjxc+Ht3ZxZSsl0ajFDgr2OV+O1\nnNq7hTKrnwMd1DknxUcykvvLzwnVgPPKTKeivJboCQChpOc=\n=Po8E\n-----END PGP MESSAGE-----\n";
+        let armored_signature = "-----BEGIN PGP SIGNATURE-----\n\nwpoEABYKAEwFgmbkEEwJkP3x66xOhANrJJSAAAAAABEACmNvbnRleHRAcHJvdG9u\nLmNod2FsbGV0LmtleRYhBMZ9T6whFVji9dBihP3x66xOhANrAAD3AgD/XVthoS2S\nWiXUH1HpBgwDiWEl9vn/GQgp61wOMdZfdrQBAMPVbxEsjW/RYjEM/IkuIa7rejjT\n5Q+kRnd0wuAtJDsG\n=BNBE\n-----END PGP SIGNATURE-----\n";
+        let locked_wallet_key = LockedWalletKey::new(
+            armored_encrypted_message.to_string(),
+            armored_signature.to_string(),
+        );
+
+        // user key to lock the wallet
+        let provider = new_pgp_provider();
+        let locked_user_key = get_test_user_2_locked_user_key();
+        let key_secret = get_test_user_2_locked_user_key_secret();
+
+        let locked_keys = LockedPrivateKeys::from_primary(locked_user_key);
+        let unlocked_user_keys = locked_keys.unlock_with(&provider, &key_secret);
+        assert!(!unlocked_user_keys.user_keys.is_empty());
+
+        let unlocked_wallet_key = locked_wallet_key
+            .unlock_with(&provider, unlocked_user_keys.user_keys)
+            .unwrap();
+        assert_eq!(byte_key, unlocked_wallet_key.as_bytes());
+    }
+
+    #[test]
+    fn test_unlock_wallet_key_signature_fail() {
+        // restore the wallet key
+        let armored_encrypted_message = "-----BEGIN PGP MESSAGE-----\n\nwV4DcsIsGT18EWcSAQdAYicpbmQmVa+RJ/s3NnlmQgGTa2XqY13wWTn1uY3p9AEw\nNFXNLGm6jrT11hsRwntd7a9rpk3ITvmzslGv18VJ46a2A++ynWGIO4Zb0xS5Nkpe\n0lEBaO5VSBCYtPTeptEKaLfUI69IFzOlxngTA/IYvvgn/AfvH+/BKKI5quF3v8gL\nSHUfTa0uxOLX7VNWk5UfxlNCGLxpZ7FqvlO/siOZKprKOBQ=\n=YcwK\n-----END PGP MESSAGE-----\n";
+        let locked_wallet_key = LockedWalletKey::new(
+            armored_encrypted_message.to_string(),
+            armored_encrypted_message.to_string(),
+        );
+        // user key to lock the wallet
+        let provider = new_pgp_provider();
+        let locked_user_key = get_test_user_2_locked_user_key();
+        let key_secret = get_test_user_2_locked_user_key_secret();
+
+        let locked_keys = LockedPrivateKeys::from_primary(locked_user_key);
+        let unlocked_user_keys = locked_keys.unlock_with(&provider, &key_secret);
+        assert!(!unlocked_user_keys.user_keys.is_empty());
+
+        let unlocked_wallet_key =
+            locked_wallet_key.unlock_with(&provider, unlocked_user_keys.user_keys);
+        assert!(unlocked_wallet_key.is_err());
+        let error = unlocked_wallet_key.err();
+        match error {
+            Some(WalletCryptoError::CryptoError(err)) => {
+                println!("{}", err);
+            }
+            _ => panic!("Expected WalletCryptoError::CryptoError"),
+        }
+
+        let locked_wallet_key =
+            LockedWalletKey::new(armored_encrypted_message.to_string(), "".to_string());
+        let locked_user_key = get_test_user_2_locked_user_key();
+        let key_secret = get_test_user_2_locked_user_key_secret();
+        let locked_keys = LockedPrivateKeys::from_primary(locked_user_key);
+        let unlocked_user_keys = locked_keys.unlock_with(&provider, &key_secret);
+        assert!(!unlocked_user_keys.user_keys.is_empty());
+        let unlocked_wallet_key =
+            locked_wallet_key.unlock_with(&provider, unlocked_user_keys.user_keys);
+        assert!(unlocked_wallet_key.is_err());
+        let error = unlocked_wallet_key.err();
+        match error {
+            Some(WalletCryptoError::CryptoSignatureVerify(err)) => {
+                println!("{}", err);
+            }
+            _ => panic!("Expected WalletCryptoError::CryptoSignatureVerify"),
+        }
+    }
+
+    #[test]
+    fn test_unlock_wallet_key_verify_dart() {
+        let byte_key = [
+            239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
+            29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218,
+        ];
+        // restore the wallet key
+        let armored_encrypted_message = "-----BEGIN PGP MESSAGE-----\nComment: https://gopenpgp.org\nVersion: GopenPGP 2.7.5\n\nwV4D9Oug9vT13XESAQdAQkDaJMVbFk5TQ2XmK6qZU4rKVLV1DIccP11ljsbkqRgw\n/D/q1wGge0x3vPAAqjzRcMK7hyeIP9LCMfvjkBdS6o6E7CAROpAD7crqqHXtWt5W\n0lEBEPnoASMJSW9sPjmCzOz7OsDgXvTDefYrS8sp40y+4XVKs30m8q2oXIVYEZC6\nRK1A5P738mJ0y+chA2IOVWaLdOROM6O33lX+N8jfdsz5S+c=\n=yEP9\n-----END PGP MESSAGE-----\n";
+        let armored_signature = "-----BEGIN PGP SIGNATURE-----\nVersion: GopenPGP 2.7.5\nComment: https://gopenpgp.org\n\nwpoEABYKAEwFAmbkDIkJELc30Qz6a91XFiEE6Q8m5+76nNyfDKZEtzfRDPpr3Vck\nlIAAAAAAEQAKY29udGV4dEBwcm90b24uY2h3YWxsZXQua2V5AAAgYAEApHBozjEK\nAoKM3rIdhWLbrHBq2lavIMwLNeqlXPG7zOsA/RZE9nMJNgRBq8EPa0LEtipE98LK\nq6m0IdhYgyQL3OkK\n=/dp1\n-----END PGP SIGNATURE-----\n";
+        let locked_wallet_key = LockedWalletKey::new(
+            armored_encrypted_message.to_string(),
+            armored_signature.to_string(),
+        );
+        // user key to lock the wallet
+        let provider = new_pgp_provider();
+        let locked_user_key = get_test_user_3_locked_user_key();
+        let key_secret = get_test_user_3_locked_user_key_secret();
+
+        let locked_keys = LockedPrivateKeys::from_primary(locked_user_key);
+        let unlocked_user_keys = locked_keys.unlock_with(&provider, &key_secret);
+        assert!(!unlocked_user_keys.user_keys.is_empty());
+
+        let unlocked_wallet_key = locked_wallet_key
+            .unlock_with(&provider, unlocked_user_keys.user_keys)
+            .unwrap();
+        assert_eq!(byte_key, unlocked_wallet_key.as_bytes());
     }
 }

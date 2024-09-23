@@ -1,0 +1,34 @@
+[wallet]
+debug = false
+verbose = false
+
+# Exclude given files from coverage results has * wildcard
+exclude-files = [
+    "src/api/**/*",
+    "src/mocks/**/*",
+    "tests/**/*",
+    "**/mod.rs",
+    "**/lib.rs",
+    "**/frb_generated.rs",
+]
+features = "test"
+# Sets a percentage threshold for failure ranging from 0-100, if coverage is below exit with a non-zero code
+# fail-under = 70
+# Coverage tracing backend to use [possible values: Auto, Ptrace, Llvm]
+engine = "Llvm"
+# Run all tests regardless of failure
+no-fail-fast = true
+# Follow executed processes capturing coverage information if they're part of your project
+follow-exec = true
+# The opposite of --force-clean
+skip-clean = true
+# Ignore lines of test functions when collecting coverage (default)
+ignore-tests = true
+# Option to fail immediately after a single test fails
+fail-immediately = true
+# Do not update Cargo.lock
+locked = true
+# Integer for the maximum time in seconds without response from test before timeout (default is 1 minute)
+timeout = "120s"
+# Output format of coverage report [possible values: Json, Stdout, Xml, Html, Lcov]
+out = ["Html", "Xml"]

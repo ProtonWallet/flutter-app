@@ -154,3 +154,4 @@ env.var.g.dart
 test/snapshot/*/failures/
 tarpaulin-report.html
 cobertura.xml
+coverage
