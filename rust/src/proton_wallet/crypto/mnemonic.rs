@@ -90,3 +90,53 @@ impl EncryptedWalletMnemonic {
         key.decrypt(&self.0).map(WalletMnemonic::new)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use secrecy::ExposeSecret;
+
+    use crate::proton_wallet::crypto::mnemonic::{EncryptedWalletMnemonic, WalletMnemonic};
+
+    #[test]
+    fn test_new_wallet_mnemonic_from_str() {
+        let plaintext = "test mnemonic phrase";
+        let mnemonic = WalletMnemonic::new_from_str(plaintext);
+        assert_eq!(
+            mnemonic.as_utf8_string().unwrap().expose_secret(),
+            plaintext
+        );
+    }
+
+    #[test]
+    fn test_new_wallet_mnemonic_from_base64() {
+        let base64_data = "dGVzdCBtbmVtb25pYyBwaHJhc2U="; // base64 for "test mnemonic phrase"
+        let mnemonic = WalletMnemonic::new_from_base64(base64_data).unwrap();
+        assert_eq!(mnemonic.mnemonic.expose_secret(), b"test mnemonic phrase");
+        assert_eq!(mnemonic.to_base64().expose_secret(), base64_data);
+    }
+
+    #[test]
+    fn test_wallet_mnemonic_to_base64() {
+        let mnemonic = WalletMnemonic::new_from_str("test mnemonic phrase");
+        let base64_encoded = mnemonic.to_base64();
+
+        assert_eq!(
+            base64_encoded.expose_secret(),
+            "dGVzdCBtbmVtb25pYyBwaHJhc2U="
+        );
+    }
+
+    #[test]
+    fn test_wallet_mnemonic_as_utf8_string() {
+        let mnemonic = WalletMnemonic::new_from_str("test mnemonic phrase");
+        let utf8_string = mnemonic.as_utf8_string().unwrap();
+        assert_eq!(utf8_string.expose_secret(), "test mnemonic phrase");
+    }
+
+    #[test]
+    fn test_new_enc_wallet_mnemonic_from_base64() {
+        let base64_data = "dGVzdCBtbmVtb25pYyBwaHJhc2U="; // base64 for "test mnemonic phrase"
+        let mnemonic = EncryptedWalletMnemonic::new_from_base64(base64_data).unwrap();
+        assert_eq!(mnemonic.to_base64(), base64_data);
+    }
+}

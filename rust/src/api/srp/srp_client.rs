@@ -7,6 +7,7 @@ use proton_crypto::{
     new_srp_provider,
     srp::{SRPProvider, SRPVerifierB64},
 };
+use proton_crypto_account::proton_crypto;
 use proton_srp::{mailbox_password_hash, SRPAuth, SRPProofB64};
 
 use crate::BridgeError;

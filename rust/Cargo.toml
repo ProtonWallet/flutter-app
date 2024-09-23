@@ -29,6 +29,7 @@ rusqlite = { version = "0.31.0", features = [
 ] }
 proton-sqlite3 = { version = "=0.7.6", registry = "proton_internal" }
 stash = { version = "=0.1.6", registry = "proton_internal" }
+async-trait = { version = "0.1.66" }
 
 ## old
 thiserror = "1.0.61"
@@ -50,6 +51,7 @@ andromeda-common = { path = "../vendor/andromeda/crates/common" }
 proton-srp = { version = "0.4.1", default-features = false, registry = "proton_internal" }
 bdk_sqlite = { version = "=0.2.0" }
 proton-crypto = { path = "../vendor/proton-crypto-rs/proton-crypto" }
+proton-crypto-account = { path = "../vendor/proton-crypto-rs/proton-crypto-account" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
@@ -79,4 +81,5 @@ build_targets = ["aarch64-apple-ios"]
 
 [features]
 default = []
-test = ["andromeda-api/allow-dangerous-env"]
+mocking = ["andromeda-api/mocking"]
+test = ["andromeda-api/allow-dangerous-env", "mocking"]

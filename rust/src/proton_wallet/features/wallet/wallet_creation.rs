@@ -1,23 +1,29 @@
 #![allow(dead_code)] // temperay allow dead code
 use std::sync::Arc;
 
-use andromeda_api::wallet::{ApiWalletData, CreateWalletRequestBody, WalletClient};
+use andromeda_api::{
+    wallet::{
+        ApiWalletAccount, ApiWalletData, CreateWalletAccountRequestBody, CreateWalletRequestBody,
+    },
+    wallet_ext::WalletClientExt,
+};
+use proton_crypto_account::{keys::UserKeys, proton_crypto::new_pgp_provider, salts::KeySecret};
 
 use crate::proton_wallet::{
     crypto::{
+        binary::Binary,
         mnemonic::WalletMnemonic,
+        wallet_account_label::WalletAccountLabel,
         wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
     },
     features::error::FeaturesError,
-    storage::user_key::UserKeyStorage,
 };
 
-pub struct WalletCreation {
-    user_key_storage: Arc<UserKeyStorage>,
-    wallet_client: Arc<WalletClient>,
+pub struct WalletCreation<T: WalletClientExt> {
+    wallet_client: Arc<T>,
 }
 
-impl WalletCreation {
+impl<T: WalletClientExt> WalletCreation<T> {
     /// Creates a new wallet
     ///
     /// This function generates a wallet secret key, encrypts the wallet's mnemonic
@@ -43,21 +49,19 @@ impl WalletCreation {
     /// fails, such as key generation, encryption, or communication with the server.
     async fn create_wallet(
         &self,
+        key_id: String,
+        primary_user_key: &UserKeys,
+        user_key_passphrase: &KeySecret,
         wallet_name: String,
         mnemonic_str: String,
         fingerprint: String,
         wallet_type: u8,
         wallet_passphrase: Option<String>,
     ) -> Result<ApiWalletData, FeaturesError> {
+        // check if primary_user_key has a primary user key
+
         // Generate a wallet secret key
         let secret_key = WalletKeyProvider::generate();
-        // let entropy = secret_key.as_entropy();
-
-        // Get the first user key (primary user key) after used release them
-        // let primary_user_key = user_manager::get_primary_key().await?;
-        // let user_private_key = primary_user_key.private_key.clone();
-        // let user_key_id = primary_user_key.key_id.clone();
-        // let passphrase = primary_user_key.passphrase.clone();
 
         // Encrypt mnemonic with wallet key
         let clear_mnemonic_body = WalletMnemonic::new_from_str(&mnemonic_str);
@@ -75,24 +79,19 @@ impl WalletCreation {
         let base64_encrypted_wallet_name = result.to_base64();
 
         // Encrypt wallet key with user private key
-        // let encrypted_wallet_key = proton_crypto::encrypt_binary_armor(&user_private_key, &entropy)?;
-
-        // Sign wallet key with user private key
-        // let wallet_key_signature = proton_crypto::get_binary_signature_with_context(
-        //     &user_private_key,
-        //     &passphrase,
-        //     &entropy,
-        //     gpg_context_wallet_key,
-        // )?;
+        let provider = new_pgp_provider();
+        let unlocked = primary_user_key.unlock(&provider, user_key_passphrase);
+        let first = unlocked.unlocked_keys.first().unwrap();
+        let encrypted = secret_key.lock_with(&provider, first)?;
 
         let wallet_req = CreateWalletRequestBody {
             Name: base64_encrypted_wallet_name,
             IsImported: wallet_type,
             Type: 1,
             HasPassphrase: wallet_passphrase.is_some() as u8,
-            UserKeyID: "KeyID".to_string(),
-            WalletKey: "Encrypted wallet key".to_string(),
-            WalletKeySignature: "Encrypted wallet key signature".to_string(),
+            UserKeyID: key_id,
+            WalletKey: encrypted.get_armored(),
+            WalletKeySignature: encrypted.get_signature(),
             Mnemonic: Some(base64_encrypted_mnemonic),
             Fingerprint: Some(fingerprint),
             PublicKey: None,
@@ -102,4 +101,80 @@ impl WalletCreation {
         let wallet_data = self.wallet_client.create_wallet(wallet_req).await?;
         Ok(wallet_data)
     }
+
+    pub async fn create_wallet_account(
+        &self,
+        wallet_id: String,
+        // script_type: &ScriptTypeInfo,
+        label: String,
+        // fiat_currency: &FiatCurrency,
+        account_index: i32,
+    ) -> Result<ApiWalletAccount, FeaturesError> {
+        let clear_label = WalletAccountLabel::new_from_str(&label);
+
+        // Create request
+        let request = CreateWalletAccountRequestBody {
+            DerivationPath: "".to_owned(),
+            Label: "".to_owned(),
+            ScriptType: 1,
+        };
+
+        let api_wallet_account = self
+            .wallet_client
+            .create_wallet_account(wallet_id, request)
+            .await?;
+        Ok(api_wallet_account)
+    }
+}
+
+#[cfg(test)]
+#[cfg(feature = "mocking")]
+mod test {
+    use std::sync::Arc;
+
+    use andromeda_api::{tests::wallet_mock::mock_utils::MockWalletClient, wallet::ApiWalletData};
+
+    use crate::{
+        mocks::user_keys::tests::{
+            get_test_user_1_locked_user_key, get_test_user_1_locked_user_key_secret,
+        },
+        proton_wallet::features::wallet::wallet_creation::WalletCreation,
+    };
+
+    #[tokio::test]
+    async fn test_create_wallet_success() {
+        let user_keys = get_test_user_1_locked_user_key();
+        let key_secret = get_test_user_1_locked_user_key_secret();
+        let mut mock_client = MockWalletClient::new();
+        mock_client.expect_create_wallet().returning({
+            |req| {
+                let mut out = ApiWalletData::default();
+                out.Wallet.Name = req.Name;
+                out.WalletKey.UserKeyID = req.UserKeyID;
+                out.WalletKey.WalletKey = req.WalletKey;
+                out.WalletKey.WalletKeySignature = req.WalletKeySignature;
+                Ok(out)
+            }
+        });
+        let wallet_creation = WalletCreation {
+            wallet_client: Arc::new(mock_client),
+        };
+        let result = wallet_creation
+            .create_wallet(
+                "aTdvCsWuv2V_YQQ5nLKsWPkHWMrlHfUxL9aTWakz6blhwI0q_j4MKnxO29xMQ4slCRvo3lFLE8ljb3kvMP2PQQ==".to_string(),
+                &user_keys,
+                &key_secret,
+                "My Wallet".to_string(),
+                "dummy_mnemonic".to_string(),
+                "dummy_fingerprint".to_string(),
+                1,
+                None,
+            )
+            .await
+            .unwrap();
+        assert_eq!(result.WalletKey.UserKeyID, "aTdvCsWuv2V_YQQ5nLKsWPkHWMrlHfUxL9aTWakz6blhwI0q_j4MKnxO29xMQ4slCRvo3lFLE8ljb3kvMP2PQQ==");
+    }
+
+    #[tokio::test]
+    async fn test_create_wallet_fail_encryption() {}
 }

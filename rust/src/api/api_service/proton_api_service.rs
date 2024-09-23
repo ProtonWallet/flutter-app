@@ -18,6 +18,7 @@ use crate::api::proton_api::{logout, set_proton_api};
 use crate::api::srp::srp_client::SrpClient;
 use crate::{auth_credential::AuthCredential, BridgeError};
 use andromeda_api::wallet::ApiWalletData;
+use andromeda_api::wallet_ext::WalletClientExt;
 use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
