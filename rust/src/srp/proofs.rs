@@ -1,5 +1,6 @@
 use flutter_rust_bridge::frb;
 
+use proton_crypto_account::proton_crypto;
 pub use proton_srp::SRPProofB64;
 
 pub use proton_crypto::srp::SRPVerifierB64;

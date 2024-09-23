@@ -4,6 +4,7 @@ use andromeda_api::settings::{
     FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings,
 };
 use andromeda_api::wallet::{ApiWallet, ApiWalletAccount, ApiWalletData};
+use andromeda_api::wallet_ext::WalletClientExt;
 use andromeda_api::{wallet::CreateWalletTransactionRequestBody, ChildSession};
 use andromeda_common::BitcoinUnit;
 use lazy_static::lazy_static;
