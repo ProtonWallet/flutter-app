@@ -4,6 +4,7 @@ use std::{error::Error, fmt, sync::PoisonError};
 use andromeda_api::error::Error as AndromedaApiError;
 use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
 use proton_crypto_account::proton_crypto;
+use rusqlite::Error as RusqlitError;
 
 use crate::proton_wallet::crypto::errors::WalletCryptoError;
 
@@ -56,6 +57,12 @@ pub enum BridgeError {
 impl From<WalletCryptoError> for BridgeError {
     fn from(value: WalletCryptoError) -> Self {
         BridgeError::WalletCrypto(format!("WalletCryptoError occurred: {:?}", value.source()))
+    }
+}
+
+impl From<RusqlitError> for BridgeError {
+    fn from(value: RusqlitError) -> Self {
+        BridgeError::Generic(format!("Rusqlite Error occurred: {:?}", value.source()))
     }
 }
 

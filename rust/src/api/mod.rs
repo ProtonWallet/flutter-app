@@ -19,3 +19,6 @@ pub mod proton_wallet;
 // crypto
 pub mod crypto;
 pub mod srp;
+
+// db
+pub mod db;
