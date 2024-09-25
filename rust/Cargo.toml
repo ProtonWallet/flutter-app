@@ -27,6 +27,7 @@ rusqlite = { version = "0.31.0", features = [
     "functions",
     "trace",
 ] }
+serde_rusqlite = "0.35.0"
 proton-sqlite3 = { version = "=0.7.6", registry = "proton_internal" }
 stash = { version = "=0.1.6", registry = "proton_internal" }
 async-trait = { version = "0.1.66" }
