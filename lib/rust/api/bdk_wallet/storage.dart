@@ -6,20 +6,19 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `new`
-// These types are ignored because they are not used by any `pub` functions: `OnchainStore`, `STATIC_CHANGESET`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `build`, `clear`, `clone`, `clone`, `deref`, `fmt`, `initialize`, `read`, `write`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `build`, `clone`, `fmt`
 
-class OnchainStoreFactory {
+class WalletMobileConnectorFactory {
   final String folderPath;
 
-  const OnchainStoreFactory.raw({
+  const WalletMobileConnectorFactory.raw({
     required this.folderPath,
   });
 
-  factory OnchainStoreFactory({required String folderPath}) => RustLib
-      .instance.api
-      .crateApiBdkWalletStorageOnchainStoreFactoryNew(folderPath: folderPath);
+  factory WalletMobileConnectorFactory({required String folderPath}) =>
+      RustLib.instance.api
+          .crateApiBdkWalletStorageWalletMobileConnectorFactoryNew(
+              folderPath: folderPath);
 
   @override
   int get hashCode => folderPath.hashCode;
@@ -27,7 +26,7 @@ class OnchainStoreFactory {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OnchainStoreFactory &&
+      other is WalletMobileConnectorFactory &&
           runtimeType == other.runtimeType &&
           folderPath == other.folderPath;
 }

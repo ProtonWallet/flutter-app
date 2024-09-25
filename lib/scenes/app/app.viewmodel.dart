@@ -107,7 +107,7 @@ class AppViewModelImpl extends AppViewModel {
       apiEnv,
       storage,
       shared,
-      apiServiceManager.getApiService(),
+      apiServiceManager,
       dbConnection,
       userManager,
     );

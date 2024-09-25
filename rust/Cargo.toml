@@ -47,10 +47,12 @@ flutter_logger = { version = "0.6.1", features = ["panic"] }
 log = "0.4.19"
 ### proton dependencies
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
-andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin" }
+andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin", features = [
+    "sqlite",
+] }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
 proton-srp = { version = "0.4.1", default-features = false, registry = "proton_internal" }
-bdk_sqlite = { version = "=0.2.0" }
+# bdk_sqlite = { version = "=0.2.0" }
 proton-crypto = { path = "../vendor/proton-crypto-rs/proton-crypto" }
 proton-crypto-account = { path = "../vendor/proton-crypto-rs/proton-crypto-account" }
 
@@ -82,5 +84,5 @@ build_targets = ["aarch64-apple-ios"]
 
 [features]
 default = []
-mocking = ["andromeda-api/mocking"]
+mocking = []
 test = ["andromeda-api/allow-dangerous-env", "mocking"]

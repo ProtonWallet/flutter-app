@@ -8,7 +8,6 @@ use andromeda_api::{
         CreateWalletTransactionRequestBody, MigratedWallet, MigratedWalletAccount,
         MigratedWalletTransaction, WalletMigrateRequestBody, WalletTransactionFlag,
     },
-    wallet_ext::WalletClientExt,
 };
 
 use crate::{
