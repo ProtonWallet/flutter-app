@@ -7,22 +7,23 @@ use andromeda_bitcoin::{transactions::Pagination, utils::SortOrder, wallet::Wall
 use andromeda_common::{Network, ScriptType};
 
 use super::{
-    account::FrbAccount,
-    balance::FrbBalance,
-    derivation_path::FrbDerivationPath,
-    discovered_account::DiscoveredAccount,
-    storage::{OnchainStore, OnchainStoreFactory},
+    account::FrbAccount, balance::FrbBalance, derivation_path::FrbDerivationPath,
+    discovered_account::DiscoveredAccount, storage::WalletMobileConnectorFactory,
     transaction_details::FrbTransactionDetails,
 };
-use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
+use crate::{
+    api::api_service::proton_api_service::ProtonAPIService,
+    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
+    BridgeError,
+};
 
 #[derive(Debug)]
 pub struct FrbWallet {
-    pub(crate) inner: Wallet<OnchainStore>,
+    pub(crate) inner: Wallet<WalletMobileConnector, WalletMobilePersister>,
 }
 
 impl FrbWallet {
-    pub(crate) fn get_inner(&self) -> &Wallet<OnchainStore> {
+    pub(crate) fn get_inner(&self) -> &Wallet<WalletMobileConnector, WalletMobilePersister> {
         &self.inner
     }
 }
@@ -42,7 +43,7 @@ impl FrbWallet {
     pub async fn discover_account(
         &self,
         api_service: Arc<ProtonAPIService>,
-        storage_factory: OnchainStoreFactory,
+        connector_factory: WalletMobileConnectorFactory,
         account_stop_gap: u32,
         address_stop_gap: usize,
     ) -> Result<Vec<DiscoveredAccount>, BridgeError> {
@@ -50,7 +51,7 @@ impl FrbWallet {
             .inner
             .discover_accounts(
                 api_service.inner.deref().clone(),
-                storage_factory,
+                connector_factory,
                 Some(account_stop_gap),
                 Some(address_stop_gap),
             )
@@ -65,14 +66,16 @@ impl FrbWallet {
         &mut self,
         script_type: ScriptType,
         derivation_path: String,
-        storage_factory: OnchainStoreFactory,
+        connector_factory: WalletMobileConnectorFactory,
     ) -> Result<FrbAccount, BridgeError> {
         // In a multi-wallet context, an account must be defined by the BIP32 masterkey
         // (fingerprint), and its derivation path (unique)
         let derivation_path = FrbDerivationPath::new(&derivation_path)?;
-        let account =
-            self.inner
-                .add_account(script_type, derivation_path.clone_inner(), storage_factory)?;
+        let account = self.inner.add_account(
+            script_type,
+            derivation_path.clone_inner(),
+            connector_factory,
+        )?;
 
         Ok(account.into())
     }
@@ -136,11 +139,12 @@ mod test {
     use std::time::Instant;
     use std::{env, sync::Arc};
 
+    use crate::api::bdk_wallet::storage::WalletMobileConnectorFactory;
     use crate::api::{
         api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        bdk_wallet::{blockchain::FrbBlockchainClient, storage::OnchainStoreFactory},
+        bdk_wallet::blockchain::FrbBlockchainClient,
     };
 
     use super::FrbWallet;
@@ -151,9 +155,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory {
-            folder_path: ".".to_string(),
-        };
+        let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
         let network = Network::Testnet;
         let bip39_mnemonic =
                 // "deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough"
@@ -265,9 +267,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = OnchainStoreFactory {
-            folder_path: ".".to_string(),
-        };
+        let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
         let network = Network::Bitcoin;
         let bip39_mnemonic =
             "shoe foot noise erode merit good gesture wolf boring build trim zero".to_string();
@@ -290,14 +290,14 @@ mod test {
         assert!(external_path.contains(&path));
         println!("path: {}", path);
 
-        let app_version = "android-wallet@1.0.0".to_string();
+        let app_version = "android-wallet@1.0.0.77-dev".to_string();
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let store = ProtonWalletAuthStore::new("prod").unwrap();
         let api_service = Arc::new(
             ProtonAPIService::new("prod".to_string(), app_version, user_agent, store).unwrap(),
         );
         let _ = api_service
-            .login("username".to_string(), "password".to_string())
+            .login("feng200".to_string(), "12345678".to_string())
             .await;
 
         let balance = frb_account.get_balance().await.total();
@@ -333,6 +333,9 @@ mod test {
         println!("trusted_pending: {}", balance.inner.trusted_pending);
         println!("untrusted_pending: {}", balance.inner.untrusted_pending);
         println!("balance: {}", balance.total().to_btc());
+
+        let transactions = frb_account.get_transactions(None, None).await.unwrap();
+        assert!(!transactions.is_empty());
 
         let address1 = frb_account.get_address(Some(0)).await.unwrap();
         let address2 = frb_account.get_address(Some(1)).await.unwrap();

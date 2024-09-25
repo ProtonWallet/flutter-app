@@ -107,7 +107,7 @@ class WalletManager implements Manager {
     }
 
     final dbPath = await getDatabaseFolderPath();
-    final storage = OnchainStoreFactory(folderPath: dbPath);
+    final storage = WalletMobileConnectorFactory(folderPath: dbPath);
     ScriptTypeInfo? scriptTypeInfo;
     for (ScriptTypeInfo info in ScriptTypeInfo.scripts) {
       if (derivationPath.startsWith("m/${info.bipVersion}'/")) {
@@ -131,7 +131,7 @@ class WalletManager implements Manager {
       final account = frbWallet.addAccount(
           scriptType: scriptTypeInfo.type,
           derivationPath: derivationPath,
-          storageFactory: storage);
+          connectorFactory: storage);
 
       return account;
     }

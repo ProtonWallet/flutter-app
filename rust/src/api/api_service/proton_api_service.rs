@@ -18,7 +18,7 @@ use crate::api::proton_api::{logout, set_proton_api};
 use crate::api::srp::srp_client::SrpClient;
 use crate::{auth_credential::AuthCredential, BridgeError};
 use andromeda_api::wallet::ApiWalletData;
-use andromeda_api::wallet_ext::WalletClientExt;
+// use andromeda_api::wallet_ext::WalletClientExt;
 use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
@@ -123,7 +123,7 @@ impl ProtonAPIService {
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
         info!("update_auth api service --- loggin");
         let mut old_auth = self.store.inner.auth.lock()?;
-        *old_auth = auth;
+        *old_auth = auth.clone();
         info!("auth data is updated");
         Ok(())
     }
@@ -133,7 +133,6 @@ impl ProtonAPIService {
     }
 
     pub async fn logout(&mut self) -> Result<(), BridgeError> {
-        // self.store.clone().logout().await;
         info!("logout api service is loggin out");
         let mut old_auth = self.store.inner.auth.lock()?;
         *old_auth = Auth::None;

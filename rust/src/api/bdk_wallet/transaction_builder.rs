@@ -1,6 +1,9 @@
 // transaction_builder.rs
 
-use crate::BridgeError;
+use crate::{
+    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
+    BridgeError,
+};
 use andromeda_bitcoin::{
     transaction_builder::{CoinSelection, TxBuilder},
     ChangeSpendPolicy,
@@ -8,15 +11,15 @@ use andromeda_bitcoin::{
 use andromeda_common::Network;
 use flutter_rust_bridge::frb;
 
-use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt, storage::OnchainStore};
+use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt};
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {
-    pub(crate) inner: TxBuilder<OnchainStore>,
+    pub(crate) inner: TxBuilder<WalletMobileConnector, WalletMobilePersister>,
 }
 
-impl From<TxBuilder<OnchainStore>> for FrbTxBuilder {
-    fn from(inner: TxBuilder<OnchainStore>) -> Self {
+impl From<TxBuilder<WalletMobileConnector, WalletMobilePersister>> for FrbTxBuilder {
+    fn from(inner: TxBuilder<WalletMobileConnector, WalletMobilePersister>) -> Self {
         FrbTxBuilder { inner }
     }
 }
@@ -32,9 +35,7 @@ impl FrbTxBuilder {
     }
 
     pub async fn set_account(&self, account: &FrbAccount) -> Result<FrbTxBuilder, BridgeError> {
-        let inner = self.inner.set_account(account.get_inner());
-
-        Ok(inner.into())
+        Ok(self.inner.set_account(account.get_inner()).into())
     }
 
     #[frb(sync)]

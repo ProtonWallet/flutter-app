@@ -3,7 +3,8 @@ mod frb_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be
 /// frb interface
 pub mod api;
 
-// pub mod bdk;
+pub mod proton_bdk;
+
 pub mod common;
 // pub mod ldk;
 pub mod proton_api;
