@@ -21,21 +21,17 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These types are ignored because they are not used by any `pub` functions: `PROTON_API`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `deref`, `initialize`
 
-/// TODO:: slowly move to use api_service folder functions
-Future<List<ApiWalletData>> getWallets() =>
-    RustLib.instance.api.crateApiProtonApiGetWallets();
-
+/// proton_api.updatewalletname
 Future<ApiWallet> updateWalletName(
         {required String walletId, required String newName}) =>
     RustLib.instance.api.crateApiProtonApiUpdateWalletName(
         walletId: walletId, newName: newName);
 
+/// proton_api.deletewallet
 Future<void> deleteWallet({required String walletId}) =>
     RustLib.instance.api.crateApiProtonApiDeleteWallet(walletId: walletId);
 
-Future<List<ApiWalletAccount>> getWalletAccounts({required String walletId}) =>
-    RustLib.instance.api.crateApiProtonApiGetWalletAccounts(walletId: walletId);
-
+/// proton_api.updatewalletaccountlabel
 Future<ApiWalletAccount> updateWalletAccountLabel(
         {required String walletId,
         required String walletAccountId,
@@ -45,47 +41,36 @@ Future<ApiWalletAccount> updateWalletAccountLabel(
         walletAccountId: walletAccountId,
         newLabel: newLabel);
 
+/// proton_api.deletewalletaccount
 Future<void> deleteWalletAccount(
         {required String walletId, required String walletAccountId}) =>
     RustLib.instance.api.crateApiProtonApiDeleteWalletAccount(
         walletId: walletId, walletAccountId: walletAccountId);
 
-/// getUserSettings
-Future<ApiWalletUserSettings> getUserSettings() =>
-    RustLib.instance.api.crateApiProtonApiGetUserSettings();
-
+/// proton_api.bitcoinunit
 Future<ApiWalletUserSettings> bitcoinUnit({required BitcoinUnit symbol}) =>
     RustLib.instance.api.crateApiProtonApiBitcoinUnit(symbol: symbol);
 
-Future<ApiWalletUserSettings> fiatCurrency({required FiatCurrency symbol}) =>
-    RustLib.instance.api.crateApiProtonApiFiatCurrency(symbol: symbol);
-
-Future<ApiWalletUserSettings> twoFaThreshold({required BigInt amount}) =>
-    RustLib.instance.api.crateApiProtonApiTwoFaThreshold(amount: amount);
-
-Future<ApiWalletUserSettings> hideEmptyUsedAddresses(
-        {required bool hideEmptyUsedAddresses}) =>
-    RustLib.instance.api.crateApiProtonApiHideEmptyUsedAddresses(
-        hideEmptyUsedAddresses: hideEmptyUsedAddresses);
-
+/// proton_api.getexchangerate
 Future<ProtonExchangeRate> getExchangeRate(
         {required FiatCurrency fiatCurrency, BigInt? time}) =>
     RustLib.instance.api.crateApiProtonApiGetExchangeRate(
         fiatCurrency: fiatCurrency, time: time);
 
+/// proton_api.getlatesteventid
 Future<String> getLatestEventId() =>
     RustLib.instance.api.crateApiProtonApiGetLatestEventId();
 
+/// proton_api.collectevents
 Future<List<ProtonEvent>> collectEvents({required String latestEventId}) =>
     RustLib.instance.api
         .crateApiProtonApiCollectEvents(latestEventId: latestEventId);
 
-Future<List<ApiContactEmails>> getContacts() =>
-    RustLib.instance.api.crateApiProtonApiGetContacts();
-
+/// proton_api.getprotonaddress
 Future<List<ProtonAddress>> getProtonAddress() =>
     RustLib.instance.api.crateApiProtonApiGetProtonAddress();
 
+/// proton_api.addemailaddress
 Future<ApiWalletAccount> addEmailAddress(
         {required String walletId,
         required String walletAccountId,
@@ -95,6 +80,7 @@ Future<ApiWalletAccount> addEmailAddress(
         walletAccountId: walletAccountId,
         addressId: addressId);
 
+/// proton_api.removeemailaddress
 Future<ApiWalletAccount> removeEmailAddress(
         {required String walletId,
         required String walletAccountId,
@@ -104,6 +90,7 @@ Future<ApiWalletAccount> removeEmailAddress(
         walletAccountId: walletAccountId,
         addressId: addressId);
 
+/// proton_api.updatebitcoinaddress
 Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
         {required String walletId,
         required String walletAccountId,
@@ -115,6 +102,7 @@ Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
         walletAccountBitcoinAddressId: walletAccountBitcoinAddressId,
         bitcoinAddress: bitcoinAddress);
 
+/// proton_api.addbitcoinaddresses
 Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
         {required String walletId,
         required String walletAccountId,
@@ -124,10 +112,12 @@ Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
         walletAccountId: walletAccountId,
         bitcoinAddresses: bitcoinAddresses);
 
+/// proton_api.lookupbitcoinaddress
 Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
         {required String email}) =>
     RustLib.instance.api.crateApiProtonApiLookupBitcoinAddress(email: email);
 
+/// proton_api.getwalletbitcoinaddress
 Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
         {required String walletId,
         required String walletAccountId,
@@ -137,20 +127,7 @@ Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
         walletAccountId: walletAccountId,
         onlyRequest: onlyRequest);
 
-Future<BigInt> getBitcoinAddressLatestIndex(
-        {required String walletId, required String walletAccountId}) =>
-    RustLib.instance.api.crateApiProtonApiGetBitcoinAddressLatestIndex(
-        walletId: walletId, walletAccountId: walletAccountId);
-
-Future<List<WalletTransaction>> getWalletTransactions(
-        {required String walletId,
-        String? walletAccountId,
-        List<String>? hashedTxids}) =>
-    RustLib.instance.api.crateApiProtonApiGetWalletTransactions(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        hashedTxids: hashedTxids);
-
+/// proton_api.createwallettransactions
 Future<WalletTransaction> createWalletTransactions(
         {required String walletId,
         required String walletAccountId,
@@ -168,6 +145,7 @@ Future<WalletTransaction> createWalletTransactions(
         exchangeRateId: exchangeRateId,
         transactionTime: transactionTime);
 
+/// proton_api.updatewallettransactionlabel
 Future<WalletTransaction> updateWalletTransactionLabel(
         {required String walletId,
         required String walletAccountId,
@@ -179,21 +157,11 @@ Future<WalletTransaction> updateWalletTransactionLabel(
         walletTransactionId: walletTransactionId,
         label: label);
 
-Future<void> deleteWalletTransactions(
-        {required String walletId,
-        required String walletAccountId,
-        required String walletTransactionId}) =>
-    RustLib.instance.api.crateApiProtonApiDeleteWalletTransactions(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        walletTransactionId: walletTransactionId);
-
+/// proton_api.getallpublickeys
 Future<List<AllKeyAddressKey>> getAllPublicKeys(
         {required String email, required int internalOnly}) =>
     RustLib.instance.api.crateApiProtonApiGetAllPublicKeys(
         email: email, internalOnly: internalOnly);
 
-Future<bool> isValidToken() =>
-    RustLib.instance.api.crateApiProtonApiIsValidToken();
-
+/// proton_api.fork
 Future<ChildSession> fork() => RustLib.instance.api.crateApiProtonApiFork();

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/user.agent.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
@@ -34,7 +35,6 @@ import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/drift/user.keys.queries.dart';
 import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
-import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 
 /// data state
 abstract class DataState extends Equatable {}
@@ -123,7 +123,7 @@ abstract class DataProvider extends Bloc<DataEvent, DataState> {
 class DataProviderManager extends Manager {
   final SecureStorageManager storage;
   final PreferencesManager shared;
-  final ProtonApiService apiService;
+  final ProtonApiServiceManager apiServiceManager;
   final AppDatabase dbConnection;
   final UserManager userManager;
   final ApiEnv apiEnv;
@@ -153,7 +153,7 @@ class DataProviderManager extends Manager {
     this.apiEnv,
     this.storage,
     this.shared,
-    this.apiService,
+    this.apiServiceManager,
     this.dbConnection,
     this.userManager,
   );
@@ -162,7 +162,7 @@ class DataProviderManager extends Manager {
   Future<void> login(String userID) async {
     //
     userDataProvider = UserDataProvider(
-      apiService.getProtonUserClient(),
+      apiServiceManager.getApiService().getProtonUserClient(),
       UserQueries(dbConnection),
       UserKeysQueries(dbConnection),
     );
@@ -174,7 +174,7 @@ class DataProviderManager extends Manager {
       DBHelper.walletDao!,
       DBHelper.accountDao!,
       DBHelper.addressDao!,
-      apiService.getWalletClient(),
+      apiServiceManager.getApiService().getWalletClient(),
       // TODO(fix): put selected wallet server id here
       "",
       // TODO(fix): put selected wallet account server id here
@@ -184,11 +184,11 @@ class DataProviderManager extends Manager {
     //
     walletKeysProvider = WalletKeysProvider(
       storage,
-      apiService.getWalletClient(),
+      apiServiceManager.getApiService().getWalletClient(),
     );
     //
     contactsDataProvider = ContactsDataProvider(
-      apiService.getProtonContactsClient(),
+      apiServiceManager.getApiService().getProtonContactsClient(),
       DBHelper.contactsDao!,
       userID,
     );
@@ -196,19 +196,20 @@ class DataProviderManager extends Manager {
     userSettingsDataProvider = UserSettingsDataProvider(
       userID,
       WalletUserSettingsQueries(dbConnection),
-      apiService.getSettingsClient(),
+      apiServiceManager.getApiService().getSettingsClient(),
       shared,
     );
     // on ramp gateway
     gatewayDataProvider = GatewayDataProvider(
-      apiService.getOnRampGatewayClient(),
+      apiServiceManager.getApiService().getOnRampGatewayClient(),
     );
 
-    addressKeyProvider =
-        AddressKeyProvider(apiService.getProtonEmailAddrClient());
+    addressKeyProvider = AddressKeyProvider(
+      apiServiceManager.getApiService().getProtonEmailAddrClient(),
+    );
 
     serverTransactionDataProvider = ServerTransactionDataProvider(
-        apiService.getWalletClient(),
+        apiServiceManager.getApiService().getWalletClient(),
         DBHelper.walletDao!,
         DBHelper.accountDao!,
         DBHelper.exchangeRateDao!,
@@ -217,7 +218,7 @@ class DataProviderManager extends Manager {
 
     bdkTransactionDataProvider = BDKTransactionDataProvider(
       DBHelper.accountDao!,
-      apiService,
+      apiServiceManager.getApiService(),
       shared,
     );
 
@@ -237,11 +238,11 @@ class DataProviderManager extends Manager {
     );
 
     blockInfoDataProvider = BlockInfoDataProvider(
-      apiService.getBlockClient(),
+      apiServiceManager.getApiService().getBlockClient(),
     );
 
     exclusiveInviteDataProvider = ExclusiveInviteDataProvider(
-      apiService.getInviteClient(),
+      apiServiceManager.getApiService().getInviteClient(),
     );
 
     protonEmailAddressProvider = ProtonEmailAddressProvider();
@@ -249,11 +250,11 @@ class DataProviderManager extends Manager {
     connectivityProvider = ConnectivityProvider();
 
     priceGraphDataProvider = PriceGraphDataProvider(
-      apiService.getPriceGraphClient(),
+      apiServiceManager.getApiService().getPriceGraphClient(),
     );
 
     receiveAddressDataProvider = ReceiveAddressDataProvider(
-      apiService.getBitcoinAddrClient(),
+      apiServiceManager.getApiService().getBitcoinAddrClient(),
     );
 
     final userAgent = UserAgent();

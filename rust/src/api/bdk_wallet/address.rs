@@ -5,9 +5,8 @@ use std::str::FromStr;
 use andromeda_bitcoin::{Address as BdkAddress, ConsensusParams};
 use andromeda_common::Network;
 
-use crate::BridgeError;
-
 use super::script_buf::FrbScriptBuf;
+use crate::BridgeError;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FrbAddress {

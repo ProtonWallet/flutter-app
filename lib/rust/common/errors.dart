@@ -65,6 +65,16 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.walletCrypto(
     String field0,
   ) = BridgeError_WalletCrypto;
+
+  /// Login error
+  const factory BridgeError.login(
+    String field0,
+  ) = BridgeError_Login;
+
+  /// Fork error
+  const factory BridgeError.fork(
+    String field0,
+  ) = BridgeError_Fork;
 }
 
 class ResponseError {

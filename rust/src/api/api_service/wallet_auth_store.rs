@@ -1,8 +1,6 @@
 use std::{future::Future, pin::Pin, sync::Arc};
 
-use andromeda_api::{
-    Auth, ChildSession, EnvId, Store, StoreReadErr, StoreWriteErr, Tokens, WalletAuthStore,
-};
+use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
 use log::info;
 
@@ -34,6 +32,7 @@ impl ProtonWalletAuthStore {
         env: &str,
         auth: Arc<std::sync::Mutex<Auth>>,
     ) -> Result<Self, BridgeError> {
+        info!("from_auth start");
         let store = WalletAuthStore::from_env_str(env.to_string(), auth);
         Ok(Self { inner: store })
     }
@@ -47,6 +46,7 @@ impl ProtonWalletAuthStore {
         scopes: Vec<String>,
     ) -> Result<Self, BridgeError> {
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        info!("from_session start");
         ProtonWalletAuthStore::from_auth(env, Arc::new(std::sync::Mutex::new(auth)))
     }
 
@@ -58,8 +58,9 @@ impl ProtonWalletAuthStore {
         refresh: String,
         scopes: Vec<String>,
     ) -> Result<(), BridgeError> {
+        info!("set_auth_sync start");
         let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
-        let _ = self.inner.set_auth(auth)?;
+        let _ = self.inner.set_auth(auth);
         Ok(())
     }
 
@@ -121,12 +122,12 @@ impl Store for ProtonWalletAuthStore {
         self.inner.env()
     }
 
-    fn get_auth(&self) -> Result<Auth, StoreReadErr> {
+    fn get_auth(&self) -> Auth {
         info!("ProtonWalletAuthStore get_auth");
         self.inner.get_auth()
     }
 
-    fn set_auth(&mut self, auth: Auth) -> Result<Auth, StoreWriteErr> {
+    fn set_auth(&mut self, auth: Auth) -> Result<Auth, StoreFailure> {
         info!("Custom set_auth: {:?}", auth.clone());
         let result = self.inner.set_auth(auth.clone())?;
         self.refresh_auth_credential(auth.clone());
