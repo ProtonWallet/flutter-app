@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 // account.rs
 use flutter_rust_bridge::frb;
 
@@ -6,45 +8,48 @@ use andromeda_bitcoin::{
 };
 use andromeda_common::{Network, ScriptType};
 
-use crate::{common::address_info::FrbAddressInfo, BridgeError};
+use crate::{
+    common::address_info::FrbAddressInfo,
+    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
+    BridgeError,
+};
 
 use super::{
-    address::FrbAddress,
-    balance::FrbBalance,
-    derivation_path::FrbDerivationPath,
-    local_output::FrbLocalOutput,
-    payment_link::FrbPaymentLink,
-    psbt::FrbPsbt,
-    storage::{OnchainStore, OnchainStoreFactory},
-    transaction_builder::FrbTxBuilder,
-    transaction_details::FrbTransactionDetails,
+    address::FrbAddress, balance::FrbBalance, derivation_path::FrbDerivationPath,
+    local_output::FrbLocalOutput, psbt::FrbPsbt, storage::WalletMobileConnectorFactory,
+    transaction_builder::FrbTxBuilder, transaction_details::FrbTransactionDetails,
     wallet::FrbWallet,
 };
 
-#[derive(Debug, Clone)]
+// #[derive(Debug, Clone)]
 pub struct FrbAccount {
-    pub(crate) inner: Account<OnchainStore>,
+    pub(crate) inner: Arc<Account<WalletMobileConnector, WalletMobilePersister>>,
 }
 
 impl FrbAccount {
-    pub(crate) fn get_inner(&self) -> Account<OnchainStore> {
+    #[frb(ignore)]
+    pub(crate) fn get_inner(&self) -> Arc<Account<WalletMobileConnector, WalletMobilePersister>> {
         self.inner.clone()
     }
+
+    // pub(crate) fn get_inner_ref(&self) -> Account<WalletMobileConnector, WalletMobilePersister> {
+    //     self.inner.deref()
+    // }
 }
 
-impl From<Account<OnchainStore>> for FrbAccount {
-    fn from(value: Account<OnchainStore>) -> Self {
+impl From<Arc<Account<WalletMobileConnector, WalletMobilePersister>>> for FrbAccount {
+    fn from(value: Arc<Account<WalletMobileConnector, WalletMobilePersister>>) -> Self {
         FrbAccount { inner: value }
     }
 }
 
-impl From<&Account<OnchainStore>> for FrbAccount {
-    fn from(value: &Account<OnchainStore>) -> Self {
-        FrbAccount {
-            inner: value.clone(),
-        }
-    }
-}
+// impl From<&Account<WalletMobileConnector, WalletMobilePersister>> for FrbAccount {
+//     fn from(value: &Account<WalletMobileConnector, WalletMobilePersister>) -> Self {
+//         FrbAccount {
+//             inner: value.clone(),
+//         }
+//     }
+// }
 
 impl FrbAccount {
     /// Usually creating account need to through wallet.
@@ -54,7 +59,7 @@ impl FrbAccount {
         wallet: &FrbWallet,
         script_type: ScriptType,
         derivation_path: FrbDerivationPath,
-        storage_factory: OnchainStoreFactory,
+        storage_factory: WalletMobileConnectorFactory,
     ) -> Result<FrbAccount, BridgeError> {
         let (mprv, network) = wallet.get_inner().mprv();
         let account = Account::new(
@@ -65,11 +70,13 @@ impl FrbAccount {
             storage_factory,
         )?;
 
-        Ok(FrbAccount { inner: account })
+        Ok(FrbAccount {
+            inner: Arc::new(account),
+        })
     }
 
     pub async fn get_address(&self, index: Option<u32>) -> Result<FrbAddressInfo, BridgeError> {
-        let account_inner = self.get_inner();
+        let account_inner = self.inner.clone();
 
         let address = if let Some(idx) = index {
             account_inner.peek_receive_address(idx).await?
@@ -85,7 +92,7 @@ impl FrbAccount {
         from: u32,
         to: Option<u32>,
     ) -> Result<(), BridgeError> {
-        let account_inner = self.get_inner();
+        let account_inner = self.inner.clone();
         account_inner
             .mark_receive_addresses_used_to(from, to)
             .await?;
@@ -94,34 +101,32 @@ impl FrbAccount {
     }
 
     pub async fn get_next_receive_address(&self) -> Result<FrbAddressInfo, BridgeError> {
-        let account_inner = self.get_inner();
+        let account_inner = self.inner.clone();
         let address = account_inner.get_next_receive_address().await?;
 
         Ok(address.into())
     }
 
-    pub async fn get_bitcoin_uri(
-        &mut self,
-        amount: Option<u64>,
-        label: Option<String>,
-        message: Option<String>,
-    ) -> Result<FrbPaymentLink, BridgeError> {
-        let mut account_inner = self.get_inner();
-
-        let payment_link = account_inner
-            .get_bitcoin_uri(amount, label, message)
-            .await?;
-        Ok(payment_link.into())
-    }
+    // pub async fn get_bitcoin_uri(
+    //     &mut self,
+    //     amount: Option<u64>,
+    //     label: Option<String>,
+    //     message: Option<String>,
+    // ) -> Result<FrbPaymentLink, BridgeError> {
+    //     let mut account_inner = self.get_inner_ref();
+    //     let payment_link = account_inner
+    //         .get_bitcoin_uri(amount, label, message)
+    //         .await?;
+    //     Ok(payment_link.into())
+    // }
 
     pub async fn is_mine(&self, address: &FrbAddress) -> Result<bool, BridgeError> {
-        let owns = self.inner.owns(&address.clone_inner()).await;
-
+        let owns = self.get_inner().owns(&address.clone_inner()).await;
         Ok(owns)
     }
 
     pub async fn get_balance(&self) -> FrbBalance {
-        self.inner.get_balance().await.into()
+        self.get_inner().get_balance().await.into()
     }
 
     pub fn get_derivation_path(&self) -> Result<String, BridgeError> {
@@ -185,7 +190,7 @@ impl FrbAccount {
     pub async fn build_tx(&self) -> Result<FrbTxBuilder, BridgeError> {
         let mut tx_builder = FrbTxBuilder::new();
         tx_builder = tx_builder.clear_recipients();
-        tx_builder = tx_builder.set_account(&self.clone()).await?;
+        tx_builder = tx_builder.set_account(self).await?;
 
         Ok(tx_builder)
     }

@@ -503,11 +503,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  FrbAccount
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
-          dynamic raw);
-
-  @protected
   FrbAppDatabase
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAppDatabase(
           dynamic raw);
@@ -1145,9 +1140,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MigratedWallet dco_decode_box_autoadd_migrated_wallet(dynamic raw);
 
   @protected
-  OnchainStoreFactory dco_decode_box_autoadd_onchain_store_factory(dynamic raw);
-
-  @protected
   Pagination dco_decode_box_autoadd_pagination(dynamic raw);
 
   @protected
@@ -1206,6 +1198,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt dco_decode_box_autoadd_usize(dynamic raw);
+
+  @protected
+  WalletMobileConnectorFactory
+      dco_decode_box_autoadd_wallet_mobile_connector_factory(dynamic raw);
 
   @protected
   WalletModel dco_decode_box_autoadd_wallet_model(dynamic raw);
@@ -1481,9 +1477,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network dco_decode_network(dynamic raw);
-
-  @protected
-  OnchainStoreFactory dco_decode_onchain_store_factory(dynamic raw);
 
   @protected
   Map<String, String>? dco_decode_opt_Map_String_String(dynamic raw);
@@ -1768,6 +1761,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletKeyEvent dco_decode_wallet_key_event(dynamic raw);
 
   @protected
+  WalletMobileConnectorFactory dco_decode_wallet_mobile_connector_factory(
+      dynamic raw);
+
+  @protected
   WalletModel dco_decode_wallet_model(dynamic raw);
 
   @protected
@@ -2013,11 +2010,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   BdkTransaction
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
-          SseDeserializer deserializer);
-
-  @protected
-  FrbAccount
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
           SseDeserializer deserializer);
 
   @protected
@@ -2662,10 +2654,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  OnchainStoreFactory sse_decode_box_autoadd_onchain_store_factory(
-      SseDeserializer deserializer);
-
-  @protected
   Pagination sse_decode_box_autoadd_pagination(SseDeserializer deserializer);
 
   @protected
@@ -2734,6 +2722,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BigInt sse_decode_box_autoadd_usize(SseDeserializer deserializer);
+
+  @protected
+  WalletMobileConnectorFactory
+      sse_decode_box_autoadd_wallet_mobile_connector_factory(
+          SseDeserializer deserializer);
 
   @protected
   WalletModel sse_decode_box_autoadd_wallet_model(SseDeserializer deserializer);
@@ -3044,10 +3037,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Network sse_decode_network(SseDeserializer deserializer);
-
-  @protected
-  OnchainStoreFactory sse_decode_onchain_store_factory(
-      SseDeserializer deserializer);
 
   @protected
   Map<String, String>? sse_decode_opt_Map_String_String(
@@ -3366,6 +3355,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletKeyEvent sse_decode_wallet_key_event(SseDeserializer deserializer);
 
   @protected
+  WalletMobileConnectorFactory sse_decode_wallet_mobile_connector_factory(
+      SseDeserializer deserializer);
+
+  @protected
   WalletModel sse_decode_wallet_model(SseDeserializer deserializer);
 
   @protected
@@ -3615,11 +3608,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           BdkTransaction self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
-          FrbAccount self, SseSerializer serializer);
 
   @protected
   void
@@ -4283,10 +4271,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       MigratedWallet self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_onchain_store_factory(
-      OnchainStoreFactory self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_pagination(
       Pagination self, SseSerializer serializer);
 
@@ -4357,6 +4341,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_usize(BigInt self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_wallet_mobile_connector_factory(
+      WalletMobileConnectorFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_wallet_model(
@@ -4682,10 +4670,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_network(Network self, SseSerializer serializer);
 
   @protected
-  void sse_encode_onchain_store_factory(
-      OnchainStoreFactory self, SseSerializer serializer);
-
-  @protected
   void sse_encode_opt_Map_String_String(
       Map<String, String>? self, SseSerializer serializer);
 
@@ -5004,6 +4988,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_wallet_key_event(
       WalletKeyEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_wallet_mobile_connector_factory(
+      WalletMobileConnectorFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_model(WalletModel self, SseSerializer serializer);

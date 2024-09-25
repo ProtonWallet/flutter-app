@@ -52,6 +52,14 @@ pub enum BridgeError {
     /// wallet crypto errors
     #[error("An error occurred in wallet crypto: {0}")]
     WalletCrypto(String),
+
+    /// Login error
+    #[error("An Login error occurred: {0}")]
+    Login(String),
+
+    /// Fork error
+    #[error("An Fork error occurred: {0}")]
+    Fork(String),
 }
 
 impl From<WalletCryptoError> for BridgeError {
@@ -85,10 +93,10 @@ impl From<serde_json::Error> for BridgeError {
     }
 }
 
-impl From<andromeda_api::StoreWriteErr> for BridgeError {
-    fn from(value: andromeda_api::StoreWriteErr) -> Self {
+impl From<andromeda_api::StoreFailure> for BridgeError {
+    fn from(value: andromeda_api::StoreFailure) -> Self {
         BridgeError::Generic(format!(
-            "andromeda_api::StoreWriteErr occurred: {:?}",
+            "andromeda_api::StoreFailure occurred: {:?}",
             value.source()
         ))
     }
@@ -194,16 +202,21 @@ impl From<AndromedaApiError> for BridgeError {
             AndromedaApiError::Utf8Error(err) => {
                 BridgeError::Generic(format!("Utf8Error error occurred: {:?}", err.source()))
             }
+            AndromedaApiError::ForkAuthSession => {
+                BridgeError::Fork("ForkAuthSession error occurred".to_string())
+            }
+            AndromedaApiError::ForkSession => {
+                BridgeError::Fork("ForkSession error occurred".to_string())
+            }
+            AndromedaApiError::LoginError => {
+                BridgeError::Login("LoginError error occurred".to_string())
+            }
+            AndromedaApiError::UnsupportedTwoFactor => {
+                BridgeError::Generic("UnsupportedTwoFactor error occurred".to_string())
+            }
         }
     }
 }
-
-// #[derive(Debug)]
-// pub struct MuonStatusError {
-//     pub http_code: u16,
-//     pub error: String,
-//     pub details: String,
-// }
 
 #[derive(Debug)]
 pub struct ResponseError {

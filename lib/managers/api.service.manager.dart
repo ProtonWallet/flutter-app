@@ -1,6 +1,5 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
@@ -78,17 +77,8 @@ class ProtonApiServiceManager implements Manager {
   }
 
   ProtonApiService getApiService() {
-    // _apiService.isDisposed();
-    // TODO(improve): when misuse api instance in rust layer. this could be disposed. need to add re-init the api service later.
-    _apiService ??= ProtonApiService(
-        env: env.toString(),
-        appVersion: version,
-        userAgent: agent,
-        store: authStore);
     return _apiService!;
   }
-
-  Future<void> buildAndRestore() async {}
 
   @override
   Future<void> dispose() async {}
@@ -96,16 +86,6 @@ class ProtonApiServiceManager implements Manager {
   @override
   Future<void> init() async {
     await authStore.setAuthDartCallback(callback: callback);
-
-    final UserAgent userAgent = UserAgent();
-    version = await userAgent.appVersion;
-    agent = await userAgent.ua;
-
-    _apiService = ProtonApiService(
-        env: env.toString(),
-        appVersion: version,
-        userAgent: agent,
-        store: authStore);
   }
 
   @override
@@ -115,9 +95,6 @@ class ProtonApiServiceManager implements Manager {
     /// the apiSerice logout is global clean up in rust layer. remove the ProtonAPiSerive caches and also reset the AuthStore session.
     ///  after called this function, you need re-init the ProtonApiService again. dont foget to setup AuthDartCallback.
     await _apiService?.logout();
-    // _apiService = null;
-    // authStore = ProtonWalletAuthStore(env: env.toString());
-    // await init();
   }
 
   @override
