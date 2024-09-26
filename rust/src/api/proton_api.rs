@@ -1,3 +1,4 @@
+use andromeda_api::wallet_ext::WalletClientExt;
 use lazy_static::lazy_static;
 use log::info;
 use std::sync::{Arc, RwLock};

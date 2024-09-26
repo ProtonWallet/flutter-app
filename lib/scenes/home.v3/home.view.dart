@@ -23,7 +23,6 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/common/errors.dart';
@@ -1010,8 +1009,7 @@ Widget getWalletAccountBalanceWidget(
   AccountModel accountModel,
   Color textColor,
 ) {
-  FiatCurrency? fiatCurrency =
-      WalletManager.getAccountFiatCurrency(accountModel);
+  FiatCurrency? fiatCurrency = accountModel.getFiatCurrency();
   final ProtonExchangeRate? exchangeRate =
       ExchangeRateService.getExchangeRateOrNull(fiatCurrency);
   final double estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(

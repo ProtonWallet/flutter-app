@@ -46,10 +46,11 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
+          backgroundColor: ProtonColors.backgroundProton,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       bottomWidget: Padding(
         padding: const EdgeInsets.all(defaultPadding),

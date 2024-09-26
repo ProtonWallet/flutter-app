@@ -8,7 +8,8 @@ import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/managers/providers/wallet.mnemonic.provider.dart';
+import 'package:wallet/managers/providers/wallet.name.provider.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
@@ -56,6 +57,8 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   final WalletsDataProvider walletsDataProvider;
   final UserDataProvider userDataProvider;
   final ProtonUsersClient protonUsersApi;
+  final WalletNameProvider walletNameService;
+  final WalletMnemonicProvider walletMnemonicService;
 
   final String userID;
   final bool needPassword;
@@ -66,6 +69,8 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
     super.walletID,
     this.walletsDataProvider,
     this.userDataProvider,
+    this.walletNameService,
+    this.walletMnemonicService,
     this.userID,
     this.protonUsersApi, {
     required this.needPassword,
@@ -104,7 +109,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
         proofs: proofs,
       );
 
-      strMnemonic = await WalletManager.getMnemonicWithID(walletID);
+      strMnemonic = await walletMnemonicService.getMnemonicWithID(walletID);
       strMnemonic.split(" ").forEachIndexed((index, element) {
         itemList.add(Item(
           title: element,
@@ -113,7 +118,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       });
 
       try {
-        walletName = await WalletManager.getWalletName(walletID);
+        walletName = await walletNameService.getNameWithID(walletID);
       } catch (e, stacktrace) {
         walletName = "Unknown";
         logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");

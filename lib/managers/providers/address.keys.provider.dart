@@ -4,30 +4,28 @@ import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 
 class AddressKeyProvider extends DataProvider {
-  StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>.broadcast();
+  final dataUpdateController = StreamController<DataUpdated>.broadcast();
+
+  ///
   final ProtonEmailAddressClient protonEmailAddressClient;
-  final String userID = ""; // need to add userid.
+  final UserManager userManager;
 
   AddressKeyProvider(
+    this.userManager,
     this.protonEmailAddressClient,
   );
 
-  List<AddressKey> addressKeys = [];
+  List<ProtonAddress> addresses = [];
 
-  Future<void> _fetchFromServer() async {
-    addressKeys.clear();
-    List<ProtonAddress> addresses =
-        await protonEmailAddressClient.getProtonAddress();
-    addresses = addresses.where((element) => element.status == 1).toList();
-
-    // TODO(improve): dont use static managers
-    final userKeys = await WalletManager.userManager.getUserKeys();
+  Future<List<AddressKey>> getAddressKeys() async {
+    final List<AddressKey> addressKeysOut = [];
+    final addresses = await _getAddressKeys();
+    final userKeys = await userManager.getUserKeys();
     for (ProtonAddress address in addresses) {
       for (ProtonAddressKey addressKey in address.keys ?? []) {
         final String addressKeyPrivateKey = addressKey.privateKey ?? "";
@@ -39,7 +37,7 @@ class AddressKeyProvider extends DataProvider {
               uKey.passphrase,
               addressKeyToken,
             );
-            addressKeys.add(AddressKey(
+            addressKeysOut.add(AddressKey(
               id: address.id,
               privateKey: addressKeyPrivateKey,
               passphrase: addressKeyPassphrase,
@@ -51,13 +49,20 @@ class AddressKeyProvider extends DataProvider {
         }
       }
     }
+    return addressKeysOut;
   }
 
-  Future<List<AddressKey>> getAddressKeys() async {
-    if (addressKeys.isEmpty) {
+  Future<void> _fetchFromServer() async {
+    addresses.clear();
+    addresses = await protonEmailAddressClient.getProtonAddress();
+    addresses = addresses.where((element) => element.status == 1).toList();
+  }
+
+  Future<List<ProtonAddress>> _getAddressKeys() async {
+    if (addresses.isEmpty) {
       await _fetchFromServer();
     }
-    return addressKeys;
+    return addresses;
   }
 
   @override
@@ -67,7 +72,7 @@ class AddressKeyProvider extends DataProvider {
 
   @override
   Future<void> reload() async {
-    addressKeys = [];
+    addresses = [];
     await _fetchFromServer();
     dataUpdateController.add(DataUpdated(DateTime.now()));
   }

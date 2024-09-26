@@ -9,7 +9,6 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
-import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
@@ -27,6 +26,8 @@ import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
+import 'package:wallet/managers/providers/wallet.mnemonic.provider.dart';
+import 'package:wallet/managers/providers/wallet.name.provider.dart';
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -35,6 +36,7 @@ import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/drift/user.keys.queries.dart';
 import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
+import 'package:wallet/models/wallet.keys.store.dart';
 
 /// data state
 abstract class DataState extends Equatable {}
@@ -138,7 +140,6 @@ class DataProviderManager extends Manager {
   late ServerTransactionDataProvider serverTransactionDataProvider;
   late BDKTransactionDataProvider bdkTransactionDataProvider;
   late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
-  late BalanceDataProvider balanceDataProvider;
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
@@ -148,6 +149,13 @@ class DataProviderManager extends Manager {
   late ConnectivityProvider connectivityProvider;
   late PriceGraphDataProvider priceGraphDataProvider;
   late ReceiveAddressDataProvider receiveAddressDataProvider;
+
+  ///
+  late WalletMnemonicProvider walletMnemonicProvider;
+  late WalletNameProvider walletNameProvider;
+
+  // TODO(improve): this is not good
+  late WalletManager walletManager;
 
   DataProviderManager(
     this.apiEnv,
@@ -183,7 +191,8 @@ class DataProviderManager extends Manager {
     );
     //
     walletKeysProvider = WalletKeysProvider(
-      storage,
+      userManager,
+      WalletKeyStore(storage),
       apiServiceManager.getApiService().getWalletClient(),
     );
     //
@@ -205,6 +214,7 @@ class DataProviderManager extends Manager {
     );
 
     addressKeyProvider = AddressKeyProvider(
+      userManager,
       apiServiceManager.getApiService().getProtonEmailAddrClient(),
     );
 
@@ -220,6 +230,7 @@ class DataProviderManager extends Manager {
       DBHelper.accountDao!,
       apiServiceManager.getApiService(),
       shared,
+      walletManager,
     );
 
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(
@@ -227,11 +238,12 @@ class DataProviderManager extends Manager {
       DBHelper.accountDao!,
       DBHelper.bitcoinAddressDao!,
       userID,
+      walletManager,
     );
 
-    balanceDataProvider = BalanceDataProvider(
-      DBHelper.accountDao!,
-    );
+    // balanceDataProvider = BalanceDataProvider(
+    //   DBHelper.accountDao!,
+    // );
 
     protonAddressProvider = ProtonAddressProvider(
       DBHelper.addressDao!,
@@ -255,6 +267,19 @@ class DataProviderManager extends Manager {
 
     receiveAddressDataProvider = ReceiveAddressDataProvider(
       apiServiceManager.getApiService().getBitcoinAddrClient(),
+      apiServiceManager.getApiService().getWalletClient(),
+      walletDataProvider,
+    );
+
+    walletMnemonicProvider = WalletMnemonicProvider(
+      walletKeysProvider,
+      walletDataProvider,
+    );
+
+    walletNameProvider = WalletNameProvider(
+      walletKeysProvider,
+      DBHelper.accountDao!,
+      DBHelper.walletDao!,
     );
 
     final userAgent = UserAgent();
@@ -267,15 +292,6 @@ class DataProviderManager extends Manager {
       uid,
       accessToken,
     );
-    // TODO(fix): fix this
-    WalletManager.walletKeysProvider = walletKeysProvider;
-    WalletManager.walletPassphraseProvider = walletPassphraseProvider;
-    WalletManager.walletDataProvider = walletDataProvider;
-    WalletManager.localBitcoinAddressDataProvider =
-        localBitcoinAddressDataProvider;
-    WalletManager.serverTransactionDataProvider = serverTransactionDataProvider;
-    WalletManager.receiveAddressDataProvider = receiveAddressDataProvider;
-    WalletManager.userID = userID;
   }
 
   @override
@@ -286,25 +302,51 @@ class DataProviderManager extends Manager {
 
   @override
   Future<void> logout() async {
-    await gatewayDataProvider.clear();
-    await userSettingsDataProvider.clear();
     await userDataProvider.clear();
     await walletDataProvider.clear();
     await walletPassphraseProvider.clear();
     await walletKeysProvider.clear();
     await contactsDataProvider.clear();
+    await userSettingsDataProvider.clear();
+    await addressKeyProvider.clear();
+    await serverTransactionDataProvider.clear();
+    await bdkTransactionDataProvider.clear();
+    await localBitcoinAddressDataProvider.clear();
+    await gatewayDataProvider.clear();
+    await protonAddressProvider.clear();
+    await blockInfoDataProvider.clear();
     await unleashDataProvider.clear();
+    await exclusiveInviteDataProvider.clear();
+    await protonEmailAddressProvider.clear();
+    await connectivityProvider.clear();
+    await priceGraphDataProvider.clear();
+    await receiveAddressDataProvider.clear();
+    await walletMnemonicProvider.clear();
+    await walletNameProvider.clear();
   }
 
   @override
   Future<void> reload() async {
-    await gatewayDataProvider.reload();
-    await userSettingsDataProvider.reload();
     await userDataProvider.reload();
     await walletDataProvider.reload();
     await walletPassphraseProvider.reload();
     await walletKeysProvider.reload();
     await contactsDataProvider.reload();
+    await userSettingsDataProvider.reload();
+    await addressKeyProvider.reload();
+    await serverTransactionDataProvider.reload();
+    await bdkTransactionDataProvider.reload();
+    await localBitcoinAddressDataProvider.reload();
+    await gatewayDataProvider.reload();
+    await protonAddressProvider.reload();
+    await blockInfoDataProvider.reload();
     await unleashDataProvider.reload();
+    await exclusiveInviteDataProvider.reload();
+    await protonEmailAddressProvider.reload();
+    await connectivityProvider.reload();
+    await priceGraphDataProvider.reload();
+    await receiveAddressDataProvider.reload();
+    await walletMnemonicProvider.reload();
+    await walletNameProvider.reload();
   }
 }

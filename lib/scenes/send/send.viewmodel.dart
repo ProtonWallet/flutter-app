@@ -215,6 +215,7 @@ class SendViewModelImpl extends SendViewModel {
     super.accountID,
     this.eventLoop,
     this.userManager,
+    this.walletManager,
     this.contactsDataProvider,
     this.walletKeysProvider,
     this.protonEmailAddressProvider,
@@ -229,6 +230,7 @@ class SendViewModelImpl extends SendViewModel {
   final EventLoop eventLoop;
 
   final UserManager userManager;
+  final WalletManager walletManager;
 
   /// app state manager
   final AppStateManager appStateManager;
@@ -308,7 +310,7 @@ class SendViewModelImpl extends SendViewModel {
           ? protonEmailAddresses[1]
           : protonEmailAddresses.firstOrNull);
 
-      addressKeys = await WalletManager.getAddressKeys();
+      addressKeys = await walletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
       amountDisplayDigit = ExchangeCalculator.getDisplayDigit(exchangeRate);
@@ -342,7 +344,7 @@ class SendViewModelImpl extends SendViewModel {
       for (AccountModel accModel in walletData?.accounts ?? []) {
         accModel.labelDecrypt =
             await decryptAccountName(base64Encode(accModel.label));
-        final balance = await WalletManager.getWalletAccountBalance(
+        final balance = await walletManager.getWalletAccountBalance(
           walletModel?.walletID ?? "",
           accModel.accountID,
         );
@@ -507,7 +509,7 @@ class SendViewModelImpl extends SendViewModel {
       return bitcoinAddressModel.bitcoinAddress;
     }).toList();
     // TODO(fix): fix me
-    _frbAccount = await WalletManager.loadWalletWithID(
+    _frbAccount = await walletManager.loadWalletWithID(
       walletID,
       accountModel?.accountID ?? "",
       serverScriptType: accountModel?.scriptType ?? -1,
@@ -607,7 +609,7 @@ class SendViewModelImpl extends SendViewModel {
           if (email.contains("@")) {
             final EmailIntegrationBitcoinAddress?
                 emailIntegrationBitcoinAddress =
-                await WalletManager.lookupBitcoinAddress(email);
+                await walletManager.lookupBitcoinAddress(email);
             if (emailIntegrationBitcoinAddress != null) {
               final List<AllKeyAddressKey> recipientAddressKeys =
                   await proton_api.getAllPublicKeys(
@@ -1062,10 +1064,13 @@ class SendViewModelImpl extends SendViewModel {
         emailAddressID = addressKeys.firstOrNull?.id;
       }
       String? encryptedLabel;
-      final SecretKey secretKey =
-          await WalletManager.getWalletKey(walletModel!.walletID);
-      encryptedLabel =
-          await WalletKeyHelper.encrypt(secretKey, memoTextController.text);
+      final SecretKey secretKey = await walletKeysProvider.getWalletSecretKey(
+        walletModel!.walletID,
+      );
+      encryptedLabel = await WalletKeyHelper.encrypt(
+        secretKey,
+        memoTextController.text,
+      );
 
       String? encryptedMessage;
       final Map<String, String> apiRecipientsMap = {};
@@ -1369,18 +1374,9 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<String> decryptAccountName(String encryptedName) async {
-    if (secretKey == null) {
-      final walletKey = await walletKeysProvider.getWalletKey(
-        walletID,
-      );
-      if (walletKey != null) {
-        final userKey = await userManager.getUserKey(walletKey.userKeyId);
-        secretKey = WalletKeyHelper.decryptWalletKey(
-          userKey,
-          walletKey,
-        );
-      }
-    }
+    secretKey ??= await walletKeysProvider.getWalletSecretKey(
+      walletID,
+    );
     String decryptedName = "Default Wallet Account";
     if (secretKey != null) {
       try {

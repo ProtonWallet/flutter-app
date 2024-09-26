@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -63,6 +62,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     super.serverWalletID,
     super.serverAccountID,
     this.userManager,
+    this.walletManager,
     this.walletDataProvider,
     this.protonAddressProvider,
     this.walletKeysProvider,
@@ -73,9 +73,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   late FrbAccount _frbAccount;
 
-  SecretKey? secretKey;
-
   final UserManager userManager;
+  final WalletManager walletManager;
   final WalletsDataProvider walletDataProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final ProtonAddressProvider protonAddressProvider;
@@ -91,7 +90,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       for (AccountModel accModel in walletData?.accounts ?? []) {
         accModel.labelDecrypt =
             await decryptAccountName(base64Encode(accModel.label));
-        final balance = await WalletManager.getWalletAccountBalance(
+        final balance = await walletManager.getWalletAccountBalance(
           walletModel?.walletID ?? "",
           accModel.accountID,
         );
@@ -108,7 +107,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         accountValueNotifier.addListener(() {
           changeAccount(accountValueNotifier.value);
         });
-        await changeAccount(accountModel!);
+        changeAccount(accountModel!);
       }
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
@@ -160,7 +159,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<void> getAddress({bool init = false}) async {
     if (walletModel != null && accountModel != null) {
       if (init) {
-        _frbAccount = (await WalletManager.loadWalletWithID(
+        _frbAccount = (await walletManager.loadWalletWithID(
           walletModel!.walletID,
           accountModel!.accountID,
           serverScriptType: accountModel!.scriptType,
@@ -186,28 +185,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   Future<String> decryptAccountName(String encryptedName) async {
-    if (secretKey == null) {
-      final walletKey = await walletKeysProvider.getWalletKey(
+    String decryptedName = "Default Wallet Account";
+    try {
+      final secretKey = await walletKeysProvider.getWalletSecretKey(
         serverWalletID,
       );
-      if (walletKey != null) {
-        final userKey = await userManager.getUserKey(walletKey.userKeyId);
-        secretKey = WalletKeyHelper.decryptWalletKey(
-          userKey,
-          walletKey,
-        );
-      }
-    }
-    String decryptedName = "Default Wallet Account";
-    if (secretKey != null) {
-      try {
-        decryptedName = await WalletKeyHelper.decrypt(
-          secretKey!,
-          encryptedName,
-        );
-      } catch (e) {
-        logger.e(e.toString());
-      }
+      decryptedName = await WalletKeyHelper.decrypt(
+        secretKey,
+        encryptedName,
+      );
+    } catch (e) {
+      logger.e(e.toString());
     }
     return decryptedName;
   }
@@ -228,7 +216,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       /// this will happen when some one send bitcoin via qr code
       localLastUsedIndex = await localBitcoinAddressDataProvider
           .getLastUsedIndex(walletModel, accountModel);
-      _frbAccount = (await WalletManager.loadWalletWithID(
+      _frbAccount = (await walletManager.loadWalletWithID(
         walletModel!.walletID,
         accountModel!.accountID,
         serverScriptType: accountModel!.scriptType,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 
 class WelcomBackground extends StatelessWidget {
   final Widget child;
@@ -18,7 +19,7 @@ class WelcomBackground extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height,
+        height: context.height,
         child: Stack(
           alignment: alignment,
           children: <Widget>[
@@ -26,8 +27,8 @@ class WelcomBackground extends StatelessWidget {
               top: 0,
               left: 0,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2, // 350,
+                width: context.width,
+                height: context.height / 2, // 350,
                 child: const DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -49,7 +50,7 @@ class WelcomBackground extends StatelessWidget {
             Positioned(
               bottom: 50,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: context.width,
                 height: 20,
                 child: Assets.images.welcome.protonPrivacyByDefaultFooter
                     .svg(fit: BoxFit.fitHeight),

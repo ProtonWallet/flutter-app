@@ -60,6 +60,8 @@ class BDKSyncError extends DataUpdated<String> {
 }
 
 class BDKTransactionDataProvider extends DataProvider {
+  // TODO(fix): shouldnt be here. sync shouldnt be in this class
+  final WalletManager walletManager;
   final AccountDao accountDao;
   FrbBlockchainClient? blockchain;
   final ProtonApiService apiService;
@@ -70,6 +72,7 @@ class BDKTransactionDataProvider extends DataProvider {
     this.accountDao,
     this.apiService,
     this.shared,
+    this.walletManager,
   );
 
   List<BDKTransactionData> bdkTransactionDataList = [];
@@ -100,7 +103,7 @@ class BDKTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    final FrbAccount? account = await WalletManager.loadWalletWithID(
+    final FrbAccount? account = await walletManager.loadWalletWithID(
       walletModel.walletID,
       accountModel.accountID,
       serverScriptType: accountModel.scriptType,
@@ -169,7 +172,7 @@ class BDKTransactionDataProvider extends DataProvider {
       try {
         isWalletSyncing[accountModel.accountID] = true;
         blockchain ??= await Api.createEsploraBlockchainWithApi();
-        final FrbAccount? account = await WalletManager.loadWalletWithID(
+        final FrbAccount? account = await walletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
           serverScriptType: accountModel.scriptType,
