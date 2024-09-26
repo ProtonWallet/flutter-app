@@ -3,8 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
-import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -24,34 +25,34 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      title: S.of(context).settings_title,
+      title: context.local.settings_title,
       child: Column(
         children: [
           // User Information
-          const SizedBox(height: 24),
+          SizedBoxes.box24,
           SectionUserInfo(
             displayName: viewModel.displayName,
             displayEmail: viewModel.displayEmail,
           ),
 
           // Section: Account Settings
-          const SizedBox(height: 24),
-          const SectionHeader(title: 'Account Settings'),
+          SizedBoxes.box24,
+          SectionHeader(title: context.local.account_settings),
           SettingsGroup(
             children: [
               SettingsItem(
-                title: 'Subscription',
+                title: context.local.subscription,
                 subtitle: 'free',
                 onTap: () {},
                 hidden: true,
               ),
               SettingsItem(
-                title: 'Sentinel Settings',
+                title: context.local.sentinel_settings,
                 hidden: true,
                 onTap: () {},
               ),
               SettingsItem(
-                title: 'Account',
+                title: context.local.account,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
                   width: 20,
@@ -65,29 +66,29 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
           ),
 
           // Section: System Settings
-          const SizedBox(height: 12),
-          const SectionHeader(title: 'System Settings'),
+          SizedBoxes.box12,
+          SectionHeader(title: context.local.system_settings),
           SettingsGroup(
             children: [
               SettingsItem(
-                title: 'Theme',
+                title: context.local.theme,
                 subtitle: 'System default / Light / Dark',
                 onTap: () {},
                 hidden: true,
               ),
               SettingsItem(
-                title: 'Default Browser',
+                title: context.local.default_browser,
                 subtitle: 'System default',
                 hidden: true,
                 onTap: () {},
               ),
               SettingsItem(
-                title: 'Languages',
+                title: context.local.languages,
                 hidden: true,
                 onTap: () {},
               ),
               SettingsItem(
-                title: S.of(context).setting_receive_inviter_notification,
+                title: context.local.setting_receive_inviter_notification,
                 logo: !viewModel.loadedWalletUserSettings
                     ? const CustomLoading()
                     : CupertinoSwitch(
@@ -98,7 +99,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 onTap: () {},
               ),
               SettingsItem(
-                title: S.of(context).setting_receive_bve_notification,
+                title: context.local.setting_receive_bve_notification,
                 logo: !viewModel.loadedWalletUserSettings
                     ? const CustomLoading()
                     : CupertinoSwitch(
@@ -139,12 +140,12 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
           // ),
 
           // Section: Help Center
-          const SizedBox(height: 12),
-          const SectionHeader(title: 'Help Center'),
+          SizedBoxes.box12,
+          SectionHeader(title: context.local.help_center),
           SettingsGroup(
             children: [
               SettingsItem(
-                title: S.of(context).report_a_problem,
+                title: context.local.report_a_problem,
                 logo: Assets.images.icon.icBugreport.svg(
                   height: 20,
                   width: 20,
@@ -155,7 +156,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 },
               ),
               SettingsItem(
-                title: 'Privacy policy',
+                title: context.local.privacy_policy,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
                   width: 20,
@@ -166,7 +167,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 },
               ),
               SettingsItem(
-                title: 'Terms of service',
+                title: context.local.terms_of_service,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
                   width: 20,
@@ -177,7 +178,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 },
               ),
               SettingsItem(
-                title: 'How to import your wallet to Proton Wallet',
+                title: context.local.how_to_import_wallet_,
                 hidden: true,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
@@ -187,7 +188,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 onTap: () {},
               ),
               SettingsItem(
-                title: 'Feedback',
+                title: context.local.feedback,
                 hidden: true,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
@@ -197,7 +198,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 onTap: () {},
               ),
               SettingsItem(
-                title: 'Help center & knowledge base',
+                title: context.local.help_center_knowledge_base,
                 logo: Assets.images.icon.icArrowOutSquare.svg(
                   height: 20,
                   width: 20,
@@ -211,7 +212,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
           ),
 
           ///
-          const SizedBox(height: 24),
+          SizedBoxes.box24,
 
           /// Debug tools -- code will the Tree shaking in production
           if (kDebugMode) ...[

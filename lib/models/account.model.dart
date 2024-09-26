@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class AccountModel {
   int id;
@@ -91,5 +93,12 @@ class AccountModel {
       lastUsedIndex: map['lastUsedIndex'],
     );
     return accountModel;
+  }
+
+  // get fiat currency
+  FiatCurrency getFiatCurrency() {
+    return CommonHelper.getFiatCurrencyByName(
+      fiatCurrency.toUpperCase(),
+    );
   }
 }

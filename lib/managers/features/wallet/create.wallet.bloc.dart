@@ -150,13 +150,9 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
   ) async {
     final String serverWalletID = walletID;
 
-    final walletKey = await walletKeysProvider.getWalletKey(serverWalletID);
-    if (walletKey == null) {
-      throw Exception("Wallet key not found");
-    }
-
-    final userKey = await userManager.getUserKey(walletKey.userKeyId);
-    final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
+    final secretKey = await walletKeysProvider.getWalletSecretKey(
+      serverWalletID,
+    );
 
     /// get new derivation path
     final derivationPath = await walletsDataProvider.getNewDerivationPathBy(

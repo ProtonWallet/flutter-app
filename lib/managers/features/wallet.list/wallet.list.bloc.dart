@@ -35,6 +35,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final WalletKeysProvider walletKeysProvider;
   final UserSettingsDataProvider userSettingsDataProvider;
   final UserManager userManager;
+  final WalletManager walletManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
 
   /// app state manager
@@ -55,6 +56,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     this.walletPassProvider,
     this.walletKeysProvider,
     this.userManager,
+    this.walletManager,
     this.userSettingsDataProvider,
     this.bdkTransactionDataProvider,
     this.appStateManager,
@@ -154,7 +156,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           }
           walletModel.accountSize = wallet.accounts.length;
           walletModel.walletName = wallet.wallet.name;
-
           if (secretKey != null) {
             try {
               walletModel.walletName = await WalletKeyHelper.decrypt(
@@ -186,7 +187,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               }
             }
 
-            final balance = await WalletManager.getWalletAccountBalance(
+            final balance = await walletManager.getWalletAccountBalance(
               wallet.wallet.walletID,
               account.accountID,
             );
@@ -194,8 +195,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             accMenuModel.balance = balance;
             double estimateValue = 0.0;
             final settings = await userSettingsDataProvider.getSettings();
-            // TODO(fix): Tempary need to use providers
-            final fiatCurrency = WalletManager.getAccountFiatCurrency(account);
+            final fiatCurrency = account.getFiatCurrency();
 
             /// get exchange rate call. if failed we should show btc but balance.
             ProtonExchangeRate? exchangeRate;
@@ -369,13 +369,11 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               double estimateValue = 0.0;
               final settings = await userSettingsDataProvider.getSettings();
 
-              final balance = await WalletManager.getWalletAccountBalance(
+              final balance = await walletManager.getWalletAccountBalance(
                 walletModel.walletModel.walletID,
                 account.accountModel.accountID,
               );
-              // Tempary need to use providers
-              final fiatCurrency =
-                  WalletManager.getAccountFiatCurrency(account.accountModel);
+              final fiatCurrency = account.accountModel.getFiatCurrency();
               final ProtonExchangeRate exchangeRate =
                   await ExchangeRateService.getExchangeRate(fiatCurrency);
               estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
@@ -453,25 +451,25 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       final wallets = state.walletsModel;
       for (WalletMenuModel walletModel in wallets) {
         for (AccountMenuModel account in walletModel.accounts) {
-          final balance = await WalletManager.getWalletAccountBalance(
+          final balance = await walletManager.getWalletAccountBalance(
             walletModel.walletModel.walletID,
             account.accountModel.accountID,
           );
           account.balance = balance;
           double estimateValue = 0.0;
           final settings = await userSettingsDataProvider.getSettings();
-          // Tempary need to use providers
-          final fiatCurrency =
-              WalletManager.getAccountFiatCurrency(account.accountModel);
-          final ProtonExchangeRate exchangeRate =
-              await ExchangeRateService.getExchangeRate(fiatCurrency);
+          final fiatCurrency = account.accountModel.getFiatCurrency();
+          final exchangeRate = await ExchangeRateService.getExchangeRate(
+            fiatCurrency,
+          );
           estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
             exchangeRate,
             balance,
           );
 
-          final String fiatSign =
-              CommonHelper.getFiatCurrencySign(fiatCurrency);
+          final fiatSign = CommonHelper.getFiatCurrencySign(
+            fiatCurrency,
+          );
           account.currencyBalance =
               "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
           account.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(

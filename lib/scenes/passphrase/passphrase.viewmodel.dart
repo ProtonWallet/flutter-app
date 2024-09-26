@@ -55,9 +55,11 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
     super.strMnemonic,
     this.createWalletBloc,
     this.userID,
+    this.walletManager,
   );
 
   final CreateWalletBloc createWalletBloc;
+  final WalletManager walletManager;
   final String userID;
 
   @override
@@ -164,7 +166,7 @@ class SetupPassPhraseViewModelImpl extends SetupPassPhraseViewModel {
         0, // default wallet account index
       );
 
-      await WalletManager.autoBindEmailAddresses(userID);
+      await walletManager.autoBindEmailAddresses(userID);
       await Future.delayed(
         const Duration(seconds: 1),
       ); // wait for account show on sidebar

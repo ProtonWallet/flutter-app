@@ -6,7 +6,7 @@ use andromeda_api::{
     core::ApiClient,
     proton_users::{
         GetAuthInfoRequest, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
-        ProtonUser, ProtonUserSettings,
+        ProtonUser, ProtonUserSettings, ProtonUsersClientExt,
     },
 };
 

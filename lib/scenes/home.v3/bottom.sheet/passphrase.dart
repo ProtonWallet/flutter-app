@@ -7,7 +7,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
@@ -74,8 +73,10 @@ class PassphraseSheet {
                   // TODO(fix): move some logic to VM
                   final String passphrase =
                       viewModel.walletRecoverPassphraseController.text;
-                  final bool match = await WalletManager.checkFingerprint(
-                      walletMenuModel.walletModel, passphrase);
+                  final bool match = await viewModel.checkFingerprint(
+                    walletMenuModel.walletModel,
+                    passphrase,
+                  );
                   setState(() {
                     viewModel.isWalletPassphraseMatch = match;
                   });

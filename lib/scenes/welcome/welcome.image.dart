@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class WelcomeImage extends StatelessWidget {
@@ -17,7 +16,7 @@ class WelcomeImage extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: context.multHeight(0.4),
           child: Stack(
             children: [
               Column(
@@ -28,7 +27,7 @@ class WelcomeImage extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBoxes.box2,
                 ],
               ),
 
@@ -54,21 +53,22 @@ class WelcomeImage extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 30),
+        SizedBoxes.box30,
         SizedBox(
           width: 264,
           height: 54,
-          child: Assets.images.walletCreation.protonWalletLogoLight
-              .svg(fit: BoxFit.fitHeight),
+          child: Assets.images.walletCreation.protonWalletLogoLight.svg(
+            fit: BoxFit.fitHeight,
+          ),
         ),
-        const SizedBox(height: 24),
+        SizedBoxes.box24,
         SizedBox(
-          width: max(MediaQuery.of(context).size.width, 450),
+          width: context.maxWidth(450),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Center(
               child: Text(
-                S.of(context).welcome_desc,
+                context.local.welcome_desc,
                 style: FontManager.body1Regular(ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),

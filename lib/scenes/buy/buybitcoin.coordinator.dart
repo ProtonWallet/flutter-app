@@ -1,6 +1,7 @@
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -23,6 +24,7 @@ class BuyBitcoinCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> start() {
     final info = serviceManager.get<UserManager>().userInfo;
+    final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
 
     final BuyBitcoinBloc buyBloc = BuyBitcoinBloc(
@@ -38,6 +40,7 @@ class BuyBitcoinCoordinator extends Coordinator {
       accountID,
       dataProviderManager.localBitcoinAddressDataProvider,
       dataProviderManager.receiveAddressDataProvider,
+      walletManager,
     );
     widget = BuyBitcoinView(
       viewModel,

@@ -8,6 +8,7 @@ import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 
 // Define the events
@@ -76,7 +77,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? serverTransactionDataSubscription;
   StreamSubscription? selectedWalletChangeSubscription;
-  final BalanceDataProvider balanceDataProvider;
+  final WalletManager walletManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
   final WalletsDataProvider walletsDataProvider;
   final ServerTransactionDataProvider serverTransactionDataProvider;
@@ -85,7 +86,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
 
   WalletBalanceBloc(
     this.bdkTransactionDataProvider,
-    this.balanceDataProvider,
+    this.walletManager,
     this.walletsDataProvider,
     this.serverTransactionDataProvider,
   ) : super(const WalletBalanceState(
@@ -159,7 +160,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
           in event.walletMenuModel.accounts) {
         // update account balance
         final BDKBalanceData bdkBalanceData =
-            await balanceDataProvider.getBDKBalanceDataByWalletAccount(
+            await walletManager.getBDKBalanceDataByWalletAccount(
           walletModel,
           accountMenuModel.accountModel,
         );
@@ -178,7 +179,7 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
       lastEvent = event;
       final WalletModel walletModel = event.walletMenuModel.walletModel;
       final BDKBalanceData bdkBalanceData =
-          await balanceDataProvider.getBDKBalanceDataByWalletAccount(
+          await walletManager.getBDKBalanceDataByWalletAccount(
         walletModel,
         event.accountMenuModel.accountModel,
       );

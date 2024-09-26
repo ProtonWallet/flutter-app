@@ -132,6 +132,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     this.accountID,
     this.localBitcoinAddressDataProvider,
     this.receiveAddressDataProvider,
+    this.walletManager,
   );
 
   @override
@@ -140,6 +141,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     controller.dispose();
     super.dispose();
   }
+
+  ///
+  final WalletManager walletManager;
 
   /// provider
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
@@ -263,7 +267,7 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     if (walletModel != null && accountModel != null) {
       FrbAccount? account;
       if (init) {
-        account = await WalletManager.loadWalletWithID(
+        account = await walletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
           serverScriptType: accountModel.scriptType,

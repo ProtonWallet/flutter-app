@@ -114,12 +114,20 @@ class AppViewModelImpl extends AppViewModel {
     // dataProviderManager.init();
     serviceManager.register(dataProviderManager);
 
-    // TODO(fix): fix me
-    WalletManager.userManager = userManager;
+    final walletManager = WalletManager(
+      userManager,
+      dataProviderManager,
+    );
+    // walletManager.init();
+    serviceManager.register(walletManager);
+
+    // TODO(fix): this is bad.
+    dataProviderManager.walletManager = walletManager;
 
     /// event loop
     serviceManager.register(EventLoop(
       userManager,
+      walletManager,
       dataProviderManager,
       appStateManger,
       ConnectivityProvider(),

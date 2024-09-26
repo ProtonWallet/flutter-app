@@ -515,5 +515,20 @@
   "session_expired_content": "Your session has expired. Please log in to continue.",
   "session_expired_title": "Session expired!",
   "force_upgrade": "Force Upgrade",
-  "upgrade": "Upgrade"
+  "upgrade": "Upgrade",
+  "account_settings": "Account Settings",
+  "subscription": "Subscription",
+  "sentinel_settings": "Sentinel Settings",
+  "account": "Account",
+  "system_settings": "System Settings",
+  "free": "free",
+  "theme": "Theme",
+  "default_browser": "Default Browser",
+  "languages": "Languages",
+  "help_center": "Help Center",
+  "privacy_policy": "Privacy policy",
+  "terms_of_service": "Terms of service",
+  "how_to_import_wallet_": "How to import your wallet to Proton Wallet",
+  "feedback": "Feedback",
+  "help_center_knowledge_base": "Help center & knowledge base"
 }
