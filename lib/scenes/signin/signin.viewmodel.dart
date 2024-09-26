@@ -61,6 +61,7 @@ class SigninViewModelImpl extends SigninViewModel {
   @override
   Future<void> signIn(String username, String password) async {
     try {
+      // TODO(move): move this to rust
       final authCredential = await apiService.login(
         username: username,
         password: password,

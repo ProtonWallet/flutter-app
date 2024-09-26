@@ -61,12 +61,14 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   final AccountDao accountDao;
   final BitcoinAddressDao bitcoinAddressDao;
   final String userID;
-
+  // TODO(fix): shouldnt be here. sync shouldnt be in this class
+  final WalletManager walletManager;
   LocalBitcoinAddressDataProvider(
     this.walletDao,
     this.accountDao,
     this.bitcoinAddressDao,
     this.userID,
+    this.walletManager,
   );
 
   Map<String, AccountBitcoinAddressesInfo> accountID2AddressesInfo = {};
@@ -92,7 +94,7 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             addressIndex2bitcoinAddressModel[
                 bitcoinAddressModel.bitcoinAddressIndex] = bitcoinAddressModel;
           }
-          final frbAccountOrNull = (await WalletManager.loadWalletWithID(
+          final frbAccountOrNull = (await walletManager.loadWalletWithID(
             walletModel.walletID,
             accountModel.accountID,
           ));

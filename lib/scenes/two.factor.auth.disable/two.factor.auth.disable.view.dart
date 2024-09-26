@@ -5,6 +5,8 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -14,7 +16,6 @@ import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.2fa.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 import 'two.factor.auth.disable.viewmodel.dart';
 
@@ -37,7 +38,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
         ),
         Text(
           S.of(context).setting_2fa_disable,
-          style: FontManager.titleHeadline(ProtonColors.textNorm),
+          style: ProtonStyles.headline(color: ProtonColors.textNorm),
           textAlign: TextAlign.center,
         ),
         const SizedBox(
@@ -45,23 +46,25 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
         ),
         Text(
           body,
-          style: FontManager.body2Regular(ProtonColors.textWeak),
+          style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
           textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
+  /// build 2fa confirm Widget
   Widget build2FAConfirm(BuildContext context) {
     return PageLayoutV1(
       backgroundColor: ProtonColors.white,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
+          backgroundColor: ProtonColors.backgroundProton,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       bottomWidget: Padding(
         padding: const EdgeInsets.all(defaultPadding),
@@ -78,10 +81,10 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
               }
             },
             text: S.of(context).submit,
-            width: MediaQuery.of(context).size.width,
+            width: context.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -90,10 +93,10 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
               Navigator.pop(context);
             },
             text: S.of(context).cancel,
-            width: MediaQuery.of(context).size.width,
+            width: context.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -121,7 +124,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
             SizedBoxes.box24,
             Text(
               S.of(context).setting_2fa_code_hint,
-              style: FontManager.body2Regular(ProtonColors.textWeak),
+              style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
               textAlign: TextAlign.center,
             ),
             SizedBoxes.box8,

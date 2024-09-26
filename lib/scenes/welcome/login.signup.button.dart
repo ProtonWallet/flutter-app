@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -30,8 +32,12 @@ class LoginAndSignupBtn extends StatelessWidget {
         const SizedBox(height: 4),
         CupertinoButton(
           onPressed: signinPressed,
-          child: Text('Sign In',
-              style: FontManager.body1Regular(ProtonColors.protonBlue)),
+          child: Text(
+            context.local.sign_in,
+            style: ProtonStyles.body1Regular(
+              color: ProtonColors.protonBlue,
+            ),
+          ),
         ),
       ],
     );

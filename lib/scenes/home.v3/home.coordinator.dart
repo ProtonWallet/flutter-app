@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
@@ -12,8 +13,10 @@ import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.da
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/update.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
@@ -172,6 +175,7 @@ class HomeCoordinator extends Coordinator {
   @override
   ViewBase<ViewModel> start() {
     final userManager = serviceManager.get<UserManager>();
+    final walletManager = serviceManager.get<WalletManager>();
     final event = serviceManager.get<EventLoop>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
@@ -184,6 +188,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.walletPassphraseProvider,
       dataProviderManager.walletKeysProvider,
       userManager,
+      walletManager,
       dataProviderManager.userSettingsDataProvider,
       dataProviderManager.bdkTransactionDataProvider,
       appStateManager,
@@ -192,6 +197,7 @@ class HomeCoordinator extends Coordinator {
     /// build wallet transaction feature bloc
     final walletTransactionBloc = WalletTransactionBloc(
       userManager,
+      walletManager,
       dataProviderManager.bdkTransactionDataProvider,
       dataProviderManager.serverTransactionDataProvider,
       dataProviderManager.addressKeyProvider,
@@ -204,7 +210,7 @@ class HomeCoordinator extends Coordinator {
     /// build wallet balance feature bloc
     final walletBalanceBloc = WalletBalanceBloc(
       dataProviderManager.bdkTransactionDataProvider,
-      dataProviderManager.balanceDataProvider,
+      walletManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.serverTransactionDataProvider,
     );
@@ -231,6 +237,12 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.addressKeyProvider,
     );
 
+    final walletNameBloc = WalletNameBloc(
+      dataProviderManager.walletKeysProvider,
+      apiServiceManager.getWalletClient(),
+      DBHelper.accountDao!,
+    );
+
     /// build locker overlay view
     final overlayView = LockCoordinator().start();
 
@@ -243,7 +255,9 @@ class HomeCoordinator extends Coordinator {
       createWalletBloc,
       deleteWalletBloc,
       updateWalletBloc,
+      walletNameBloc,
       userManager,
+      walletManager,
       event,
       apiServiceManager,
 

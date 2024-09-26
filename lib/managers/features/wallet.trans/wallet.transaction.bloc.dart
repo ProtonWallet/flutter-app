@@ -166,6 +166,7 @@ extension WalletTransactionStateCopyWith on WalletTransactionState {
 class WalletTransactionBloc
     extends Bloc<WalletTransactionEvent, WalletTransactionState> {
   final UserManager userManager;
+  final WalletManager walletManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final AddressKeyProvider addressKeyProvider;
@@ -183,6 +184,7 @@ class WalletTransactionBloc
 
   WalletTransactionBloc(
     this.userManager,
+    this.walletManager,
     this.bdkTransactionDataProvider,
     this.serverTransactionDataProvider,
     this.addressKeyProvider,
@@ -631,8 +633,7 @@ class WalletTransactionBloc
       SecretKey? secretKey) async {
     /// getAddressKeys take ~1 second to initialize at first call
     /// since it need to fetch from server
-    final List<AddressKey> addressKeys =
-        await addressKeyProvider.getAddressKeys();
+    final addressKeys = await addressKeyProvider.getAddressKeys();
     final Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
     final AccountModel accountModel = accountMenuModel.accountModel;
     final BDKTransactionData bdkTransactionData =
@@ -649,7 +650,7 @@ class WalletTransactionBloc
     );
 
     // TODO(fix): replace it
-    final FrbAccount? account = await WalletManager.loadWalletWithID(
+    final FrbAccount? account = await walletManager.loadWalletWithID(
       walletModel.walletID,
       accountMenuModel.accountModel.accountID,
       serverScriptType: accountMenuModel.accountModel.scriptType,
@@ -870,16 +871,9 @@ class WalletTransactionBloc
   }
 
   Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
-    /// restore walletKey, it will be use to decrypt transaction txid from server, and transaction user label from server
-    final walletKey = await walletKeysProvider.getWalletKey(
+    return walletKeysProvider.getWalletSecretKey(
       walletModel.walletID,
     );
-    SecretKey? secretKey;
-    if (walletKey != null) {
-      final userKey = await userManager.getUserKey(walletKey.userKeyId);
-      secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
-    }
-    return secretKey;
   }
 
   void init() {

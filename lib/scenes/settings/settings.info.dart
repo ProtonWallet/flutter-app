@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class SectionUserInfo extends StatelessWidget {
   final String displayName;
@@ -18,21 +20,15 @@ class SectionUserInfo extends StatelessWidget {
           Text(
             displayName,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF0E0E0E),
-              fontSize: 17,
-              fontFamily: 'SF Pro Text',
-              fontWeight: FontWeight.w700,
+            style: ProtonStyles.body1Semibold(
+              color: const Color(0xFF0F0F0F),
             ),
           ),
           Text(
             displayEmail,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF848993),
-              fontSize: 14,
-              fontFamily: 'SF Pro Text',
-              fontWeight: FontWeight.w400,
+            style: ProtonStyles.body2Medium(
+              color: ProtonColors.textHint,
             ),
           ),
         ],

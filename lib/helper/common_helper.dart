@@ -194,7 +194,7 @@ class CommonHelper {
     }
   }
 
-  static bool isPrimaryAccount(String derivationPath){
+  static bool isPrimaryAccount(String derivationPath) {
     final String cleanPath = derivationPath.replaceAll("m/", "");
     return cleanPath == "84'/0'/0'";
   }

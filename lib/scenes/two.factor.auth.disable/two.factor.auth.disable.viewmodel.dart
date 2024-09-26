@@ -42,6 +42,8 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
     for (TextEditingController textEditingController in digitControllers) {
       loginTwoFaTotp += textEditingController.text;
     }
+
+    // TODO(move): move this to rust
     try {
       final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
       final clientProofs = await SrpClient.generateProofs(

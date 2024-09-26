@@ -1,8 +1,6 @@
 // home.viewmodel.dart
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +16,6 @@ import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
@@ -30,6 +27,7 @@ import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.da
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/update.wallet.bloc.dart';
+import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
@@ -82,6 +80,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.createWalletBloc,
     this.deleteWalletBloc,
     this.updateWalletBloc,
+    this.walletNameBloc,
   );
 
   int selectedPage = 0;
@@ -253,6 +252,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void updateAddressListFilterBy(String filterBy);
 
   //
+  final WalletNameBloc walletNameBloc;
   final WalletListBloc walletListBloc;
   final WalletTransactionBloc walletTransactionBloc;
   final WalletBalanceBloc walletBalanceBloc;
@@ -265,6 +265,9 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   /// app version
   String appVersion = "Proton Wallet";
+
+  ///
+  Future<bool> checkFingerprint(WalletModel walletModel, String passphrase);
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -277,7 +280,9 @@ class HomeViewModelImpl extends HomeViewModel {
     super.createWalletBloc,
     super.deleteWalletBloc,
     super.updateWalletBloc,
+    super.walletNameBloc,
     this.userManager,
+    this.walletManager,
     this.eventLoop,
     this.apiServiceManager,
     this.channel,
@@ -286,6 +291,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   // user manager
   final UserManager userManager;
+
+  /// wallet manager
+  final WalletManager walletManager;
 
   // event loop manger
   final EventLoop eventLoop;
@@ -746,13 +754,9 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> updateWalletName(WalletModel walletModel, String newName) async {
-    final SecretKey secretKey =
-        await WalletManager.getWalletKey(walletModel.walletID);
     try {
-      final String encryptedName =
-          await WalletKeyHelper.encrypt(secretKey, newName);
-      await proton_api.updateWalletName(
-          walletId: walletModel.walletID, newName: encryptedName);
+      // rename wallet name
+      await walletNameBloc.updateWalletName(walletModel, newName);
       walletListBloc.updateWalletName(walletModel, newName);
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -771,16 +775,11 @@ class HomeViewModelImpl extends HomeViewModel {
   Future<void> renameAccount(WalletModel walletModel, AccountModel accountModel,
       String newName) async {
     try {
-      final SecretKey secretKey =
-          await WalletManager.getWalletKey(walletModel.walletID);
-      final ApiWalletAccount walletAccount =
-          await proton_api.updateWalletAccountLabel(
-              walletId: walletModel.walletID,
-              walletAccountId: accountModel.accountID,
-              newLabel: await WalletKeyHelper.encrypt(secretKey, newName));
-      accountModel.label = base64Decode(walletAccount.label);
-      accountModel.labelDecrypt = newName;
-      await DBHelper.accountDao!.update(accountModel);
+      await walletNameBloc.updateAccountLabel(
+        walletModel,
+        accountModel,
+        newName,
+      );
       walletListBloc.updateAccountName(walletModel, accountModel, newName);
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -864,7 +863,7 @@ class HomeViewModelImpl extends HomeViewModel {
         }
       }
       if (deleted) {
-        await WalletManager.deleteAddress(serverAddressID);
+        await walletManager.deleteAddress(serverAddressID);
         walletListBloc.removeEmailIntegration(
             walletModel, accountModel, serverAddressID);
       }
@@ -889,13 +888,13 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       eventLoop.stop();
       await userManager.logout();
-      await WalletManager.cleanBDKCache();
+      await walletManager.cleanBDKCache();
       try {
         userSettingProvider.destroy();
       } catch (e) {
         // no provider init for non eligible user
       }
-      await WalletManager.cleanSharedPreference();
+      await walletManager.cleanSharedPreference();
       await DBHelper.reset();
       await Future.delayed(
         const Duration(seconds: 3),
@@ -1054,7 +1053,7 @@ class HomeViewModelImpl extends HomeViewModel {
     String serverAddressID,
   ) async {
     try {
-      await WalletManager.addEmailAddress(
+      await walletManager.addEmailAddress(
         serverWalletID,
         accountModel.accountID,
         serverAddressID,
@@ -1108,8 +1107,7 @@ class HomeViewModelImpl extends HomeViewModel {
       List<AccountModel> userAccounts) {
     for (AccountModel accountModel in userAccounts) {
       if (!accountFiatCurrencyNotifiers.containsKey(accountModel.accountID)) {
-        final ValueNotifier valueNotifier =
-            ValueNotifier(WalletManager.getAccountFiatCurrency(accountModel));
+        final valueNotifier = ValueNotifier(accountModel.getFiatCurrency());
         valueNotifier.addListener(() {
           updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
         });
@@ -1270,5 +1268,13 @@ class HomeViewModelImpl extends HomeViewModel {
         .setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
+  }
+
+  @override
+  Future<bool> checkFingerprint(
+    WalletModel walletModel,
+    String passphrase,
+  ) async {
+    return walletManager.checkFingerprint(walletModel, passphrase);
   }
 }
