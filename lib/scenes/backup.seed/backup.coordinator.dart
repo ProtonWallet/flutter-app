@@ -20,7 +20,6 @@ class SetupBackupCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final userManager = serviceManager.get<UserManager>();
-
     final apiManager = serviceManager.get<ProtonApiServiceManager>();
 
     final viewModel = SetupBackupViewModelImpl(
@@ -28,6 +27,8 @@ class SetupBackupCoordinator extends Coordinator {
       walletID,
       dataProviderManager.walletDataProvider,
       dataProviderManager.userDataProvider,
+      dataProviderManager.walletNameProvider,
+      dataProviderManager.walletMnemonicProvider,
       userManager.userID,
       apiManager.getProtonUsersApiClient(),
       needPassword: true,

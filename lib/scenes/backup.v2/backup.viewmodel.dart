@@ -26,6 +26,7 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
 }
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
+  final WalletManager walletManager;
   final WalletsDataProvider walletsDataProvider;
   final UserDataProvider userDataProvider;
   final String userID;
@@ -36,11 +37,12 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
     this.walletsDataProvider,
     this.userDataProvider,
     this.userID,
+    this.walletManager,
   );
 
   @override
   Future<void> loadData() async {
-    strMnemonic = await WalletManager.getMnemonicWithID(walletID);
+    strMnemonic = await walletManager.getMnemonicWithID(walletID);
     strMnemonic.split(" ").forEachIndexed((index, element) {
       itemList.add(Item(
         title: element,

@@ -71,15 +71,8 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
         if (wallet.wallet.migrationRequired == 1) {
           try {
             final walletId = wallet.wallet.walletID;
-            final walletKey = await walletKeysProvider.getWalletKey(walletId);
-            if (walletKey == null) {
-              return;
-            }
-            //
-            final userKey = await userManager.getUserKey(walletKey.userKeyId);
-            final secretKey = WalletKeyHelper.decryptWalletKey(
-              userKey,
-              walletKey,
+            final secretKey = await walletKeysProvider.getWalletSecretKey(
+              walletId,
             );
 
             final walletMnemonic = await walletsDataProvider.getWalletMnemonic(

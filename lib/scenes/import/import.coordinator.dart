@@ -2,6 +2,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -23,6 +24,7 @@ class ImportCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final userManager = serviceManager.get<UserManager>();
+    final walletManager = serviceManager.get<WalletManager>();
     final apiService = serviceManager.get<ProtonApiServiceManager>();
     final bloc = CreateWalletBloc(
       userManager,
@@ -36,6 +38,7 @@ class ImportCoordinator extends Coordinator {
       preInputName,
       bloc,
       apiService.getApiService(),
+      walletManager,
     );
     widget = ImportView(
       viewModel,

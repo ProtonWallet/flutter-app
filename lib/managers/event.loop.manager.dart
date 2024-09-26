@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:sentry/sentry.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
@@ -30,6 +31,7 @@ typedef RecoveryCallback = Future<void> Function(List<LoadingTask> failedTask);
 // TODO(fix): handle user and settings event.
 class EventLoop extends Service implements Manager {
   final UserManager userManager;
+  final WalletManager walletManager;
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
   final ConnectivityProvider connectivityProvider;
@@ -46,6 +48,7 @@ class EventLoop extends Service implements Manager {
 
   EventLoop(
     this.userManager,
+    this.walletManager,
     this.dataProviderManager,
     this.appStateManager,
     this.connectivityProvider,
@@ -152,7 +155,7 @@ class EventLoop extends Service implements Manager {
 
   Future<void> fetchEventID() async {
     try {
-      final String? savedLatestEventId = await WalletManager.getLatestEventId();
+      final String? savedLatestEventId = await getLatestEventId();
       latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -181,7 +184,9 @@ class EventLoop extends Service implements Manager {
               }
               walletID2ProtonWalletKey[serverWalletID]!.add(walletKey);
 
-              await WalletManager.setWalletKey([walletKey]);
+              await dataProviderManager.walletKeysProvider.saveApiWalletKeys(
+                [walletKey],
+              );
             }
           }
         }
@@ -352,7 +357,7 @@ class EventLoop extends Service implements Manager {
 
         /// update event id
         latestEventId = event.eventId;
-        await WalletManager.setLatestEventId(latestEventId);
+        await setLatestEventId(latestEventId);
       }
       await appStateManager.resetEventloopDuration();
       appStateManager.isConnectivityOK = true;
@@ -401,7 +406,7 @@ class EventLoop extends Service implements Manager {
       final accountModels =
           await DBHelper.accountDao!.findAllByWalletID(walletModel.walletID);
       for (final accountModel in accountModels) {
-        final FrbAccount? account = await WalletManager.loadWalletWithID(
+        final FrbAccount? account = await walletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
           serverScriptType: accountModel.scriptType,
@@ -421,7 +426,7 @@ class EventLoop extends Service implements Manager {
         }
 
         try {
-          await WalletManager.handleBitcoinAddressRequests(
+          await walletManager.handleBitcoinAddressRequests(
             account!,
             walletModel.walletID,
             accountModel.accountID,
@@ -434,7 +439,7 @@ class EventLoop extends Service implements Manager {
           logger.e("handleBitcoinAddressRequests error: $e");
         }
         try {
-          await WalletManager.bitcoinAddressPoolHealthCheck(
+          await walletManager.bitcoinAddressPoolHealthCheck(
             account!,
             walletModel.walletID,
             accountModel.accountID,
@@ -448,6 +453,16 @@ class EventLoop extends Service implements Manager {
         }
       }
     }
+  }
+
+  Future<void> setLatestEventId(String latestEventId) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("latestEventId", latestEventId);
+  }
+
+  Future<String?> getLatestEventId() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString("latestEventId");
   }
 
   @override

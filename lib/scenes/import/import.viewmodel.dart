@@ -9,6 +9,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/path.helper.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -67,6 +68,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
 class ImportViewModelImpl extends ImportViewModel {
   final String preInputWalletName;
   final ProtonApiService apiService;
+  final WalletManager walletManager;
 
   final CreateWalletBloc createWalletBloc;
 
@@ -76,6 +78,7 @@ class ImportViewModelImpl extends ImportViewModel {
     this.preInputWalletName,
     this.createWalletBloc,
     this.apiService,
+    this.walletManager,
   );
 
   @override
@@ -132,7 +135,7 @@ class ImportViewModelImpl extends ImportViewModel {
         bip38Passphrase: strPassphrase.isNotEmpty ? strPassphrase : null,
       );
 
-      final dbPath = await WalletManager.getDatabaseFolderPath();
+      final dbPath = await getDatabaseFolderPath();
       final storage = WalletMobileConnectorFactory(folderPath: dbPath);
       final foundAccounts = await frbWallet.discoverAccount(
           apiService: apiService.getArc(),
@@ -249,7 +252,7 @@ class ImportViewModelImpl extends ImportViewModel {
     String serverAddressID,
   ) async {
     try {
-      await WalletManager.addEmailAddress(
+      await walletManager.addEmailAddress(
         serverWalletID,
         accountModel.accountID,
         serverAddressID,

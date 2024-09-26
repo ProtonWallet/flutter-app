@@ -16,10 +16,10 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
+import 'package:wallet/managers/providers/wallet.name.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -107,19 +107,23 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.txID,
     super.userFiatCurrency,
     this.userManager,
+    this.walletManager,
     this.serverTransactionDataProvider,
     this.walletClient,
     this.walletKeysProvider,
     super.userSettingsDataProvider,
     super.contactsDataProvider,
+    this.walletNameService,
   );
 
   late FrbAccount _frbAccount;
 
   final UserManager userManager;
+  final WalletManager walletManager;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final WalletClient walletClient;
   final WalletKeysProvider walletKeysProvider;
+  final WalletNameProvider walletNameService;
 
   Uint8List? entropy;
   SecretKey? secretKey;
@@ -136,7 +140,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
     if (addressKeys.isEmpty) {
-      addressKeys = await WalletManager.getAddressKeys();
+      addressKeys = await walletManager.getAddressKeys();
     }
 
     var serverTrans = await serverTransactionDataProvider.getTransByAccountID(
@@ -144,14 +148,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       accountID,
     );
 
-    /// get user key
-    final WalletKey? walletKey = await walletKeysProvider.getWalletKey(
+    secretKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
-    if (walletKey != null) {
-      final userKey = await userManager.getUserKey(walletKey.userKeyId);
-      secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
-    }
 
     transactionModel = await findServerTransactionByTxID(
       serverTrans,
@@ -166,14 +165,14 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
 
     sinkAddSafe();
-    _frbAccount = (await WalletManager.loadWalletWithID(
+    _frbAccount = (await walletManager.loadWalletWithID(
       walletID,
       accountID,
     ))!;
     final List<FrbTransactionDetails> history =
         await _frbAccount.getTransactions();
-    strWallet = await WalletManager.getNameWithID(walletID);
-    strAccount = await WalletManager.getAccountLabelWithID(accountID);
+    strWallet = await walletNameService.getNameWithID(walletID);
+    strAccount = await walletNameService.getAccountLabelWithID(accountID);
 
     try {
       recipients = await DBHelper.transactionInfoDao!.findAllRecipients(
@@ -222,7 +221,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               for (Recipient recipient
                   in transactionDetailFromBlockChain.recipients) {
                 if (!hasFindMineBitcoinAddress) {
-                  if (await WalletManager.isMineBitcoinAddress(
+                  if (await walletManager.isMineBitcoinAddress(
                       _frbAccount, recipient.bitcoinAddress)) {
                     hasFindMineBitcoinAddress = true;
                     continue;
@@ -251,7 +250,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           if (transactionDetailFromBlockChain != null) {
             for (Recipient recipient
                 in transactionDetailFromBlockChain.recipients) {
-              if (await WalletManager.isMineBitcoinAddress(
+              if (await walletManager.isMineBitcoinAddress(
                   _frbAccount, recipient.bitcoinAddress)) {
                 selfBitcoinAddress = recipient.bitcoinAddress;
                 break;

@@ -1,4 +1,4 @@
-import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
@@ -7,8 +7,11 @@ class ExchangeRateService {
 
   static Future<void> runOnce(FiatCurrency fiatCurrency, {int? time}) async {
     final String key = getKey(fiatCurrency, time: time);
-    fiatCurrency2exchangeRate[key] =
-        await WalletManager.getExchangeRate(fiatCurrency, time: time);
+
+    final exchangeRate = await proton_api.getExchangeRate(
+        fiatCurrency: fiatCurrency,
+        time: time == null ? null : BigInt.from(time));
+    fiatCurrency2exchangeRate[key] = exchangeRate;
   }
 
   static Future<ProtonExchangeRate> getExchangeRate(
