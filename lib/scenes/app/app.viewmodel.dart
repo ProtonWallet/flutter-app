@@ -22,6 +22,7 @@ import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class AppViewModel extends ViewModel<AppCoordinator> {
   AppViewModel(super.coordinator);
@@ -81,6 +82,11 @@ class AppViewModelImpl extends AppViewModel {
       await rebuildDatabase();
     });
     final AppDatabase dbConnection = AppDatabase(shared);
+
+    shared.checkif("app_bdk_database_force_version", 1, () async {
+      await rebuildDatabase();
+      await BdkLibrary().clearLocalCache();
+    });
 
     /// networking
     final apiServiceManager = ProtonApiServiceManager(apiEnv, storage: storage);
