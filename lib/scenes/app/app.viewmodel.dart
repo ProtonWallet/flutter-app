@@ -84,7 +84,6 @@ class AppViewModelImpl extends AppViewModel {
     final AppDatabase dbConnection = AppDatabase(shared);
 
     shared.checkif("app_bdk_database_force_version", 1, () async {
-      await rebuildDatabase();
       await BdkLibrary().clearLocalCache();
     });
 
