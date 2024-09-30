@@ -9,8 +9,7 @@ class BdkLibrary {
   Future<void> clearLocalCache() async {
     String? path;
     if (Platform.isWindows || Platform.isLinux) {
-      final Directory appDocumentsDir =
-          await getApplicationDocumentsDirectory();
+      final appDocumentsDir = await getApplicationDocumentsDirectory();
       path = join(appDocumentsDir.path, "databases");
     } else {
       path = await getDatabasesPath();
