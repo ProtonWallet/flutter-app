@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
@@ -22,7 +23,6 @@ import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/debug/bdk.test.dart';
 
 abstract class AppViewModel extends ViewModel<AppCoordinator> {
   AppViewModel(super.coordinator);
@@ -83,7 +83,7 @@ class AppViewModelImpl extends AppViewModel {
     });
     final AppDatabase dbConnection = AppDatabase(shared);
 
-    shared.checkif("app_bdk_database_force_version", 1, () async {
+    await shared.checkif("app_bdk_database_force_version", 1, () async {
       await BdkLibrary().clearLocalCache();
     });
 
