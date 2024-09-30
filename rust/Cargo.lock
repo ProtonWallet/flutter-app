@@ -3883,7 +3883,7 @@ dependencies = [
  "proton-crypto",
  "proton-crypto-account",
  "proton-sqlite3",
- "proton-srp 0.4.2",
+ "proton-srp 0.5.1",
  "rand",
  "rusqlite",
  "secrecy",
