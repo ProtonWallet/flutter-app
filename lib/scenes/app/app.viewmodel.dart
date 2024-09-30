@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/user.agent.dart';
@@ -83,7 +84,8 @@ class AppViewModelImpl extends AppViewModel {
     });
     final AppDatabase dbConnection = AppDatabase(shared);
 
-    await shared.checkif("app_bdk_database_force_version", 1, () async {
+    /// remove bdk cache files to avoid migration issues in bdk@1.0.0-beta.4
+    await shared.checkif("app_bdk_database_force_version", bdkDatabaseVersion, () async {
       await BdkLibrary().clearLocalCache();
     });
 
