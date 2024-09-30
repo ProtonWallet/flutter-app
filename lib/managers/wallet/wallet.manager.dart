@@ -159,7 +159,7 @@ class WalletManager implements Manager {
   ///
   static Future<void> cleanBDKCache() async {
     frbWallets.clear();
-    bdkLib.clearLocalCache();
+    await bdkLib.clearLocalCache();
     // TODO(fix): add clear cache to bdk library
   }
 
