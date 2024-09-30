@@ -1753,12 +1753,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fixedbitset"
-version = "0.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d674e81391d1e1ab681a28d99df07927c6d4aa5b027d7da16ba32d1d21ecd99"
-
-[[package]]
 name = "flate2"
 version = "1.0.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1766,18 +1760,6 @@ checksum = "324a1be68054ef05ad64b861cc9eaf1d623d2d8cb25b4bf2cb9cdd902b4bf253"
 dependencies = [
  "crc32fast",
  "miniz_oxide",
-]
-
-[[package]]
-name = "flume"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55ac459de2512911e4b674ce33cf20befaba382d05b62b008afc1c8b57cbf181"
-dependencies = [
- "futures-core",
- "futures-sink",
- "nanorand",
- "spin",
 ]
 
 [[package]]
@@ -2636,12 +2618,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "indoc"
-version = "2.0.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
-
-[[package]]
 name = "inotify"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3093,15 +3069,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.77",
-]
-
-[[package]]
-name = "nanorand"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a51313c5820b0b02bd422f4b44776fbf47961755c74ce64afc73bfad10226c3"
-dependencies = [
- "getrandom",
 ]
 
 [[package]]
@@ -3808,26 +3775,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "proton-sqlite3"
-version = "0.7.6"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "325a5cdd68eea9b3030d700622c54813cbe5fcfb845b1fd517252c525840a4f7"
-dependencies = [
- "fixedbitset",
- "flume",
- "futures",
- "parking_lot",
- "paste",
- "rusqlite",
- "serde",
- "slotmap",
- "stash",
- "thiserror",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "proton-srp"
 version = "0.4.2"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
@@ -3882,15 +3829,13 @@ dependencies = [
  "openssl",
  "proton-crypto",
  "proton-crypto-account",
- "proton-sqlite3",
- "proton-srp 0.5.1",
+ "proton-srp 0.4.2",
  "rand",
  "rusqlite",
  "secrecy",
  "serde",
  "serde_json",
  "serde_rusqlite",
- "stash",
  "thiserror",
  "tokio",
  "tracing-subscriber",
@@ -3909,28 +3854,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5b9d34b8991d19d98081b46eacdd8eb58c6f2b201139f7c5f643cc155a633af"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "r2d2"
-version = "0.8.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51de85fb3fb6524929c8a2eb85e6b6d363de4e8c48f9e2c2eac4944abc181c93"
-dependencies = [
- "log",
- "parking_lot",
- "scheduled-thread-pool",
-]
-
-[[package]]
-name = "r2d2_sqlite"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a982edf65c129796dba72f8775b292ef482b40d035e827a9825b3bc07ccc5f2"
-dependencies = [
- "r2d2",
- "rusqlite",
- "uuid",
 ]
 
 [[package]]
@@ -4381,15 +4304,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "scheduled-thread-pool"
-version = "0.2.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cbc66816425a074528352f5789333ecff06ca41b36b0b0efdfbb29edc391a19"
-dependencies = [
- "parking_lot",
-]
-
-[[package]]
 name = "scopeguard"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4685,15 +4599,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "slotmap"
-version = "1.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbff4acf519f630b3a3ddcfaea6c06b42174d9a44bc70c620e9ed1649d58b82a"
-dependencies = [
- "version_check",
-]
-
-[[package]]
 name = "smallvec"
 version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4714,9 +4619,6 @@ name = "spin"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6980e8d7511241f8acf4aebddbb1ff938df5eebe98691418c4468d0b72a96a67"
-dependencies = [
- "lock_api",
-]
 
 [[package]]
 name = "spki"
@@ -4726,36 +4628,6 @@ checksum = "d91ed6c858b01f942cd56b37a94b3e0a1798290327d1236e4d9cf4eaca44d29d"
 dependencies = [
  "base64ct",
  "der",
-]
-
-[[package]]
-name = "stash"
-version = "0.1.6"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "7882a5774c454c0d4eee8a03b306cf91d99544d787118e69032969e3c1a7baf5"
-dependencies = [
- "flume",
- "indoc",
- "r2d2",
- "r2d2_sqlite",
- "rusqlite",
- "serde",
- "serde_json",
- "stash-macros",
- "thiserror",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "stash-macros"
-version = "0.1.1"
-source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "7e2da7bdacca6e0e92b47cfb65b260b0b9e254c9266c135db20259ecb72ac24d"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.77",
 ]
 
 [[package]]
