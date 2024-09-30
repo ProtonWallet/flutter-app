@@ -28,8 +28,6 @@ rusqlite = { version = "0.31.0", features = [
     "trace",
 ] }
 serde_rusqlite = "0.35.0"
-proton-sqlite3 = { version = "=0.7.6", registry = "proton_internal" }
-stash = { version = "=0.1.6", registry = "proton_internal" }
 async-trait = { version = "0.1.66" }
 
 ## old
@@ -51,7 +49,7 @@ andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin", features = [
     "sqlite",
 ] }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
-proton-srp = { version = "0.5.1", default-features = false, registry = "proton_internal" }
+proton-srp = { version = "0.4.1", default-features = false, registry = "proton" }
 
 # bdk_sqlite = { version = "=0.2.0" }
 proton-crypto = { path = "../vendor/proton-crypto-rs/proton-crypto" }
