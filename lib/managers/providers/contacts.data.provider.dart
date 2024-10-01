@@ -120,6 +120,7 @@ class ContactsDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
+    contactsData?.clear();
     dataUpdateController.close();
   }
 
