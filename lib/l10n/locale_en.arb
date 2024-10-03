@@ -530,5 +530,6 @@
   "terms_of_service": "Terms of service",
   "how_to_import_wallet_": "How to import your wallet to Proton Wallet",
   "feedback": "Feedback",
-  "help_center_knowledge_base": "Help center & knowledge base"
+  "help_center_knowledge_base": "Help center & knowledge base",
+  "now_login": "Logging in"
 }
