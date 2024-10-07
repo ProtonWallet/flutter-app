@@ -42,6 +42,9 @@ class ApiWallet {
   /// Temporary field to tell clients to re-encrypt WalletKey
   final int? migrationRequired;
 
+  /// Field to tell clients if mnemonic uses a legacy encryption scheme
+  final int? legacy;
+
   const ApiWallet({
     required this.id,
     required this.name,
@@ -54,6 +57,7 @@ class ApiWallet {
     this.fingerprint,
     this.publicKey,
     this.migrationRequired,
+    this.legacy,
   });
 
   @override
@@ -68,7 +72,8 @@ class ApiWallet {
       mnemonic.hashCode ^
       fingerprint.hashCode ^
       publicKey.hashCode ^
-      migrationRequired.hashCode;
+      migrationRequired.hashCode ^
+      legacy.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -85,7 +90,8 @@ class ApiWallet {
           mnemonic == other.mnemonic &&
           fingerprint == other.fingerprint &&
           publicKey == other.publicKey &&
-          migrationRequired == other.migrationRequired;
+          migrationRequired == other.migrationRequired &&
+          legacy == other.legacy;
 }
 
 class ApiWalletBitcoinAddress {

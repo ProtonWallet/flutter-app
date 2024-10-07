@@ -133,7 +133,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => 2022707352;
+  int get rustContentHash => -1697301474;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -620,6 +620,13 @@ abstract class RustLibApi extends BaseApi {
       required String walletId,
       required String walletAccountId});
 
+  Future<void>
+      crateApiApiServiceWalletClientWalletClientDeleteWalletTransaction(
+          {required WalletClient that,
+          required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId});
+
   Future<WalletTransaction>
       crateApiApiServiceWalletClientWalletClientDeleteWalletTransactionPrivateFlag(
           {required WalletClient that,
@@ -629,13 +636,6 @@ abstract class RustLibApi extends BaseApi {
 
   Future<WalletTransaction>
       crateApiApiServiceWalletClientWalletClientDeleteWalletTransactionSuspiciousFlag(
-          {required WalletClient that,
-          required String walletId,
-          required String walletAccountId,
-          required String walletTransactionId});
-
-  Future<void>
-      crateApiApiServiceWalletClientWalletClientDeleteWalletTransactions(
           {required WalletClient that,
           required String walletId,
           required String walletAccountId,
@@ -5124,6 +5124,47 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  Future<void>
+      crateApiApiServiceWalletClientWalletClientDeleteWalletTransaction(
+          {required WalletClient that,
+          required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
+            that, serializer);
+        sse_encode_String(walletId, serializer);
+        sse_encode_String(walletAccountId, serializer);
+        sse_encode_String(walletTransactionId, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 108, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiApiServiceWalletClientWalletClientDeleteWalletTransactionConstMeta,
+      argValues: [that, walletId, walletAccountId, walletTransactionId],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiApiServiceWalletClientWalletClientDeleteWalletTransactionConstMeta =>
+          const TaskConstMeta(
+            debugName: "WalletClient_delete_wallet_transaction",
+            argNames: [
+              "that",
+              "walletId",
+              "walletAccountId",
+              "walletTransactionId"
+            ],
+          );
+
+  @override
   Future<WalletTransaction>
       crateApiApiServiceWalletClientWalletClientDeleteWalletTransactionPrivateFlag(
           {required WalletClient that,
@@ -5139,7 +5180,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_String(walletTransactionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 108, port: port_);
+            funcId: 109, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_transaction,
@@ -5180,7 +5221,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_String(walletTransactionId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 109, port: port_);
+            funcId: 110, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_transaction,
@@ -5197,47 +5238,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiApiServiceWalletClientWalletClientDeleteWalletTransactionSuspiciousFlagConstMeta =>
           const TaskConstMeta(
             debugName: "WalletClient_delete_wallet_transaction_suspicious_flag",
-            argNames: [
-              "that",
-              "walletId",
-              "walletAccountId",
-              "walletTransactionId"
-            ],
-          );
-
-  @override
-  Future<void>
-      crateApiApiServiceWalletClientWalletClientDeleteWalletTransactions(
-          {required WalletClient that,
-          required String walletId,
-          required String walletAccountId,
-          required String walletTransactionId}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerWalletClient(
-            that, serializer);
-        sse_encode_String(walletId, serializer);
-        sse_encode_String(walletAccountId, serializer);
-        sse_encode_String(walletTransactionId, serializer);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 110, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_unit,
-        decodeErrorData: sse_decode_bridge_error,
-      ),
-      constMeta:
-          kCrateApiApiServiceWalletClientWalletClientDeleteWalletTransactionsConstMeta,
-      argValues: [that, walletId, walletAccountId, walletTransactionId],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiApiServiceWalletClientWalletClientDeleteWalletTransactionsConstMeta =>
-          const TaskConstMeta(
-            debugName: "WalletClient_delete_wallet_transactions",
             argNames: [
               "that",
               "walletId",
@@ -12590,8 +12590,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ApiWallet dco_decode_api_wallet(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 11)
-      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    if (arr.length != 12)
+      throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
     return ApiWallet(
       id: dco_decode_String(arr[0]),
       name: dco_decode_String(arr[1]),
@@ -12604,6 +12604,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       fingerprint: dco_decode_opt_String(arr[8]),
       publicKey: dco_decode_opt_String(arr[9]),
       migrationRequired: dco_decode_opt_box_autoadd_u_8(arr[10]),
+      legacy: dco_decode_opt_box_autoadd_u_8(arr[11]),
     );
   }
 
@@ -16205,6 +16206,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_fingerprint = sse_decode_opt_String(deserializer);
     var var_publicKey = sse_decode_opt_String(deserializer);
     var var_migrationRequired = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_legacy = sse_decode_opt_box_autoadd_u_8(deserializer);
     return ApiWallet(
         id: var_id,
         name: var_name,
@@ -16216,7 +16218,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         mnemonic: var_mnemonic,
         fingerprint: var_fingerprint,
         publicKey: var_publicKey,
-        migrationRequired: var_migrationRequired);
+        migrationRequired: var_migrationRequired,
+        legacy: var_legacy);
   }
 
   @protected
@@ -20484,6 +20487,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.fingerprint, serializer);
     sse_encode_opt_String(self.publicKey, serializer);
     sse_encode_opt_box_autoadd_u_8(self.migrationRequired, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.legacy, serializer);
   }
 
   @protected
@@ -24737,6 +24741,17 @@ class WalletClientImpl extends RustOpaque implements WalletClient {
           .crateApiApiServiceWalletClientWalletClientDeleteWalletAccount(
               that: this, walletId: walletId, walletAccountId: walletAccountId);
 
+  Future<void> deleteWalletTransaction(
+          {required String walletId,
+          required String walletAccountId,
+          required String walletTransactionId}) =>
+      RustLib.instance.api
+          .crateApiApiServiceWalletClientWalletClientDeleteWalletTransaction(
+              that: this,
+              walletId: walletId,
+              walletAccountId: walletAccountId,
+              walletTransactionId: walletTransactionId);
+
   Future<WalletTransaction> deleteWalletTransactionPrivateFlag(
           {required String walletId,
           required String walletAccountId,
@@ -24754,17 +24769,6 @@ class WalletClientImpl extends RustOpaque implements WalletClient {
           required String walletTransactionId}) =>
       RustLib.instance.api
           .crateApiApiServiceWalletClientWalletClientDeleteWalletTransactionSuspiciousFlag(
-              that: this,
-              walletId: walletId,
-              walletAccountId: walletAccountId,
-              walletTransactionId: walletTransactionId);
-
-  Future<void> deleteWalletTransactions(
-          {required String walletId,
-          required String walletAccountId,
-          required String walletTransactionId}) =>
-      RustLib.instance.api
-          .crateApiApiServiceWalletClientWalletClientDeleteWalletTransactions(
               that: this,
               walletId: walletId,
               walletAccountId: walletAccountId,

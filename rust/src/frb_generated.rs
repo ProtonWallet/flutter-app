@@ -78,7 +78,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.1.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2022707352;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1697301474;
 
 // Section: executor
 
@@ -3566,6 +3566,33 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
                     })().await)
                 } })
 }
+fn wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_delete_wallet_transaction", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
+let api_wallet_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
+let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+                    transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
+                        let mut api_that_guard = None;
+let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
+        for i in decode_indices_ {
+            match i {
+                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
+                _ => unreachable!(),
+            }
+        }
+        let api_that_guard = api_that_guard.unwrap();
+ let output_ok = crate::api::api_service::wallet_client::WalletClient::delete_wallet_transaction(&*api_that_guard, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await?;   Ok(output_ok)
+                    })().await)
+                } })
+}
 fn wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_private_flag_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3617,33 +3644,6 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
         }
         let api_that_guard = api_that_guard.unwrap();
  let output_ok = crate::api::api_service::wallet_client::WalletClient::delete_wallet_transaction_suspicious_flag(&*api_that_guard, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await?;   Ok(output_ok)
-                    })().await)
-                } })
-}
-fn wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transactions_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec,_,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "WalletClient_delete_wallet_transactions", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<WalletClient>>>::sse_decode(&mut deserializer);
-let api_wallet_id = <String>::sse_decode(&mut deserializer);
-let api_wallet_account_id = <String>::sse_decode(&mut deserializer);
-let api_wallet_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
-                    transform_result_sse::<_, crate::common::errors::BridgeError>((move || async move {
-                        let mut api_that_guard = None;
-let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decode_order(vec![flutter_rust_bridge::for_generated::LockableOrderInfo::new(&api_that, 0, false)]);
-        for i in decode_indices_ {
-            match i {
-                0 => api_that_guard = Some(api_that.lockable_decode_async_ref().await),
-                _ => unreachable!(),
-            }
-        }
-        let api_that_guard = api_that_guard.unwrap();
- let output_ok = crate::api::api_service::wallet_client::WalletClient::delete_wallet_transactions(&*api_that_guard, api_wallet_id, api_wallet_account_id, api_wallet_transaction_id).await?;   Ok(output_ok)
                     })().await)
                 } })
 }
@@ -11654,6 +11654,7 @@ const _: fn() = || {
         let _: Option<String> = ApiWallet.Fingerprint;
         let _: Option<String> = ApiWallet.PublicKey;
         let _: Option<u8> = ApiWallet.MigrationRequired;
+        let _: Option<u8> = ApiWallet.Legacy;
     }
     {
         let ApiWalletAccount = None::<crate::proton_api::wallet_account::ApiWalletAccount>.unwrap();
@@ -13424,6 +13425,7 @@ impl SseDecode for crate::proton_api::wallet::ApiWallet {
         let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         let mut var_publicKey = <Option<String>>::sse_decode(deserializer);
         let mut var_migrationRequired = <Option<u8>>::sse_decode(deserializer);
+        let mut var_legacy = <Option<u8>>::sse_decode(deserializer);
         return crate::proton_api::wallet::ApiWallet {
             ID: var_id,
             Name: var_name,
@@ -13436,6 +13438,7 @@ impl SseDecode for crate::proton_api::wallet::ApiWallet {
             Fingerprint: var_fingerprint,
             PublicKey: var_publicKey,
             MigrationRequired: var_migrationRequired,
+            Legacy: var_legacy,
         };
     }
 }
@@ -16428,9 +16431,9 @@ fn pde_ffi_dispatcher_primary_impl(
 105 => wire__crate__api__api_service__wallet_client__WalletClient_create_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
 106 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_impl(port, ptr, rust_vec_len, data_len),
 107 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_account_impl(port, ptr, rust_vec_len, data_len),
-108 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
-109 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
-110 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transactions_impl(port, ptr, rust_vec_len, data_len),
+108 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_impl(port, ptr, rust_vec_len, data_len),
+109 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_private_flag_impl(port, ptr, rust_vec_len, data_len),
+110 => wire__crate__api__api_service__wallet_client__WalletClient_delete_wallet_transaction_suspicious_flag_impl(port, ptr, rust_vec_len, data_len),
 111 => wire__crate__api__api_service__wallet_client__WalletClient_disable_show_wallet_recovery_impl(port, ptr, rust_vec_len, data_len),
 112 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_account_addresses_impl(port, ptr, rust_vec_len, data_len),
 113 => wire__crate__api__api_service__wallet_client__WalletClient_get_wallet_accounts_impl(port, ptr, rust_vec_len, data_len),
@@ -17606,6 +17609,7 @@ impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::proton_api::wallet::Api
             self.0.Fingerprint.into_into_dart().into_dart(),
             self.0.PublicKey.into_into_dart().into_dart(),
             self.0.MigrationRequired.into_into_dart().into_dart(),
+            self.0.Legacy.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -20863,6 +20867,7 @@ impl SseEncode for crate::proton_api::wallet::ApiWallet {
         <Option<String>>::sse_encode(self.Fingerprint, serializer);
         <Option<String>>::sse_encode(self.PublicKey, serializer);
         <Option<u8>>::sse_encode(self.MigrationRequired, serializer);
+        <Option<u8>>::sse_encode(self.Legacy, serializer);
     }
 }
 
