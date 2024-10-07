@@ -140,6 +140,8 @@ pub struct _ApiWallet {
     pub PublicKey: Option<String>,
     /// Temporary field to tell clients to re-encrypt WalletKey
     pub MigrationRequired: Option<u8>,
+    /// Field to tell clients if mnemonic uses a legacy encryption scheme
+    pub Legacy: Option<u8>,
 }
 
 #[frb(mirror(ApiWalletKey))]
