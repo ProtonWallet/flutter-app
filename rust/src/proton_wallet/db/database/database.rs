@@ -122,7 +122,7 @@ pub trait BaseDatabase {
     async fn get_all<T: ModelBase>(&self) -> Result<Vec<T>> {
         let conn = self.conn().lock().await;
         let mut stmt = conn.prepare(&format!("SELECT * FROM `{}`", self.table_name().as_str()))?;
-        let iter = stmt.query_map([], |row| Ok(T::from_row(row)?))?;
+        let iter = stmt.query_map([], |row| T::from_row(row))?;
         let items: Vec<T> = iter.collect::<Result<_>>()?;
         Ok(items)
     }
@@ -133,7 +133,7 @@ pub trait BaseDatabase {
             "SELECT * FROM `{}` WHERE id = ?1",
             self.table_name().as_str()
         ))?;
-        let result = stmt.query_row(params![id], |row| Ok(T::from_row(row)?));
+        let result = stmt.query_row(params![id], |row| T::from_row(row));
         Ok(result.ok())
     }
 
@@ -143,7 +143,7 @@ pub trait BaseDatabase {
         value: &str,
     ) -> Result<Option<T>, DatabaseError> {
         let exsit = self.column_exists(column_name).await?;
-        if exsit == false {
+        if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));
         }
         let conn = self.conn().lock().await;
@@ -152,7 +152,7 @@ pub trait BaseDatabase {
             self.table_name().as_str(),
             column_name
         ))?;
-        let result = stmt.query_row(params![value], |row| Ok(T::from_row(row)?));
+        let result = stmt.query_row(params![value], |row| T::from_row(row));
         Ok(result.ok())
     }
 
@@ -162,7 +162,7 @@ pub trait BaseDatabase {
         value: &str,
     ) -> Result<Vec<T>, DatabaseError> {
         let exsit = self.column_exists(column_name).await?;
-        if exsit == false {
+        if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));
         }
         let conn = self.conn().lock().await;
@@ -171,7 +171,7 @@ pub trait BaseDatabase {
             self.table_name().as_str(),
             column_name
         ))?;
-        let account_iter = stmt.query_map([value], |row| Ok(T::from_row(row)?))?;
+        let account_iter = stmt.query_map([value], |row| T::from_row(row))?;
         let accounts: Vec<T> = account_iter.collect::<Result<_>>()?;
         Ok(accounts)
     }
@@ -191,7 +191,7 @@ pub trait BaseDatabase {
         value: &str,
     ) -> Result<(), DatabaseError> {
         let exsit = self.column_exists(column_name).await?;
-        if exsit == false {
+        if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));
         }
         let conn = self.conn().lock().await;

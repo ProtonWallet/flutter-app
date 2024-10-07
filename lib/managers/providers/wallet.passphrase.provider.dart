@@ -57,6 +57,7 @@ class WalletPassphraseProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
+    walletPassphrases?.clear();
     dataUpdateController.close();
   }
 

@@ -27,7 +27,7 @@ impl MigrationContainer {
         let start = migration.start_version();
         let end = migration.end_version();
 
-        let target_map = self.migrations.entry(start).or_insert_with(BTreeMap::new);
+        let target_map = self.migrations.entry(start).or_default();
 
         if target_map.contains_key(&end) {
             warn!("Override migration from {} to {}", start, end);

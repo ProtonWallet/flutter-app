@@ -23,7 +23,7 @@ impl ContactsDao {
         &self,
         item: &ContactsModel,
     ) -> Result<Option<ContactsModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.server_contact_id).await? {
+        if (self.get_by_server_id(&item.server_contact_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -72,7 +72,7 @@ impl ContactsDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(item.id.unwrap_or_default()).await?)
+        self.get(item.id.unwrap_or_default()).await
     }
 
     pub async fn get(&self, id: u32) -> Result<Option<ContactsModel>> {
@@ -181,7 +181,7 @@ mod tests {
         let contacts = contacts_dao.get_all().await.unwrap();
         assert_eq!(contacts.len(), 1);
 
-        let _ = contacts_dao.delete_by_server_id("server12345");
+        let _ = contacts_dao.delete_by_server_id("server12345").await;
 
         let contacts = contacts_dao.get_all().await.unwrap();
         assert_eq!(contacts.len(), 1);

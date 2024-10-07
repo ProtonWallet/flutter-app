@@ -25,7 +25,7 @@ impl BitcoinAddressDao {
         &self,
         item: &BitcoinAddressModel,
     ) -> Result<Option<BitcoinAddressModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.server_id).await? {
+        if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -82,7 +82,7 @@ impl BitcoinAddressDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(item.id.unwrap_or_default()).await?)
+        self.get(item.id.unwrap_or_default()).await
     }
 
     pub async fn get(&self, id: u32) -> Result<Option<BitcoinAddressModel>> {

@@ -60,7 +60,7 @@ impl AppDatabase {
     }
 
     pub async fn drop_all_tables(&self) -> Result<()> {
-        let _ = self.account_dao.database.drop_table();
+        let _ = self.account_dao.database.drop_table().await;
         Ok(())
     }
 

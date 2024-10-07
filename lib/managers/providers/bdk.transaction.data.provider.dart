@@ -148,7 +148,7 @@ class BDKTransactionDataProvider extends DataProvider {
     final String serverWalletID = walletModel.walletID;
     final String serverAccountID = accountModel.accountID;
     final String syncCheckID =
-        "is_wallet_full_synced_${serverWalletID}_$serverAccountID";
+        "is_bkd${bdkDatabaseVersion}_wallet_full_synced_${serverWalletID}_$serverAccountID";
     return syncCheckID;
   }
 

@@ -25,7 +25,7 @@ impl TransactionDao {
         &self,
         item: &TransactionModel,
     ) -> Result<Option<TransactionModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.server_id).await? {
+        if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -96,7 +96,7 @@ impl TransactionDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(item.id).await?)
+        self.get(item.id).await
     }
 
     pub async fn get(&self, id: u32) -> Result<Option<TransactionModel>> {
@@ -223,7 +223,7 @@ mod tests {
         assert_eq!(query_item.server_account_id, "account123");
         assert_eq!(query_item.modify_time, 1633159200);
         assert_eq!(query_item.tolist, Some("recipient@example.com".to_string()));
-        assert_eq!(query_item.subject.is_none(), false);
+        assert!(query_item.subject.is_some());
 
         let query_item = transaction_dao.get(2).await.unwrap().unwrap();
         assert_eq!(query_item.exchange_rate_id, "rate123");
@@ -232,7 +232,7 @@ mod tests {
         assert_eq!(query_item.server_account_id, "new_acc");
         assert_eq!(query_item.modify_time, 199999999);
         assert_eq!(query_item.tolist, Some("recipient@example.com".to_string()));
-        assert_eq!(query_item.subject.is_none(), true);
+        assert!(query_item.subject.is_none());
 
         let transactions = transaction_dao.get_all().await.unwrap();
         assert_eq!(transactions.len(), 2);
@@ -250,7 +250,7 @@ mod tests {
             .unwrap();
         assert_eq!(transactions.len(), 0);
 
-        let _ = transaction_dao.delete_by_server_id("server12345");
+        let _ = transaction_dao.delete_by_server_id("server12345").await;
 
         let contacts = transaction_dao.get_all().await.unwrap();
         assert_eq!(contacts.len(), 2);
@@ -280,6 +280,6 @@ mod tests {
         assert_eq!(query_item.create_time, 666666666);
         assert_eq!(query_item.modify_time, 777777777);
         assert_eq!(query_item.tolist, Some("recipient@example.com".to_string()));
-        assert_eq!(query_item.subject.is_none(), true);
+        assert!(query_item.subject.is_none());
     }
 }
