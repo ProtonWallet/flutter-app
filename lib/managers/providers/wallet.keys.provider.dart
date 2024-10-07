@@ -114,7 +114,9 @@ class WalletKeysProvider extends DataProvider {
   }
 
   @override
-  Future<void> clear() async {}
+  Future<void> clear() async {
+    walletKeys = null;
+  }
 
   Future<void> reset() async {
     walletKeys = null;

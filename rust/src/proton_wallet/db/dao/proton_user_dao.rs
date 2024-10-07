@@ -87,10 +87,10 @@ mod tests {
         assert_eq!(users[0].name, "proton.wallet.test");
 
         let user = proton_user_dao.get_by_user_id("vJxErOgAzrqjwPfvjlhAoDVPoXbDl2URUzd15JcQNwggW6bkwd70KNWozrMpV_d21FITkNqnMAY5WRxwAGclng==").await.unwrap();
-        assert_eq!(user.is_none(), false);
+        assert!(user.is_some());
 
         let user = proton_user_dao.get_by_user_id("123").await.unwrap();
-        assert_eq!(user.is_none(), true);
+        assert!(user.is_none());
     }
 
     #[tokio::test]
@@ -173,8 +173,8 @@ mod tests {
         assert_eq!(query_item.subscribed, 0);
         assert_eq!(query_item.services, 12);
         assert_eq!(query_item.delinquent, 0);
-        assert_eq!(query_item.organization_private_key.is_none(), true);
-        assert_eq!(query_item.email.is_none(), false);
+        assert!(query_item.organization_private_key.is_none());
+        assert!(query_item.email.is_some());
         assert_eq!(query_item.display_name, Some("Test User".to_string()));
     }
 }
