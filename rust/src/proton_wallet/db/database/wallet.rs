@@ -81,7 +81,7 @@ mod tests {
         assert_eq!(db.table_name().as_str(), table_name);
         let result = db.migration_0().await;
         assert!(result.is_ok());
-        let exists = db.table_exists(&table_name).await.unwrap();
+        let exists = db.table_exists(table_name).await.unwrap();
         assert!(exists);
         assert!(db.column_exists("id").await.unwrap());
         assert!(db.column_exists("name").await.unwrap());

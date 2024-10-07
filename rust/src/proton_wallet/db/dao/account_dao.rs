@@ -20,7 +20,7 @@ impl AccountDao {
 
 impl AccountDao {
     pub async fn upsert(&self, item: &AccountModel) -> Result<Option<AccountModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.account_id).await? {
+        if (self.get_by_server_id(&item.account_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -79,7 +79,7 @@ impl AccountDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(item.id).await?)
+        self.get(item.id).await
     }
 
     /// Get account by auto increase id
@@ -278,13 +278,13 @@ mod tests {
         assert_eq!(accounts[0].fiat_currency, "MMR");
 
         let query_item = account_dao.get(1).await.unwrap();
-        assert_eq!(query_item.is_none(), true);
+        assert!(query_item.is_none());
 
         let query_item = account_dao.get(2).await.unwrap();
-        assert_eq!(query_item.is_none(), false);
+        assert!(query_item.is_some());
 
         let _ = account_dao.delete_by_account_id("test_account_id_2").await;
         let query_item = account_dao.get(2).await.unwrap();
-        assert_eq!(query_item.is_none(), true);
+        assert!(query_item.is_none());
     }
 }

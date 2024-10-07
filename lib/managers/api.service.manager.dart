@@ -95,6 +95,7 @@ class ProtonApiServiceManager implements Manager {
     /// the apiSerice logout is global clean up in rust layer. remove the ProtonAPiSerive caches and also reset the AuthStore session.
     ///  after called this function, you need re-init the ProtonApiService again. dont foget to setup AuthDartCallback.
     await _apiService?.logout();
+    _apiService = null;
   }
 
   @override

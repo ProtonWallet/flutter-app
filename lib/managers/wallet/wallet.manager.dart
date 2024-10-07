@@ -134,7 +134,7 @@ class WalletManager implements Manager {
   ///
   Future<void> cleanBDKCache() async {
     frbWallets.clear();
-    bdkLib.clearLocalCache();
+    await bdkLib.clearLocalCache();
   }
 
   Future<void> cleanSharedPreference() async {

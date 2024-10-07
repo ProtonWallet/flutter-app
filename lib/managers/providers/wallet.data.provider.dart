@@ -676,6 +676,7 @@ class WalletsDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
+    walletsData = null;
     dataUpdateController.close();
   }
 

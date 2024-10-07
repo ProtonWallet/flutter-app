@@ -577,7 +577,8 @@ class HomeView extends ViewBase<HomeViewModel> {
           ),
         ]),
         Row(children: [
-          viewModel.currentExchangeRate.id == defaultExchangeRate.id
+          showBalanceLoading(
+                  viewModel, walletBalanceState, walletTransactionState)
               ? const CardLoading(
                   width: 200,
                   height: 36,
@@ -629,19 +630,37 @@ class HomeView extends ViewBase<HomeViewModel> {
         const SizedBox(
           height: 8,
         ),
-        viewModel.displayBalance
-            ? Text(
-                ExchangeCalculator.getBitcoinUnitLabel(
-                  viewModel.bitcoinUnit,
-                  walletBalanceState.balanceInSatoshi,
-                ),
-                style: FontManager.balanceInBTC(ProtonColors.textHint))
-            : Text(
-                "$hidedBalanceString ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
-                style: FontManager.balanceInBTC(ProtonColors.textHint),
-              ),
+        showBalanceLoading(
+                viewModel, walletBalanceState, walletTransactionState)
+            ? const CardLoading(
+                width: 200,
+                height: 16,
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                margin: EdgeInsets.only(top: 4),
+              )
+            : viewModel.displayBalance
+                ? Text(
+                    ExchangeCalculator.getBitcoinUnitLabel(
+                      viewModel.bitcoinUnit,
+                      walletBalanceState.balanceInSatoshi,
+                    ),
+                    style: FontManager.balanceInBTC(ProtonColors.textHint))
+                : Text(
+                    "$hidedBalanceString ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
+                    style: FontManager.balanceInBTC(ProtonColors.textHint),
+                  ),
       ],
     );
+  }
+
+  bool showBalanceLoading(
+    HomeViewModel viewModel,
+    WalletBalanceState walletBalanceState,
+    WalletTransactionState walletTransactionState,
+  ) {
+    return viewModel.currentExchangeRate.id == defaultExchangeRate.id ||
+        (walletTransactionState.isSyncing &&
+            walletBalanceState.balanceInSatoshi == 0);
   }
 
   Color getTransactionAndAddressesBackground(

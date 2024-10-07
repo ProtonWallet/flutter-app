@@ -68,14 +68,14 @@ mod tests {
         assert_eq!(db.table_name().as_str(), table_name);
 
         let result = db.migration_0().await;
-        assert_eq!(result.is_ok(), true);
-        let exists = db.table_exists(&table_name).await.unwrap();
-        assert_eq!(exists, true);
+        assert!(result.is_ok());
+        let exists = db.table_exists(table_name).await.unwrap();
+        assert!(exists);
 
-        assert_eq!(db.column_exists("id").await.unwrap(), true);
-        assert_eq!(db.column_exists("server_id").await.unwrap(), true);
-        assert_eq!(db.column_exists("email").await.unwrap(), true);
-        assert_eq!(db.column_exists("server_wallet_id").await.unwrap(), true);
-        assert_eq!(db.column_exists("server_account_id").await.unwrap(), true);
+        assert!(db.column_exists("id").await.unwrap());
+        assert!(db.column_exists("server_id").await.unwrap());
+        assert!(db.column_exists("email").await.unwrap());
+        assert!(db.column_exists("server_wallet_id").await.unwrap());
+        assert!(db.column_exists("server_account_id").await.unwrap());
     }
 }

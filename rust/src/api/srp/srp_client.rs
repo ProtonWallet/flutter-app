@@ -8,7 +8,7 @@ use proton_crypto::{
     srp::{SRPProvider, SRPVerifierB64},
 };
 use proton_crypto_account::proton_crypto;
-use proton_srp::{mailbox_password_hash, SRPAuth, SRPProofB64};
+use proton_srp::{mailbox_password_hash, SRPProofB64};
 
 use crate::BridgeError;
 
@@ -27,9 +27,21 @@ impl SrpClient {
         modulus: String,
         server_ephemeral: String,
     ) -> Result<SRPProofB64, BridgeError> {
-        let client = SRPAuth::new(&login_password, version, &salt, &modulus, &server_ephemeral)?;
-        let proofs = client.generate_proofs()?;
-        Ok(proofs.into())
+        let srp_provider = new_srp_provider();
+        let proofs = srp_provider.generate_client_proof(
+            "",
+            &login_password,
+            version,
+            &salt,
+            &modulus,
+            &server_ephemeral,
+        )?;
+
+        Ok(SRPProofB64 {
+            client_ephemeral: proofs.ephemeral,
+            client_proof: proofs.proof,
+            expected_server_proof: proofs.expected_server_proof,
+        })
     }
 
     pub fn generate_verifer(

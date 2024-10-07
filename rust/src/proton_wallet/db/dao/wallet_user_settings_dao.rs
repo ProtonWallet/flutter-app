@@ -121,7 +121,7 @@ mod tests {
             .get_by_user_id("mock_user_id")
             .await
             .unwrap();
-        assert_eq!(setting.is_none(), true);
+        assert!(setting.is_none());
 
         let setting = WalletUserSettingsModel {
             user_id: "mock_user_id".to_string(),

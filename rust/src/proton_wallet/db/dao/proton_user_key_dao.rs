@@ -191,8 +191,8 @@ mod tests {
         assert_eq!(query_item.private_key, "mock_private_key_here");
         assert_eq!(query_item.token, Some("mock_token".to_string()));
         assert_eq!(query_item.fingerprint, Some("FTS721AVC2US".to_string()));
-        assert_eq!(query_item.recovery_secret.is_none(), true);
-        assert_eq!(query_item.recovery_secret_signature.is_none(), true);
+        assert!(query_item.recovery_secret.is_none());
+        assert!(query_item.recovery_secret_signature.is_none());
         assert_eq!(query_item.primary, 1);
 
         // test query
