@@ -40,17 +40,17 @@ abstract class WalletClient implements RustOpaqueInterface {
   Future<void> deleteWalletAccount(
       {required String walletId, required String walletAccountId});
 
+  Future<void> deleteWalletTransaction(
+      {required String walletId,
+      required String walletAccountId,
+      required String walletTransactionId});
+
   Future<WalletTransaction> deleteWalletTransactionPrivateFlag(
       {required String walletId,
       required String walletAccountId,
       required String walletTransactionId});
 
   Future<WalletTransaction> deleteWalletTransactionSuspiciousFlag(
-      {required String walletId,
-      required String walletAccountId,
-      required String walletTransactionId});
-
-  Future<void> deleteWalletTransactions(
       {required String walletId,
       required String walletAccountId,
       required String walletTransactionId});

@@ -350,7 +350,7 @@ impl WalletClient {
         Ok(result.into())
     }
 
-    pub async fn delete_wallet_transactions(
+    pub async fn delete_wallet_transaction(
         &self,
         wallet_id: String,
         wallet_account_id: String,
@@ -358,7 +358,7 @@ impl WalletClient {
     ) -> Result<(), BridgeError> {
         Ok(self
             .inner
-            .delete_wallet_transactions(wallet_id, wallet_account_id, wallet_transaction_id)
+            .delete_wallet_transaction(wallet_id, wallet_account_id, wallet_transaction_id)
             .await?)
     }
 
