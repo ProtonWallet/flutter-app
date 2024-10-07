@@ -22,6 +22,18 @@ impl WalletUserSettingsDao {
 }
 
 impl WalletUserSettingsDao {
+    pub async fn upsert(
+        &self,
+        item: &WalletUserSettingsModel,
+    ) -> Result<Option<WalletUserSettingsModel>, DatabaseError> {
+        if let Some(_) = self.get_by_user_id(&item.user_id).await? {
+            self.update(item).await?;
+        } else {
+            self.insert(item).await?;
+        }
+        self.get_by_user_id(&item.user_id).await
+    }
+
     pub async fn insert(&self, item: &WalletUserSettingsModel) -> Result<u32> {
         let conn = self.conn.lock().await;
         let result: std::result::Result<usize, rusqlite::Error> = conn.execute(
@@ -45,6 +57,56 @@ impl WalletUserSettingsDao {
             Err(e) => {
                 eprintln!("Something went wrong: {}", e);
                 Err(e)
+            }
+        }
+    }
+
+    pub async fn update(
+        &self,
+        item: &WalletUserSettingsModel,
+    ) -> Result<Option<WalletUserSettingsModel>> {
+        let conn = self.conn.lock().await;
+        let rows_affected = conn.execute(
+            "UPDATE wallet_user_settings_table 
+                    SET bitcoin_unit = ?1, 
+                        fiat_currency = ?2, 
+                        hide_empty_used_addresses = ?3, 
+                        show_wallet_recovery = ?4, 
+                        two_factor_amount_threshold = ?5, 
+                        receive_inviter_notification = ?6, 
+                        receive_email_integration_notification = ?7, 
+                        wallet_created = ?8, 
+                        accept_terms_and_conditions = ?9 
+                    WHERE user_id = ?10",
+            params![
+                item.bitcoin_unit,
+                item.fiat_currency,
+                item.hide_empty_used_addresses,
+                item.show_wallet_recovery,
+                item.two_factor_amount_threshold,
+                item.receive_inviter_notification,
+                item.receive_email_integration_notification,
+                item.wallet_created,
+                item.accept_terms_and_conditions,
+                item.user_id
+            ],
+        )?;
+
+        if rows_affected == 0 {
+            return Err(rusqlite::Error::StatementChangedRows(0));
+        }
+
+        std::mem::drop(conn); // release connection before we want to use self.get()
+        Ok(self.get(&item.user_id).await?)
+    }
+
+    pub async fn get(&self, user_id: &str) -> Result<Option<WalletUserSettingsModel>> {
+        let result = self.database.get_by_column_id("user_id", user_id).await;
+        match result {
+            Ok(user_setting) => Ok(user_setting),
+            Err(e) => {
+                eprintln!("Something went wrong: {}", e);
+                Ok(None)
             }
         }
     }
@@ -123,7 +185,7 @@ mod tests {
             .unwrap();
         assert!(setting.is_none());
 
-        let setting = WalletUserSettingsModel {
+        let mut setting = WalletUserSettingsModel {
             user_id: "mock_user_id".to_string(),
             bitcoin_unit: "MBTC".to_string(),
             fiat_currency: "CNY".to_string(),
@@ -136,9 +198,9 @@ mod tests {
             accept_terms_and_conditions: 0,
         };
 
-        // test insert
-        let insert_id = wallet_user_settings_dao.insert(&setting).await.unwrap();
-        assert_eq!(insert_id, 1);
+        // test upsert
+        let upsert_item = wallet_user_settings_dao.upsert(&setting).await.unwrap();
+        assert_eq!(upsert_item.is_some(), true);
 
         // test query
         let query_item = wallet_user_settings_dao
@@ -150,6 +212,29 @@ mod tests {
         assert_eq!(query_item.user_id, "mock_user_id");
         assert_eq!(query_item.bitcoin_unit, "MBTC");
         assert_eq!(query_item.fiat_currency, "CNY");
+        assert_eq!(query_item.hide_empty_used_addresses, 1);
+        assert_eq!(query_item.show_wallet_recovery, 1);
+        assert_eq!(query_item.two_factor_amount_threshold, 66.66);
+        assert_eq!(query_item.receive_inviter_notification, 0);
+        assert_eq!(query_item.receive_email_integration_notification, 1);
+        assert_eq!(query_item.wallet_created, 0);
+        assert_eq!(query_item.accept_terms_and_conditions, 0);
+
+        // test update
+        setting.bitcoin_unit = "SATS".to_string();
+        setting.fiat_currency = "JPY".to_string();
+        let upsert_item = wallet_user_settings_dao.upsert(&setting).await.unwrap();
+        assert_eq!(upsert_item.is_some(), true);
+
+        let query_item = wallet_user_settings_dao
+            .get_by_user_id("mock_user_id")
+            .await
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(query_item.user_id, "mock_user_id");
+        assert_eq!(query_item.bitcoin_unit, "SATS");
+        assert_eq!(query_item.fiat_currency, "JPY");
         assert_eq!(query_item.hide_empty_used_addresses, 1);
         assert_eq!(query_item.show_wallet_recovery, 1);
         assert_eq!(query_item.two_factor_amount_threshold, 66.66);

@@ -78,7 +78,7 @@ impl MigrationContainer {
     ) -> Result<(), DatabaseError> {
         if let Some(migrations) = self.find_migration_path(start_version, end_version) {
             for migration in migrations {
-                migration.migrate();
+                let _ = migration.migrate().await;
             }
         } else {
             return Err(DatabaseError::Migration(

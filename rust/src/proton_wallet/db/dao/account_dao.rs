@@ -119,6 +119,12 @@ impl AccountDao {
             .delete_by_column_id("account_id", account_id)
             .await
     }
+
+    pub async fn delete_by_wallet_id(&self, account_id: &str) -> Result<(), DatabaseError> {
+        self.database
+            .delete_by_column_id("wallet_id", account_id)
+            .await
+    }
 }
 
 #[cfg(test)]
@@ -283,8 +289,12 @@ mod tests {
         let query_item = account_dao.get(2).await.unwrap();
         assert!(query_item.is_some());
 
-        let _ = account_dao.delete_by_account_id("test_account_id_2").await;
-        let query_item = account_dao.get(2).await.unwrap();
-        assert!(query_item.is_none());
+        let _ = account_dao.delete_by_wallet_id("test_account_id").await;
+        let accounts = account_dao.get_all().await.unwrap();
+        assert_eq!(accounts.len(), 1);
+
+        let _ = account_dao.delete_by_wallet_id("test_wallet_id_2").await;
+        let accounts = account_dao.get_all().await.unwrap();
+        assert_eq!(accounts.len(), 0);
     }
 }

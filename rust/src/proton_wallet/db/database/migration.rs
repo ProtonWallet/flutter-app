@@ -1,24 +1,31 @@
+use std::future::Future;
+use std::pin::Pin;
+
 pub trait Migration: Send + Sync {
     fn start_version(&self) -> u32;
     fn end_version(&self) -> u32;
 
-    fn migrate(&self);
+    fn migrate(&self) -> impl std::future::Future<Output = ()> + Send;
 }
 pub struct SimpleMigration {
     start_version: u32,
     end_version: u32,
-    migrate_fn: Box<dyn Fn() + Send + Sync>,
+    migrate_fn: Box<dyn Fn() -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>,
 }
 
 impl SimpleMigration {
-    pub fn new<F>(start_version: u32, end_version: u32, migrate_fn: F) -> Self
+    pub fn new<F, Fut>(start_version: u32, end_version: u32, migrate_fn: F) -> Self
     where
-        F: Fn() + 'static + Send + Sync,
+        F: Fn() -> Fut + Send + Sync + 'static,
+        Fut: Future<Output = ()> + Send + 'static,
     {
         SimpleMigration {
             start_version,
             end_version,
-            migrate_fn: Box::new(migrate_fn),
+            migrate_fn: Box::new(move || {
+                let fut = migrate_fn();
+                Box::pin(fut) as Pin<Box<dyn Future<Output = ()> + Send>>
+            }),
         }
     }
 }
@@ -41,7 +48,7 @@ impl Migration for SimpleMigration {
         self.end_version
     }
 
-    fn migrate(&self) {
-        (self.migrate_fn)();
+    async fn migrate(&self) {
+        (self.migrate_fn)().await;
     }
 }

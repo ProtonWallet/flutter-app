@@ -69,31 +69,46 @@ impl AppDatabase {
             SimpleMigration::new(1, 2, {
                 let wallet_database = self.wallet_dao.database.clone();
                 let account_database = self.account_dao.database.clone();
-                let address_dao = self.address_dao.database.clone();
-                let bitcoin_address_dao = self.bitcoin_address_dao.database.clone();
-                let contacts_dao = self.contacts_dao.database.clone();
-                let exchange_rate_dao = self.exchange_rate_dao.database.clone();
-                let proton_user_dao = self.proton_user_dao.database.clone();
-                let proton_user_key_dao = self.proton_user_key_dao.database.clone();
-                let transaction_dao = self.transaction_dao.database.clone();
-                let wallet_user_settings_dao = self.wallet_user_settings_dao.database.clone();
+                let address_database = self.address_dao.database.clone();
+                let bitcoin_address_database = self.bitcoin_address_dao.database.clone();
+                let contacts_database = self.contacts_dao.database.clone();
+                let exchange_rate_database = self.exchange_rate_dao.database.clone();
+                let proton_user_database = self.proton_user_dao.database.clone();
+                let proton_user_key_database = self.proton_user_key_dao.database.clone();
+                let transaction_database = self.transaction_dao.database.clone();
+                let wallet_user_settings_database = self.wallet_user_settings_dao.database.clone();
                 move || {
-                    let _ = wallet_database.migration_0();
-                    let _ = account_database.migration_0();
-                    let _ = address_dao.migration_0();
-                    let _ = bitcoin_address_dao.migration_0();
-                    let _ = contacts_dao.migration_0();
-                    let _ = exchange_rate_dao.migration_0();
-                    let _ = proton_user_dao.migration_0();
-                    let _ = proton_user_key_dao.migration_0();
-                    let _ = transaction_dao.migration_0();
-                    let _ = wallet_user_settings_dao.migration_0();
+                    let wallet_database = wallet_database.clone();
+                    let account_database = account_database.clone();
+                    let address_database = address_database.clone();
+                    let bitcoin_address_database = bitcoin_address_database.clone();
+                    let contacts_database = contacts_database.clone();
+                    let exchange_rate_database = exchange_rate_database.clone();
+                    let proton_user_database = proton_user_database.clone();
+                    let proton_user_key_database = proton_user_key_database.clone();
+                    let transaction_database = transaction_database.clone();
+                    let wallet_user_settings_database = wallet_user_settings_database.clone();
+                    async move {
+                        let _ = wallet_database.migration_0().await;
+                        let _ = account_database.migration_0().await;
+                        let _ = address_database.migration_0().await;
+                        let _ = bitcoin_address_database.migration_0().await;
+                        let _ = contacts_database.migration_0().await;
+                        let _ = exchange_rate_database.migration_0().await;
+                        let _ = proton_user_database.migration_0().await;
+                        let _ = proton_user_key_database.migration_0().await;
+                        let _ = transaction_database.migration_0().await;
+                        let _ = wallet_user_settings_database.migration_0().await;
+                    }
                 }
             }),
             SimpleMigration::new(2, 3, {
                 let account_database = self.account_dao.database.clone();
                 move || {
-                    let _ = account_database.migration_1();
+                    let account_database = account_database.clone();
+                    async move {
+                        let _ = account_database.migration_1().await;
+                    }
                 }
             }),
         ];
@@ -117,7 +132,7 @@ impl AppDatabase {
 
         if let Some(migrations) = upgrade_migrations {
             for migration in migrations {
-                migration.migrate();
+                migration.migrate().await;
             }
         } else {
             println!("nothing to migrate");
