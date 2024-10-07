@@ -531,5 +531,11 @@
   "how_to_import_wallet_": "How to import your wallet to Proton Wallet",
   "feedback": "Feedback",
   "help_center_knowledge_base": "Help center & knowledge base",
-  "now_login": "Logging in"
+  "now_login": "Logging in",
+  "rbf_title": "Boost transaction priority",
+  "rbf_desc": "By increasing the fee, you can prioritize your transaction, helping it get confirmed faster during busy network times.",
+  "rbf_current_fee": "Current network fee",
+  "rbf_new_fee": "New network fee",
+  "rbf_confirm_speed_desc": "Confirmation speed: Normal",
+  "rbf_send": "Increase fee and resend"
 }

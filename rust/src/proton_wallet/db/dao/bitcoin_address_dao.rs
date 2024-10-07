@@ -100,6 +100,15 @@ impl BitcoinAddressDao {
         self.database.get_all().await
     }
 
+    pub async fn get_all_by_account_id(
+        &self,
+        account_id: &str,
+    ) -> Result<Vec<BitcoinAddressModel>, DatabaseError> {
+        self.database
+            .get_all_by_column_id("server_account_id", account_id)
+            .await
+    }
+
     pub async fn delete_by_account_id(&self, account_id: &str) -> Result<(), DatabaseError> {
         self.database
             .delete_by_column_id("server_account_id", account_id)
@@ -185,6 +194,18 @@ mod tests {
 
         let bitcoin_addresses = bitcoin_address_dao.get_all().await.unwrap();
         assert_eq!(bitcoin_addresses.len(), 2);
+
+        let bitcoin_addresses = bitcoin_address_dao
+            .get_all_by_account_id("server_account_456")
+            .await
+            .unwrap();
+        assert_eq!(bitcoin_addresses.len(), 2);
+
+        let bitcoin_addresses = bitcoin_address_dao
+            .get_all_by_account_id("server_account_4561123")
+            .await
+            .unwrap();
+        assert_eq!(bitcoin_addresses.len(), 0);
 
         // test update
         let mut query_item = bitcoin_address_dao.get(2).await.unwrap().unwrap();

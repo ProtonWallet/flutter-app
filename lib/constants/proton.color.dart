@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ProtonColors {
   // default light theme
   static Color interactionNorm = const Color(0xFF6D4AFF);
+  static Color interactionNormMinor1 = const Color(0xFF8B8DF9);
   static Color white = Colors.white;
   static Color clear = Colors.transparent;
   static Color textNorm = const Color(0xFF0C0C14);
@@ -10,6 +11,7 @@ class ProtonColors {
   static Color primaryColor = const Color(0xFF0E0E0E);
   static Color homeActionButtonBackground = const Color(0xFFE3E6ED);
   static Color textWeak = const Color(0xFF535964);
+  static Color textDisabled = const Color(0xFFCED0DE);
   static Color textWeakPressed = const Color(0xFFE2E2E2);
   static Color errorBackground = const Color(0xFFFFE0E0);
   static Color textHint = const Color(0xFF9395A4);
