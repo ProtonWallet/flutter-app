@@ -129,7 +129,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   int amountDisplayDigit = 0;
   int totalAmountInSAT = 0; // total value
   SendFlowStatus sendFlowStatus = SendFlowStatus.addRecipient;
-  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.medianPriority;
+  TransactionFeeMode userTransactionFeeMode = TransactionFeeMode.highPriority;
   bool amountTextControllerChanged = false;
   bool amountFiatCurrencyTextControllerChanged = false;
   bool hasEmailIntegrationRecipient = false;

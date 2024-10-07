@@ -20,7 +20,7 @@ impl AddressDao {
 
 impl AddressDao {
     pub async fn upsert(&self, item: &AddressModel) -> Result<Option<AddressModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.server_id).await? {
+        if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -67,7 +67,7 @@ impl AddressDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(item.id).await?)
+        self.get(item.id).await
     }
 
     /// Get a record by id

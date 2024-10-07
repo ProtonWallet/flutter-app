@@ -85,7 +85,7 @@ mod tests {
         assert_eq!(db.table_name().as_str(), table_name);
         let result = db.migration_0().await;
         assert!(result.is_ok());
-        let exists = db.table_exists(&table_name).await.unwrap();
+        let exists = db.table_exists(table_name).await.unwrap();
         assert!(exists);
 
         assert!(db.column_exists("id").await.unwrap());
@@ -95,7 +95,7 @@ mod tests {
         assert!(db.column_exists("label").await.unwrap());
         assert!(db.column_exists("script_type").await.unwrap());
         assert!(db.column_exists("create_time").await.unwrap());
-        assert!(db.column_exists(&"modify_time").await.unwrap());
+        assert!(db.column_exists("modify_time").await.unwrap());
         assert!(db.column_exists("fiat_currency").await.unwrap());
         assert!(db.column_exists("priority").await.unwrap());
         assert!(db.column_exists("last_used_index").await.unwrap());

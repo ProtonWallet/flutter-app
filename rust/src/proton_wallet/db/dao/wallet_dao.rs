@@ -21,7 +21,7 @@ impl WalletDao {
 
 impl WalletDao {
     pub async fn upsert(&self, item: &WalletModel) -> Result<Option<WalletModel>, DatabaseError> {
-        if let Some(_) = self.get_by_server_id(&item.wallet_id).await? {
+        if (self.get_by_server_id(&item.wallet_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -81,7 +81,7 @@ impl WalletDao {
         let mut stmt = conn.prepare(
             "SELECT * FROM wallet_table WHERE user_id = ?1 ORDER BY priority asc LIMIT 1",
         )?;
-        let result = stmt.query_row(params![user_id], |row| Ok(WalletModel::from_row(row)?));
+        let result = stmt.query_row(params![user_id], |row| WalletModel::from_row(row));
         Ok(result.ok())
     }
 
@@ -93,7 +93,7 @@ impl WalletDao {
         let conn = self.conn.lock().await;
         let mut stmt =
             conn.prepare("SELECT * FROM wallet_table WHERE user_id = ?1 ORDER BY priority asc")?;
-        let account_iter = stmt.query_map([user_id], |row| Ok(WalletModel::from_row(row)?))?;
+        let account_iter = stmt.query_map([user_id], |row| WalletModel::from_row(row))?;
         let accounts: Vec<WalletModel> = account_iter.collect::<Result<_>>()?;
         Ok(accounts)
     }
@@ -128,7 +128,7 @@ impl WalletDao {
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(wallet.id).await?)
+        self.get(wallet.id).await
     }
 
     pub async fn delete(&self, id: u32) -> Result<()> {
