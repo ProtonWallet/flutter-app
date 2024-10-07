@@ -12,6 +12,8 @@ import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 abstract class WelcomeViewModel extends ViewModel<WelcomeCoordinator> {
   WelcomeViewModel(super.coordinator);
+
+  bool isLoginToHomepage = false;
 }
 
 class WelcomeViewModelImpl extends WelcomeViewModel {
@@ -47,9 +49,12 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
 
   Future<void> handleStateChanges(NativeLoginState state) async {
     if (state is NativeLoginSucess) {
+      isLoginToHomepage = true;
+      sinkAddSafe();
       await userManager.nativeLogin(state.userInfo);
       await serviceManager.login(state.userInfo.userId);
       coordinator.showHome(env);
+      isLoginToHomepage = false;
     }
   }
 
