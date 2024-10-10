@@ -274,6 +274,7 @@ class DataProviderManager extends Manager {
     walletMnemonicProvider = WalletMnemonicProvider(
       walletKeysProvider,
       walletDataProvider,
+      userManager,
     );
 
     walletNameProvider = WalletNameProvider(
