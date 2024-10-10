@@ -12,7 +12,6 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
-import 'package:wallet/managers/features/wallet/update.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -228,15 +227,6 @@ class HomeCoordinator extends Coordinator {
         apiServiceManager.getWalletClient(),
         apiServiceManager.getProtonUsersApiClient());
 
-    final updateWalletBloc = UpdateWalletBloc(
-      userManager,
-      dataProviderManager.walletDataProvider,
-      dataProviderManager.walletKeysProvider,
-      apiServiceManager.getWalletClient(),
-      dataProviderManager.serverTransactionDataProvider,
-      dataProviderManager.addressKeyProvider,
-    );
-
     final walletNameBloc = WalletNameBloc(
       dataProviderManager.walletKeysProvider,
       apiServiceManager.getWalletClient(),
@@ -254,7 +244,6 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager,
       createWalletBloc,
       deleteWalletBloc,
-      updateWalletBloc,
       walletNameBloc,
       userManager,
       walletManager,

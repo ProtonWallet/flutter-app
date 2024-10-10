@@ -172,6 +172,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       fingerprint: walletModel.fingerprint ?? "",
       showWalletRecovery: walletModel.showWalletRecovery,
       migrationRequired: walletModel.migrationRequired,
+      legacy: walletModel.legacy,
     );
     userDataProvider.enabledShowWalletRecovery(false);
   }

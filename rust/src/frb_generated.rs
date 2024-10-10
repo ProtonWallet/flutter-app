@@ -16228,6 +16228,7 @@ impl SseDecode for crate::proton_wallet::db::model::wallet_model::WalletModel {
         let mut var_fingerprint = <Option<String>>::sse_decode(deserializer);
         let mut var_showWalletRecovery = <u32>::sse_decode(deserializer);
         let mut var_migrationRequired = <u32>::sse_decode(deserializer);
+        let mut var_legacy = <Option<u32>>::sse_decode(deserializer);
         return crate::proton_wallet::db::model::wallet_model::WalletModel {
             id: var_id,
             name: var_name,
@@ -16246,6 +16247,7 @@ impl SseDecode for crate::proton_wallet::db::model::wallet_model::WalletModel {
             fingerprint: var_fingerprint,
             show_wallet_recovery: var_showWalletRecovery,
             migration_required: var_migrationRequired,
+            legacy: var_legacy,
         };
     }
 }
@@ -19661,6 +19663,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_wallet::db::model::wallet_m
             self.fingerprint.into_into_dart().into_dart(),
             self.show_wallet_recovery.into_into_dart().into_dart(),
             self.migration_required.into_into_dart().into_dart(),
+            self.legacy.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -23087,6 +23090,7 @@ impl SseEncode for crate::proton_wallet::db::model::wallet_model::WalletModel {
         <Option<String>>::sse_encode(self.fingerprint, serializer);
         <u32>::sse_encode(self.show_wallet_recovery, serializer);
         <u32>::sse_encode(self.migration_required, serializer);
+        <Option<u32>>::sse_encode(self.legacy, serializer);
     }
 }
 

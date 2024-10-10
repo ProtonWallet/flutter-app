@@ -23,7 +23,7 @@ class AppDatabase {
   static String versionKey = "db_version";
 
   // current version of the database
-  int version = 26;
+  int version = 27;
 
   // future: if the database cached version < resetVersion. rebuild the cache with latest schema. we can clean up migrations.
   int resetVersion = 1;
@@ -124,10 +124,12 @@ class AppDatabase {
       Migration(23, 24, () async {}),
       Migration(24, 25, () async {}),
       Migration(25, 26, () async {
-        await walletDao.migration_0();
         await accountDao.migration_0();
       }),
-      Migration(26, 27, () async {}),
+      Migration(26, 27, () async {
+        await walletDao.migration_0();
+      }),
+      Migration(27, 28, () async {}),
     ];
 
     migrationContainer.addMigrations(migrations);

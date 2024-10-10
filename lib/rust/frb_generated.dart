@@ -14657,8 +14657,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletModel dco_decode_wallet_model(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 17)
-      throw Exception('unexpected arr length: expect 17 but see ${arr.length}');
+    if (arr.length != 18)
+      throw Exception('unexpected arr length: expect 18 but see ${arr.length}');
     return WalletModel(
       id: dco_decode_u_32(arr[0]),
       name: dco_decode_String(arr[1]),
@@ -14677,6 +14677,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       fingerprint: dco_decode_opt_String(arr[14]),
       showWalletRecovery: dco_decode_u_32(arr[15]),
       migrationRequired: dco_decode_u_32(arr[16]),
+      legacy: dco_decode_opt_box_autoadd_u_32(arr[17]),
     );
   }
 
@@ -18810,6 +18811,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_fingerprint = sse_decode_opt_String(deserializer);
     var var_showWalletRecovery = sse_decode_u_32(deserializer);
     var var_migrationRequired = sse_decode_u_32(deserializer);
+    var var_legacy = sse_decode_opt_box_autoadd_u_32(deserializer);
     return WalletModel(
         id: var_id,
         name: var_name,
@@ -18827,7 +18829,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         balance: var_balance,
         fingerprint: var_fingerprint,
         showWalletRecovery: var_showWalletRecovery,
-        migrationRequired: var_migrationRequired);
+        migrationRequired: var_migrationRequired,
+        legacy: var_legacy);
   }
 
   @protected
@@ -22598,6 +22601,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.fingerprint, serializer);
     sse_encode_u_32(self.showWalletRecovery, serializer);
     sse_encode_u_32(self.migrationRequired, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.legacy, serializer);
   }
 
   @protected

@@ -254,6 +254,7 @@ class EventLoop extends Service implements Manager {
                 publickey: null,
                 showWalletRecovery: walletData.isImported == 0 ? 1 : 0,
                 migrationRequired: walletData.migrationRequired ?? 0,
+                legacy: walletData.legacy ?? 0,
               );
             }
           }
@@ -484,6 +485,7 @@ class EventLoop extends Service implements Manager {
 
   @override
   Future<void> login(String userID) async {}
+
   @override
   Future<void> reload() async {}
 }

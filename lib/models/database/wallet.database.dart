@@ -25,6 +25,7 @@ class WalletDatabase extends BaseDatabase {
           fingerprint TEXT,
           showWalletRecovery INTEGER NULL,
           migrationRequired INTEGER NULL,
+          legacy INTEGER NULL,
           UNIQUE (userID, walletID)
         )
     ''');
