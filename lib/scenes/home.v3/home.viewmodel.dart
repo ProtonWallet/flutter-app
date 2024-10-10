@@ -26,7 +26,6 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
-import 'package:wallet/managers/features/wallet/update.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -79,7 +78,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.dataProviderManager,
     this.createWalletBloc,
     this.deleteWalletBloc,
-    this.updateWalletBloc,
     this.walletNameBloc,
   );
 
@@ -256,7 +254,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final WalletListBloc walletListBloc;
   final WalletTransactionBloc walletTransactionBloc;
   final WalletBalanceBloc walletBalanceBloc;
-  final UpdateWalletBloc updateWalletBloc;
   final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
   final DeleteWalletBloc deleteWalletBloc;
@@ -279,7 +276,6 @@ class HomeViewModelImpl extends HomeViewModel {
     super.dataProviderManager,
     super.createWalletBloc,
     super.deleteWalletBloc,
-    super.updateWalletBloc,
     super.walletNameBloc,
     this.userManager,
     this.walletManager,
@@ -621,9 +617,6 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     datasourceStreamSinkAdd();
     eventLoop.start();
-
-    /// temp try to migrate wallet data
-    updateWalletBloc.add(MigrateWalletEvent());
   }
 
   void selectDefaultWallet() {

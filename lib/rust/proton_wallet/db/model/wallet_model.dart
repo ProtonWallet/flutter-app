@@ -24,6 +24,7 @@ class WalletModel {
   final String? fingerprint;
   final int showWalletRecovery;
   final int migrationRequired;
+  final int? legacy;
 
   const WalletModel({
     required this.id,
@@ -43,6 +44,7 @@ class WalletModel {
     this.fingerprint,
     required this.showWalletRecovery,
     required this.migrationRequired,
+    this.legacy,
   });
 
   @override
@@ -63,7 +65,8 @@ class WalletModel {
       balance.hashCode ^
       fingerprint.hashCode ^
       showWalletRecovery.hashCode ^
-      migrationRequired.hashCode;
+      migrationRequired.hashCode ^
+      legacy.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -86,5 +89,6 @@ class WalletModel {
           balance == other.balance &&
           fingerprint == other.fingerprint &&
           showWalletRecovery == other.showWalletRecovery &&
-          migrationRequired == other.migrationRequired;
+          migrationRequired == other.migrationRequired &&
+          legacy == other.legacy;
 }

@@ -52,6 +52,7 @@ impl WalletDatabase {
                 fingerprint TEXT,
                 show_wallet_recovery INTEGER NOT NULL,
                 migration_required INTEGER NOT NULL,
+                legacy INTEGER,
                 UNIQUE (wallet_id)
             )
             "#,
@@ -100,5 +101,6 @@ mod tests {
         assert!(db.column_exists("fingerprint").await.unwrap());
         assert!(db.column_exists("show_wallet_recovery").await.unwrap());
         assert!(db.column_exists("migration_required").await.unwrap());
+        assert!(db.column_exists("legacy").await.unwrap());
     }
 }

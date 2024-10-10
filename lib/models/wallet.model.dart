@@ -36,6 +36,7 @@ class WalletModel {
   int showWalletRecovery = 1;
 
   int migrationRequired = 0;
+  int legacy = 0;
 
   WalletModel({
     required this.id,
@@ -53,6 +54,7 @@ class WalletModel {
     required this.walletID,
     required this.showWalletRecovery,
     required this.migrationRequired,
+    required this.legacy,
   });
 
   Map<String, dynamic> toMap() {
@@ -72,6 +74,7 @@ class WalletModel {
       'walletID': walletID,
       'showWalletRecovery': showWalletRecovery,
       'migrationRequired': migrationRequired,
+      'legacy': legacy,
     };
   }
 
@@ -92,6 +95,7 @@ class WalletModel {
       walletID: map['walletID'] ?? "",
       showWalletRecovery: map['showWalletRecovery'] ?? 1,
       migrationRequired: map['migrationRequired'] ?? 0,
+      legacy: map['legacy'] ?? 0,
     );
   }
 }

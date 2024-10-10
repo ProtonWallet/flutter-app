@@ -24,6 +24,7 @@ pub struct WalletModel {
     pub fingerprint: Option<String>,
     pub show_wallet_recovery: u32,
     pub migration_required: u32,
+    pub legacy: Option<u32>,
 }
 
 impl ModelBase for WalletModel {

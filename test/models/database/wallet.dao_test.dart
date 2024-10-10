@@ -35,6 +35,7 @@ Future<void> main() async {
         modifyTime: now.millisecondsSinceEpoch ~/ 1000,
         showWalletRecovery: 1,
         migrationRequired: 0,
+        legacy: 0,
       ));
       expect(id, 1);
       id = await appDatabase.walletDao.insert(WalletModel(
@@ -53,6 +54,7 @@ Future<void> main() async {
         walletID: "test_wallet_id_2",
         showWalletRecovery: 0,
         migrationRequired: 0,
+        legacy: 0,
       ));
       expect(id, 2);
     });
@@ -142,6 +144,7 @@ Future<void> main() async {
         walletID: "",
         showWalletRecovery: 0,
         migrationRequired: 0,
+        legacy: 0,
       ));
       final WalletModel walletModel = await appDatabase.walletDao.findById(2);
       expect(walletModel.id, 2);

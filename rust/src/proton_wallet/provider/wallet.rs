@@ -137,6 +137,7 @@ mod tests {
             fingerprint: Some("abc123xyz".to_string()),
             show_wallet_recovery: 1,
             migration_required: 0,
+            legacy: Some(1),
         };
         let wallet2 = WalletModel {
             id: 2,
@@ -156,6 +157,7 @@ mod tests {
             fingerprint: Some("abc456xyz".to_string()),
             show_wallet_recovery: 1,
             migration_required: 0,
+            legacy: Some(0),
         };
         let _ = wallet_provider.upsert(wallet1).await;
         // match result {
@@ -194,6 +196,7 @@ mod tests {
         assert_eq!(wallet.name, "New Name");
         assert_eq!(wallet.public_key, "binary_encoded_string");
         assert_eq!(wallet.fingerprint.unwrap(), "abc123xyz");
+        assert_eq!(wallet.legacy.unwrap(), 1);
 
         // test get new derivation path
         let derivation_path = wallet_provider

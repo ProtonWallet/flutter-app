@@ -46,7 +46,7 @@ mod tests {
         let _ = contacts_dao.database.migration_0().await;
         let mut contacts_provider = ContactsDataProvider::new(contacts_dao);
 
-        let mut contact1 = ContactsModel {
+        let contact1 = ContactsModel {
             id: Some(1),
             server_contact_id: "server_contact_123".to_string(),
             name: "John Doe".to_string(),
@@ -54,7 +54,7 @@ mod tests {
             canonical_email: "johndoe@example.com".to_string(),
             is_proton: 1,
         };
-        let mut contact2 = ContactsModel {
+        let contact2 = ContactsModel {
             id: Some(2),
             server_contact_id: "server_contact_222".to_string(),
             name: "Mark Yan".to_string(),
