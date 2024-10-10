@@ -436,6 +436,7 @@ class WalletsDataProvider extends DataProvider {
       walletID: walletID,
       showWalletRecovery: showWalletRecovery ? 1 : 0,
       migrationRequired: apiWalletData.wallet.migrationRequired ?? 0,
+      legacy: apiWalletData.wallet.legacy ?? 0,
       initialize: true,
     );
   }
@@ -543,6 +544,7 @@ class WalletsDataProvider extends DataProvider {
     required String fingerprint,
     required int showWalletRecovery,
     required int migrationRequired,
+    required int legacy,
     bool initialize = false,
   }) async {
     int tmpID = -1;
@@ -566,6 +568,7 @@ class WalletsDataProvider extends DataProvider {
         walletID: walletID,
         showWalletRecovery: showWalletRecovery,
         migrationRequired: migrationRequired,
+        legacy: legacy,
       );
       tmpID = await walletDao.insert(wallet);
       wallet.id = tmpID;

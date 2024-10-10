@@ -32,8 +32,8 @@ impl WalletDao {
     pub async fn insert(&self, wallet: &WalletModel) -> Result<u32> {
         let conn = self.conn.lock().await;
         let result: std::result::Result<usize, rusqlite::Error> = conn.execute(
-            "INSERT INTO wallet_table (name, passphrase, public_key, imported, priority, status, type, create_time, modify_time, user_id, wallet_id, account_count, balance, fingerprint, show_wallet_recovery, migration_required) 
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
+            "INSERT INTO wallet_table (name, passphrase, public_key, imported, priority, status, type, create_time, modify_time, user_id, wallet_id, account_count, balance, fingerprint, show_wallet_recovery, migration_required, legacy) 
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)",
             params![
                 wallet.name,
                 wallet.passphrase,
@@ -50,7 +50,8 @@ impl WalletDao {
                 wallet.balance,
                 wallet.fingerprint,
                 wallet.show_wallet_recovery,
-                wallet.migration_required
+                wallet.migration_required,
+                wallet.legacy,
             ]
         );
         match result {
@@ -101,7 +102,25 @@ impl WalletDao {
     pub async fn update(&self, wallet: &WalletModel) -> Result<Option<WalletModel>> {
         let conn = self.conn.lock().await;
         let rows_affected = conn.execute(
-            "UPDATE wallet_table SET name = ?1, passphrase = ?2, public_key = ?3, imported = ?4, priority = ?5, status = ?6, type = ?7, create_time = ?8, modify_time = ?9, user_id = ?10, wallet_id = ?11, account_count = ?12, balance = ?13, fingerprint = ?14, show_wallet_recovery = ?15, migration_required = ?16 WHERE id = ?17",
+            "UPDATE wallet_table SET 
+                name = ?1, 
+                passphrase = ?2, 
+                public_key = ?3, 
+                imported = ?4, 
+                priority = ?5, 
+                status = ?6, 
+                type = ?7, 
+                create_time = ?8, 
+                modify_time = ?9, 
+                user_id = ?10, 
+                wallet_id = ?11, 
+                account_count = ?12, 
+                balance = ?13, 
+                fingerprint = ?14, 
+                show_wallet_recovery = ?15, 
+                migration_required = ?16, 
+                legacy = ?17 
+                WHERE id = ?18",
             params![
                 wallet.name,
                 wallet.passphrase,
@@ -119,8 +138,9 @@ impl WalletDao {
                 wallet.fingerprint,
                 wallet.show_wallet_recovery,
                 wallet.migration_required,
+                wallet.legacy,
                 wallet.id
-            ]
+            ],
         )?;
 
         if rows_affected == 0 {
@@ -177,6 +197,7 @@ mod tests {
                     fingerprint TEXT,
                     show_wallet_recovery INTEGER NOT NULL,
                     migration_required INTEGER NOT NULL,
+                    legacy INTEGER,
                     UNIQUE (wallet_id)
                 )
                 "#,
@@ -204,6 +225,7 @@ mod tests {
             fingerprint: Some("abc123xyz".to_string()),
             show_wallet_recovery: 1,
             migration_required: 0,
+            legacy: Some(1),
         };
 
         // test insert
@@ -221,6 +243,7 @@ mod tests {
         assert_eq!(query_wallet.passphrase, 0);
         assert_eq!(query_wallet.account_count, 3);
         assert_eq!(query_wallet.balance, 150.75);
+        assert_eq!(query_wallet.legacy, Some(1));
 
         let query_wallet = wallet_dao
             .get_default_wallet_by_user_id("user123")
@@ -231,6 +254,7 @@ mod tests {
         assert_eq!(query_wallet.passphrase, 0);
         assert_eq!(query_wallet.account_count, 3);
         assert_eq!(query_wallet.balance, 150.75);
+        assert_eq!(query_wallet.legacy, Some(1));
 
         let wallets = wallet_dao.get_all().await.unwrap();
         assert_eq!(wallets.len(), 1);
@@ -238,11 +262,21 @@ mod tests {
         // test update
         result.balance = 199.0;
         result.account_count = 4;
+        result.legacy = Some(0);
         result.name = "Hello world".to_string();
         let result_update = wallet_dao.upsert(&result).await.unwrap().unwrap();
         assert_eq!(result_update.name, "Hello world");
         assert_eq!(result_update.passphrase, 0);
         assert_eq!(result_update.account_count, 4);
         assert_eq!(result_update.balance, 199.0);
+        assert_eq!(result_update.legacy, Some(0));
+
+        // test delete
+        let _ = wallet_dao.delete_by_wallet_id("wallet_id").await;
+        let wallets = wallet_dao.get_all_by_user_id("user123").await.unwrap();
+        assert_eq!(wallets.len(), 1);
+        let _ = wallet_dao.delete_by_wallet_id("wallet123").await;
+        let wallets = wallet_dao.get_all_by_user_id("user123").await.unwrap();
+        assert_eq!(wallets.len(), 0);
     }
 }
