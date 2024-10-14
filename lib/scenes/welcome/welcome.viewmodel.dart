@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/channels/platform.channel.state.dart';
 import 'package:wallet/managers/manager.factory.dart';
@@ -65,6 +66,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         if (mobile) {
           coordinator.showNativeSignin();
         } else {
+          final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+          await apiServiceManager.initalOldApiService();
           coordinator.showFlutterSignin(env);
         }
       case NavID.nativeSignup:
