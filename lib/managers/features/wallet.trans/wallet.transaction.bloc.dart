@@ -641,7 +641,10 @@ class WalletTransactionBloc
       walletModel,
       accountModel,
     );
-
+    if (bdkTransactionData.transactions.isEmpty) {
+      /// return empty when no transactions in bdk so that we can avoid api call
+      return [];
+    }
     final ServerTransactionData serverTransactionData =
         await serverTransactionDataProvider
             .getServerTransactionDataByWalletAccount(

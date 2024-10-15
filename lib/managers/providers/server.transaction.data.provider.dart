@@ -82,15 +82,20 @@ class ServerTransactionDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    /// fetch from server
-    await fetchTransactions(
-      walletModel.walletID,
-      accountModel.accountID,
-      isInitializeProcess: true,
-    );
-    final transactions = await transactionDao.findAllByServerAccountID(
+    List<TransactionModel> transactions = await transactionDao.findAllByServerAccountID(
       accountModel.accountID,
     );
+    if (transactions.isEmpty){
+      /// fetch from server when no local cache
+      await fetchTransactions(
+        walletModel.walletID,
+        accountModel.accountID,
+        isInitializeProcess: true,
+      );
+      transactions = await transactionDao.findAllByServerAccountID(
+        accountModel.accountID,
+      );
+    }
     return ServerTransactionData(
       accountModel: accountModel,
       transactions: transactions,

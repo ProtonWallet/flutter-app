@@ -198,6 +198,7 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   @override
   Future<void> logout() async {
     await storage.deleteAll();
+    await shared.logout();
   }
 
   @override
