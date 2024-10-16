@@ -1,5 +1,6 @@
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
@@ -14,8 +15,7 @@ class ProtonApiServiceManager implements Manager {
   final SecureStorageManager storage;
   final ApiEnv env;
 
-  String version = "macos-wallet@1.0.0";
-  String agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)";
+  final userAgent = UserAgent();
 
   String? userID;
 
@@ -52,6 +52,8 @@ class ProtonApiServiceManager implements Manager {
     logger.i("sessionId = '$uid';");
 
     final apiService = _apiService;
+    final appVersion = await userAgent.appVersion;
+    final ua = await userAgent.ua;
     if (apiService != null) {
       logger.w("ApiService already initalized, updating the session");
       await apiService.updateAuth(
@@ -69,8 +71,8 @@ class ProtonApiServiceManager implements Manager {
       await authStore.setAuthDartCallback(callback: callback);
       _apiService = ProtonApiService(
           env: env.toString(),
-          appVersion: version,
-          userAgent: agent,
+          appVersion: appVersion,
+          userAgent: ua,
           store: authStore);
     }
     await _apiService?.setProtonApi();
