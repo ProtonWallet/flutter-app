@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
@@ -199,6 +200,19 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   Future<void> logout() async {
     await storage.deleteAll();
     await shared.logout();
+  }
+
+  Future<void> clear() async {
+    final map = shared.toMap();
+    for (var entry in map.entries) {
+      final key = entry.key;
+      if (key.toString().startsWith(PreferenceKeys.bdkFullSyncedPrefix)) {
+        await shared.delete(key);
+      }
+    }
+    await shared.delete(PreferenceKeys.eventLoopErrorCount);
+    await shared.delete(PreferenceKeys.syncErrorCount);
+    await shared.delete(PreferenceKeys.syncErrorTimer);
   }
 
   @override

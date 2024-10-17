@@ -133,6 +133,10 @@ class WalletManager implements Manager {
 
   ///
   Future<void> cleanBDKCache() async {
+    /// dispose the frbWallet so we can delete the local cached sqlite files
+    for (final frbWallet in frbWallets.values) {
+      frbWallet.dispose();
+    }
     frbWallets.clear();
     await bdkLib.clearLocalCache();
   }
@@ -713,12 +717,16 @@ class WalletManager implements Manager {
 
   @override
   Future<void> dispose() async {}
+
   @override
   Future<void> init() async {}
+
   @override
   Future<void> logout() async {}
+
   @override
   Future<void> login(String userID) async {}
+
   @override
   Future<void> reload() async {}
 }

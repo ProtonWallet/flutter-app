@@ -29,7 +29,12 @@ class BdkLibrary {
           }
           if (delete) {
             logger.i("removing bdk db: ${entity.path}");
-            entity.deleteSync();
+            try {
+              await entity.delete();
+              logger.i("removed bdk db: ${entity.path}");
+            } catch (e){
+              e.toString();
+            }
           }
         }
       }

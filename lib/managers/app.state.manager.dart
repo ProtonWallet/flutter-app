@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
@@ -87,10 +88,6 @@ class AppStateManager extends DataProvider implements Manager {
   final unlockKey = "proton_wallet_app_k_unlock_type";
   final unlockErrorKey = "proton_wallet_app_k_unlock_error_count";
 
-  /// none key chain
-  final eventloopErrorCountKey = "proton_wallet_app_k_event_loop_error_count";
-  final syncErrorCountKey = "proton_wallet_app_k_sync_error_count";
-
   /// user eligible
   final userEligible = "proton_wallet_app_k_is_user_eligible";
 
@@ -173,8 +170,8 @@ class AppStateManager extends DataProvider implements Manager {
   }
 
   Future<int> getSyncErrorCoount() async {
-    final count = await shared.read(syncErrorCountKey);
-    await shared.write(eventloopErrorCountKey, count + 1);
+    final count = await shared.read(PreferenceKeys.syncErrorCount);
+    await shared.write(PreferenceKeys.eventLoopErrorCount, count + 1);
     return _getNextBackoffDuration(
       count,
       minSeconds: 120,
@@ -182,13 +179,13 @@ class AppStateManager extends DataProvider implements Manager {
   }
 
   Future<void> resetSyncErrorCoount() async {
-    await shared.write(syncErrorCountKey, 0);
+    await shared.write(PreferenceKeys.syncErrorCount, 0);
   }
 
   ///
   Future<int> getEventloopDuration() async {
-    final count = await shared.read(eventloopErrorCountKey) ?? 0;
-    await shared.write(eventloopErrorCountKey, count + 1);
+    final count = await shared.read(PreferenceKeys.eventLoopErrorCount) ?? 0;
+    await shared.write(PreferenceKeys.eventLoopErrorCount, count + 1);
     return _getNextBackoffDuration(
       count,
       maxSeconds: 300,
@@ -196,12 +193,12 @@ class AppStateManager extends DataProvider implements Manager {
   }
 
   Future<void> resetEventloopDuration() async {
-    await shared.write(eventloopErrorCountKey, 0);
+    await shared.write(PreferenceKeys.eventLoopErrorCount, 0);
   }
 
   ///
   Future<int> getSyncDuration() async {
-    final count = await shared.read(eventloopErrorCountKey);
+    final count = await shared.read(PreferenceKeys.eventLoopErrorCount);
     return _getNextBackoffDuration(
       count,
       maxSeconds: 120,
@@ -227,7 +224,7 @@ class AppStateManager extends DataProvider implements Manager {
   }
 
   Future<void> resetSyncDuration() async {
-    await shared.write(eventloopErrorCountKey, 0);
+    await shared.write(PreferenceKeys.eventLoopErrorCount, 0);
   }
 
   int _getNextBackoffDuration(

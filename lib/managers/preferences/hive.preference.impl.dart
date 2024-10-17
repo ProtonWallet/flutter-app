@@ -4,10 +4,16 @@ import 'preferences.interface.dart';
 
 class HivePreferenceImpl implements PreferencesInterface {
   late Box storage;
+
   HivePreferenceImpl();
 
   Future<void> init() async {
     storage = await Hive.openBox("protono_wallet_shared_preference");
+  }
+
+  @override
+  Map<dynamic, dynamic> toMap() {
+    return storage.toMap();
   }
 
   @override

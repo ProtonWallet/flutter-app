@@ -8,6 +8,7 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -57,6 +58,10 @@ class BDKSyncing extends DataUpdated<String> {
 
 class BDKSyncError extends DataUpdated<String> {
   BDKSyncError(super.updatedData);
+}
+
+class BDKCacheCleared extends DataUpdated<String> {
+  BDKCacheCleared(super.updatedData);
 }
 
 class BDKTransactionDataProvider extends DataProvider {
@@ -148,8 +153,21 @@ class BDKTransactionDataProvider extends DataProvider {
     final String serverWalletID = walletModel.walletID;
     final String serverAccountID = accountModel.accountID;
     final String syncCheckID =
-        "is_bkd${bdkDatabaseVersion}_wallet_full_synced_${serverWalletID}_$serverAccountID";
+        "${PreferenceKeys.bdkFullSyncedPrefix}_${bdkDatabaseVersion}_${serverWalletID}_$serverAccountID";
     return syncCheckID;
+  }
+
+  /// return true if at lease one full sync done
+  /// i.e. preferences has at least one key starts with bdkFullSyncedPrefix, and value is true
+  bool anyFullSyncedDone(){
+    final map = shared.toMap();
+    for (var entry in map.entries) {
+      final key = entry.key;
+      if (key.toString().startsWith(PreferenceKeys.bdkFullSyncedPrefix) && entry.value == true) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Future<bool> hasFullSynced(
@@ -182,7 +200,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
           /// check can i run
           final errorTimer =
-              await shared.read("proton_wallet_app_k_sync_error_timmer") ?? 0;
+              await shared.read(PreferenceKeys.syncErrorTimer) ?? 0;
 
           final int currentTime = DateTime.now().secondsSinceEpoch();
           if (!forceSync && currentTime - errorTimer < 0) {
@@ -258,8 +276,8 @@ class BDKTransactionDataProvider extends DataProvider {
         }
       } catch (e, stacktrace) {
         final count =
-            await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
-        await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
+            await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
+        await shared.write(PreferenceKeys.syncErrorCount, count + 1);
         emitState(BDKSyncError(e.toString()));
         final String errorMessage =
             "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
@@ -286,6 +304,12 @@ class BDKTransactionDataProvider extends DataProvider {
     lastSyncedTime.clear();
   }
 
+  /// BDK local files and memory caches cleared
+  /// change state to notify other data providers
+  void notifyCacheCleared() {
+    emitState(BDKCacheCleared("Cleared caches"));
+  }
+
   int _getNextBackoffDuration(
     int attempt, {
     int minSeconds = 30,
@@ -305,16 +329,16 @@ class BDKTransactionDataProvider extends DataProvider {
 
   Future<void> updateErrorCount() async {
     final count =
-        await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
-    await shared.write("proton_wallet_app_k_sync_error_count", count + 1);
+        await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
+    await shared.write(PreferenceKeys.syncErrorCount, count + 1);
     final newTimeer = DateTime.now().secondsSinceEpoch() +
         _getNextBackoffDuration(count, minSeconds: 120, maxSeconds: 300);
-    await shared.write("proton_wallet_app_k_sync_error_timmer", newTimeer);
+    await shared.write(PreferenceKeys.syncErrorTimer, newTimeer);
   }
 
   Future<void> resetErrorCount() async {
-    await shared.write("proton_wallet_app_k_sync_error_count", 0);
-    await shared.write("proton_wallet_app_k_sync_error_timmer", 0);
+    await shared.write(PreferenceKeys.syncErrorCount, 0);
+    await shared.write(PreferenceKeys.syncErrorTimer, 0);
   }
 
   @override

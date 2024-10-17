@@ -537,5 +537,7 @@
   "rbf_current_fee": "Current network fee",
   "rbf_new_fee": "New network fee",
   "rbf_confirm_speed_desc": "Confirmation speed: Normal",
-  "rbf_send": "Increase fee and resend"
+  "rbf_send": "Increase fee and resend",
+  "help_center_clear_caches": "Clear local caches",
+  "local_cache_clear": "Cleared local caches"
 }

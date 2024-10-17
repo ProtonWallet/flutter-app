@@ -3,4 +3,5 @@ abstract class PreferencesInterface {
   Future<dynamic> read(String key);
   Future<void> delete(String key);
   Future<void> deleteAll();
+  Map<dynamic, dynamic> toMap();
 }
