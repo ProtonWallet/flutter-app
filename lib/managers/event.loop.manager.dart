@@ -8,6 +8,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -115,7 +116,7 @@ class EventLoop extends Service implements Manager {
         await stateRecovery([LoadingTask.homeRecheck]);
       }
       final count =
-          await shared.read("proton_wallet_app_k_sync_error_count") ?? 0;
+          await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
       if (count > 0) {
         await stateRecovery([LoadingTask.syncRecheck]);
       }
@@ -458,12 +459,12 @@ class EventLoop extends Service implements Manager {
 
   Future<void> setLatestEventId(String latestEventId) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("latestEventId", latestEventId);
+    preferences.setString(PreferenceKeys.latestEventId, latestEventId);
   }
 
   Future<String?> getLatestEventId() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getString("latestEventId");
+    return preferences.getString(PreferenceKeys.latestEventId);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:wallet/managers/channels/native.view.channel.dart';
+import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
@@ -9,7 +10,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/settings/settings.coordinator.dart';
 
 abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
-  SettingsViewModel(super.coordinator);
+  SettingsViewModel(super.coordinator, this.clearCacheBloc);
 
   String errorMessage = "";
 
@@ -24,6 +25,8 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   void updateReceiveInviterNotification(enable);
 
   void updateReceiveEmailIntegrationNotification(enable);
+
+  final ClearCacheBloc clearCacheBloc;
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -33,6 +36,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
 
   SettingsViewModelImpl(
     super.coordinator,
+    super.clearCacheBloc,
     this.userManager,
     this.nativeViewChannel,
     this.userSettingsDataProvider,
