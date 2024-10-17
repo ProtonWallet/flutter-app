@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/dbhelper.dart';
-import 'package:wallet/helper/user.agent.dart';
+// import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -21,7 +21,7 @@ import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
-import 'package:wallet/managers/providers/unleash.data.provider.dart';
+// import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -143,7 +143,7 @@ class DataProviderManager extends Manager {
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
-  late UnleashDataProvider unleashDataProvider;
+  // late UnleashDataProvider unleashDataProvider;
   late ExclusiveInviteDataProvider exclusiveInviteDataProvider;
   late ProtonEmailAddressProvider protonEmailAddressProvider;
   late ConnectivityProvider connectivityProvider;
@@ -283,16 +283,16 @@ class DataProviderManager extends Manager {
       DBHelper.walletDao!,
     );
 
-    final userAgent = UserAgent();
-    final uid = userManager.userInfo.sessionId;
-    final accessToken = userManager.userInfo.accessToken;
-    unleashDataProvider = UnleashDataProvider(
-      apiEnv,
-      await userAgent.appVersion,
-      await userAgent.ua,
-      uid,
-      accessToken,
-    );
+    // final userAgent = UserAgent();
+    // final uid = userManager.userInfo.sessionId;
+    // final accessToken = userManager.userInfo.accessToken;
+    // unleashDataProvider = UnleashDataProvider(
+    //   apiEnv,
+    //   await userAgent.appVersion,
+    //   await userAgent.ua,
+    //   uid,
+    //   accessToken,
+    // );
   }
 
   @override
@@ -316,7 +316,7 @@ class DataProviderManager extends Manager {
     await gatewayDataProvider.clear();
     await protonAddressProvider.clear();
     await blockInfoDataProvider.clear();
-    await unleashDataProvider.clear();
+    // await unleashDataProvider.clear();
     await exclusiveInviteDataProvider.clear();
     await protonEmailAddressProvider.clear();
     await connectivityProvider.clear();
@@ -341,7 +341,7 @@ class DataProviderManager extends Manager {
     await gatewayDataProvider.reload();
     await protonAddressProvider.reload();
     await blockInfoDataProvider.reload();
-    await unleashDataProvider.reload();
+    // await unleashDataProvider.reload();
     await exclusiveInviteDataProvider.reload();
     await protonEmailAddressProvider.reload();
     await connectivityProvider.reload();
