@@ -92,6 +92,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         add(UpdateBalance());
       } else if (state is BDKSyncError) {
         logger.e("WalletListBloc BDKSyncError: ${state.updatedData}");
+      } else if (state is BDKCacheCleared) {
+        /// trigger startLoadingCallback to select default wallet
+        /// so that home page can get reload
+        startLoadingCallback?.call();
       }
     });
 

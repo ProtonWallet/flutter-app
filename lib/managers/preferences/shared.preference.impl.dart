@@ -40,4 +40,9 @@ class SharedPreferenceImpl implements PreferencesInterface {
       storage.setStringList(key, value);
     }
   }
+
+  @override
+  Map toMap() {
+    return {};
+  }
 }

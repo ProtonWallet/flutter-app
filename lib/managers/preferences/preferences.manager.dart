@@ -17,6 +17,14 @@ class PreferencesManager implements Manager {
     await rebuild();
   }
 
+  Future<void> delete(String key) async {
+    await storage.delete(key);
+  }
+
+  Map toMap() {
+    return storage.toMap();
+  }
+
   Future<void> rebuild() async {
     await storage.write(firstTimeEntryKey, false);
   }

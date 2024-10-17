@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/address.dao.impl.dart';
 import 'package:wallet/models/bitcoin.address.dao.impl.dart';
@@ -79,13 +80,15 @@ class DBHelper {
 
   static Future<void> init() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final int appDatabaseVersion = preferences.getInt("appDatabaseVersion") ?? 1;
+    final int appDatabaseVersion =
+        preferences.getInt(PreferenceKeys.appDatabaseVersion) ?? 1;
 
     _appDatabase = AppDatabase();
     await _appDatabase!.init(await AppDatabase.getDatabase());
     await _appDatabase!.buildDatabase(oldVersion: appDatabaseVersion);
     // await reset();
-    preferences.setInt("appDatabaseVersion", _appDatabase!.version);
+    preferences.setInt(
+        PreferenceKeys.appDatabaseVersion, _appDatabase!.version);
   }
 
   static Future<void> reset() async {
