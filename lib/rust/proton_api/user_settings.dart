@@ -13,6 +13,7 @@ class ApiWalletUserSettings {
   final BigInt? twoFactorAmountThreshold;
   final int? receiveInviterNotification;
   final int? receiveEmailIntegrationNotification;
+  final int? receiveTransactionNotification;
   final int? walletCreated;
   final int? acceptTermsAndConditions;
 
@@ -23,6 +24,7 @@ class ApiWalletUserSettings {
     this.twoFactorAmountThreshold,
     this.receiveInviterNotification,
     this.receiveEmailIntegrationNotification,
+    this.receiveTransactionNotification,
     this.walletCreated,
     this.acceptTermsAndConditions,
   });
@@ -35,6 +37,7 @@ class ApiWalletUserSettings {
       twoFactorAmountThreshold.hashCode ^
       receiveInviterNotification.hashCode ^
       receiveEmailIntegrationNotification.hashCode ^
+      receiveTransactionNotification.hashCode ^
       walletCreated.hashCode ^
       acceptTermsAndConditions.hashCode;
 
@@ -50,6 +53,8 @@ class ApiWalletUserSettings {
           receiveInviterNotification == other.receiveInviterNotification &&
           receiveEmailIntegrationNotification ==
               other.receiveEmailIntegrationNotification &&
+          receiveTransactionNotification ==
+              other.receiveTransactionNotification &&
           walletCreated == other.walletCreated &&
           acceptTermsAndConditions == other.acceptTermsAndConditions;
 }

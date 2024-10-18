@@ -155,3 +155,5 @@ test/snapshot/*/failures/
 tarpaulin-report.html
 cobertura.xml
 coverage
+build_rs_cov.profraw
+test_proton_wallet_rust_db.*

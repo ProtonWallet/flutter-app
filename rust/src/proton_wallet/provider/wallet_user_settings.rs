@@ -1,30 +1,28 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::wallet_user_settings_dao::WalletUserSettingsDao;
-use crate::proton_wallet::db::model::wallet_user_settings_model::WalletUserSettingsModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::wallet_user_settings_dao::WalletUserSettingsDao,
+    model::wallet_user_settings_model::WalletUserSettingsModel,
+};
 
 pub struct WalletUserSettingsDataProvider {
-    dao: WalletUserSettingsDao,
+    pub(crate) dao: WalletUserSettingsDao,
 }
 
 impl WalletUserSettingsDataProvider {
     pub fn new(dao: WalletUserSettingsDao) -> Self {
-        WalletUserSettingsDataProvider { dao: dao }
+        WalletUserSettingsDataProvider { dao }
     }
 }
 
 impl DataProvider<WalletUserSettingsModel> for WalletUserSettingsDataProvider {
-    async fn upsert(&mut self, item: WalletUserSettingsModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: WalletUserSettingsModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
 
         Ok(())
     }
 
-    async fn get(
-        &mut self,
-        user_id: &str,
-    ) -> Result<Option<WalletUserSettingsModel>, Box<dyn Error>> {
+    async fn get(&mut self, user_id: &str) -> Result<Option<WalletUserSettingsModel>> {
         Ok(self.dao.get_by_user_id(user_id).await?)
     }
 }
@@ -48,7 +46,7 @@ mod tests {
         let mut wallet_user_settings_provider =
             WalletUserSettingsDataProvider::new(wallet_user_settings_dao);
 
-        let mut setting = WalletUserSettingsModel {
+        let setting = WalletUserSettingsModel {
             user_id: "mock_user_id".to_string(),
             bitcoin_unit: "MBTC".to_string(),
             fiat_currency: "CNY".to_string(),
@@ -61,7 +59,10 @@ mod tests {
             accept_terms_and_conditions: 0,
         };
 
-        let _ = wallet_user_settings_provider.upsert(setting.clone()).await;
+        wallet_user_settings_provider
+            .upsert(setting.clone())
+            .await
+            .unwrap();
 
         // Test get
         let user_setting = wallet_user_settings_provider

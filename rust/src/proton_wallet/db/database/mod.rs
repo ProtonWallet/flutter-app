@@ -2,8 +2,8 @@ pub mod account;
 pub mod address;
 pub mod bitcoin_address;
 pub mod contacts;
+#[allow(clippy::module_inception)]
 pub mod database;
-pub mod error;
 pub mod exchange_rate;
 pub mod migration;
 pub mod migration_container;

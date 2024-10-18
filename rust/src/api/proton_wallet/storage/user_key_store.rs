@@ -3,20 +3,20 @@ use std::sync::Arc;
 use andromeda_api::proton_users::ProtonUserKey;
 use flutter_rust_bridge::frb;
 
-use crate::{
-    api::api_service::wallet_auth_store::DartFnFuture, proton_wallet::storage::user_key::UserKeyDao,
+use crate::proton_wallet::{
+    common::callbacks::DartFnFuture, storage::user_key::UserKeySecureStore,
 };
 
 // Define a new struct that wraps WalletAuthStore
 pub struct FrbUserKeyStore {
-    pub(crate) inner: UserKeyDao,
+    pub(crate) inner: UserKeySecureStore,
 }
 
 impl FrbUserKeyStore {
     #[frb(sync)]
     pub fn new() -> Self {
         FrbUserKeyStore {
-            inner: UserKeyDao::new(),
+            inner: UserKeySecureStore::new(),
         }
     }
 

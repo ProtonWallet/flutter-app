@@ -1,4 +1,4 @@
-use std::error::Error;
+use super::Result;
 
 #[derive(Copy, Clone, Hash, PartialEq, Eq)]
 pub enum Dataupdate {
@@ -24,12 +24,12 @@ pub enum Dataupdate {
 /// we can add a cache for data provider if needed
 /// so far we only get datas from db via dao directly to keep the logic simple
 pub trait DataProvider<T> {
-    fn upsert(
-        &mut self,
-        item: T,
-    ) -> impl std::future::Future<Output = Result<(), Box<dyn Error>>> + Send;
+    fn upsert(&mut self, item: T) -> impl std::future::Future<Output = Result<()>> + Send;
     fn get(
         &mut self,
         server_id: &str,
-    ) -> impl std::future::Future<Output = Result<Option<T>, Box<dyn Error>>> + Send;
+    ) -> impl std::future::Future<Output = Result<Option<T>>> + Send;
 }
+
+// async fn clear(&mut self);
+// async fn reload(&self) -> Result<()>;

@@ -1,9 +1,15 @@
-use crate::proton_wallet::db::app_database::AppDatabase;
-use crate::proton_wallet::db::model::{account_model::AccountModel, wallet_model::WalletModel};
-use crate::BridgeError;
-
 use flutter_rust_bridge::frb;
+use log::info;
 use rusqlite::Result;
+
+use crate::{
+    proton_wallet::db::{
+        app_database::AppDatabase,
+        dao::{account_dao::AccountDao, wallet_dao::WalletDao},
+        model::{account_model::AccountModel, wallet_model::WalletModel},
+    },
+    BridgeError,
+};
 
 #[derive(Debug)]
 pub struct FrbAppDatabase {
@@ -21,7 +27,7 @@ impl FrbAppDatabase {
 
     /// Expose functions in appDatabase
     pub async fn build_database(&mut self, old_version: u32) -> Result<(), BridgeError> {
-        println!("Start build database in Rust ˊ_>ˋ");
+        info!("Start build database in Rust ˊ_>ˋ");
         let _ = self.inner.init().await;
         let result = self.inner.build_database(old_version).await;
         match result {

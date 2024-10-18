@@ -11,7 +11,7 @@ import 'script_buf.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbDetailledTxOutput>>
 abstract class FrbDetailledTxOutput implements RustOpaqueInterface {
-  String get address;
+  String? get address;
 
   bool get isMine;
 

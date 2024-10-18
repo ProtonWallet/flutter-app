@@ -4,6 +4,7 @@ use chrono::Utc;
 use flutter_rust_bridge::frb;
 
 use andromeda_bitcoin::blockchain_client::BlockchainClient;
+use log::info;
 use std::{collections::HashMap, ops::Deref, sync::Arc};
 
 use super::{account::FrbAccount, psbt::FrbPsbt};
@@ -78,7 +79,7 @@ impl FrbBlockchainClient {
 
         let compute_txid = tx.compute_txid();
 
-        println!("signed_transaction_hex: {}", compute_txid);
+        info!("signed_transaction_hex: {}", compute_txid);
         let exchange_rate_or_transaction_time = if let Some(exchange_rate_id) = exchange_rate_id {
             ExchangeRateOrTransactionTime::ExchangeRate(exchange_rate_id)
         } else if let Some(transaction_time) = transaction_time {

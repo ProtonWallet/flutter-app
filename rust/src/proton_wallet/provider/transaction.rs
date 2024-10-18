@@ -1,7 +1,7 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::transaction_dao::TransactionDao;
-use crate::proton_wallet::db::model::transaction_model::TransactionModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::transaction_dao::TransactionDao, model::transaction_model::TransactionModel,
+};
 
 pub struct TransactionDataProvider {
     dao: TransactionDao,
@@ -9,44 +9,36 @@ pub struct TransactionDataProvider {
 
 impl TransactionDataProvider {
     pub fn new(dao: TransactionDao) -> Self {
-        TransactionDataProvider { dao: dao }
+        TransactionDataProvider { dao }
     }
 
-    pub async fn delete_by_server_id(&mut self, server_id: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete_by_server_id(&mut self, server_id: &str) -> Result<()> {
         let result = self.dao.delete_by_server_id(server_id).await;
         result?;
 
         Ok(())
     }
 
-    pub async fn get_by_account_id(
-        &mut self,
-        account_id: &str,
-    ) -> Result<Vec<TransactionModel>, Box<dyn Error>> {
+    pub async fn get_by_account_id(&mut self, account_id: &str) -> Result<Vec<TransactionModel>> {
         Ok(self.dao.get_by_account_id(account_id).await?)
     }
 }
 
 impl DataProvider<TransactionModel> for TransactionDataProvider {
-    async fn upsert(&mut self, item: TransactionModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: TransactionModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
-
         Ok(())
     }
 
-    async fn get(&mut self, server_id: &str) -> Result<Option<TransactionModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<TransactionModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::transaction_dao::TransactionDao;
-    use crate::proton_wallet::db::model::transaction_model::TransactionModel;
-    use crate::proton_wallet::provider::{
-        provider::DataProvider, transaction::TransactionDataProvider,
-    };
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;

@@ -1,11 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{
-    bitcoin_address::BitcoinAddressDatabase, database::BaseDatabase,
-};
-use crate::proton_wallet::db::model::bitcoin_address_model::BitcoinAddressModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{bitcoin_address::BitcoinAddressDatabase, database::BaseDatabase},
+    error::DatabaseError,
+    model::bitcoin_address_model::BitcoinAddressModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct BitcoinAddressDao {
@@ -21,10 +24,7 @@ impl BitcoinAddressDao {
 }
 
 impl BitcoinAddressDao {
-    pub async fn upsert(
-        &self,
-        item: &BitcoinAddressModel,
-    ) -> Result<Option<BitcoinAddressModel>, DatabaseError> {
+    pub async fn upsert(&self, item: &BitcoinAddressModel) -> Result<Option<BitcoinAddressModel>> {
         if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -53,8 +53,8 @@ impl BitcoinAddressDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -78,7 +78,7 @@ impl BitcoinAddressDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -89,10 +89,7 @@ impl BitcoinAddressDao {
         self.database.get_by_id(id).await
     }
 
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<BitcoinAddressModel>, DatabaseError> {
+    pub async fn get_by_server_id(&self, server_id: &str) -> Result<Option<BitcoinAddressModel>> {
         self.database.get_by_column_id("server_id", server_id).await
     }
 
@@ -103,13 +100,13 @@ impl BitcoinAddressDao {
     pub async fn get_all_by_account_id(
         &self,
         account_id: &str,
-    ) -> Result<Vec<BitcoinAddressModel>, DatabaseError> {
+    ) -> Result<Vec<BitcoinAddressModel>> {
         self.database
             .get_all_by_column_id("server_account_id", account_id)
             .await
     }
 
-    pub async fn delete_by_account_id(&self, account_id: &str) -> Result<(), DatabaseError> {
+    pub async fn delete_by_account_id(&self, account_id: &str) -> Result<()> {
         self.database
             .delete_by_column_id("server_account_id", account_id)
             .await

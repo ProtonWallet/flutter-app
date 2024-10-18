@@ -1,19 +1,21 @@
-use crate::proton_wallet::db::database::migration::Migration;
+use log::info;
 use rusqlite::Connection;
-use rusqlite::Result;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use super::dao::{
-    account_dao::AccountDao, address_dao::AddressDao, bitcoin_address_dao::BitcoinAddressDao,
-    contacts_dao::ContactsDao, exchange_rate_dao::ExchangeRateDao, proton_user_dao::ProtonUserDao,
-    proton_user_key_dao::ProtonUserKeyDao, transaction_dao::TransactionDao, wallet_dao::WalletDao,
-    wallet_user_settings_dao::WalletUserSettingsDao,
+use super::{
+    dao::{
+        account_dao::AccountDaoImpl, address_dao::AddressDao,
+        bitcoin_address_dao::BitcoinAddressDao, contacts_dao::ContactsDao,
+        exchange_rate_dao::ExchangeRateDao, proton_user_dao::ProtonUserDao,
+        proton_user_key_dao::ProtonUserKeyDaoImpl, transaction_dao::TransactionDao,
+        wallet_dao::WalletDaoImpl, wallet_user_settings_dao::WalletUserSettingsDao,
+    },
+    database::{
+        database::BaseDatabase, migration::SimpleMigration, migration_container::MigrationContainer,
+    },
 };
-use super::database::database::BaseDatabase;
-
-use super::database::migration::SimpleMigration;
-use super::database::migration_container::MigrationContainer;
+use crate::proton_wallet::db::{database::migration::Migration, Result};
 
 #[derive(Debug)]
 pub struct AppDatabase {
@@ -21,14 +23,14 @@ pub struct AppDatabase {
     pub reset_version: u32,
     pub db_reset: bool,
     pub migration_container: MigrationContainer,
-    pub account_dao: AccountDao,
-    pub wallet_dao: WalletDao,
+    pub account_dao: AccountDaoImpl,
+    pub wallet_dao: WalletDaoImpl,
     pub address_dao: AddressDao,
     pub bitcoin_address_dao: BitcoinAddressDao,
     pub contacts_dao: ContactsDao,
     pub exchange_rate_dao: ExchangeRateDao,
     pub proton_user_dao: ProtonUserDao,
-    pub proton_user_key_dao: ProtonUserKeyDao,
+    pub proton_user_key_dao: ProtonUserKeyDaoImpl,
     pub transaction_dao: TransactionDao,
     pub wallet_user_settings_dao: WalletUserSettingsDao,
 }
@@ -41,14 +43,14 @@ impl AppDatabase {
             reset_version: 1,
             db_reset: false,
             migration_container: MigrationContainer::new(),
-            account_dao: AccountDao::new(conn.clone()),
-            wallet_dao: WalletDao::new(conn.clone()),
+            account_dao: AccountDaoImpl::new(conn.clone()),
+            wallet_dao: WalletDaoImpl::new(conn.clone()),
             address_dao: AddressDao::new(conn.clone()),
             bitcoin_address_dao: BitcoinAddressDao::new(conn.clone()),
             contacts_dao: ContactsDao::new(conn.clone()),
             exchange_rate_dao: ExchangeRateDao::new(conn.clone()),
             proton_user_dao: ProtonUserDao::new(conn.clone()),
-            proton_user_key_dao: ProtonUserKeyDao::new(conn.clone()),
+            proton_user_key_dao: ProtonUserKeyDaoImpl::new(conn.clone()),
             transaction_dao: TransactionDao::new(conn.clone()),
             wallet_user_settings_dao: WalletUserSettingsDao::new(conn.clone()),
         }
@@ -125,7 +127,7 @@ impl AppDatabase {
             .migration_container
             .find_migration_path(old_version, self.version);
 
-        println!(
+        info!(
             "Migration appDatabase from Ver.{} to Ver.{}",
             old_version, self.version
         );
@@ -135,7 +137,7 @@ impl AppDatabase {
                 migration.migrate().await;
             }
         } else {
-            println!("nothing to migrate");
+            info!("nothing to migrate");
         }
 
         self.check_and_update_version().await

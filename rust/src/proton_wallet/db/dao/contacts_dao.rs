@@ -1,9 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{contacts::ContactsDatabase, database::BaseDatabase};
-use crate::proton_wallet::db::model::contacts_model::ContactsModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{contacts::ContactsDatabase, database::BaseDatabase},
+    error::DatabaseError,
+    model::contacts_model::ContactsModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct ContactsDao {
@@ -19,10 +24,7 @@ impl ContactsDao {
 }
 
 impl ContactsDao {
-    pub async fn upsert(
-        &self,
-        item: &ContactsModel,
-    ) -> Result<Option<ContactsModel>, DatabaseError> {
+    pub async fn upsert(&self, item: &ContactsModel) -> Result<Option<ContactsModel>> {
         if (self.get_by_server_id(&item.server_contact_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -47,8 +49,8 @@ impl ContactsDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -68,7 +70,7 @@ impl ContactsDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -79,10 +81,7 @@ impl ContactsDao {
         self.database.get_by_id(id).await
     }
 
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<ContactsModel>, DatabaseError> {
+    pub async fn get_by_server_id(&self, server_id: &str) -> Result<Option<ContactsModel>> {
         self.database
             .get_by_column_id("server_contact_id", server_id)
             .await
@@ -92,7 +91,7 @@ impl ContactsDao {
         self.database.get_all().await
     }
 
-    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<(), DatabaseError> {
+    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<()> {
         self.database
             .delete_by_column_id("server_contact_id", server_id)
             .await

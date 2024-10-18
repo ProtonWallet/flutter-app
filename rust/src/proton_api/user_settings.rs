@@ -129,6 +129,7 @@ pub struct _ApiWalletUserSettings {
     pub TwoFactorAmountThreshold: Option<u64>,
     pub ReceiveInviterNotification: Option<u8>,
     pub ReceiveEmailIntegrationNotification: Option<u8>,
+    pub ReceiveTransactionNotification: Option<u8>,
     pub WalletCreated: Option<u8>,
     pub AcceptTermsAndConditions: Option<u8>,
 }

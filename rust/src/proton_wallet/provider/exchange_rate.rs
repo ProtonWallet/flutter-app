@@ -1,7 +1,7 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::exchange_rate_dao::ExchangeRateDao;
-use crate::proton_wallet::db::model::exchange_rate_model::ExchangeRateModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::exchange_rate_dao::ExchangeRateDao, model::exchange_rate_model::ExchangeRateModel,
+};
 
 pub struct ExchangeRateDataProvider {
     dao: ExchangeRateDao,
@@ -9,34 +9,29 @@ pub struct ExchangeRateDataProvider {
 
 impl ExchangeRateDataProvider {
     pub fn new(dao: ExchangeRateDao) -> Self {
-        ExchangeRateDataProvider { dao: dao }
+        ExchangeRateDataProvider { dao }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<ExchangeRateModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<ExchangeRateModel>> {
         Ok(self.dao.get_all().await?)
     }
 }
 
 impl DataProvider<ExchangeRateModel> for ExchangeRateDataProvider {
-    async fn upsert(&mut self, item: ExchangeRateModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: ExchangeRateModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
-
         Ok(())
     }
 
-    async fn get(&mut self, server_id: &str) -> Result<Option<ExchangeRateModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<ExchangeRateModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::exchange_rate_dao::ExchangeRateDao;
-    use crate::proton_wallet::db::model::exchange_rate_model::ExchangeRateModel;
-    use crate::proton_wallet::provider::{
-        exchange_rate::ExchangeRateDataProvider, provider::DataProvider,
-    };
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;
