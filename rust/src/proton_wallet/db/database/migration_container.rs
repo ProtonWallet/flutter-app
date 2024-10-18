@@ -1,13 +1,17 @@
+use log::{info, warn};
 use std::collections::BTreeMap;
 
-use log::warn;
-
-use super::error::DatabaseError;
 use super::migration::{Migration, SimpleMigration};
+use crate::proton_wallet::db::{error::DatabaseError, Result};
 
 #[derive(Debug)]
 pub struct MigrationContainer {
     migrations: BTreeMap<u32, BTreeMap<u32, SimpleMigration>>,
+}
+impl Default for MigrationContainer {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MigrationContainer {
@@ -42,7 +46,7 @@ impl MigrationContainer {
     ) -> Option<Vec<&SimpleMigration>> {
         let mut result = Vec::new();
         let mut current_version = start_version;
-        println!("migrations = {:?}", self.migrations);
+        info!("migrations = {:?}", self.migrations);
 
         while current_version < end_version {
             let target_map = self.migrations.get(&current_version)?;
@@ -71,11 +75,7 @@ impl MigrationContainer {
         Some(result)
     }
 
-    pub async fn run_migrations(
-        &self,
-        start_version: u32,
-        end_version: u32,
-    ) -> Result<(), DatabaseError> {
+    pub async fn run_migrations(&self, start_version: u32, end_version: u32) -> Result<()> {
         if let Some(migrations) = self.find_migration_path(start_version, end_version) {
             for migration in migrations {
                 let _ = migration.migrate().await;

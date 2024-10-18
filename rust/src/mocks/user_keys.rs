@@ -1,9 +1,9 @@
 #[cfg(test)]
 pub mod tests {
 
-    const TEST_USER_2_KEY: &str = "-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: ProtonMail\n\nxYYEZXrEuBYJKwYBBAHaRw8BAQdAd3SP+S82mvNYec99IYXXy02QlEtWOwCX\nG+VRoWMTJgT+CQMIAuL1Bl1uoZBgAAAAAAAAAAAAAAAAAAAAAP8Kb+34nsOQ\njVlCUF4Rco6I2xectxdUsuCm6X+Emq+S+8JsPw/rwVxAmClvKJaeWIfZIV/u\nyc07bm90X2Zvcl9lbWFpbF91c2VAZG9tYWluLnRsZCA8bm90X2Zvcl9lbWFp\nbF91c2VAZG9tYWluLnRsZD7CjAQQFgoAPgWCZXrEuAQLCQcICZD98eusToQD\nawMVCAoEFgACAQIZAQKbAwIeARYhBMZ9T6whFVji9dBihP3x66xOhANrAADW\n1QEA4TDQcWcCskhIbAyLj3eFN9oO4cAv01QnTYuW5p5LvMYA/AyngETI6OGC\n+/8UR3hKvmZMnThBMRfbzqg5B96KTIcBx4sEZXrEuBIKKwYBBAGXVQEFAQEH\nQCmW61ll1IgTcm8TuNuh92qEGoIzYrRs0fb6ivPBz7YJAwEIB/4JAwh2VqMV\n7EJ4WmAAAAAAAAAAAAAAAAAAAAAAjDFyvMguSeKDXNNvviwSK+nf7uqvbUNJ\nEEuxjr48kR2A6Cc4OavQJbAAHIVwUG8UQ+PYW/PvwngEGBYKACoFgmV6xLgJ\nkP3x66xOhANrApsMFiEExn1PrCEVWOL10GKE/fHrrE6EA2sAAIGYAQCzpA2U\nR18gbFL3k6xUaUaRHxZoxBZQ2crLRO1GhgxTxQEAhYFyb7k/0S4XwcDpSgJO\nYJWp7nLYBj9YSh4+qOa/5QM=\n-----END PGP PRIVATE KEY BLOCK-----\n";
+    pub const TEST_USER_2_KEY: &str = "-----BEGIN PGP PRIVATE KEY BLOCK-----\nVersion: ProtonMail\n\nxYYEZXrEuBYJKwYBBAHaRw8BAQdAd3SP+S82mvNYec99IYXXy02QlEtWOwCX\nG+VRoWMTJgT+CQMIAuL1Bl1uoZBgAAAAAAAAAAAAAAAAAAAAAP8Kb+34nsOQ\njVlCUF4Rco6I2xectxdUsuCm6X+Emq+S+8JsPw/rwVxAmClvKJaeWIfZIV/u\nyc07bm90X2Zvcl9lbWFpbF91c2VAZG9tYWluLnRsZCA8bm90X2Zvcl9lbWFp\nbF91c2VAZG9tYWluLnRsZD7CjAQQFgoAPgWCZXrEuAQLCQcICZD98eusToQD\nawMVCAoEFgACAQIZAQKbAwIeARYhBMZ9T6whFVji9dBihP3x66xOhANrAADW\n1QEA4TDQcWcCskhIbAyLj3eFN9oO4cAv01QnTYuW5p5LvMYA/AyngETI6OGC\n+/8UR3hKvmZMnThBMRfbzqg5B96KTIcBx4sEZXrEuBIKKwYBBAGXVQEFAQEH\nQCmW61ll1IgTcm8TuNuh92qEGoIzYrRs0fb6ivPBz7YJAwEIB/4JAwh2VqMV\n7EJ4WmAAAAAAAAAAAAAAAAAAAAAAjDFyvMguSeKDXNNvviwSK+nf7uqvbUNJ\nEEuxjr48kR2A6Cc4OavQJbAAHIVwUG8UQ+PYW/PvwngEGBYKACoFgmV6xLgJ\nkP3x66xOhANrApsMFiEExn1PrCEVWOL10GKE/fHrrE6EA2sAAIGYAQCzpA2U\nR18gbFL3k6xUaUaRHxZoxBZQ2crLRO1GhgxTxQEAhYFyb7k/0S4XwcDpSgJO\nYJWp7nLYBj9YSh4+qOa/5QM=\n-----END PGP PRIVATE KEY BLOCK-----\n";
     const TEST_USER_2_PASSWORD: &str = "password";
-    use andromeda_api::proton_users::ProtonUserKey;
+    use andromeda_api::{proton_users::ProtonUserKey, wallet::ApiWalletKey};
     use proton_crypto_account::{
         keys::{
             AddressKeys, ArmoredPrivateKey, EncryptedKeyToken, KeyFlag, KeyId, KeyTokenSignature,
@@ -68,6 +68,20 @@ pub mod tests {
         }
     }
 
+    pub fn get_test_user_2_locked_proton_user_key() -> ProtonUserKey {
+        ProtonUserKey {
+            ID: "G8URRzoYaBW6mSPQjbbo2yYgwI828DVcEs8dDRKxByd1A_qSRYF49TOtw_m4wvDGb76M-r3AVdXuDzSHObR5hQ==".into(),
+            Version: 3,
+            PrivateKey: TEST_USER_2_KEY.into(),
+            Token: None,
+            Primary: 1,
+            Active: 1,
+            RecoverySecret: None,
+            RecoverySecretSignature: None,
+            Fingerprint: "".into(),
+        }
+    }
+
     pub fn get_test_user_2_locked_user_key_secret() -> KeySecret {
         KeySecret::new(TEST_USER_2_PASSWORD.as_bytes().to_vec())
     }
@@ -128,5 +142,51 @@ pub mod tests {
             RecoverySecretSignature: None,
             Fingerprint: "private_key_fingerprint".into(),
         }
+    }
+
+    pub fn mock_fake_proton_user_key_2() -> ProtonUserKey {
+        ProtonUserKey {
+            ID: "test_id".into(),
+            Version: 3,
+            PrivateKey: "private_key_2".into(),
+            Token: Some("token".into()),
+            Primary: 0,
+            Active: 1,
+            RecoverySecret: None,
+            RecoverySecretSignature: None,
+            Fingerprint: "private_key_fingerprint".into(),
+        }
+    }
+
+    pub fn mock_fake_proton_user_key_3() -> ProtonUserKey {
+        ProtonUserKey {
+            ID: "test_id_3".into(),
+            Version: 3,
+            PrivateKey: "private_key_3".into(),
+            Token: Some("token".into()),
+            Primary: 1,
+            Active: 1,
+            RecoverySecret: None,
+            RecoverySecretSignature: None,
+            Fingerprint: "private_key_fingerprint".into(),
+        }
+    }
+
+    pub fn get_test_user_3_api_wallet_key() -> ApiWalletKey {
+        let armored_encrypted_message = "-----BEGIN PGP MESSAGE-----\nComment: https://gopenpgp.org\nVersion: GopenPGP 2.7.5\n\nwV4D9Oug9vT13XESAQdAQkDaJMVbFk5TQ2XmK6qZU4rKVLV1DIccP11ljsbkqRgw\n/D/q1wGge0x3vPAAqjzRcMK7hyeIP9LCMfvjkBdS6o6E7CAROpAD7crqqHXtWt5W\n0lEBEPnoASMJSW9sPjmCzOz7OsDgXvTDefYrS8sp40y+4XVKs30m8q2oXIVYEZC6\nRK1A5P738mJ0y+chA2IOVWaLdOROM6O33lX+N8jfdsz5S+c=\n=yEP9\n-----END PGP MESSAGE-----\n";
+        let armored_signature = "-----BEGIN PGP SIGNATURE-----\nVersion: GopenPGP 2.7.5\nComment: https://gopenpgp.org\n\nwpoEABYKAEwFAmbkDIkJELc30Qz6a91XFiEE6Q8m5+76nNyfDKZEtzfRDPpr3Vck\nlIAAAAAAEQAKY29udGV4dEBwcm90b24uY2h3YWxsZXQua2V5AAAgYAEApHBozjEK\nAoKM3rIdhWLbrHBq2lavIMwLNeqlXPG7zOsA/RZE9nMJNgRBq8EPa0LEtipE98LK\nq6m0IdhYgyQL3OkK\n=/dp1\n-----END PGP SIGNATURE-----\n";
+        ApiWalletKey {
+            WalletID: "wallet_id_user_3".to_owned(),
+            UserKeyID: "user_key_id_user_3".to_owned(),
+            WalletKey: armored_encrypted_message.to_string(),
+            WalletKeySignature: armored_signature.to_string(),
+        }
+    }
+    pub fn get_test_user_3_api_wallet_key_clear() -> Vec<u8> {
+        let clear = [
+            239, 203, 93, 93, 253, 145, 50, 82, 227, 145, 154, 177, 206, 86, 83, 32, 251, 160, 160,
+            29, 164, 144, 177, 101, 205, 128, 169, 38, 59, 33, 146, 218,
+        ];
+        clear.to_vec()
     }
 }

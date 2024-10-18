@@ -1,9 +1,13 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{database::BaseDatabase, proton_user::ProtonUserDatabase};
-use crate::proton_wallet::db::model::proton_user_model::ProtonUserModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{database::BaseDatabase, proton_user::ProtonUserDatabase},
+    model::proton_user_model::ProtonUserModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct ProtonUserDao {
@@ -46,8 +50,8 @@ impl ProtonUserDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -56,10 +60,7 @@ impl ProtonUserDao {
         self.database.get_all().await
     }
 
-    pub async fn get_by_user_id(
-        &self,
-        user_id: &str,
-    ) -> Result<Option<ProtonUserModel>, DatabaseError> {
+    pub async fn get_by_user_id(&self, user_id: &str) -> Result<Option<ProtonUserModel>> {
         self.database.get_by_column_id("user_id", user_id).await
     }
 }

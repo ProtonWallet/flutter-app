@@ -1,11 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{
-    database::BaseDatabase, exchange_rate::ExchangeRateDatabase,
-};
-use crate::proton_wallet::db::model::exchange_rate_model::ExchangeRateModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{database::BaseDatabase, exchange_rate::ExchangeRateDatabase},
+    error::DatabaseError,
+    model::exchange_rate_model::ExchangeRateModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct ExchangeRateDao {
@@ -21,10 +24,7 @@ impl ExchangeRateDao {
 }
 
 impl ExchangeRateDao {
-    pub async fn upsert(
-        &self,
-        item: &ExchangeRateModel,
-    ) -> Result<Option<ExchangeRateModel>, DatabaseError> {
+    pub async fn upsert(&self, item: &ExchangeRateModel) -> Result<Option<ExchangeRateModel>> {
         if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -52,8 +52,8 @@ impl ExchangeRateDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -75,7 +75,7 @@ impl ExchangeRateDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -86,10 +86,7 @@ impl ExchangeRateDao {
         self.database.get_by_id(id).await
     }
 
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<ExchangeRateModel>, DatabaseError> {
+    pub async fn get_by_server_id(&self, server_id: &str) -> Result<Option<ExchangeRateModel>> {
         self.database.get_by_column_id("server_id", server_id).await
     }
 

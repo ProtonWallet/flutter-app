@@ -6,4 +6,8 @@ pub enum DatabaseError {
     Migration(String),
     #[error("Database operation column not found: {0}")]
     ColumnNotFound(String),
+    #[error("Database operation update failed")]
+    UpdateFailed,
+    #[error("Database operation update no row changed")]
+    NoChangedRows,
 }

@@ -1,7 +1,8 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::account_dao::AccountDao;
-use crate::proton_wallet::db::model::account_model::AccountModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::account_dao::{AccountDao, AccountDaoImpl},
+    model::account_model::AccountModel,
+};
 
 // pub trait ProivderSink: Send + Sync {
 //     fn send(&self, entry: Dataupdate);
@@ -35,54 +36,49 @@ use std::error::Error;
 // }
 
 pub struct AccountDataProvider {
-    dao: AccountDao,
+    dao: AccountDaoImpl,
 }
 
 impl AccountDataProvider {
-    pub fn new(dao: AccountDao) -> Self {
-        AccountDataProvider { dao: dao }
+    pub fn new(dao: AccountDaoImpl) -> Self {
+        AccountDataProvider { dao }
     }
 
-    pub async fn delete_by_wallet_id(&mut self, wallet_id: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete_by_wallet_id(&mut self, wallet_id: &str) -> Result<()> {
         let result = self.dao.delete_by_wallet_id(wallet_id).await;
         result?;
 
         Ok(())
     }
 
-    pub async fn delete_by_account_id(&mut self, account_id: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete_by_account_id(&mut self, account_id: &str) -> Result<()> {
         let result = self.dao.delete_by_account_id(account_id).await;
         result?;
 
         Ok(())
     }
 
-    pub async fn get_all_by_wallet_id(
-        &mut self,
-        wallet_id: &str,
-    ) -> Result<Vec<AccountModel>, Box<dyn Error>> {
+    pub async fn get_all_by_wallet_id(&mut self, wallet_id: &str) -> Result<Vec<AccountModel>> {
         Ok(self.dao.get_all_by_wallet_id(wallet_id).await?)
     }
 }
 
 impl DataProvider<AccountModel> for AccountDataProvider {
-    async fn upsert(&mut self, item: AccountModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: AccountModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
 
         Ok(())
     }
 
-    async fn get(&mut self, server_id: &str) -> Result<Option<AccountModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<AccountModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::account_dao::AccountDao;
-    use crate::proton_wallet::db::model::account_model::AccountModel;
-    use crate::proton_wallet::provider::{account::AccountDataProvider, provider::DataProvider};
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;
@@ -90,7 +86,7 @@ mod tests {
     #[tokio::test]
     async fn test_account_provider() {
         let conn_arc = Arc::new(Mutex::new(Connection::open_in_memory().unwrap()));
-        let account_dao = AccountDao::new(conn_arc.clone());
+        let account_dao = AccountDaoImpl::new(conn_arc.clone());
         let _ = account_dao.database.migration_0().await;
         let _ = account_dao.database.migration_1().await;
         let mut account_provider = AccountDataProvider::new(account_dao);

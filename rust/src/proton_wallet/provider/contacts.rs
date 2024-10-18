@@ -1,7 +1,7 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::contacts_dao::ContactsDao;
-use crate::proton_wallet::db::model::contacts_model::ContactsModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::contacts_dao::ContactsDao, model::contacts_model::ContactsModel,
+};
 
 pub struct ContactsDataProvider {
     dao: ContactsDao,
@@ -9,32 +9,30 @@ pub struct ContactsDataProvider {
 
 impl ContactsDataProvider {
     pub fn new(dao: ContactsDao) -> Self {
-        ContactsDataProvider { dao: dao }
+        ContactsDataProvider { dao }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<ContactsModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<ContactsModel>> {
         Ok(self.dao.get_all().await?)
     }
 }
 
 impl DataProvider<ContactsModel> for ContactsDataProvider {
-    async fn upsert(&mut self, item: ContactsModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: ContactsModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
 
         Ok(())
     }
 
-    async fn get(&mut self, server_id: &str) -> Result<Option<ContactsModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<ContactsModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::contacts_dao::ContactsDao;
-    use crate::proton_wallet::db::model::contacts_model::ContactsModel;
-    use crate::proton_wallet::provider::{contacts::ContactsDataProvider, provider::DataProvider};
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;

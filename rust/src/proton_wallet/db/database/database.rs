@@ -1,11 +1,11 @@
 use async_trait::async_trait;
-use rusqlite::{params, Connection, Result};
+use log::info;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use crate::proton_wallet::db::model::model::ModelBase;
-
-use super::{error::DatabaseError, table_names::TableName};
+use super::table_names::TableName;
+use crate::proton_wallet::db::{error::DatabaseError, model::model::ModelBase, Result};
 
 #[async_trait]
 pub trait BaseDatabase {
@@ -17,22 +17,18 @@ pub trait BaseDatabase {
 
     fn table_name(&self) -> &TableName;
 
-    async fn create_table(&self, create_table_query: &str) -> Result<usize, DatabaseError> {
+    async fn create_table(&self, create_table_query: &str) -> Result<usize> {
         let conn = self.conn().lock().await;
         Ok(conn.execute(create_table_query, [])?)
     }
 
-    async fn drop_table(&self) -> Result<usize, DatabaseError> {
+    async fn drop_table(&self) -> Result<usize> {
         let query = format!("DROP TABLE IF EXISTS `{}`", self.table_name().as_str());
         let conn = self.conn().lock().await;
         conn.execute(&query, []).map_err(|e| e.into())
     }
 
-    async fn add_column(
-        &self,
-        column_name: &str,
-        column_type: &str,
-    ) -> Result<usize, DatabaseError> {
+    async fn add_column(&self, column_name: &str, column_type: &str) -> Result<usize> {
         let query = format!(
             "ALTER TABLE {} ADD COLUMN {} {}",
             self.table_name().as_str(),
@@ -44,7 +40,7 @@ pub trait BaseDatabase {
         conn.execute(&query, []).map_err(|e| e.into())
     }
 
-    async fn add_index(&self, column_name: &str) -> Result<usize, DatabaseError> {
+    async fn add_index(&self, column_name: &str) -> Result<usize> {
         let query = format!(
             "CREATE INDEX IF NOT EXISTS idx_{} ON {}({})",
             column_name,
@@ -56,7 +52,7 @@ pub trait BaseDatabase {
         conn.execute(&query, []).map_err(|e| e.into())
     }
 
-    async fn drop_column(&self, column_name: &str) -> Result<usize, DatabaseError> {
+    async fn drop_column(&self, column_name: &str) -> Result<usize> {
         let query = format!(
             "ALTER TABLE {} DROP COLUMN {}",
             self.table_name().as_str(),
@@ -82,7 +78,7 @@ pub trait BaseDatabase {
 
         for column in schema {
             let (name, col_type, not_null, dflt_value, pk) = column?;
-            println!(
+            info!(
                 "Column: {}\nType: {}\nNot Null: {}\nDefault Value: {:?}\nPrimary Key: {}\n---",
                 name, col_type, not_null, dflt_value, pk
             );
@@ -123,7 +119,7 @@ pub trait BaseDatabase {
         let conn = self.conn().lock().await;
         let mut stmt = conn.prepare(&format!("SELECT * FROM `{}`", self.table_name().as_str()))?;
         let iter = stmt.query_map([], |row| T::from_row(row))?;
-        let items: Vec<T> = iter.collect::<Result<_>>()?;
+        let items: Vec<T> = iter.collect::<rusqlite::Result<_>>()?;
         Ok(items)
     }
 
@@ -141,7 +137,7 @@ pub trait BaseDatabase {
         &self,
         column_name: &str,
         value: &str,
-    ) -> Result<Option<T>, DatabaseError> {
+    ) -> Result<Option<T>> {
         let exsit = self.column_exists(column_name).await?;
         if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));
@@ -160,7 +156,7 @@ pub trait BaseDatabase {
         &self,
         column_name: &str,
         value: &str,
-    ) -> Result<Vec<T>, DatabaseError> {
+    ) -> Result<Vec<T>> {
         let exsit = self.column_exists(column_name).await?;
         if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));
@@ -172,7 +168,7 @@ pub trait BaseDatabase {
             column_name
         ))?;
         let account_iter = stmt.query_map([value], |row| T::from_row(row))?;
-        let accounts: Vec<T> = account_iter.collect::<Result<_>>()?;
+        let accounts: Vec<T> = account_iter.collect::<rusqlite::Result<_>>()?;
         Ok(accounts)
     }
 
@@ -185,11 +181,7 @@ pub trait BaseDatabase {
         Ok(())
     }
 
-    async fn delete_by_column_id(
-        &self,
-        column_name: &str,
-        value: &str,
-    ) -> Result<(), DatabaseError> {
+    async fn delete_by_column_id(&self, column_name: &str, value: &str) -> Result<()> {
         let exsit = self.column_exists(column_name).await?;
         if !exsit {
             return Err(DatabaseError::ColumnNotFound(column_name.to_string()));

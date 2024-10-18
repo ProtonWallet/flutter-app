@@ -1,9 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{address::AddressDatabase, database::BaseDatabase};
-use crate::proton_wallet::db::model::address_model::AddressModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{address::AddressDatabase, database::BaseDatabase},
+    error::DatabaseError,
+    model::address_model::AddressModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct AddressDao {
@@ -19,7 +24,7 @@ impl AddressDao {
 }
 
 impl AddressDao {
-    pub async fn upsert(&self, item: &AddressModel) -> Result<Option<AddressModel>, DatabaseError> {
+    pub async fn upsert(&self, item: &AddressModel) -> Result<Option<AddressModel>> {
         if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -43,8 +48,8 @@ impl AddressDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -63,7 +68,7 @@ impl AddressDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -75,19 +80,13 @@ impl AddressDao {
         self.database.get_by_id(id).await
     }
 
-    pub async fn get_all_by_account_id(
-        &self,
-        account_id: &str,
-    ) -> Result<Vec<AddressModel>, DatabaseError> {
+    pub async fn get_all_by_account_id(&self, account_id: &str) -> Result<Vec<AddressModel>> {
         self.database
             .get_all_by_column_id("server_account_id", account_id)
             .await
     }
 
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<AddressModel>, DatabaseError> {
+    pub async fn get_by_server_id(&self, server_id: &str) -> Result<Option<AddressModel>> {
         self.database.get_by_column_id("server_id", server_id).await
     }
 
@@ -95,13 +94,13 @@ impl AddressDao {
         self.database.get_all().await
     }
 
-    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<(), DatabaseError> {
+    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<()> {
         self.database
             .delete_by_column_id("server_id", server_id)
             .await
     }
 
-    pub async fn delete_by_account_id(&self, server_account_id: &str) -> Result<(), DatabaseError> {
+    pub async fn delete_by_account_id(&self, server_account_id: &str) -> Result<()> {
         self.database
             .delete_by_column_id("server_account_id", server_account_id)
             .await

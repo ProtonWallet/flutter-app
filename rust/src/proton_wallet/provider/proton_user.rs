@@ -1,43 +1,42 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::proton_user_dao::ProtonUserDao;
-use crate::proton_wallet::db::model::proton_user_model::ProtonUserModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::proton_user_dao::ProtonUserDao, model::proton_user_model::ProtonUserModel,
+};
 
 pub struct ProtonUserDataProvider {
     dao: ProtonUserDao,
+    // pub(crate) proton_user_client: ProtonUsersClient,
 }
 
 impl ProtonUserDataProvider {
     pub fn new(dao: ProtonUserDao) -> Self {
-        ProtonUserDataProvider { dao: dao }
+        ProtonUserDataProvider {
+            dao,
+            // proton_user_client,
+        }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<ProtonUserModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<ProtonUserModel>> {
         Ok(self.dao.get_all().await?)
     }
 }
 
 impl DataProvider<ProtonUserModel> for ProtonUserDataProvider {
-    async fn upsert(&mut self, item: ProtonUserModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: ProtonUserModel) -> Result<()> {
         // only implemet insert() for proton user, can add update function if needed
         let result = self.dao.insert(&item).await;
         result?;
-
         Ok(())
     }
 
-    async fn get(&mut self, user_id: &str) -> Result<Option<ProtonUserModel>, Box<dyn Error>> {
+    async fn get(&mut self, user_id: &str) -> Result<Option<ProtonUserModel>> {
         Ok(self.dao.get_by_user_id(user_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::proton_user_dao::ProtonUserDao;
-    use crate::proton_wallet::db::model::proton_user_model::ProtonUserModel;
-    use crate::proton_wallet::provider::{
-        proton_user::ProtonUserDataProvider, provider::DataProvider,
-    };
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;
