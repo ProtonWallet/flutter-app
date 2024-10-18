@@ -2,7 +2,8 @@ use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use super::{database::BaseDatabase, error::DatabaseError, table_names::TableName};
+use super::{database::BaseDatabase, table_names::TableName};
+use crate::proton_wallet::db::Result;
 
 #[derive(Debug, Clone)]
 pub struct ProtonUserKeyDatabase {
@@ -29,7 +30,7 @@ impl BaseDatabase for ProtonUserKeyDatabase {
 
 impl ProtonUserKeyDatabase {
     // You can add specific migration methods here
-    pub async fn migration_0(&self) -> Result<(), DatabaseError> {
+    pub async fn migration_0(&self) -> Result<()> {
         self.drop_table().await?;
         self.create_table(
             format!(
@@ -43,7 +44,8 @@ impl ProtonUserKeyDatabase {
                 fingerprint TEXT NULL, 
                 recovery_secret TEXT NULL, 
                 recovery_secret_signature TEXT NULL, 
-                'primary' INTEGER NOT NULL, 
+                active INTEGER NOT NULL,
+                'primary' INTEGER NOT NULL,
                 PRIMARY KEY (key_id, user_id))
             "#,
                 self.table_name().as_str()
@@ -83,6 +85,7 @@ mod tests {
         assert!(db.column_exists("fingerprint").await.unwrap());
         assert!(db.column_exists("recovery_secret").await.unwrap());
         assert!(db.column_exists("recovery_secret_signature").await.unwrap());
+        assert!(db.column_exists("active").await.unwrap());
         assert!(db.column_exists("primary").await.unwrap());
     }
 }

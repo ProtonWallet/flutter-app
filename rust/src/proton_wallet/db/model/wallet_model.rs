@@ -4,7 +4,7 @@ use serde_rusqlite::from_row;
 
 use super::model::ModelBase;
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct WalletModel {
     pub id: u32,
     pub name: String,

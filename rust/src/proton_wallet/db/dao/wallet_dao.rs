@@ -1,26 +1,58 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{database::BaseDatabase, wallet::WalletDatabase};
-use crate::proton_wallet::db::model::model::ModelBase;
-use crate::proton_wallet::db::model::wallet_model::WalletModel;
-use rusqlite::{params, Connection, Result};
+use async_trait::async_trait;
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use crate::proton_wallet::db::{
+    database::{database::BaseDatabase, wallet::WalletDatabase},
+    error::DatabaseError,
+    model::{model::ModelBase, wallet_model::WalletModel},
+    Result,
+};
+
 #[derive(Debug, Clone)]
-pub struct WalletDao {
+pub struct WalletDaoImpl {
     conn: Arc<Mutex<Connection>>,
     pub database: WalletDatabase,
 }
 
-impl WalletDao {
+impl WalletDaoImpl {
     pub fn new(conn: Arc<Mutex<Connection>>) -> Self {
         let database = WalletDatabase::new(conn.clone());
         Self { conn, database }
     }
 }
 
-impl WalletDao {
-    pub async fn upsert(&self, item: &WalletModel) -> Result<Option<WalletModel>, DatabaseError> {
+#[async_trait]
+pub trait WalletDao: Send + Sync {
+    async fn get_by_server_id(&self, server_id: &str) -> Result<Option<WalletModel>>;
+    async fn get_all_by_user_id(&self, user_id: &str) -> Result<Vec<WalletModel>>;
+    async fn delete_by_wallet_id(&self, wallet_id: &str) -> Result<()>;
+    async fn upsert(&self, item: &WalletModel) -> Result<Option<WalletModel>>;
+}
+
+#[async_trait]
+impl WalletDao for WalletDaoImpl {
+    async fn get_by_server_id(&self, server_id: &str) -> Result<Option<WalletModel>> {
+        self.database.get_by_column_id("wallet_id", server_id).await
+    }
+
+    async fn get_all_by_user_id(&self, user_id: &str) -> Result<Vec<WalletModel>> {
+        let conn = self.conn.lock().await;
+        let mut stmt =
+            conn.prepare("SELECT * FROM wallet_table WHERE user_id = ?1 ORDER BY priority asc")?;
+        let account_iter = stmt.query_map([user_id], WalletModel::from_row)?;
+        let accounts: Vec<WalletModel> = account_iter.collect::<rusqlite::Result<_>>()?;
+        Ok(accounts)
+    }
+    async fn delete_by_wallet_id(&self, wallet_id: &str) -> Result<()> {
+        self.database
+            .delete_by_column_id("wallet_id", wallet_id)
+            .await
+    }
+
+    async fn upsert(&self, item: &WalletModel) -> Result<Option<WalletModel>> {
         if (self.get_by_server_id(&item.wallet_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -28,7 +60,9 @@ impl WalletDao {
         }
         self.get_by_server_id(&item.wallet_id).await
     }
+}
 
+impl WalletDaoImpl {
     pub async fn insert(&self, wallet: &WalletModel) -> Result<u32> {
         let conn = self.conn.lock().await;
         let result: std::result::Result<usize, rusqlite::Error> = conn.execute(
@@ -57,21 +91,14 @@ impl WalletDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
 
     pub async fn get(&self, id: u32) -> Result<Option<WalletModel>> {
         self.database.get_by_id(id).await
-    }
-
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<WalletModel>, DatabaseError> {
-        self.database.get_by_column_id("wallet_id", server_id).await
     }
 
     pub async fn get_default_wallet_by_user_id(
@@ -82,21 +109,12 @@ impl WalletDao {
         let mut stmt = conn.prepare(
             "SELECT * FROM wallet_table WHERE user_id = ?1 ORDER BY priority asc LIMIT 1",
         )?;
-        let result = stmt.query_row(params![user_id], |row| WalletModel::from_row(row));
+        let result = stmt.query_row(params![user_id], WalletModel::from_row);
         Ok(result.ok())
     }
 
     pub async fn get_all(&self) -> Result<Vec<WalletModel>> {
         self.database.get_all().await
-    }
-
-    pub async fn get_all_by_user_id(&self, user_id: &str) -> Result<Vec<WalletModel>> {
-        let conn = self.conn.lock().await;
-        let mut stmt =
-            conn.prepare("SELECT * FROM wallet_table WHERE user_id = ?1 ORDER BY priority asc")?;
-        let account_iter = stmt.query_map([user_id], |row| WalletModel::from_row(row))?;
-        let accounts: Vec<WalletModel> = account_iter.collect::<Result<_>>()?;
-        Ok(accounts)
     }
 
     pub async fn update(&self, wallet: &WalletModel) -> Result<Option<WalletModel>> {
@@ -144,7 +162,7 @@ impl WalletDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -154,17 +172,11 @@ impl WalletDao {
     pub async fn delete(&self, id: u32) -> Result<()> {
         self.database.delete_by_id(id).await
     }
-
-    pub async fn delete_by_wallet_id(&self, wallet_id: &str) -> Result<(), DatabaseError> {
-        self.database
-            .delete_by_column_id("wallet_id", wallet_id)
-            .await
-    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::wallet_dao::WalletDao;
+    use crate::proton_wallet::db::dao::wallet_dao::{WalletDao, WalletDaoImpl};
     use crate::proton_wallet::db::model::wallet_model::WalletModel;
     use rusqlite::Connection;
     use std::sync::Arc;
@@ -204,7 +216,7 @@ mod tests {
                 [],
             );
         }
-        let wallet_dao = WalletDao::new(conn_arc);
+        let wallet_dao = WalletDaoImpl::new(conn_arc);
         let wallets = wallet_dao.get_all().await.unwrap();
         assert_eq!(wallets.len(), 0);
         let wallet = WalletModel {

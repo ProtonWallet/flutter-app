@@ -1,5 +1,4 @@
 // transaction_builder.rs
-
 use crate::{
     proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
     BridgeError,
@@ -239,21 +238,6 @@ impl FrbTxBuilder {
             .inner
             .create_draft_psbt(allow_dust.unwrap_or(false))
             .await?;
-        // let transaction = psbt.extract_tx()?;
-        // info!(
-        //     "create_draft_psbt --- addr count: {:?}",
-        //     transaction.output.len()
-        // );
-        // println!(
-        //     "create_draft_psbt --- addr count: {:?}",
-        //     transaction.output.len()
-        // );
-        // for value in &transaction.output {
-        //     let addr = FrbAddress::from_script(value.script_pubkey.clone().into(), network)?;
-        //     info!("create_draft_psbt --- addr: {:?}", addr.to_string());
-        //     println!("create_draft_psbt --- addr: {:?}", addr.to_string());
-        // }
-
         FrbPsbt::from_psbt(&psbt, network)
     }
 }

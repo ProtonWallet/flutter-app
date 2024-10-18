@@ -1,12 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{
-    database::BaseDatabase, wallet_user_settings::WalletUserSettingsDatabase,
-};
-
-use crate::proton_wallet::db::model::wallet_user_settings_model::WalletUserSettingsModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{database::BaseDatabase, wallet_user_settings::WalletUserSettingsDatabase},
+    error::DatabaseError,
+    model::wallet_user_settings_model::WalletUserSettingsModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct WalletUserSettingsDao {
@@ -25,8 +27,8 @@ impl WalletUserSettingsDao {
     pub async fn upsert(
         &self,
         item: &WalletUserSettingsModel,
-    ) -> Result<Option<WalletUserSettingsModel>, DatabaseError> {
-        if let Some(_) = self.get_by_user_id(&item.user_id).await? {
+    ) -> Result<Option<WalletUserSettingsModel>> {
+        if (self.get_by_user_id(&item.user_id).await?).is_some() {
             self.update(item).await?;
         } else {
             self.insert(item).await?;
@@ -55,8 +57,8 @@ impl WalletUserSettingsDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -93,11 +95,11 @@ impl WalletUserSettingsDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
-        Ok(self.get(&item.user_id).await?)
+        self.get(&item.user_id).await
     }
 
     pub async fn get(&self, user_id: &str) -> Result<Option<WalletUserSettingsModel>> {
@@ -105,16 +107,13 @@ impl WalletUserSettingsDao {
         match result {
             Ok(user_setting) => Ok(user_setting),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
+                error!("Something went wrong: {}", e);
                 Ok(None)
             }
         }
     }
 
-    pub async fn get_by_user_id(
-        &self,
-        user_id: &str,
-    ) -> Result<Option<WalletUserSettingsModel>, DatabaseError> {
+    pub async fn get_by_user_id(&self, user_id: &str) -> Result<Option<WalletUserSettingsModel>> {
         self.database.get_by_column_id("user_id", user_id).await
     }
 }
@@ -200,7 +199,7 @@ mod tests {
 
         // test upsert
         let upsert_item = wallet_user_settings_dao.upsert(&setting).await.unwrap();
-        assert_eq!(upsert_item.is_some(), true);
+        assert!(upsert_item.is_some());
 
         // test query
         let query_item = wallet_user_settings_dao
@@ -224,7 +223,7 @@ mod tests {
         setting.bitcoin_unit = "SATS".to_string();
         setting.fiat_currency = "JPY".to_string();
         let upsert_item = wallet_user_settings_dao.upsert(&setting).await.unwrap();
-        assert_eq!(upsert_item.is_some(), true);
+        assert!(upsert_item.is_some());
 
         let query_item = wallet_user_settings_dao
             .get_by_user_id("mock_user_id")

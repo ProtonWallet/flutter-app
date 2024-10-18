@@ -8,7 +8,7 @@ use crate::api::bdk_wallet::script_buf::FrbScriptBuf;
 #[derive(Debug, Clone)]
 pub struct FrbDetailledTxOutput {
     pub(crate) value: u64,
-    pub(crate) address: String,
+    pub(crate) address: Option<String>,
     pub(crate) script_pubkey: FrbScriptBuf,
     pub(crate) is_mine: bool,
 }
@@ -17,7 +17,7 @@ impl From<DetailledTxOutput> for FrbDetailledTxOutput {
     fn from(detailled_tx_output: DetailledTxOutput) -> Self {
         FrbDetailledTxOutput {
             value: detailled_tx_output.value,
-            address: detailled_tx_output.address.to_string(),
+            address: detailled_tx_output.address.map(|obj| obj.to_string()),
             script_pubkey: detailled_tx_output.script_pubkey.into(),
             is_mine: detailled_tx_output.is_mine,
         }
@@ -26,7 +26,7 @@ impl From<DetailledTxOutput> for FrbDetailledTxOutput {
 
 impl FrbDetailledTxOutput {
     #[frb(getter, sync)]
-    pub fn address(&self) -> String {
+    pub fn address(&self) -> Option<String> {
         self.address.clone()
     }
 

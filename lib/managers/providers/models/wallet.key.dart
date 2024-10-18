@@ -78,4 +78,15 @@ class WalletKey {
             ))
         .toList();
   }
+
+  static List<ApiWalletKey> toApiWalletKeys(List<WalletKey> items) {
+    return items
+        .map((item) => ApiWalletKey(
+              walletId: item.walletId,
+              userKeyId: item.userKeyId,
+              walletKey: item.walletKey,
+              walletKeySignature: item.walletKeySignature,
+            ))
+        .toList();
+  }
 }

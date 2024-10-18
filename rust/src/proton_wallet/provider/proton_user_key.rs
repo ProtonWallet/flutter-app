@@ -1,31 +1,29 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::proton_user_key_dao::ProtonUserKeyDao;
-use crate::proton_wallet::db::model::proton_user_key_model::ProtonUserKeyModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::proton_user_key_dao::{ProtonUserKeyDao, ProtonUserKeyDaoImpl},
+    model::proton_user_key_model::ProtonUserKeyModel,
+};
 
 pub struct ProtonUserKeyDataProvider {
-    dao: ProtonUserKeyDao,
+    dao: ProtonUserKeyDaoImpl,
 }
 
 impl ProtonUserKeyDataProvider {
-    pub fn new(dao: ProtonUserKeyDao) -> Self {
-        ProtonUserKeyDataProvider { dao: dao }
+    pub fn new(dao: ProtonUserKeyDaoImpl) -> Self {
+        ProtonUserKeyDataProvider { dao }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<ProtonUserKeyModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<ProtonUserKeyModel>> {
         Ok(self.dao.get_all().await?)
     }
 
-    pub async fn get_all_by_user_id(
-        &mut self,
-        user_id: &str,
-    ) -> Result<Vec<ProtonUserKeyModel>, Box<dyn Error>> {
+    pub async fn get_all_by_user_id(&mut self, user_id: &str) -> Result<Vec<ProtonUserKeyModel>> {
         Ok(self.dao.get_all_by_user_id(user_id).await?)
     }
 }
 
 impl DataProvider<ProtonUserKeyModel> for ProtonUserKeyDataProvider {
-    async fn upsert(&mut self, item: ProtonUserKeyModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: ProtonUserKeyModel) -> Result<()> {
         // only implemet insert() for proton user, can add update function if needed
         let result = self.dao.insert(&item).await;
         result?;
@@ -33,18 +31,14 @@ impl DataProvider<ProtonUserKeyModel> for ProtonUserKeyDataProvider {
         Ok(())
     }
 
-    async fn get(&mut self, key_id: &str) -> Result<Option<ProtonUserKeyModel>, Box<dyn Error>> {
+    async fn get(&mut self, key_id: &str) -> Result<Option<ProtonUserKeyModel>> {
         Ok(self.dao.get_by_key_id(key_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::proton_user_key_dao::ProtonUserKeyDao;
-    use crate::proton_wallet::db::model::proton_user_key_model::ProtonUserKeyModel;
-    use crate::proton_wallet::provider::{
-        proton_user_key::ProtonUserKeyDataProvider, provider::DataProvider,
-    };
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;
@@ -52,7 +46,8 @@ mod tests {
     #[tokio::test]
     async fn test_proton_user_key_provider() {
         let conn_arc = Arc::new(Mutex::new(Connection::open_in_memory().unwrap()));
-        let proton_user_key_dao = ProtonUserKeyDao::new(conn_arc.clone());
+
+        let proton_user_key_dao = ProtonUserKeyDaoImpl::new(conn_arc.clone());
         let _ = proton_user_key_dao.database.migration_0().await;
         let mut proton_user_key_provider = ProtonUserKeyDataProvider::new(proton_user_key_dao);
 
@@ -65,6 +60,7 @@ mod tests {
             fingerprint: Some("FTS721AVC2US".to_string()),
             recovery_secret: None,
             recovery_secret_signature: None,
+            active: 1,
             primary: 1,
         };
 
@@ -77,6 +73,7 @@ mod tests {
             fingerprint: Some("SUIGUG125".to_string()),
             recovery_secret: None,
             recovery_secret_signature: None,
+            active: 1,
             primary: 0,
         };
 
@@ -89,6 +86,7 @@ mod tests {
             fingerprint: Some("151ASYGU".to_string()),
             recovery_secret: None,
             recovery_secret_signature: None,
+            active: 1,
             primary: 0,
         };
         let _ = proton_user_key_provider.upsert(user_key1.clone()).await;

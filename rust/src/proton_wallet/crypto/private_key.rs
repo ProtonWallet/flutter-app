@@ -82,6 +82,13 @@ impl LockedPrivateKeys {
             addr_keys: AddressKeys::new([]),
         }
     }
+
+    pub fn from_user_keys(user_keys: Vec<LockedKey>) -> Self {
+        Self {
+            user_keys: UserKeys::new(user_keys),
+            addr_keys: AddressKeys::new([]),
+        }
+    }
 }
 
 impl LockedPrivateKeys {

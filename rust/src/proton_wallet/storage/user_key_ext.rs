@@ -1,7 +1,7 @@
 use andromeda_api::proton_users::ProtonUserKey;
 use proton_crypto_account::keys::{LockedKey, UserKeys};
 
-// convert ProtonUserKey to LockedKey
+/// convert ProtonUserKey to LockedKey
 struct UserKeyWrap(ProtonUserKey);
 struct UserKeysWrap(Vec<ProtonUserKey>);
 impl From<UserKeyWrap> for LockedKey {
