@@ -1,5 +1,4 @@
-use std::future::Future;
-use std::pin::Pin;
+use std::{future::Future, pin::Pin};
 
 pub trait Migration: Send + Sync {
     fn start_version(&self) -> u32;

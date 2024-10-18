@@ -709,7 +709,10 @@ class WalletTransactionBloc
       final List<FrbDetailledTxOutput> output = transactionDetail.outputs;
       final List<String> recipientBitcoinAddresses = [];
       for (FrbDetailledTxOutput txOut in output) {
-        final String bitcoinAddress = txOut.address;
+        final String? bitcoinAddress = txOut.address;
+        if (bitcoinAddress == null) {
+          continue;
+        }
         bitcoinAddressesInTransaction.add(bitcoinAddress);
         BitcoinAddressModel? bitcoinAddressModel =
             await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(

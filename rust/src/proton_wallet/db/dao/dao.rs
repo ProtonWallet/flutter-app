@@ -1,4 +1,4 @@
-use rusqlite::Result;
+use crate::proton_wallet::db::Result;
 
 pub trait Dao<T> {
     fn insert(&self, item: &T) -> Result<u32>;

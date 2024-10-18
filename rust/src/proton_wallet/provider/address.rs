@@ -1,7 +1,5 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::address_dao::AddressDao;
-use crate::proton_wallet::db::model::address_model::AddressModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{dao::address_dao::AddressDao, model::address_model::AddressModel};
 
 ///
 /// AddressDataProvider handle wallet account BvE settings
@@ -13,28 +11,25 @@ pub struct AddressDataProvider {
 
 impl AddressDataProvider {
     pub fn new(dao: AddressDao) -> Self {
-        AddressDataProvider { dao: dao }
+        AddressDataProvider { dao }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<AddressModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<AddressModel>> {
         Ok(self.dao.get_all().await?)
     }
 
-    pub async fn get_all_by_account_id(
-        &mut self,
-        account_id: &str,
-    ) -> Result<Vec<AddressModel>, Box<dyn Error>> {
+    pub async fn get_all_by_account_id(&mut self, account_id: &str) -> Result<Vec<AddressModel>> {
         Ok(self.dao.get_all_by_account_id(account_id).await?)
     }
 
-    pub async fn delete_by_server_id(&mut self, server_id: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete_by_server_id(&mut self, server_id: &str) -> Result<()> {
         let result = self.dao.delete_by_server_id(server_id).await;
         result?;
 
         Ok(())
     }
 
-    pub async fn delete_by_account_id(&mut self, account_id: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete_by_account_id(&mut self, account_id: &str) -> Result<()> {
         let result = self.dao.delete_by_account_id(account_id).await;
         result?;
 
@@ -43,23 +38,21 @@ impl AddressDataProvider {
 }
 
 impl DataProvider<AddressModel> for AddressDataProvider {
-    async fn upsert(&mut self, item: AddressModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: AddressModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
 
         Ok(())
     }
 
-    async fn get(&mut self, server_id: &str) -> Result<Option<AddressModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<AddressModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::address_dao::AddressDao;
-    use crate::proton_wallet::db::model::address_model::AddressModel;
-    use crate::proton_wallet::provider::{address::AddressDataProvider, provider::DataProvider};
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;

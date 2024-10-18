@@ -5,6 +5,7 @@ use aes_gcm::{
     aead::{Aead, KeyInit},
     AeadCore, Aes256Gcm, Key, Nonce,
 };
+use andromeda_api::wallet::ApiWalletKey;
 use base64::{prelude::BASE64_STANDARD, Engine};
 use proton_crypto::crypto::{
     DetachedSignatureVariant, EncryptorDetachedSignatureWriter, UnixTimestamp,
@@ -198,6 +199,13 @@ pub struct LockedWalletKey {
     encrypted: String,
     signature: String,
 }
+
+impl From<ApiWalletKey> for LockedWalletKey {
+    fn from(api_wallet_key: ApiWalletKey) -> LockedWalletKey {
+        LockedWalletKey::new(api_wallet_key.WalletKey, api_wallet_key.WalletKeySignature)
+    }
+}
+
 impl LockedWalletKey {
     pub fn new(armored: String, signature: String) -> Self {
         LockedWalletKey {

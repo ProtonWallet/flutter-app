@@ -6,7 +6,7 @@ use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
 use proton_crypto_account::proton_crypto;
 use rusqlite::Error as RusqlitError;
 
-use crate::proton_wallet::crypto::errors::WalletCryptoError;
+use crate::proton_wallet::{crypto::errors::WalletCryptoError, features::error::FeaturesError};
 
 #[derive(thiserror::Error, Debug)]
 pub enum BridgeError {
@@ -53,6 +53,10 @@ pub enum BridgeError {
     #[error("An error occurred in wallet crypto: {0}")]
     WalletCrypto(String),
 
+    /// wallet feature errors
+    #[error("An error occurred in wallet feature: {0}")]
+    WalletFeature(String),
+
     /// Login error
     #[error("An Login error occurred: {0}")]
     Login(String),
@@ -65,6 +69,12 @@ pub enum BridgeError {
 impl From<WalletCryptoError> for BridgeError {
     fn from(value: WalletCryptoError) -> Self {
         BridgeError::WalletCrypto(format!("WalletCryptoError occurred: {:?}", value.source()))
+    }
+}
+
+impl From<FeaturesError> for BridgeError {
+    fn from(value: FeaturesError) -> Self {
+        BridgeError::WalletFeature(format!("WalletFeatureError occurred: {:?}", value.source()))
     }
 }
 

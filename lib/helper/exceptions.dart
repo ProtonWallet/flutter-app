@@ -27,6 +27,7 @@ String parseSampleDisplayError(BridgeError exception) {
     apiSrp: (e) => e.field0,
     aesGcm: (e) => e.field0,
     walletCrypto: (e) => e.field0,
+    walletFeature: (e) => e.field0,
     login: (e) => e.field0,
     fork: (e) => e.field0,
   );

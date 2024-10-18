@@ -83,5 +83,5 @@ build_targets = ["aarch64-apple-ios"]
 
 [features]
 default = []
-mocking = []
+mocking = ["andromeda-api/mocking"]
 test = ["andromeda-api/allow-dangerous-env", "mocking"]

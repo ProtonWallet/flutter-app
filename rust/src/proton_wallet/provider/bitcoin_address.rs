@@ -1,7 +1,7 @@
-use super::provider::DataProvider;
-use crate::proton_wallet::db::dao::bitcoin_address_dao::BitcoinAddressDao;
-use crate::proton_wallet::db::model::bitcoin_address_model::BitcoinAddressModel;
-use std::error::Error;
+use super::{provider::DataProvider, Result};
+use crate::proton_wallet::db::{
+    dao::bitcoin_address_dao::BitcoinAddressDao, model::bitcoin_address_model::BitcoinAddressModel,
+};
 
 pub struct BitcoinAddressDataProvider {
     dao: BitcoinAddressDao,
@@ -9,44 +9,37 @@ pub struct BitcoinAddressDataProvider {
 
 impl BitcoinAddressDataProvider {
     pub fn new(dao: BitcoinAddressDao) -> Self {
-        BitcoinAddressDataProvider { dao: dao }
+        BitcoinAddressDataProvider { dao }
     }
 
-    pub async fn get_all(&mut self) -> Result<Vec<BitcoinAddressModel>, Box<dyn Error>> {
+    pub async fn get_all(&mut self) -> Result<Vec<BitcoinAddressModel>> {
         Ok(self.dao.get_all().await?)
     }
 
     pub async fn get_all_by_account_id(
         &mut self,
         account_id: &str,
-    ) -> Result<Vec<BitcoinAddressModel>, Box<dyn Error>> {
+    ) -> Result<Vec<BitcoinAddressModel>> {
         Ok(self.dao.get_all_by_account_id(account_id).await?)
     }
 }
 
 impl DataProvider<BitcoinAddressModel> for BitcoinAddressDataProvider {
-    async fn upsert(&mut self, item: BitcoinAddressModel) -> Result<(), Box<dyn Error>> {
+    async fn upsert(&mut self, item: BitcoinAddressModel) -> Result<()> {
         let result = self.dao.upsert(&item).await;
         result?;
 
         Ok(())
     }
 
-    async fn get(
-        &mut self,
-        server_id: &str,
-    ) -> Result<Option<BitcoinAddressModel>, Box<dyn Error>> {
+    async fn get(&mut self, server_id: &str) -> Result<Option<BitcoinAddressModel>> {
         Ok(self.dao.get_by_server_id(server_id).await?)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::proton_wallet::db::dao::bitcoin_address_dao::BitcoinAddressDao;
-    use crate::proton_wallet::db::model::bitcoin_address_model::BitcoinAddressModel;
-    use crate::proton_wallet::provider::{
-        bitcoin_address::BitcoinAddressDataProvider, provider::DataProvider,
-    };
+    use super::*;
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;

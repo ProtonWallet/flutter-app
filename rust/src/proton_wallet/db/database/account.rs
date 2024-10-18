@@ -3,7 +3,8 @@ use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use super::{database::BaseDatabase, error::DatabaseError, table_names::TableName};
+use super::{database::BaseDatabase, table_names::TableName};
+use crate::proton_wallet::db::Result;
 
 #[derive(Debug, Clone)]
 pub struct AccountDatabase {
@@ -30,7 +31,7 @@ impl BaseDatabase for AccountDatabase {
 
 impl AccountDatabase {
     // You can add specific migration methods here
-    pub async fn migration_0(&self) -> Result<(), DatabaseError> {
+    pub async fn migration_0(&self) -> Result<()> {
         self.drop_table().await?;
         self.create_table(
             format!(
@@ -60,7 +61,7 @@ impl AccountDatabase {
         Ok(())
     }
 
-    pub async fn migration_1(&self) -> Result<(), DatabaseError> {
+    pub async fn migration_1(&self) -> Result<()> {
         if let Err(e) = self.drop_column("pool_size").await {
             error!("Failed to drop column pool_size: {:?}", e);
         }

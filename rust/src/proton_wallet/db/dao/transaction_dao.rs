@@ -1,11 +1,14 @@
-use crate::proton_wallet::db::database::error::DatabaseError;
-use crate::proton_wallet::db::database::{
-    database::BaseDatabase, transaction::TransactionDatabase,
-};
-use crate::proton_wallet::db::model::transaction_model::TransactionModel;
-use rusqlite::{params, Connection, Result};
+use log::error;
+use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+
+use crate::proton_wallet::db::{
+    database::{database::BaseDatabase, transaction::TransactionDatabase},
+    error::DatabaseError,
+    model::transaction_model::TransactionModel,
+    Result,
+};
 
 #[derive(Debug)]
 pub struct TransactionDao {
@@ -21,10 +24,7 @@ impl TransactionDao {
 }
 
 impl TransactionDao {
-    pub async fn upsert(
-        &self,
-        item: &TransactionModel,
-    ) -> Result<Option<TransactionModel>, DatabaseError> {
+    pub async fn upsert(&self, item: &TransactionModel) -> Result<Option<TransactionModel>> {
         if (self.get_by_server_id(&item.server_id).await?).is_some() {
             self.update(item).await?;
         } else {
@@ -60,8 +60,8 @@ impl TransactionDao {
         match result {
             Ok(_) => Ok(conn.last_insert_rowid() as u32),
             Err(e) => {
-                eprintln!("Something went wrong: {}", e);
-                Err(e)
+                error!("Something went wrong: {}", e);
+                Err(e.into())
             }
         }
     }
@@ -92,7 +92,7 @@ impl TransactionDao {
         )?;
 
         if rows_affected == 0 {
-            return Err(rusqlite::Error::StatementChangedRows(0));
+            return Err(DatabaseError::NoChangedRows);
         }
 
         std::mem::drop(conn); // release connection before we want to use self.get()
@@ -103,17 +103,11 @@ impl TransactionDao {
         self.database.get_by_id(id).await
     }
 
-    pub async fn get_by_server_id(
-        &self,
-        server_id: &str,
-    ) -> Result<Option<TransactionModel>, DatabaseError> {
+    pub async fn get_by_server_id(&self, server_id: &str) -> Result<Option<TransactionModel>> {
         self.database.get_by_column_id("server_id", server_id).await
     }
 
-    pub async fn get_by_account_id(
-        &self,
-        account_id: &str,
-    ) -> Result<Vec<TransactionModel>, DatabaseError> {
+    pub async fn get_by_account_id(&self, account_id: &str) -> Result<Vec<TransactionModel>> {
         self.database
             .get_all_by_column_id("server_account_id", account_id)
             .await
@@ -123,7 +117,7 @@ impl TransactionDao {
         self.database.get_all().await
     }
 
-    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<(), DatabaseError> {
+    pub async fn delete_by_server_id(&self, server_id: &str) -> Result<()> {
         self.database
             .delete_by_column_id("server_id", server_id)
             .await

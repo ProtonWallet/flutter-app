@@ -1,12 +1,11 @@
-use std::{future::Future, pin::Pin, sync::Arc};
+use std::sync::Arc;
 
 use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
 use log::info;
 
-use crate::BridgeError;
+use crate::{proton_wallet::common::callbacks::DartFnFuture, BridgeError};
 use tokio::sync::Mutex;
-pub type DartFnFuture<T> = Pin<Box<dyn Future<Output = T> + Send + 'static>>;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
 
 lazy_static::lazy_static! {

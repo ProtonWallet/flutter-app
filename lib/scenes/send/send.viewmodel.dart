@@ -1331,12 +1331,7 @@ class SendViewModelImpl extends SendViewModel {
         } else {
           CommonHelper.showErrorDialog(
             msg,
-            callback: () {
-              // TODO(fix): change me back
-              // if (Platform.isAndroid || Platform.isIOS) {
-              //   coordinator.showNativeReportBugs();
-              // }
-            },
+            callback: () {},
           );
         }
       } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
@@ -1349,24 +1344,14 @@ class SendViewModelImpl extends SendViewModel {
         } else {
           CommonHelper.showErrorDialog(
             msg,
-            callback: () {
-              // TODO(fix): change me back
-              // if (Platform.isAndroid || Platform.isIOS) {
-              //   coordinator.showNativeReportBugs();
-              // }
-            },
+            callback: () {},
           );
         }
       } else {
         Sentry.captureException(error, stackTrace: stacktrace);
         CommonHelper.showErrorDialog(
           msg,
-          callback: () {
-            // TODO(fix): change me back
-            // if (Platform.isAndroid || Platform.isIOS) {
-            //   coordinator.showNativeReportBugs();
-            // }
-          },
+          callback: () {},
         );
       }
     }

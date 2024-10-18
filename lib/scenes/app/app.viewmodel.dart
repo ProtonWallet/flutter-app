@@ -14,6 +14,7 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/preferences/hive.preference.impl.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
+import 'package:wallet/managers/proton.wallet.manager.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.dart';
@@ -131,6 +132,13 @@ class AppViewModelImpl extends AppViewModel {
 
     // TODO(fix): this is bad.
     dataProviderManager.walletManager = walletManager;
+
+    /// new rust proton wallet manager
+    final protonWalletManager = ProtonWalletManager(
+      apiServiceManager,
+      storage,
+    );
+    serviceManager.register(protonWalletManager);
 
     /// event loop
     serviceManager.register(EventLoop(

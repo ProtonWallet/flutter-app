@@ -3,6 +3,7 @@ pub mod errors;
 pub mod label;
 pub mod message;
 pub mod mnemonic;
+pub mod mnemonic_lagcy;
 pub mod private_key;
 pub mod public_key;
 pub mod transaction_id;
