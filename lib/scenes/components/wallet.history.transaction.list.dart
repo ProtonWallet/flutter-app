@@ -10,6 +10,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -24,7 +25,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
   final VoidCallback showMoreCallback;
   final ShowDetailCallback showDetailCallback;
   final List<String> selfEmailAddresses;
-  final String filter;
+  final TransactionFilterBy filterBy;
   final String keyWord;
   final BitcoinUnit bitcoinUnit;
   final bool displayBalance;
@@ -35,7 +36,7 @@ class WalletHistoryTransactionList extends StatefulWidget {
     required this.showMoreCallback,
     required this.showDetailCallback,
     required this.selfEmailAddresses,
-    required this.filter,
+    required this.filterBy,
     required this.keyWord,
     required this.bitcoinUnit,
     required this.displayBalance,
@@ -56,7 +57,7 @@ class WalletHistoryTransactionListState
     super.didUpdateWidget(oldWidget);
     setState(() {
       transactionsFiltered = applyHistoryTransactionFilterAndKeyword(
-        widget.filter,
+        widget.filterBy,
         widget.keyWord,
         widget.transactions,
       );
@@ -119,17 +120,17 @@ class WalletHistoryTransactionListState
   }
 }
 
-List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(String filter,
-    String keyword, List<HistoryTransaction> historyTransactions) {
+List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(
+    TransactionFilterBy filterBy,
+    String keyword,
+    List<HistoryTransaction> historyTransactions) {
   List<HistoryTransaction> newHistoryTransactions = [];
-  if (filter.isNotEmpty) {
-    if (filter == "receive") {
-      newHistoryTransactions =
-          historyTransactions.where((t) => t.amountInSATS >= 0).toList();
-    } else if (filter == "send") {
-      newHistoryTransactions =
-          historyTransactions.where((t) => t.amountInSATS < 0).toList();
-    }
+  if (filterBy == TransactionFilterBy.receive) {
+    newHistoryTransactions =
+        historyTransactions.where((t) => t.amountInSATS >= 0).toList();
+  } else if (filterBy == TransactionFilterBy.send) {
+    newHistoryTransactions =
+        historyTransactions.where((t) => t.amountInSATS < 0).toList();
   } else {
     newHistoryTransactions = historyTransactions;
   }

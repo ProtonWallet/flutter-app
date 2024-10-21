@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -22,7 +23,6 @@ import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/welcome.dialog.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -69,8 +69,7 @@ class OnboardingGuideSheet {
                                     backgroundColor:
                                         AvatarColorHelper.getBackgroundColor(1),
                                     radius: 10,
-                                    child: SvgPicture.asset(
-                                      "assets/images/icon/wallet-1.svg",
+                                    child: Assets.images.icon.wallet1.svg(
                                       fit: BoxFit.scaleDown,
                                       width: 16,
                                       height: 16,
@@ -248,14 +247,8 @@ class OnboardingGuideSheet {
                                       if (context.mounted &&
                                           firstWallet &&
                                           success) {
-                                        WelcomeDialogSheet.show(
-                                          context,
-                                          viewModel.userEmail,
-                                          viewModel
-                                              .dataProviderManager
-                                              .userSettingsDataProvider
-                                              .acceptTermsAndConditions,
-                                        );
+                                        viewModel.move(
+                                            NavID.acceptTermsConditionDialog);
                                       }
                                     }
                                   },

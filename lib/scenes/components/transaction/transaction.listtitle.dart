@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -48,13 +48,17 @@ class TransactionListTitle extends StatelessWidget {
           //   )),
           // ),
           child: Row(children: [
-            SvgPicture.asset(
-                isSend
-                    ? "assets/images/icon/send.svg"
-                    : "assets/images/icon/receive.svg",
-                fit: BoxFit.fill,
-                width: 32,
-                height: 32),
+            isSend
+                ? Assets.images.icon.send.svg(
+                    fit: BoxFit.fill,
+                    width: 32,
+                    height: 32,
+                  )
+                : Assets.images.icon.receive.svg(
+                    fit: BoxFit.fill,
+                    width: 32,
+                    height: 32,
+                  ),
             const SizedBox(
               width: 12,
             ),

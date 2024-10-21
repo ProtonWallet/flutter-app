@@ -2,7 +2,6 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -32,7 +31,6 @@ import 'package:wallet/scenes/components/transaction.history.item.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/send.invite.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -959,13 +957,12 @@ class SendView extends ViewBase<SendViewModel> {
                                 animationMilliSeconds: 2400,
                                 delayMilliSeconds: 0,
                                 child: Transform.rotate(
-                                  angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
+                                    angle: 40,
+                                    child: Assets.images.icon.star.svg(
                                       fit: BoxFit.fill,
                                       width: 16,
-                                      height: 16),
-                                ),
+                                      height: 16,
+                                    )),
                               ),
                               const SizedBox(
                                 height: 16,
@@ -975,11 +972,11 @@ class SendView extends ViewBase<SendViewModel> {
                                 delayMilliSeconds: 800,
                                 child: Transform.rotate(
                                   angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
+                                  child: Assets.images.icon.star.svg(
+                                    fit: BoxFit.fill,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -990,11 +987,11 @@ class SendView extends ViewBase<SendViewModel> {
                                 delayMilliSeconds: 300,
                                 child: Transform.rotate(
                                   angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
-                                      fit: BoxFit.fill,
-                                      width: 16,
-                                      height: 16),
+                                  child: Assets.images.icon.star.svg(
+                                    fit: BoxFit.fill,
+                                    width: 16,
+                                    height: 16,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -1005,11 +1002,11 @@ class SendView extends ViewBase<SendViewModel> {
                                 delayMilliSeconds: 150,
                                 child: Transform.rotate(
                                   angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
-                                      fit: BoxFit.fill,
-                                      width: 20,
-                                      height: 20),
+                                  child: Assets.images.icon.star.svg(
+                                    fit: BoxFit.fill,
+                                    width: 20,
+                                    height: 20,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -1020,11 +1017,11 @@ class SendView extends ViewBase<SendViewModel> {
                                 delayMilliSeconds: 700,
                                 child: Transform.rotate(
                                   angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
-                                      fit: BoxFit.fill,
-                                      width: 12,
-                                      height: 12),
+                                  child: Assets.images.icon.star.svg(
+                                    fit: BoxFit.fill,
+                                    width: 12,
+                                    height: 12,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -1035,11 +1032,11 @@ class SendView extends ViewBase<SendViewModel> {
                                 delayMilliSeconds: 500,
                                 child: Transform.rotate(
                                   angle: 40,
-                                  child: SvgPicture.asset(
-                                      "assets/images/icon/star.svg",
-                                      fit: BoxFit.fill,
-                                      width: 16,
-                                      height: 16),
+                                  child: Assets.images.icon.star.svg(
+                                    fit: BoxFit.fill,
+                                    width: 16,
+                                    height: 16,
+                                  ),
                                 ),
                               ),
                             ],
@@ -1064,36 +1061,6 @@ class SendView extends ViewBase<SendViewModel> {
                           textAlign: TextAlign.center,
                         ),
                       ]))))),
-          // Padding(
-          //     padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-          //     child: Column(children: [
-          //       ButtonV5(
-          //           onPressed: () async {
-          // TODO(check): why call end here
-          //             viewModel.coordinator.end();
-          //             Navigator.of(context).pop();
-          //           },
-          //           enable: false,
-          //           text: S.of(context).done,
-          //           width: MediaQuery.of(context).size.width,
-          //           textStyle: FontManager.body1Median(ProtonColors.white),
-          //           backgroundColor: ProtonColors.protonBlue,
-          //           borderColor: ProtonColors.protonBlue,
-          //           height: 48),
-          //       const SizedBox(
-          //         height: 8,
-          //       ),
-          //       ButtonV5(
-          //           onPressed: () async {},
-          //           enable: false,
-          //           text: S.of(context).invite_a_friend,
-          //           width: MediaQuery.of(context).size.width,
-          //           textStyle: FontManager.body1Median(ProtonColors.textNorm),
-          //           backgroundColor: ProtonColors.textWeakPressed,
-          //           borderColor: ProtonColors.textWeakPressed,
-          //           height: 48),
-          //       const SizedBox(height: 20),
-          //     ])),
         ]));
   }
 
@@ -1146,14 +1113,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      SendInviteSheet.show(
-                        context,
-                        viewModel.protonEmailAddresses
-                            .where((e) => e.id != anonymousAddress.id)
-                            .toList(),
-                        viewModel.contactsEmails,
-                        viewModel.sendExclusiveInvite,
-                      );
+                      viewModel.coordinator.showSendInvite();
                     },
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,
@@ -1196,11 +1156,11 @@ void showSelectTransactionFeeMode(
                           context, viewModel, TransactionFeeMode.highPriority),
                       trailing: viewModel.userTransactionFeeMode ==
                               TransactionFeeMode.highPriority
-                          ? SvgPicture.asset(
-                              "assets/images/icon/ic-checkmark.svg",
+                          ? Assets.images.icon.icCheckmark.svg(
                               fit: BoxFit.fill,
                               width: 20,
-                              height: 20)
+                              height: 20,
+                            )
                           : null,
                       onTap: () async {
                         final TransactionFeeMode originTransactionFeeMode =
@@ -1229,11 +1189,11 @@ void showSelectTransactionFeeMode(
                           TransactionFeeMode.medianPriority),
                       trailing: viewModel.userTransactionFeeMode ==
                               TransactionFeeMode.medianPriority
-                          ? SvgPicture.asset(
-                              "assets/images/icon/ic-checkmark.svg",
+                          ? Assets.images.icon.icCheckmark.svg(
                               fit: BoxFit.fill,
                               width: 20,
-                              height: 20)
+                              height: 20,
+                            )
                           : null,
                       onTap: () async {
                         final TransactionFeeMode originTransactionFeeMode =
@@ -1261,11 +1221,11 @@ void showSelectTransactionFeeMode(
                           size: 18),
                       trailing: viewModel.userTransactionFeeMode ==
                               TransactionFeeMode.lowPriority
-                          ? SvgPicture.asset(
-                              "assets/images/icon/ic-checkmark.svg",
+                          ? Assets.images.icon.icCheckmark.svg(
                               fit: BoxFit.fill,
                               width: 20,
-                              height: 20)
+                              height: 20,
+                            )
                           : null,
                       title: getEstimatedFeeInfo(
                           context, viewModel, TransactionFeeMode.lowPriority),

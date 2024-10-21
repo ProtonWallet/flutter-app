@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class SecureYourWalletSheet {
-  static void show(BuildContext context, HomeViewModel viewModel) {
-    HomeModalBottomSheet.show(context,
+class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
+  const SecureYourWalletView(SecureYourWalletViewModel viewModel)
+      : super(viewModel, const Key("SecureYourWalletView"));
+
+  @override
+  Widget build(BuildContext context) {
+    return PageLayoutV1(
+        showHeader: false,
+        expanded: false,
+        backgroundColor: ProtonColors.white,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(S.of(context).secure_your_wallet,
               style: FontManager.body2Median(ProtonColors.textNorm)),
@@ -22,8 +29,10 @@ class SecureYourWalletSheet {
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: ProtonColors.protonBlue, size: 14),
             onTap: () {
-              Navigator.of(context).pop(); // pop this modalBottomSheet
-              viewModel.move(NavID.recovery);
+              if (!viewModel.hadSetupRecovery) {
+                Navigator.of(context).pop();
+                viewModel.coordinator.showRecovery();
+              }
             },
           ),
           const Divider(
@@ -39,8 +48,10 @@ class SecureYourWalletSheet {
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: ProtonColors.protonBlue, size: 14),
             onTap: () {
-              Navigator.of(context).pop(); // pop this modalBottomSheet
-              viewModel.move(NavID.setupBackup);
+              if (viewModel.showWalletRecovery) {
+                Navigator.of(context).pop();
+                viewModel.coordinator.showSetupBackup();
+              }
             },
           ),
           const Divider(
@@ -56,8 +67,10 @@ class SecureYourWalletSheet {
             trailing: Icon(Icons.arrow_forward_ios_rounded,
                 color: ProtonColors.protonBlue, size: 14),
             onTap: () {
-              Navigator.of(context).pop(); // pop this modalBottomSheet
-              viewModel.move(NavID.securitySetting);
+              if (!viewModel.hadSetup2FA) {
+                Navigator.of(context).pop();
+                viewModel.coordinator.showSecuritySetting();
+              }
             },
           ),
         ]));

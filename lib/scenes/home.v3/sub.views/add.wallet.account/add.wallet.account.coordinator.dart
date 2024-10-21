@@ -1,29 +1,25 @@
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/managers/wallet/wallet.manager.dart';
-
+import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/sub.views/import.success/import.success.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
-import 'package:wallet/scenes/import/import.view.dart';
-import 'package:wallet/scenes/import/import.viewmodel.dart';
 
-class ImportCoordinator extends Coordinator {
+class AddWalletAccountCoordinator extends Coordinator {
   late ViewBase widget;
+  final FiatCurrency fiatCurrency;
+  final String walletID;
 
-  final String preInputName;
-
-  ImportCoordinator(this.preInputName);
-
-  void showImportSuccess() {
-    final view = ImportSuccessCoordinator().start();
-    showInBottomSheet(view);
-  }
+  AddWalletAccountCoordinator(
+    this.walletID,
+    this.fiatCurrency,
+  );
 
   @override
   void end() {}
@@ -42,25 +38,27 @@ class ImportCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    final dataProviderManager = serviceManager.get<DataProviderManager>();
     final userManager = serviceManager.get<UserManager>();
-    final walletManager = serviceManager.get<WalletManager>();
-    final apiService = serviceManager.get<ProtonApiServiceManager>();
-    final bloc = CreateWalletBloc(
+    final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
+
+    /// build create wallet feature bloc
+    final createWalletBloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.walletKeysProvider,
       dataProviderManager.walletPassphraseProvider,
     );
-    final viewModel = ImportViewModelImpl(
+
+    final viewModel = AddWalletAccountViewModelImpl(
+      appStateManager,
+      createWalletBloc,
+      dataProviderManager.walletDataProvider,
+      fiatCurrency,
+      walletID,
       this,
-      dataProviderManager,
-      preInputName,
-      bloc,
-      apiService.getApiService(),
-      walletManager,
     );
-    widget = ImportView(
+    widget = AddWalletAccountView(
       viewModel,
     );
     return widget;

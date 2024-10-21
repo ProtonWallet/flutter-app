@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
@@ -23,9 +23,7 @@ import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/advance.wallet.account.setting.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/bve.privacy.learn.more.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/email.integration.dropdown.v2.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -75,6 +73,35 @@ class WalletSettingSheet {
       });
     }
 
+    Widget getWalletLeadingIcon(int index) {
+      switch (index) {
+        case 1:
+          return Assets.images.icon.wallet1.svg(
+            fit: BoxFit.fill,
+            width: 16,
+            height: 16,
+          );
+        case 2:
+          return Assets.images.icon.wallet2.svg(
+            fit: BoxFit.fill,
+            width: 16,
+            height: 16,
+          );
+        case 3:
+          return Assets.images.icon.wallet3.svg(
+            fit: BoxFit.fill,
+            width: 16,
+            height: 16,
+          );
+        default:
+          return Assets.images.icon.wallet0.svg(
+            fit: BoxFit.fill,
+            width: 16,
+            height: 16,
+          );
+      }
+    }
+
     HomeModalBottomSheet.show(context,
         scrollController: scrollController,
         header: CustomHeader(
@@ -112,16 +139,12 @@ class WalletSettingSheet {
                       prefixIcon: Padding(
                           padding: const EdgeInsets.all(4),
                           child: CircleAvatar(
-                              backgroundColor:
-                                  AvatarColorHelper.getBackgroundColor(
-                                      indexOfWallet % 4),
-                              radius: 10,
-                              child: SvgPicture.asset(
-                                "assets/images/icon/wallet-${indexOfWallet % 4}.svg",
-                                fit: BoxFit.scaleDown,
-                                width: 16,
-                                height: 16,
-                              ))),
+                            backgroundColor:
+                                AvatarColorHelper.getBackgroundColor(
+                                    indexOfWallet % 4),
+                            radius: 10,
+                            child: getWalletLeadingIcon(indexOfWallet % 4),
+                          )),
                       labelText: S.of(context).name,
                       hintText: S.of(context).wallet_name_hint,
                       alwaysShowHint: true,
@@ -409,10 +432,14 @@ class WalletSettingSheet {
                                                                   Navigator.of(
                                                                           context)
                                                                       .pop();
-                                                                  AddWalletAccountSheet.show(
-                                                                      context,
-                                                                      viewModel,
-                                                                      walletMenuModel2);
+                                                                  viewModel
+                                                                          .walletIDtoAddAccount =
+                                                                      walletMenuModel
+                                                                          .walletModel
+                                                                          .walletID;
+                                                                  viewModel.move(
+                                                                      NavID
+                                                                          .addWalletAccount);
                                                                 },
                                                         ),
                                                         TextSpan(
@@ -430,9 +457,8 @@ class WalletSettingSheet {
                                                     const SizedBox(height: 4),
                                                     GestureDetector(
                                                         onTap: () {
-                                                          BvEPrivacyLearnMoreSheet
-                                                              .show(
-                                                            context,
+                                                          viewModel.coordinator
+                                                              .showBvEPrivacy(
                                                             isPrimaryAccount: CommonHelper
                                                                 .isPrimaryAccount(
                                                                     accountMenuModel

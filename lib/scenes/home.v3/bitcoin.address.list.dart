@@ -73,12 +73,6 @@ class BitcoinAddressList extends StatelessWidget {
                                     viewModel.updateBodyListStatus(
                                         BodyListStatus.transactionList);
                                   },
-                                  // onTap: () {
-                                  //   TransactionBitcoinAddressSwitchSheet.show(
-                                  //     context,
-                                  //     viewModel,
-                                  //   );
-                                  // },
                                   child: Row(children: [
                                     Text(
                                       S.of(context).addresses,
