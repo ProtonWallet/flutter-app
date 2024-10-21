@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -225,11 +224,11 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                                   child: Column(children: [
                                     ListTile(
                                       trailing: selected == widget.items[index]
-                                          ? SvgPicture.asset(
-                                              "assets/images/icon/ic-checkmark.svg",
+                                          ? Assets.images.icon.icCheckmark.svg(
                                               fit: BoxFit.fill,
                                               width: 20,
-                                              height: 20)
+                                              height: 20,
+                                            )
                                           : null,
                                       leading: widget.itemsMoreDetail != null
                                           ? CustomTooltip(

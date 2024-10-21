@@ -4,21 +4,23 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class WelcomeDialogSheet {
-  static void show(
-    BuildContext context,
-    String email,
-    VoidCallback acceptTermsCallback,
-  ) {
-    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
-        child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-      return Column(mainAxisSize: MainAxisSize.min, children: [
+class AcceptTermsConditionView extends ViewBase<AcceptTermsConditionViewModel> {
+  const AcceptTermsConditionView(AcceptTermsConditionViewModel viewModel)
+      : super(viewModel, const Key("AcceptTermsConditionView"));
+
+  @override
+  Widget build(BuildContext context) {
+    return PageLayoutV1(
+      showHeader: false,
+      backgroundColor: ProtonColors.white,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
         Align(
             alignment: Alignment.centerRight,
             child: CloseButtonV1(
@@ -50,7 +52,7 @@ class WelcomeDialogSheet {
                     ),
                   ),
                   TextSpan(
-                    text: email,
+                    text: viewModel.email,
                     style: FontManager.body2Median(
                       ProtonColors.textNorm,
                     ),
@@ -71,7 +73,9 @@ class WelcomeDialogSheet {
                   child: Column(children: [
                     ButtonV5(
                         onPressed: () async {
-                          acceptTermsCallback.call();
+                          viewModel
+                              .userSettingsDataProvider.acceptTermsAndConditions
+                              .call();
                           Navigator.of(context).pop();
                         },
                         text: S.of(context).continue_buttion,
@@ -82,7 +86,7 @@ class WelcomeDialogSheet {
                         height: 48),
                   ])),
             ]))
-      ]);
-    }));
+      ]),
+    );
   }
 }

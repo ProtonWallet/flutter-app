@@ -16,6 +16,16 @@ enum NavID {
   welcome,
   home,
 
+  // Home sub views
+  addWalletAccount,
+  acceptTermsConditionDialog,
+  earlyAccess,
+  protonProducts,
+  upgrade,
+  sendInvite,
+  secureYourWallet,
+  importSuccess,
+
   // Transactions
   send,
   sendReview,

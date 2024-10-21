@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -47,6 +46,64 @@ class SidebarWalletItems extends StatelessWidget {
     this.viewModel,
   });
 
+  Widget getWalletLeadingIcon(int index) {
+    switch (index) {
+      case 1:
+        return Assets.images.icon.wallet1.svg(
+          fit: BoxFit.fill,
+          width: 18,
+          height: 18,
+        );
+      case 2:
+        return Assets.images.icon.wallet2.svg(
+          fit: BoxFit.fill,
+          width: 18,
+          height: 18,
+        );
+      case 3:
+        return Assets.images.icon.wallet3.svg(
+          fit: BoxFit.fill,
+          width: 18,
+          height: 18,
+        );
+      default:
+        return Assets.images.icon.wallet0.svg(
+          fit: BoxFit.fill,
+          width: 18,
+          height: 18,
+        );
+    }
+  }
+
+  Widget getWalletAccountLeadingIcon(int index) {
+    switch (index) {
+      case 1:
+        return Assets.images.icon.walletAccount1.svg(
+          fit: BoxFit.fill,
+          width: 16,
+          height: 16,
+        );
+      case 2:
+        return Assets.images.icon.walletAccount2.svg(
+          fit: BoxFit.fill,
+          width: 16,
+          height: 16,
+        );
+      case 3:
+        return Assets.images.icon.walletAccount3.svg(
+          fit: BoxFit.fill,
+          width: 16,
+          height: 16,
+        );
+      default:
+        return Assets.images.icon.walletAccount0.svg(
+          fit: BoxFit.fill,
+          width: 16,
+          height: 16,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<WalletListBloc, WalletListState>(
@@ -71,12 +128,8 @@ class SidebarWalletItems extends StatelessWidget {
                               ? ProtonColors.drawerBackgroundHighlight
                               : Colors.transparent,
                           initiallyExpanded: wlMenu.hasValidPassword,
-                          leading: SvgPicture.asset(
-                            "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
-                            fit: BoxFit.fill,
-                            width: 18,
-                            height: 18,
-                          ),
+                          leading: getWalletLeadingIcon(
+                              state.walletsModel.indexOf(wlMenu) % 4),
                           title: Transform.translate(
                             offset: const Offset(-8, 0),
                             // Build title
@@ -102,12 +155,8 @@ class SidebarWalletItems extends StatelessWidget {
                           },
                           child: ListTile(
                             shape: const Border(),
-                            leading: SvgPicture.asset(
-                              "assets/images/icon/wallet-${state.walletsModel.indexOf(wlMenu) % 4}.svg",
-                              fit: BoxFit.fill,
-                              width: 18,
-                              height: 18,
-                            ),
+                            leading: getWalletLeadingIcon(
+                                state.walletsModel.indexOf(wlMenu) % 4),
                             title: Transform.translate(
                               offset: const Offset(-8, 0),
                               // Build title
@@ -254,12 +303,7 @@ class SidebarWalletItems extends StatelessWidget {
               /// set wallet icon
               leading: Container(
                 margin: const EdgeInsets.only(left: 10),
-                child: SvgPicture.asset(
-                  "assets/images/icon/wallet-account-${wlModel.currentIndex}.svg",
-                  fit: BoxFit.fill,
-                  width: 16,
-                  height: 16,
-                ),
+                child: getWalletAccountLeadingIcon(wlModel.currentIndex),
               ),
 
               /// wallet title: include name and balance

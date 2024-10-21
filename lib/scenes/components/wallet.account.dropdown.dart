@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -190,11 +190,11 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
                               child: Column(children: [
                                 ListTile(
                                   leading: selected == widget.accounts[index]
-                                      ? SvgPicture.asset(
-                                          "assets/images/icon/ic-checkmark.svg",
+                                      ? Assets.images.icon.icCheckmark.svg(
                                           fit: BoxFit.fill,
                                           width: 20,
-                                          height: 20)
+                                          height: 20,
+                                        )
                                       : const SizedBox(
                                           width: 20,
                                           height: 20,
