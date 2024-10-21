@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -156,9 +156,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 constraints: const BoxConstraints(
                   maxWidth: 200.0,
                 ),
-                child: SvgPicture.asset(
-                  'assets/images/wallet_creation/passphrase_icon.svg',
-                ),
+                child: Assets.images.walletCreation.passphraseIcon.svg(),
               )),
         ),
         Expanded(

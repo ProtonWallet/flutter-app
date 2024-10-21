@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -8,54 +7,27 @@ import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-// TODO(fix): refactor this to a sperate view and viewmodel. dont need to share the viewmodel with the home viewmodel
-class AddWalletAccountSheet {
-  static Future<void> show(BuildContext context, HomeViewModel viewModel,
-      WalletMenuModel walletMenuModel) async {
-    final int accountIndex = await viewModel
-        .dataProviderManager.walletDataProvider
-        .getNewDerivationAccountIndex(
-      walletMenuModel.walletModel.walletID,
-      appConfig.scriptTypeInfo,
-      appConfig.coinType,
-    );
-    final ValueNotifier newAccountScriptTypeValueNotifier =
-        ValueNotifier(appConfig.scriptTypeInfo);
-    final TextEditingController newAccountNameController =
-        TextEditingController(text: "Account $accountIndex");
-    final TextEditingController newAccountIndexController =
-        TextEditingController(text: accountIndex.toString());
+class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
+  const AddWalletAccountView(AddWalletAccountViewModel viewModel)
+      : super(viewModel, const Key("AddWalletAccountView"));
 
-    final FocusNode newAccountNameFocusNode = FocusNode();
-    final FocusNode newAccountIndexFocusNode = FocusNode();
-    Future.delayed(const Duration(milliseconds: 100),
-        newAccountNameFocusNode.requestFocus);
-    bool isAdding = false;
-    if (context.mounted) {
-      HomeModalBottomSheet.show(context, child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-        newAccountScriptTypeValueNotifier.addListener(() async {
-          final int accountIndex = await viewModel
-              .dataProviderManager.walletDataProvider
-              .getNewDerivationAccountIndex(
-            walletMenuModel.walletModel.walletID,
-            newAccountScriptTypeValueNotifier.value,
-            appConfig.coinType,
-          );
-          newAccountIndexController.text = accountIndex.toString();
-        });
-        return Column(mainAxisSize: MainAxisSize.min, children: [
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return PageLayoutV1(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           Align(
               alignment: Alignment.centerRight,
               child: CloseButtonV1(onPressed: () {
@@ -78,8 +50,8 @@ class AddWalletAccountSheet {
               child: TextFieldTextV2(
                 labelText: S.of(context).name,
                 maxLength: maxWalletNameSize,
-                textController: newAccountNameController,
-                myFocusNode: newAccountNameFocusNode,
+                textController: viewModel.newAccountNameController,
+                myFocusNode: viewModel.newAccountNameFocusNode,
                 validation: (String newAccountName) {
                   // bool accountNameExists = false;
                   // TODO(fix): check if accountName already used
@@ -97,18 +69,6 @@ class AddWalletAccountSheet {
                 iconColor: ProtonColors.textHint,
                 collapsedIconColor: ProtonColors.textHint,
                 children: [
-                  // DropdownButtonV2(
-                  //     labelText:
-                  //         S.of(context).setting_fiat_currency_label,
-                  //     width: MediaQuery.of(context).size.width -
-                  //         defaultPadding * 4,
-                  //     items: fiatCurrencies,
-                  //     canSearch: true,
-                  //     itemsText: fiatCurrencies
-                  //         .map((v) => FiatCurrencyHelper.getFullName(v))
-                  //         .toList(),
-                  //     valueNotifier: viewModel.fiatCurrencyNotifier),
-                  // const SizedBox(height: 12),
                   Text(S.of(context).script_type,
                       style: FontManager.body1Median(ProtonColors.textNorm)),
                   const SizedBox(height: 5),
@@ -154,7 +114,8 @@ class AddWalletAccountSheet {
                             return "TODO";
                         }
                       }).toList(),
-                      valueNotifier: newAccountScriptTypeValueNotifier,
+                      valueNotifier:
+                          viewModel.newAccountScriptTypeValueNotifier,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -185,11 +146,11 @@ class AddWalletAccountSheet {
                     child: TextFieldTextV2(
                       labelText: S.of(context).wallet_account_index,
                       maxLength: maxWalletNameSize,
-                      textController: newAccountIndexController,
+                      textController: viewModel.newAccountIndexController,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'^[0-9]\d*')),
                       ],
-                      myFocusNode: newAccountIndexFocusNode,
+                      myFocusNode: viewModel.newAccountIndexFocusNode,
                       validation: (String newAccountName) {
                         // bool accountNameExists = false;
                         // TODO(fix): check if accountName already used
@@ -219,12 +180,12 @@ class AddWalletAccountSheet {
                 child: Column(children: [
                   ButtonV6(
                       onPressed: () async {
-                        if (!isAdding) {
-                          isAdding = true;
+                        if (!viewModel.isAdding) {
+                          viewModel.isAdding = true;
                           int newAccountIndex = 0;
                           try {
-                            newAccountIndex =
-                                int.parse(newAccountIndexController.text);
+                            newAccountIndex = int.parse(
+                                viewModel.newAccountIndexController.text);
                           } catch (e) {
                             // parse newAccountIndex failed, use default one
                           }
@@ -234,11 +195,11 @@ class AddWalletAccountSheet {
                             if (!accountNameExists) {
                               final bool isSuccess =
                                   await viewModel.addWalletAccount(
-                                walletMenuModel.walletModel.id,
-                                walletMenuModel.walletModel.walletID,
-                                newAccountScriptTypeValueNotifier.value,
-                                newAccountNameController.text.isNotEmpty
-                                    ? newAccountNameController.text
+                                viewModel
+                                    .newAccountScriptTypeValueNotifier.value,
+                                viewModel.newAccountNameController.text
+                                        .isNotEmpty
+                                    ? viewModel.newAccountNameController.text
                                     : S.of(context).default_account,
                                 newAccountIndex,
                               );
@@ -251,7 +212,7 @@ class AddWalletAccountSheet {
                               }
                             }
                           }
-                          isAdding = false;
+                          viewModel.isAdding = false;
                         }
                       },
                       backgroundColor: ProtonColors.protonBlue,
@@ -273,9 +234,9 @@ class AddWalletAccountSheet {
                       height: 48),
                   SizedBoxes.box8,
                 ])),
-          ])
-        ]);
-      }));
-    }
+          ]),
+        ]),
+      );
+    });
   }
 }

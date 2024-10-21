@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -39,13 +38,9 @@ import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/add.wallet.account.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/secure.your.wallet.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/send.invite.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.menu.list.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
@@ -156,12 +151,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             horizontal: defaultPadding),
                                         child: GestureDetector(
                                           onTap: () {
-                                            SendInviteSheet.show(
-                                              context,
-                                              viewModel.protonAddresses,
-                                              viewModel.contactsEmails,
-                                              viewModel.sendExclusiveInvite,
-                                            );
+                                            viewModel.move(NavID.sendInvite);
                                           },
                                           child: Container(
                                             width: MediaQuery.of(context)
@@ -242,8 +232,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             horizontal: defaultPadding),
                                         child: GestureDetector(
                                           onTap: () {
-                                            SecureYourWalletSheet.show(
-                                                context, viewModel);
+                                            viewModel
+                                                .move(NavID.secureYourWallet);
                                           },
                                           child: Container(
                                             width: MediaQuery.of(context)
@@ -729,8 +719,11 @@ class HomeView extends ViewBase<HomeViewModel> {
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return IconButton(
-                icon: SvgPicture.asset("assets/images/icon/wallet_edit.svg",
-                    fit: BoxFit.fill, width: 40, height: 40),
+                icon: Assets.images.icon.walletEdit.svg(
+                  fit: BoxFit.fill,
+                  width: 40,
+                  height: 40,
+                ),
                 onPressed: () {
                   // TODO(fix): wallet settings could be a new View/view model. move to wallet settings.
                   /// temperay
@@ -922,8 +915,9 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
 
                                 /// add new account into wallet
                                 addAccount: (wallet) {
-                                  AddWalletAccountSheet.show(
-                                      context, viewModel, wallet);
+                                  viewModel.walletIDtoAddAccount =
+                                      wallet.walletModel.walletID;
+                                  viewModel.move(NavID.addWalletAccount);
                                 },
                                 viewModel: viewModel,
                               ),
@@ -931,9 +925,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               /// home more settings
                               HomeMoreSettings(
                                 onUpgrade: () {
-                                  UpgradeIntroSheet.show(context, () {
-                                    viewModel.move(NavID.nativeUpgrade);
-                                  });
+                                  // TODO(fix): add onUpgrade callback when we set hidePayment = false;
                                 },
                                 onDiscover: () {
                                   viewModel.move(NavID.discover);

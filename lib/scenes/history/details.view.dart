@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/assets.gen.dart';
@@ -97,16 +96,21 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 Row(
                                   children: [
                                     Container(
-                                        margin: const EdgeInsets.only(
-                                            right: 4, top: 2),
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: SvgPicture.asset(
-                                            viewModel.isSend
-                                                ? "assets/images/icon/send.svg"
-                                                : "assets/images/icon/receive.svg",
-                                            fit: BoxFit.fill,
-                                            width: 25,
-                                            height: 25)),
+                                      margin: const EdgeInsets.only(
+                                          right: 4, top: 2),
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: viewModel.isSend
+                                          ? Assets.images.icon.send.svg(
+                                              fit: BoxFit.fill,
+                                              width: 25,
+                                              height: 25,
+                                            )
+                                          : Assets.images.icon.receive.svg(
+                                              fit: BoxFit.fill,
+                                              width: 25,
+                                              height: 25,
+                                            ),
+                                    ),
                                     Text(
                                         viewModel.isSend
                                             ? S.of(context).you_sent
@@ -221,8 +225,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                             BorderRadius.circular(32.0)),
                                     child: Row(
                                       children: [
-                                        SvgPicture.asset(
-                                            "assets/images/icon/ic_note.svg",
+                                        Assets.images.icon.icNote.svg(
                                             fit: BoxFit.fill,
                                             width: 32,
                                             height: 32),
