@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -19,8 +19,6 @@ import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/import.success.dialog.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -58,17 +56,18 @@ class ImportView extends ViewBase<ImportViewModel> {
                         maxLength: maxAccountNameSize,
                         hintText: S.of(context).wallet_name_hint,
                         prefixIcon: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: CircleAvatar(
-                                backgroundColor:
-                                    AvatarColorHelper.getBackgroundColor(1),
-                                radius: 10,
-                                child: SvgPicture.asset(
-                                  "assets/images/icon/wallet-1.svg",
-                                  fit: BoxFit.scaleDown,
-                                  width: 16,
-                                  height: 16,
-                                ))),
+                          padding: const EdgeInsets.all(4),
+                          child: CircleAvatar(
+                            backgroundColor:
+                                AvatarColorHelper.getBackgroundColor(1),
+                            radius: 10,
+                            child: Assets.images.icon.wallet1.svg(
+                              fit: BoxFit.scaleDown,
+                              width: 16,
+                              height: 16,
+                            ),
+                          ),
+                        ),
                         alwaysShowHint: true,
                         textController: viewModel.nameTextController,
                         myFocusNode: viewModel.nameFocusNode,
@@ -162,16 +161,11 @@ class ImportView extends ViewBase<ImportViewModel> {
                                 if (viewModel.errorMessage.isEmpty) {
                                   if (viewModel.isFirstWallet &&
                                       !viewModel.acceptTermsAndConditions) {
-                                    ImportSuccessDialogSheet.show(
-                                        context,
-                                        viewModel
-                                            .dataProviderManager
-                                            .userSettingsDataProvider
-                                            .acceptTermsAndConditions);
+                                    viewModel.move(NavID.importSuccess);
                                   } else if (viewModel.hitWalletAccountLimit) {
-                                    UpgradeIntroSheet.show(context, () async {
-                                      await viewModel.move(NavID.nativeUpgrade);
-                                    });
+                                    viewModel.coordinator.showUpgrade(
+                                      isWalletAccountExceedLimit: false,
+                                    );
                                   }
                                 } else {
                                   CommonHelper.showErrorDialog(

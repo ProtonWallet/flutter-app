@@ -29,6 +29,14 @@ import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/bve.privacy/bve.privacy.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/proton.products/proton.products.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -85,6 +93,24 @@ class HomeCoordinator extends Coordinator {
 
   void showSetupBackup(String walletID) {
     final view = SetupBackupCoordinator(walletID).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showSecureYourWallet(
+    String walletID, {
+    required bool hadSetupRecovery,
+    required bool showWalletRecovery,
+    required bool hadSetup2FA,
+  }) {
+    final view = SecureYourWalletCoordinator(
+      walletID,
+      hadSetupRecovery: hadSetupRecovery,
+      showWalletRecovery: showWalletRecovery,
+      hadSetup2FA: hadSetup2FA,
+    ).start();
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
@@ -157,6 +183,87 @@ class HomeCoordinator extends Coordinator {
   void showTwoFactorAuthDisable() {
     final view = TwoFactorAuthDisableCoordinator().start();
     push(view);
+  }
+
+  void showAddWalletAccount(
+    String walletID,
+    FiatCurrency fiatCurrency,
+  ) {
+    final view = AddWalletAccountCoordinator(
+      walletID,
+      fiatCurrency,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showAcceptTermsAndCondition(
+    String email,
+  ) {
+    final view = AcceptTermsConditionCoordinator(
+      email,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showEarlyAccess(
+    VoidCallback logoutFunction,
+    String email,
+  ) {
+    final view = EarlyAccessCoordinator(
+      logoutFunction,
+      showProtonProducts,
+      email,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showProtonProducts() {
+    final view = ProtonProductsCoordinator().start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showSendInvite() {
+    final view = SendInviteCoordinator().start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showUpgrade({
+    required bool isWalletAccountExceedLimit,
+  }) {
+    final view = UpgradeCoordinator(
+      isWalletAccountExceedLimit: isWalletAccountExceedLimit,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showBvEPrivacy({
+    required bool isPrimaryAccount,
+  }) {
+    final view = BvEPrivacyCoordinator(
+      isPrimaryAccount: isPrimaryAccount,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void logout() {

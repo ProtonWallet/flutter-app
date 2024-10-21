@@ -179,8 +179,6 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   Future<bool> buildTransactionScript();
 
-  Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
-
   List<ContactsModel> contactsEmails = [];
 
   late FrbTxBuilder txBuilder;
@@ -1374,33 +1372,5 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return decryptedName;
-  }
-
-  @override
-  Future<bool> sendExclusiveInvite(
-      ProtonAddress protonAddress, String email) async {
-    final String emailAddressID = protonAddress.id;
-    try {
-      await inviteClient.sendNewcomerInvite(
-        inviteeEmail: email.trim(),
-        inviterAddressId: emailAddressID,
-      );
-      exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (e) {
-      appStateManager.updateStateFrom(e);
-      final errMsg = parseSampleDisplayError(e);
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(errMsg);
-      }
-      return false;
-    } catch (e) {
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(e.toString());
-      }
-      return false;
-    }
-    return true;
   }
 }

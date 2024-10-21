@@ -50,12 +50,11 @@ import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/force.upgrade.dialog.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
+import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/early.access.dart';
 import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/upgrade.intro.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 enum WalletDrawerStatus {
@@ -135,7 +134,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<bool> createWallet();
 
-  Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
+  // Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
 
   void deleteWallet(WalletModel walletModel) {
     deleteWalletBloc.add(DeleteWalletEvent(
@@ -215,6 +214,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
   String selectedTXID = "";
+  String walletIDtoAddAccount = "";
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
   bool isRemovingBvE = false;
@@ -240,12 +240,12 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   String userEmail = "";
   String displayName = "";
-  String transactionListFilterBy = "";
+  TransactionFilterBy transactionListFilterBy = TransactionFilterBy.all;
   String addressListFilterBy = "";
 
   Future<void> updatePassphrase(String key, String passphrase);
 
-  void updateTransactionListFilterBy(String filterBy);
+  void updateTransactionListFilterBy(TransactionFilterBy filterBy);
 
   void updateAddressListFilterBy(String filterBy);
 
@@ -418,36 +418,36 @@ class HomeViewModelImpl extends HomeViewModel {
     datasourceStreamSinkAdd();
   }
 
-  @override
-  Future<bool> sendExclusiveInvite(
-      ProtonAddress protonAddress, String email) async {
-    final String emailAddressID = protonAddress.id;
-    try {
-      await apiServiceManager
-          .getApiService()
-          .getInviteClient()
-          .sendNewcomerInvite(
-            inviteeEmail: email.trim(),
-            inviterAddressId: emailAddressID,
-          );
-      dataProviderManager.exclusiveInviteDataProvider.updateData();
-    } on BridgeError catch (e) {
-      appStateManager.updateStateFrom(e);
-      final errMsg = parseSampleDisplayError(e);
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(errMsg);
-      }
-      return false;
-    } catch (e) {
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(e.toString());
-      }
-      return false;
-    }
-    return true;
-  }
+  // @override
+  // Future<bool> sendExclusiveInvite(
+  //     ProtonAddress protonAddress, String email) async {
+  //   final String emailAddressID = protonAddress.id;
+  //   try {
+  //     await apiServiceManager
+  //         .getApiService()
+  //         .getInviteClient()
+  //         .sendNewcomerInvite(
+  //           inviteeEmail: email.trim(),
+  //           inviterAddressId: emailAddressID,
+  //         );
+  //     dataProviderManager.exclusiveInviteDataProvider.updateData();
+  //   } on BridgeError catch (e) {
+  //     appStateManager.updateStateFrom(e);
+  //     final errMsg = parseSampleDisplayError(e);
+  //     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+  //     if (context != null && context.mounted) {
+  //       CommonHelper.showErrorDialog(errMsg);
+  //     }
+  //     return false;
+  //   } catch (e) {
+  //     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+  //     if (context != null && context.mounted) {
+  //       CommonHelper.showErrorDialog(e.toString());
+  //     }
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   Future<void> initControllers() async {
     hideEmptyUsedAddressesController = TextEditingController();
@@ -485,11 +485,7 @@ class HomeViewModelImpl extends HomeViewModel {
         );
         appStateManager.loadingSuccess(LoadingTask.eligible);
         if (eligible == 0) {
-          EarlyAccessSheet.show(
-            Coordinator.rootNavigatorKey.currentContext!,
-            userEmail,
-            logout,
-          );
+          move(NavID.earlyAccess);
           eventLoop.stop();
           return false;
         } else {
@@ -985,6 +981,26 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showRecovery();
       case NavID.settings:
         coordinator.showSettings();
+      case NavID.addWalletAccount:
+        coordinator.showAddWalletAccount(
+          walletIDtoAddAccount,
+          fiatCurrencyNotifier.value,
+        );
+      case NavID.acceptTermsConditionDialog:
+        coordinator.showAcceptTermsAndCondition(userEmail);
+      case NavID.earlyAccess:
+        coordinator.showEarlyAccess(logout, userEmail);
+      case NavID.protonProducts:
+        coordinator.showProtonProducts();
+      case NavID.sendInvite:
+        coordinator.showSendInvite();
+      case NavID.secureYourWallet:
+        coordinator.showSecureYourWallet(
+          selectedWallet?.walletID ?? "",
+          hadSetupRecovery: hadSetupRecovery,
+          showWalletRecovery: showWalletRecovery,
+          hadSetup2FA: hadSetup2FA,
+        );
       default:
         break;
     }
@@ -1021,11 +1037,7 @@ class HomeViewModelImpl extends HomeViewModel {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
-          UpgradeIntroSheet.show(
-            context,
-            () async {
-              await move(NavID.nativeUpgrade);
-            },
+          coordinator.showUpgrade(
             isWalletAccountExceedLimit: true,
           );
         }
@@ -1218,9 +1230,9 @@ class HomeViewModelImpl extends HomeViewModel {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
-          UpgradeIntroSheet.show(context, () async {
-            await move(NavID.nativeUpgrade);
-          });
+          coordinator.showUpgrade(
+            isWalletAccountExceedLimit: false,
+          );
         }
         return false;
       }
@@ -1244,7 +1256,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  void updateTransactionListFilterBy(String filterBy) {
+  void updateTransactionListFilterBy(TransactionFilterBy filterBy) {
     transactionListFilterBy = filterBy;
     datasourceStreamSinkAdd();
   }

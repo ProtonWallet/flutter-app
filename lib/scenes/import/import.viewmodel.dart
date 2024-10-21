@@ -239,6 +239,8 @@ class ImportViewModelImpl extends ImportViewModel {
   @override
   Future<void> move(NavID to) async {
     switch (to) {
+      case NavID.importSuccess:
+        coordinator.showImportSuccess();
       case NavID.nativeUpgrade:
       default:
         break;

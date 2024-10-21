@@ -5,13 +5,14 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
+import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/custom.loading.with.child.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
+import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/transaction.filter.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -57,12 +58,6 @@ class TransactionList extends StatelessWidget {
                               viewModel.updateBodyListStatus(
                                   BodyListStatus.bitcoinAddressList);
                             },
-                            // onTap: () {
-                            //   TransactionBitcoinAddressSwitchSheet.show(
-                            //     context,
-                            //     viewModel,
-                            //   );
-                            // },
                             child: Row(children: [
                               Text(
                                 S.of(context).transactions,
@@ -70,11 +65,6 @@ class TransactionList extends StatelessWidget {
                                     ProtonColors.textNorm),
                                 textAlign: TextAlign.left,
                               ),
-                              // Icon(
-                              //   Icons.keyboard_arrow_down_outlined,
-                              //   size: 18,
-                              //   color: ProtonColors.textWeak,
-                              // ),
                             ]),
                           ),
                           Row(children: [
@@ -115,8 +105,13 @@ class TransactionList extends StatelessWidget {
                             if (state.historyTransaction.isNotEmpty)
                               GestureDetector(
                                 onTap: () {
-                                  TransactionFilterSheet.show(
-                                      context, viewModel);
+                                  HomeModalBottomSheet.show(context,
+                                      child: TransactionFilterView(
+                                        currentFilterBy:
+                                            viewModel.transactionListFilterBy,
+                                        updateFilterBy: viewModel
+                                            .updateTransactionListFilterBy,
+                                      ));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -154,7 +149,7 @@ class TransactionList extends StatelessWidget {
                 viewModel.move(NavID.historyDetails);
               }),
               selfEmailAddresses: const [],
-              filter: viewModel.transactionListFilterBy,
+              filterBy: viewModel.transactionListFilterBy,
               keyWord: viewModel.transactionSearchController.text,
               bitcoinUnit: viewModel.bitcoinUnit,
               displayBalance: viewModel.displayBalance,
