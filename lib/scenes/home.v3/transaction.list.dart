@@ -55,8 +55,9 @@ class TransactionList extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onLongPress: () {
-                              viewModel.updateBodyListStatus(
-                                  BodyListStatus.bitcoinAddressList);
+                              // TODO(fix): add address list after rust migrate
+                              // viewModel.updateBodyListStatus(
+                              //     BodyListStatus.bitcoinAddressList);
                             },
                             child: Row(children: [
                               Text(

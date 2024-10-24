@@ -1,29 +1,351 @@
-// import 'dart:async';
-//
-// import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-// import 'package:wallet/scenes/core/viewmodel.dart';
-// import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
-//
-// abstract class WalletSettingViewModel extends ViewModel<WalletSettingCoordinator> {
-//   final bool isPrimaryAccount;
-//
-//   WalletSettingViewModel(
-//       super.coordinator, {
-//         required this.isPrimaryAccount,
-//       });
-// }
-//
-// class WalletSettingViewModelImpl extends WalletSettingViewModel {
-//   WalletSettingViewModelImpl(
-//       super.coordinator, {
-//         required super.isPrimaryAccount,
-//       });
-//
-//   @override
-//   Future<void> loadData() async {
-//     sinkAddSafe();
-//   }
-//
-//   @override
-//   Future<void> move(NavID to) async {}
-// }
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
+import 'package:sentry/sentry.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
+import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
+import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
+import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/rust/proton_api/wallet_account.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
+import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
+
+class AccountSettingInfo {
+  bool bveEnabled;
+  final TextEditingController nameController;
+  final ValueNotifier fiatCurrencyNotifier;
+  final FocusNode nameFocusNode;
+
+  AccountSettingInfo(
+    this.nameController,
+    this.fiatCurrencyNotifier,
+    this.nameFocusNode, {
+    required this.bveEnabled,
+  });
+}
+
+abstract class WalletSettingViewModel
+    extends ViewModel<WalletSettingCoordinator> {
+  final WalletManager walletManager;
+  final AppStateManager appStateManager;
+  final DataProviderManager dataProviderManager;
+  final WalletListBloc walletListBloc;
+  final WalletBalanceBloc walletBalanceBloc;
+  final WalletNameBloc walletNameBloc;
+  final WalletMenuModel walletMenuModel;
+
+  late ScrollController scrollController;
+  late TextEditingController walletNameController;
+  late FocusNode walletNameFocusNode;
+
+  List<AccountModel> userAccounts = [];
+  List<ProtonAddress> userAddresses = [];
+  Map<String, AccountSettingInfo> accountID2SettingInfo = {};
+
+  ValueNotifier<BitcoinUnit> bitcoinUnitNotifier =
+      ValueNotifier(BitcoinUnit.btc);
+
+  String errorMessage = "";
+  bool isRemovingBvE = false;
+  bool initialized = false;
+
+  void updateRemovingBvE(isRemoving);
+
+  void updateBvEEnabledStatus(
+    String accountID,
+    enabled,
+  );
+
+  Future<void> updateWalletName(
+    String newName,
+  );
+
+  Future<void> updateAccountName(
+    AccountModel accountModel,
+    String newName,
+  );
+
+  Future<void> updateWalletAccountFiatCurrency(
+    AccountModel accountModel,
+    FiatCurrency newFiatCurrency,
+  );
+
+  Future<void> removeEmailAddressFromWalletAccount(
+    AccountModel accountModel,
+    String serverAddressID,
+  );
+
+  AccountSettingInfo getAccountSettingInfoByAccountID(
+    accountID,
+  );
+
+  ProtonAddress? getProtonAddressByID(
+    String addressID,
+  );
+
+  WalletSettingViewModel(
+    super.coordinator,
+    this.walletManager,
+    this.appStateManager,
+    this.dataProviderManager,
+    this.walletListBloc,
+    this.walletBalanceBloc,
+    this.walletNameBloc,
+    this.walletMenuModel,
+  );
+}
+
+class WalletSettingViewModelImpl extends WalletSettingViewModel {
+  WalletSettingViewModelImpl(
+    super.coordinator,
+    super.walletManager,
+    super.appStateManager,
+    super.dataProviderManager,
+    super.walletListBloc,
+    super.walletBalanceBloc,
+    super.walletNameBloc,
+    super.walletMenuModel,
+  );
+
+  @override
+  Future<void> updateWalletName(String newName) async {
+    try {
+      await walletNameBloc.updateWalletName(
+          walletMenuModel.walletModel, newName);
+      walletListBloc.updateWalletName(walletMenuModel.walletModel, newName);
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("updateWalletName error: $e, stacktrace: $stacktrace");
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog("updateWalletName failed: $errorMessage");
+      errorMessage = "";
+    }
+  }
+
+  @override
+  Future<void> updateAccountName(
+      AccountModel accountModel, String newName) async {
+    try {
+      await walletNameBloc.updateAccountLabel(
+        walletMenuModel.walletModel,
+        accountModel,
+        newName,
+      );
+      walletListBloc.updateAccountName(
+        walletMenuModel.walletModel,
+        accountModel,
+        newName,
+      );
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("updateAccountName error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog("updateAccountName failed: $errorMessage");
+      errorMessage = "";
+    }
+  }
+
+  @override
+  Future<void> updateWalletAccountFiatCurrency(
+    AccountModel accountModel,
+    FiatCurrency newFiatCurrency,
+  ) async {
+    walletListBloc.updateAccountFiat(walletMenuModel.walletModel, accountModel,
+        newFiatCurrency.name.toUpperCase());
+    walletBalanceBloc.handleTransactionUpdate();
+  }
+
+  @override
+  Future<void> loadData() async {
+    /// init wallet controllers / notifiers / focusNodes
+    scrollController = ScrollController();
+    walletNameController =
+        TextEditingController(text: walletMenuModel.walletName);
+    walletNameFocusNode = FocusNode();
+
+    /// init account setting info
+    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+
+    for (final accountMenuModel in walletMenuModel.accounts) {
+      final bveEnabled = accountMenuModel.emailIds.isNotEmpty;
+      final nameController =
+          TextEditingController(text: accountMenuModel.label);
+      final fiatCurrencyNotifier =
+          ValueNotifier(accountMenuModel.accountModel.getFiatCurrency());
+      fiatCurrencyNotifier.addListener(() {
+        updateWalletAccountFiatCurrency(
+            accountMenuModel.accountModel, fiatCurrencyNotifier.value);
+      });
+      final nameFocusNode = FocusNode();
+      nameFocusNode.addListener(() {
+        if (nameFocusNode.hasFocus && context != null) {
+          scrollController.jumpTo(scrollController.offset +
+              MediaQuery.of(context).viewInsets.bottom);
+        }
+      });
+
+      final accountSettingInfo = AccountSettingInfo(
+        nameController,
+        fiatCurrencyNotifier,
+        nameFocusNode,
+        bveEnabled: bveEnabled,
+      );
+
+      accountID2SettingInfo[accountMenuModel.accountModel.accountID] =
+          accountSettingInfo;
+    }
+
+    /// init bitcoinUnitNotifier
+    bitcoinUnitNotifier.addListener(() async {
+      updateBitcoinUnit(bitcoinUnitNotifier.value);
+    });
+
+    /// load other stuffs
+    await loadProtonAddresses();
+    await loadUserSettings();
+
+    initialized = true;
+    sinkAddSafe();
+  }
+
+  Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
+    if (appStateManager.isHomeInitialed) {
+      final userSettings = await proton_api.bitcoinUnit(symbol: symbol);
+      await dataProviderManager.userSettingsDataProvider
+          .insertUpdate(userSettings);
+      dataProviderManager.userSettingsDataProvider.updateBitcoinUnit(symbol);
+      loadUserSettings();
+    }
+  }
+
+  Future<void> loadUserSettings() async {
+    final settings =
+        await dataProviderManager.userSettingsDataProvider.getSettings();
+    if (settings != null) {
+      bitcoinUnitNotifier.value = settings.bitcoinUnit.toBitcoinUnit();
+    }
+    sinkAddSafe();
+  }
+
+  Future<void> loadProtonAddresses() async {
+    try {
+      userAddresses = await dataProviderManager.protonEmailAddressProvider
+          .getProtonEmailAddresses();
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
+
+  @override
+  Future<void> move(NavID to) async {
+    switch (to) {
+      case NavID.addWalletAccount:
+        coordinator.showAddWalletAccount();
+      case NavID.setupBackup:
+        coordinator.showSetupBackup();
+      default:
+        break;
+    }
+  }
+
+  @override
+  AccountSettingInfo getAccountSettingInfoByAccountID(accountID) {
+    try {
+      return accountID2SettingInfo[accountID]!;
+    } catch (e, stacktrace) {
+      logger.e("Event Loop error: $e stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+      return AccountSettingInfo(
+        TextEditingController(),
+        ValueNotifier(FiatCurrency.usd),
+        FocusNode(),
+        bveEnabled: false,
+      );
+    }
+  }
+
+  @override
+  void updateBvEEnabledStatus(String accountID, enabled) {
+    final accountSettingInfo = getAccountSettingInfoByAccountID(accountID);
+    accountSettingInfo.bveEnabled = enabled;
+    accountID2SettingInfo[accountID] = accountSettingInfo;
+    sinkAddSafe();
+  }
+
+  @override
+  Future<void> removeEmailAddressFromWalletAccount(
+    AccountModel accountModel,
+    String serverAddressID,
+  ) async {
+    try {
+      final ApiWalletAccount walletAccount =
+          await proton_api.removeEmailAddress(
+        walletId: walletMenuModel.walletModel.walletID,
+        walletAccountId: accountModel.accountID,
+        addressId: serverAddressID,
+      );
+      bool deleted = true;
+      for (ApiEmailAddress emailAddress in walletAccount.addresses) {
+        if (emailAddress.id == serverAddressID) {
+          deleted = false;
+        }
+      }
+      if (deleted) {
+        await walletManager.deleteAddress(serverAddressID);
+        walletListBloc.removeEmailIntegration(
+            walletMenuModel.walletModel, accountModel, serverAddressID);
+      }
+    } on BridgeError catch (e, stacktrace) {
+      appStateManager.updateStateFrom(e);
+      errorMessage = parseSampleDisplayError(e);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    if (errorMessage.isNotEmpty) {
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+    }
+    sinkAddSafe();
+  }
+
+  @override
+  ProtonAddress? getProtonAddressByID(String addressID) {
+    for (ProtonAddress protonAddress in userAddresses) {
+      if (protonAddress.id == addressID) {
+        return protonAddress;
+      }
+    }
+    return defaultProtonAddress;
+  }
+
+  @override
+  void updateRemovingBvE(isRemoving) {
+    isRemovingBvE = isRemoving;
+    sinkAddSafe();
+  }
+}

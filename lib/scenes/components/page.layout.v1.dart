@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/components/back.button.v1.dart';
+import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class PageLayoutV1 extends StatelessWidget {
@@ -12,6 +13,8 @@ class PageLayoutV1 extends StatelessWidget {
   final double? borderRadius;
   final Color? backgroundColor;
   final bool showHeader;
+  final bool initialized;
+  final ScrollController? scrollController;
 
   /// we will expanded the child to match parent height if set it to true
   final bool expanded;
@@ -24,8 +27,10 @@ class PageLayoutV1 extends StatelessWidget {
     this.title,
     this.borderRadius,
     this.backgroundColor,
+    this.scrollController,
     this.showHeader = true,
     this.expanded = true,
+    this.initialized = true,
   });
 
   @override
@@ -50,11 +55,22 @@ class PageLayoutV1 extends StatelessWidget {
                         Navigator.of(context).pop();
                       },
                     ),
-              expanded
-                  ? Expanded(
-                      child: buildMain(context),
-                    )
-                  : buildMain(context),
+              if (!initialized)
+                const Align(
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CustomLoading(
+                      size: 30,
+                    ),
+                  ),
+                ),
+              if (initialized)
+                expanded
+                    ? Expanded(
+                        child: buildMain(context),
+                      )
+                    : buildMain(context),
               if (bottomWidget != null) bottomWidget!,
             ],
           ),
@@ -65,6 +81,7 @@ class PageLayoutV1 extends StatelessWidget {
 
   Widget buildMain(BuildContext context) {
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: defaultPadding),
         if (title != null)

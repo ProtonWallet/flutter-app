@@ -191,50 +191,17 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               }
             }
 
-            final balance = await walletManager.getWalletAccountBalance(
-              wallet.wallet.walletID,
-              account.accountID,
-            );
-
-            accMenuModel.balance = balance;
-            double estimateValue = 0.0;
             final settings = await userSettingsDataProvider.getSettings();
             final fiatCurrency = account.getFiatCurrency();
-
-            /// get exchange rate call. if failed we should show btc but balance.
-            ProtonExchangeRate? exchangeRate;
-
-            try {
-              exchangeRate = await ExchangeRateService.getExchangeRate(
-                fiatCurrency,
-              );
-            } catch (e, stacktrace) {
-              logger.e(
-                "WalletListBloc exchange rate error: $e, stacktrace: $stacktrace",
-              );
-            }
-
-            if (exchangeRate != null) {
-              estimateValue = ExchangeCalculator.getNotionalInFiatCurrency(
-                exchangeRate,
-                balance,
-              );
-            }
 
             /// setup btcBalance
             accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
               (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-              balance,
+              0, // default 0 balance
             );
 
-            /// if rate is null show currencyBalance as ----
             final fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
-            if (exchangeRate != null || balance == 0) {
-              accMenuModel.currencyBalance =
-                  "$fiatSign${estimateValue.toStringAsFixed(defaultDisplayDigits)}";
-            } else {
-              accMenuModel.currencyBalance = "$fiatSign ----";
-            }
+            accMenuModel.currencyBalance = "$fiatSign ----";
 
             accMenuModel.emailIds = await WalletManager.getAccountAddressIDs(
               account.accountID,
@@ -342,6 +309,14 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<UpdateAccountFiat>((event, emit) async {
+      /// update local db data
+      walletsDataProvider.updateWalletAccountFiatCurrency(
+        event.walletModel.walletID,
+        event.accountModel.accountID,
+        event.fiatName.toFiatCurrency(),
+      );
+
+      /// update cached data
       for (WalletMenuModel walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           if (walletModel.isSelected) {
@@ -525,6 +500,16 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   void updateAccountFiat(
       WalletModel wallet, AccountModel acct, String fiatName) {
     add(UpdateAccountFiat(wallet, acct, fiatName));
+  }
+
+  List<String> getUsedEmailIDs() {
+    List<String> usedEmailIDs = [];
+    for (final walletMenuModel in state.walletsModel) {
+      for (final accountMenuModel in walletMenuModel.accounts) {
+        usedEmailIDs += accountMenuModel.emailIds;
+      }
+    }
+    return usedEmailIDs;
   }
 
   Future<bool> _hasValidPassphrase(

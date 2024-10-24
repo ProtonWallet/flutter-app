@@ -9,7 +9,7 @@ import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -27,16 +27,12 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
+        headerWidget: CustomHeader(
+          title: S.of(context).add_wallet_account,
+          buttonDirection: AxisDirection.right,
+        ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: CloseButtonV1(onPressed: () {
-                Navigator.of(context).pop();
-              })),
           Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(S.of(context).add_wallet_account,
-                style: FontManager.body1Median(ProtonColors.textNorm)),
-            const SizedBox(height: 5),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(

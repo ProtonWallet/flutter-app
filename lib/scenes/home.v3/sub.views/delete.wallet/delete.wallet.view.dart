@@ -5,41 +5,36 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.viewmodel.dart';
 import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class DeleteWalletSheet {
-  static void show(
-    BuildContext context,
-    HomeViewModel viewModel,
-    WalletMenuModel walletMenuModel, {
-    required bool hasBalance,
-    bool isInvalidWallet = false,
-    VoidCallback? onBackup,
-  }) {
-    bool isDeleting = false;
-    HomeModalBottomSheet.show(
-      context,
+class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
+  const DeleteWalletView(DeleteWalletViewModel viewModel)
+      : super(viewModel, const Key("DeleteWalletView"));
+
+  @override
+  Widget build(BuildContext context) {
+    return PageLayoutV1(
+      expanded: MediaQuery.of(context).size.height < 500,
+      showHeader: false,
       child: BlocProvider.value(
         value: viewModel.deleteWalletBloc,
         child: BlocListener<DeleteWalletBloc, DeleteWalletState>(
           listener: (context, state) {
             if (state.deleted) {
               if (context.mounted) {
-                if (!isInvalidWallet) {
-                  Navigator.of(context).pop(); // pop up this bottomSheet
-                  Navigator.of(context)
-                      .pop(); // pop up wallet setting bottomSheet
-                } else {
-                  Navigator.of(context).pop(); // pop up this bottomSheet
+                Navigator.of(context).pop();
+                if (!viewModel.triggerFromSidebar) {
+                  /// sidebar only need popup once
+                  Navigator.of(context).pop();
                 }
                 CommonHelper.showSnackbar(
                     context, S.of(context).wallet_deleted);
@@ -54,7 +49,6 @@ class DeleteWalletSheet {
                 twofa,
               ) async {
                 viewModel.deleteWalletAuth(
-                  walletMenuModel.walletModel,
                   password,
                   twofa,
                 );
@@ -87,12 +81,12 @@ class DeleteWalletSheet {
                       children: [
                         Text(
                             S.of(context).confirm_to_delete_wallet(
-                                walletMenuModel.walletName),
+                                viewModel.walletMenuModel.walletName),
                             style: FontManager.titleHeadline(
                                 ProtonColors.textNorm),
                             textAlign: TextAlign.center),
                         const SizedBox(height: 10),
-                        if (hasBalance)
+                        if (viewModel.hasBalance)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: AlertCustom(
@@ -125,7 +119,7 @@ class DeleteWalletSheet {
                           return ButtonV5(
                             onPressed: () async {
                               Navigator.of(context).pop();
-                              onBackup?.call();
+                              viewModel.coordinator.showSetupBackup();
                             },
                             enable: !loading,
                             text: S.of(context).backup_wallet,
@@ -145,12 +139,10 @@ class DeleteWalletSheet {
                           builder: (context, loading) {
                             return ButtonV6(
                               onPressed: () async {
-                                if (!loading || !isDeleting) {
-                                  isDeleting = true;
-                                  viewModel.deleteWallet(
-                                    walletMenuModel.walletModel,
-                                  );
-                                  isDeleting = false;
+                                if (!loading || !viewModel.isDeleting) {
+                                  viewModel.isDeleting = true;
+                                  viewModel.deleteWallet();
+                                  viewModel.isDeleting = false;
                                 }
                               },
                               isLoading: loading,

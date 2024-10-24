@@ -1,3 +1,4 @@
+import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/models/account.dao.impl.dart';
@@ -9,6 +10,7 @@ class WalletNameProvider extends DataProvider {
   final WalletKeysProvider walletKeysProvider;
   final AccountDao accountDao;
   final WalletDao walletDao;
+
   WalletNameProvider(
     this.walletKeysProvider,
     this.accountDao,
@@ -27,11 +29,15 @@ class WalletNameProvider extends DataProvider {
   }
 
   Future<String> getNameWithID(String walletID) async {
-    String name = "Default Name";
+    String encryptedName = "";
     final WalletModel walletRecord = await walletDao.findByServerID(
       walletID,
     );
-    name = walletRecord.name;
+    encryptedName = walletRecord.name;
+    final secretKey = await walletKeysProvider.getWalletSecretKey(
+      walletID,
+    );
+    final name = await WalletKeyHelper.decrypt(secretKey, encryptedName);
     return name;
   }
 
