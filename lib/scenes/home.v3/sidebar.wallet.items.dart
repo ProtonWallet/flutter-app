@@ -394,15 +394,18 @@ class SidebarWalletItems extends StatelessWidget {
     Color textColor, {
     required bool displayBalance,
   }) {
-    if (displayBalance) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        Text(accountModel.currencyBalance,
-            style: FontManager.captionSemiBold(textColor)),
-        Text(accountModel.btcBalance,
-            style: FontManager.overlineRegular(ProtonColors.textHint))
-      ]);
-    } else {
-      return const SizedBox();
-    }
+    /// to improve fresh start loading performance, we didn't load account balance
+    /// we hide the sidebar account balance until we fix the loading performance issue
+    return const SizedBox();
+    // if (displayBalance) {
+    //   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+    //     Text(accountModel.currencyBalance,
+    //         style: FontManager.captionSemiBold(textColor)),
+    //     Text(accountModel.btcBalance,
+    //         style: FontManager.overlineRegular(ProtonColors.textHint))
+    //   ]);
+    // } else {
+    //   return const SizedBox();
+    // }
   }
 }

@@ -333,7 +333,6 @@ class WalletTransactionBloc
       currentAccountModel = null;
       lastEvent = event;
 
-      List<BitcoinAddressDetail> bitcoinAddresses = [];
       final WalletModel walletModel = event.walletMenuModel.walletModel;
       final SecretKey? secretKey = await getSecretKey(
         event.walletMenuModel.walletModel,
@@ -349,32 +348,7 @@ class WalletTransactionBloc
                 walletModel, accountMenuModel, secretKey);
 
         newHistoryTransactions += historyTransactionsInAccount;
-        final LocalBitcoinAddressData localBitcoinAddressData =
-            await localBitcoinAddressDataProvider.getDataByWalletAccount(
-          walletModel,
-          accountMenuModel.accountModel,
-        );
 
-        /// check every bitcoinAddress if it exists in transactions
-        final Map<String, List<String>> bitcoinAddress2TXIDMap = {};
-        for (HistoryTransaction historyTransaction
-            in historyTransactionsInAccount) {
-          for (String addr in historyTransaction.bitcoinAddresses) {
-            if (!bitcoinAddress2TXIDMap.containsKey(addr)) {
-              bitcoinAddress2TXIDMap[addr] = [];
-            }
-            bitcoinAddress2TXIDMap[addr]?.add(historyTransaction.txID);
-          }
-        }
-
-        for (BitcoinAddressDetail bitcoinAddressDetail
-            in localBitcoinAddressData.bitcoinAddresses) {
-          bitcoinAddressDetail.txIDs = bitcoinAddress2TXIDMap[
-                  bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddress] ??
-              [];
-        }
-
-        bitcoinAddresses += localBitcoinAddressData.bitcoinAddresses;
         if (currentAccountModel != null ||
             currentWalletModel!.walletID != walletModel.walletID) {
           /// skip process if user change to other wallet or wallet account
@@ -395,11 +369,24 @@ class WalletTransactionBloc
         return;
       }
 
-      if (event.lagSync) {
+      bool anyAccountFullSynced = false;
+      for (AccountMenuModel accountMenuModel
+          in event.walletMenuModel.accounts) {
+        final hasFullSynced = await bdkTransactionDataProvider.hasFullSynced(
+          walletModel,
+          accountMenuModel.accountModel,
+        );
+        if (hasFullSynced) {
+          anyAccountFullSynced = true;
+          break;
+        }
+      }
+
+      if (event.lagSync && anyAccountFullSynced) {
         emit(state.copyWith(
           isSyncing: isSyncing,
           historyTransaction: historyTransaction,
-          bitcoinAddresses: bitcoinAddresses,
+          bitcoinAddresses: [],
         ));
         await Future.delayed(const Duration(seconds: 5));
       }
@@ -427,7 +414,7 @@ class WalletTransactionBloc
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
-        bitcoinAddresses: bitcoinAddresses,
+        bitcoinAddresses: [],
       ));
     });
 
@@ -466,30 +453,6 @@ class WalletTransactionBloc
           applyHistoryTransactionFilterAndKeyword(
               filter, keyWord, newHistoryTransactions);
 
-      final LocalBitcoinAddressData localBitcoinAddressData =
-          await localBitcoinAddressDataProvider.getDataByWalletAccount(
-        walletModel,
-        event.accountMenuModel.accountModel,
-      );
-
-      /// check every bitcoinAddress if it exists in transactions
-      final Map<String, List<String>> bitcoinAddress2TXIDMap = {};
-      for (HistoryTransaction historyTransaction
-          in historyTransactionsInAccount) {
-        for (String addr in historyTransaction.bitcoinAddresses) {
-          if (!bitcoinAddress2TXIDMap.containsKey(addr)) {
-            bitcoinAddress2TXIDMap[addr] = [];
-          }
-          bitcoinAddress2TXIDMap[addr]?.add(historyTransaction.txID);
-        }
-      }
-
-      for (BitcoinAddressDetail bitcoinAddressDetail
-          in localBitcoinAddressData.bitcoinAddresses) {
-        bitcoinAddressDetail.txIDs = bitcoinAddress2TXIDMap[
-                bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddress] ??
-            [];
-      }
       if (currentAccountModel != null) {
         if (currentAccountModel!.accountID !=
             event.accountMenuModel.accountModel.accountID) {
@@ -516,7 +479,7 @@ class WalletTransactionBloc
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
-        bitcoinAddresses: localBitcoinAddressData.bitcoinAddresses,
+        bitcoinAddresses: [],
       ));
     });
 
@@ -733,45 +696,47 @@ class WalletTransactionBloc
       final String txID = transactionDetail.txid;
       final List<FrbDetailledTxOutput> output = transactionDetail.outputs;
       final List<String> recipientBitcoinAddresses = [];
+
       for (FrbDetailledTxOutput txOut in output) {
         final String? bitcoinAddress = txOut.address;
         if (bitcoinAddress == null) {
           continue;
         }
         bitcoinAddressesInTransaction.add(bitcoinAddress);
-        BitcoinAddressModel? bitcoinAddressModel =
-            await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
-                bitcoinAddress, accountModel.accountID);
         final bool isMineAddress = await account?.isMine(
                 address: FrbAddress(
                     address: bitcoinAddress,
                     network: appConfig.coinType.network)) ??
             false;
-        if (bitcoinAddressModel != null) {
-          bitcoinAddressModel.used = 1;
-          await localBitcoinAddressDataProvider
-              .insertOrUpdate(bitcoinAddressModel);
-          localBitcoinAddressDataProvider
-              .updateBitcoinAddress2TransactionDataMap(bitcoinAddress, txID);
-        } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
-          bitcoinAddressModel = BitcoinAddressModel(
-            id: null,
-            walletID: 0,
-            // deprecated
-            accountID: 0,
-            // deprecated
-            serverWalletID: walletModel.walletID,
-            serverAccountID: accountModel.accountID,
-            bitcoinAddress: bitcoinAddress,
-            bitcoinAddressIndex: selfBitcoinAddressInfo[bitcoinAddress]!.index,
-            inEmailIntegrationPool: 0,
-            used: 1,
-          );
-          await localBitcoinAddressDataProvider
-              .insertOrUpdate(bitcoinAddressModel);
-          localBitcoinAddressDataProvider
-              .updateBitcoinAddress2TransactionDataMap(bitcoinAddress, txID);
-        } else if (!isMineAddress) {
+        if (isMineAddress) {
+          BitcoinAddressModel? bitcoinAddressModel =
+              await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
+                  bitcoinAddress, accountModel.accountID);
+          if (bitcoinAddressModel != null) {
+            if (bitcoinAddressModel.used != 1) {
+              bitcoinAddressModel.used = 1;
+              await localBitcoinAddressDataProvider
+                  .insertOrUpdate(bitcoinAddressModel);
+            }
+          } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
+            bitcoinAddressModel = BitcoinAddressModel(
+              id: null,
+              walletID: 0,
+              // deprecated
+              accountID: 0,
+              // deprecated
+              serverWalletID: walletModel.walletID,
+              serverAccountID: accountModel.accountID,
+              bitcoinAddress: bitcoinAddress,
+              bitcoinAddressIndex:
+                  selfBitcoinAddressInfo[bitcoinAddress]!.index,
+              inEmailIntegrationPool: 0,
+              used: 1,
+            );
+            await localBitcoinAddressDataProvider
+                .insertOrUpdate(bitcoinAddressModel);
+          }
+        } else {
           recipientBitcoinAddresses.add(bitcoinAddress);
         }
       }

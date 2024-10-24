@@ -42,12 +42,14 @@ abstract class Coordinator implements ViewNavigator {
     Color? backgroundColor,
     bool fullScreen = false,
     bool enableDrag = true,
+    bool isDismissible = true,
   }) {
     Future.delayed(Duration.zero, () {
       if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
         _showMobileBottomSheet(
           view,
           enableDrag,
+          isDismissible: isDismissible,
           backgroundColor: backgroundColor,
           fullScreen: fullScreen,
         );
@@ -56,6 +58,7 @@ abstract class Coordinator implements ViewNavigator {
         _showDesktopBottomSheet(
           view,
           enableDrag,
+          isDismissible: isDismissible,
           backgroundColor: backgroundColor,
         );
       }
@@ -67,11 +70,13 @@ abstract class Coordinator implements ViewNavigator {
     bool enableDrag, {
     Color? backgroundColor,
     bool fullScreen = false,
+    bool isDismissible = true,
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
         enableDrag: enableDrag,
+        isDismissible: isDismissible,
         backgroundColor: Colors.transparent,
         constraints: BoxConstraints(
           minWidth: MediaQuery.of(context).size.width,
@@ -89,11 +94,13 @@ abstract class Coordinator implements ViewNavigator {
     Widget view,
     bool enableDrag, {
     Color? backgroundColor,
+    bool isDismissible = true,
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
         context: context,
         enableDrag: enableDrag,
+        isDismissible: isDismissible,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         constraints: BoxConstraints(
