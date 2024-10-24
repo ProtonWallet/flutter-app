@@ -670,9 +670,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
     // TODO(fix): pass wallet server id and wallet account server id
     switch (to) {
-      case NavID.importWallet:
-        final preInputName = nameTextController.text;
-        coordinator.showImportWallet(preInputName);
       case NavID.send:
         coordinator.showSend(
           selectedWallet?.walletID ?? "",

@@ -39,7 +39,6 @@ import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.w
 import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
-import 'package:wallet/scenes/import/import.coordinator.dart';
 import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
@@ -213,6 +212,8 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
+      enableDrag: false,
+      isDismissible: false,
     );
   }
 
@@ -275,11 +276,6 @@ class HomeCoordinator extends Coordinator {
     final view =
         WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacementRemoveAll(view);
-  }
-
-  void showImportWallet(String preInputName) {
-    final view = ImportCoordinator(preInputName).start();
-    showInBottomSheet(view);
   }
 
   void showDeleteWallet(

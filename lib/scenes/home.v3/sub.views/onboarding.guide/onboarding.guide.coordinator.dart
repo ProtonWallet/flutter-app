@@ -10,6 +10,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
+import 'package:wallet/scenes/import/import.coordinator.dart';
 
 class OnboardingGuideCoordinator extends Coordinator {
   late ViewBase widget;
@@ -20,6 +21,11 @@ class OnboardingGuideCoordinator extends Coordinator {
     this.walletListBloc,
     this.createWalletBloc,
   );
+
+  void showImportWallet(String preInputName) {
+    final view = ImportCoordinator(preInputName).start();
+    showInBottomSheet(view);
+  }
 
   void showUpgrade({
     required bool isWalletAccountExceedLimit,
