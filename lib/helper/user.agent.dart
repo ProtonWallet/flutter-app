@@ -167,7 +167,7 @@ class UserAgent {
         return iosInfo.utsname.machine;
       } else if (platform == TargetPlatform.android) {
         final androidInfo = await deviceInfo.androidInfo;
-        return androidInfo.model;
+        return "${androidInfo.manufacturer} ${androidInfo.model}";
       }
     } else if (platform == TargetPlatform.macOS) {
       final macOsInfo = await deviceInfo.macOsInfo;
