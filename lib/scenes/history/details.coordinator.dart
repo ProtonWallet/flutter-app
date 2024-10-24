@@ -2,7 +2,6 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -14,13 +13,11 @@ class HistoryDetailCoordinator extends Coordinator {
   final String walletID;
   final String accountID;
   final String txID;
-  final FiatCurrency userFiatCurrency;
 
   HistoryDetailCoordinator(
     this.walletID,
     this.accountID,
     this.txID,
-    this.userFiatCurrency,
   );
 
   @override
@@ -40,7 +37,6 @@ class HistoryDetailCoordinator extends Coordinator {
       walletID,
       accountID,
       txID,
-      userFiatCurrency,
       userManager,
       walletManager,
       serverTransactionDataProvider,

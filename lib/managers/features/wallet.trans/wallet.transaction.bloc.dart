@@ -633,6 +633,8 @@ class WalletTransactionBloc
       SecretKey? secretKey) async {
     /// getAddressKeys take ~1 second to initialize at first call
     /// since it need to fetch from server
+    /// and if some network been occupied, it will need to wait more
+    /// current workaround is to put a initialize call in homepage
     final addressKeys = await addressKeyProvider.getAddressKeys();
     final Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
     final AccountModel accountModel = accountMenuModel.accountModel;
@@ -769,7 +771,6 @@ class WalletTransactionBloc
         final String encryptedToList = transactionModel.tolist ?? "";
         final String encryptedSender = transactionModel.sender ?? "";
         final String encryptedBody = transactionModel.body ?? "";
-
         toList = tryDecryptWithKeys(userKeys, encryptedToList);
         sender = tryDecryptWithKeys(userKeys, encryptedSender);
         body = tryDecryptWithKeys(userKeys, encryptedBody);
@@ -869,10 +870,10 @@ class WalletTransactionBloc
 
     // TODO(fix): replace with exchangeRateProvider
     exchangeRate ??= await ExchangeRateService.getExchangeRate(
-        userSettingsDataProvider.exchangeRate.fiatCurrency,
-        time: transactionModel?.transactionTime != null
-            ? int.parse(transactionModel?.transactionTime ?? "0")
-            : null);
+      userSettingsDataProvider.exchangeRate.fiatCurrency,
+      // ignore `time` params here to avoid new api call for getting unknown exchange rate at specific time
+      // use latest exchange rate directly
+    );
     return exchangeRate;
   }
 
