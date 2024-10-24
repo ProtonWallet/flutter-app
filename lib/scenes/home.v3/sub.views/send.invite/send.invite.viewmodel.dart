@@ -31,6 +31,7 @@ abstract class SendInviteViewModel extends ViewModel<SendInviteCoordinator> {
   SendInviteState state = SendInviteState.sendInvite;
 
   Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
+
   void updateState(SendInviteState state);
 
   SendInviteViewModel(
@@ -91,7 +92,9 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
     emailController = TextEditingController(text: "");
     userAddressValueNotifier = ValueNotifier(userAddresses.firstOrNull);
 
-    initialized = true;
+    if (userAddresses.isNotEmpty) {
+      initialized = true;
+    }
     sinkAddSafe();
   }
 
@@ -103,8 +106,8 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses = await dataProviderManager.protonEmailAddressProvider
-          .getProtonEmailAddresses();
+      userAddresses =
+          await dataProviderManager.addressKeyProvider.getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }
