@@ -1,26 +1,25 @@
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/app.state.manager.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/users/user.manager.dart';
+import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.view.dart';
-import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
 
-class AddWalletAccountCoordinator extends Coordinator {
+class OnboardingGuideCoordinator extends Coordinator {
   late ViewBase widget;
-  final String walletID;
+  final CreateWalletBloc createWalletBloc;
+  final WalletListBloc walletListBloc;
 
-  AddWalletAccountCoordinator(
-    this.walletID,
+  OnboardingGuideCoordinator(
+    this.walletListBloc,
+    this.createWalletBloc,
   );
-
-  @override
-  void end() {}
 
   void showUpgrade({
     required bool isWalletAccountExceedLimit,
@@ -35,28 +34,23 @@ class AddWalletAccountCoordinator extends Coordinator {
   }
 
   @override
+  void end() {}
+
+  @override
   ViewBase<ViewModel> start() {
-    final userManager = serviceManager.get<UserManager>();
+    final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
 
-    /// build create wallet feature bloc
-    final createWalletBloc = CreateWalletBloc(
-      userManager,
-      dataProviderManager.walletDataProvider,
-      dataProviderManager.walletKeysProvider,
-      dataProviderManager.walletPassphraseProvider,
-    );
-
-    final viewModel = AddWalletAccountViewModelImpl(
-      appStateManager,
-      createWalletBloc,
-      dataProviderManager.walletDataProvider,
-      defaultFiatCurrency,
-      walletID,
+    final viewModel = OnboardingGuideViewModelImpl(
       this,
+      walletManager,
+      appStateManager,
+      dataProviderManager,
+      walletListBloc,
+      createWalletBloc,
     );
-    widget = AddWalletAccountView(
+    widget = OnboardingGuideView(
       viewModel,
     );
     return widget;

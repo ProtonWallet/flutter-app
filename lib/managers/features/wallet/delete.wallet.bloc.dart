@@ -4,7 +4,6 @@ import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
@@ -40,6 +39,7 @@ class DeleteWalletEvent extends Equatable {
 class DeleteWalletAuthModel {
   final bool requireAuth;
   final int twofaStatus;
+
   const DeleteWalletAuthModel({
     this.requireAuth = false,
     this.twofaStatus = 0,
@@ -204,22 +204,17 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
     });
   }
 
+  /// need to handle error / bridge error manually when calling deleteWalletAccount
   Future<void> deleteWalletAccount(
     String walletID,
-    AccountModel accountModel,
+    String accountID,
   ) async {
-    try {
-      await walletClient.deleteWalletAccount(
-        walletId: walletID,
-        walletAccountId: accountModel.accountID,
-      );
-      await walletsDataProvider.deleteWalletAccount(accountModel: accountModel);
-    } on BridgeError catch (e, stacktrace) {
-      // errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet BridgeError: $e, stacktrace: $stacktrace");
-    } catch (e, stacktrace) {
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      // errorMessage = e.toString();
-    }
+    await walletClient.deleteWalletAccount(
+      walletId: walletID,
+      walletAccountId: accountID,
+    );
+    await walletsDataProvider.deleteWalletAccount(
+      accountID: accountID,
+    );
   }
 }

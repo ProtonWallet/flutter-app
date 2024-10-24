@@ -103,7 +103,6 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      await dataProviderManager.protonEmailAddressProvider.preLoad();
       userAddresses = await dataProviderManager.protonEmailAddressProvider
           .getProtonEmailAddresses();
     } catch (e) {

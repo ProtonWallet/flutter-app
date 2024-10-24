@@ -5,14 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
-import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -31,22 +28,15 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
-import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/errors.dart';
-import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
-import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/components/alerts/force.upgrade.dialog.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
@@ -54,7 +44,6 @@ import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
 import 'package:wallet/scenes/home.v3/home.coordinator.dart';
 
 enum WalletDrawerStatus {
@@ -90,39 +79,18 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool acceptTermsAndConditions = false;
   int currentHistoryPage = 0;
   int currentAddressPage = 0;
-  List<ProtonAddress> protonAddresses = [];
-  WalletModel? walletForPreference;
-  List userAccountsForPreference = [];
-  List<ContactsModel> contactsEmails = [];
   AccountModel? historyAccountModel;
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
-  Map<String, ValueNotifier> accountFiatCurrencyNotifiers = {};
-
-  ValueNotifier<FiatCurrency> fiatCurrencyNotifier =
-      ValueNotifier(defaultFiatCurrency);
-  ValueNotifier<BitcoinUnit> bitcoinUnitNotifier =
-      ValueNotifier(BitcoinUnit.btc);
-  late ValueNotifier<ProtonAddress> emailIntegrationNotifier;
-  bool emailIntegrationEnable = false;
-
-  late ValueNotifier accountValueNotifierForPreference;
 
   TextEditingController transactionSearchController =
       TextEditingController(text: "");
   TextEditingController addressSearchController =
       TextEditingController(text: "");
-  TextEditingController walletPreferenceTextEditingController =
-      TextEditingController(text: "");
 
   String errorMessage = "";
   List<HistoryTransaction> historyTransactions = [];
-
-  Map<String, ValueNotifier> getAccountFiatCurrencyNotifiers(
-      List<AccountModel> userAccounts);
-
-  void updateBitcoinUnit(BitcoinUnit symbol);
 
   void updateBodyListStatus(BodyListStatus bodyListStatus);
 
@@ -131,10 +99,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   void setSearchAddressTextField({required bool show});
 
   void setDisplayBalance({required bool display});
-
-  Future<bool> createWallet();
-
-  // Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
 
   void deleteWallet(WalletModel walletModel) {
     deleteWalletBloc.add(DeleteWalletEvent(
@@ -176,38 +140,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void showMoreAddress();
 
-  Future<bool> addWalletAccount(
-    int walletID,
-    String serverWalletID,
-    ScriptTypeInfo scriptType,
-    String label,
-    int accountIndex,
-  );
-
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
-
-  void openWalletPreference(String walletID);
-
-  void checkProtonAddresses();
-
-  Future<void> renameAccount(
-      WalletModel walletModel, AccountModel accountModel, String newName);
-
-  Future<void> deleteAccount(
-      WalletModel walletModel, AccountModel accountModel);
-
-  Future<bool> addEmailAddressToWalletAccount(
-      String serverWalletID,
-      WalletModel walletModel,
-      AccountModel accountModel,
-      String serverAddressID);
-
-  Future<void> removeEmailAddressFromWalletAccount(WalletModel walletModel,
-      AccountModel accountModel, String serverAddressID);
-
-  Future<void> updateWalletName(WalletModel walletModel, String newName);
-
-  ProtonAddress? getProtonAddressByID(String addressID);
 
   int totalTodoSteps = 3;
   int currentTodoStep = 0;
@@ -217,7 +150,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String walletIDtoAddAccount = "";
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
-  bool isRemovingBvE = false;
 
   late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
@@ -262,9 +194,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   /// app version
   String appVersion = "Proton Wallet";
-
-  ///
-  Future<bool> checkFingerprint(WalletModel walletModel, String passphrase);
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -405,8 +334,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
   Future<void> loadContacts() async {
     await dataProviderManager.contactsDataProvider.preLoad();
-    contactsEmails =
-        await dataProviderManager.contactsDataProvider.getContacts() ?? [];
   }
 
   Future<void> loadInviteState() async {
@@ -417,37 +344,6 @@ class HomeViewModelImpl extends HomeViewModel {
     }
     datasourceStreamSinkAdd();
   }
-
-  // @override
-  // Future<bool> sendExclusiveInvite(
-  //     ProtonAddress protonAddress, String email) async {
-  //   final String emailAddressID = protonAddress.id;
-  //   try {
-  //     await apiServiceManager
-  //         .getApiService()
-  //         .getInviteClient()
-  //         .sendNewcomerInvite(
-  //           inviteeEmail: email.trim(),
-  //           inviterAddressId: emailAddressID,
-  //         );
-  //     dataProviderManager.exclusiveInviteDataProvider.updateData();
-  //   } on BridgeError catch (e) {
-  //     appStateManager.updateStateFrom(e);
-  //     final errMsg = parseSampleDisplayError(e);
-  //     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-  //     if (context != null && context.mounted) {
-  //       CommonHelper.showErrorDialog(errMsg);
-  //     }
-  //     return false;
-  //   } catch (e) {
-  //     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-  //     if (context != null && context.mounted) {
-  //       CommonHelper.showErrorDialog(e.toString());
-  //     }
-  //     return false;
-  //   }
-  //   return true;
-  // }
 
   Future<void> initControllers() async {
     hideEmptyUsedAddressesController = TextEditingController();
@@ -555,13 +451,13 @@ class HomeViewModelImpl extends HomeViewModel {
       datasourceStreamSinkAdd();
     });
 
-    bitcoinUnitNotifier.addListener(() async {
-      updateBitcoinUnit(bitcoinUnitNotifier.value);
-    });
-
     transactionSearchController.addListener(datasourceStreamSinkAdd);
 
     addressSearchController.addListener(datasourceStreamSinkAdd);
+
+    /// workaround, load addressKey to memory first, or it will need to wait until other api call finish
+    /// will need to prioritize api calls in other MR
+    final _ = await dataProviderManager.addressKeyProvider.getAddressKeys();
 
     /// preload data
     preLoadHomeData();
@@ -593,10 +489,17 @@ class HomeViewModelImpl extends HomeViewModel {
       dataProviderManager.exclusiveInviteDataProvider.preLoad();
       dataProviderManager.userDataProvider.preLoad();
 
-      loadContacts();
-
-      loadDiscoverContents();
-      checkProtonAddresses();
+      /// lagLoad unnecessary data to improve homepage loading speed
+      Future.delayed(const Duration(seconds: 5), () {
+        if (!isLogout) {
+          try {
+            loadContacts();
+            loadDiscoverContents();
+          } catch (e) {
+            e.toString();
+          }
+        }
+      });
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
@@ -637,32 +540,6 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> checkProtonAddresses() async {
-    try {
-      await dataProviderManager.protonEmailAddressProvider.preLoad();
-      protonAddresses = await dataProviderManager.protonEmailAddressProvider
-          .getProtonEmailAddresses();
-      emailIntegrationNotifier = ValueNotifier(protonAddresses.first);
-      datasourceStreamSinkAdd();
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-  }
-
-  @override
-  Future<void> openWalletPreference(String walletID) async {
-    walletForPreference = await DBHelper.walletDao!.findByServerID(walletID);
-    if (walletForPreference != null) {
-      userAccountsForPreference =
-          await DBHelper.accountDao!.findAllByWalletID(walletID);
-      walletPreferenceTextEditingController.text = walletForPreference!.name;
-      accountValueNotifierForPreference =
-          ValueNotifier(userAccountsForPreference.firstOrNull);
-      updateDrawerStatus(WalletDrawerStatus.openWalletPreference);
-    }
-  }
-
-  @override
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus) {
     this.walletDrawerStatus = walletDrawerStatus;
     datasourceStreamSinkAdd();
@@ -697,12 +574,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> setOnBoard() async {
-    OnboardingGuideSheet.show(
-      Coordinator.rootNavigatorKey.currentContext!,
-      this,
-      firstWallet: true,
-    );
-    // move(NavID.setupOnboard);
+    coordinator.showOnboardingGuide(walletListBloc, createWalletBloc);
   }
 
   @override
@@ -721,94 +593,10 @@ class HomeViewModelImpl extends HomeViewModel {
     final settings =
         await dataProviderManager.userSettingsDataProvider.getSettings();
     if (settings != null) {
-      bitcoinUnitNotifier.value = settings.bitcoinUnit.toBitcoinUnit();
       hideEmptyUsedAddresses = settings.hideEmptyUsedAddresses;
       twoFactorAmountThresholdController.text =
           settings.twoFactorAmountThreshold.toString();
       acceptTermsAndConditions = settings.acceptTermsAndConditions;
-    }
-    datasourceStreamSinkAdd();
-  }
-
-  @override
-  Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
-    if (appStateManager.isHomeInitialed) {
-      final userSettings = await proton_api.bitcoinUnit(symbol: symbol);
-      await dataProviderManager.userSettingsDataProvider
-          .insertUpdate(userSettings);
-      dataProviderManager.userSettingsDataProvider.updateBitcoinUnit(symbol);
-      loadUserSettings();
-    }
-  }
-
-  @override
-  Future<void> updateWalletName(WalletModel walletModel, String newName) async {
-    try {
-      // rename wallet name
-      await walletNameBloc.updateWalletName(walletModel, newName);
-      walletListBloc.updateWalletName(walletModel, newName);
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("updateWalletName failed: $errorMessage");
-      errorMessage = "";
-    }
-  }
-
-  @override
-  Future<void> renameAccount(WalletModel walletModel, AccountModel accountModel,
-      String newName) async {
-    try {
-      await walletNameBloc.updateAccountLabel(
-        walletModel,
-        accountModel,
-        newName,
-      );
-      walletListBloc.updateAccountName(walletModel, accountModel, newName);
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      Sentry.captureException(e, stackTrace: stacktrace);
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("updateWalletName failed: $errorMessage");
-      errorMessage = "";
-    }
-  }
-
-  @override
-  Future<void> deleteAccount(
-    WalletModel walletModel,
-    AccountModel accountModel,
-  ) async {
-    if (appStateManager.isHomeInitialed) {
-      try {
-        await proton_api.deleteWalletAccount(
-          walletId: walletModel.walletID,
-          walletAccountId: accountModel.accountID,
-        );
-        await dataProviderManager.walletDataProvider.deleteWalletAccount(
-          accountModel: accountModel,
-        );
-      } on BridgeError catch (e, stacktrace) {
-        appStateManager.updateStateFrom(e);
-        errorMessage = parseSampleDisplayError(e);
-        logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      } catch (e) {
-        errorMessage = e.toString();
-      }
-      if (errorMessage.isNotEmpty) {
-        CommonHelper.showErrorDialog("deleteAccount(): $errorMessage");
-        errorMessage = "";
-      }
     }
     datasourceStreamSinkAdd();
   }
@@ -819,54 +607,6 @@ class HomeViewModelImpl extends HomeViewModel {
     newTodoStep += hadSetup2FA ? 1 : 0;
     newTodoStep += hadSetupRecovery ? 1 : 0;
     currentTodoStep = newTodoStep;
-    datasourceStreamSinkAdd();
-  }
-
-  @override
-  ProtonAddress? getProtonAddressByID(String addressID) {
-    for (ProtonAddress protonAddress in protonAddresses) {
-      if (protonAddress.id == addressID) {
-        return protonAddress;
-      }
-    }
-    return defaultProtonAddress;
-  }
-
-  @override
-  Future<void> removeEmailAddressFromWalletAccount(
-    WalletModel walletModel,
-    AccountModel accountModel,
-    String serverAddressID,
-  ) async {
-    try {
-      final ApiWalletAccount walletAccount =
-          await proton_api.removeEmailAddress(
-        walletId: walletModel.walletID,
-        walletAccountId: accountModel.accountID,
-        addressId: serverAddressID,
-      );
-      bool deleted = true;
-      for (ApiEmailAddress emailAddress in walletAccount.addresses) {
-        if (emailAddress.id == serverAddressID) {
-          deleted = false;
-        }
-      }
-      if (deleted) {
-        await walletManager.deleteAddress(serverAddressID);
-        walletListBloc.removeEmailIntegration(
-            walletModel, accountModel, serverAddressID);
-      }
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(errorMessage);
-      errorMessage = "";
-    }
     datasourceStreamSinkAdd();
   }
 
@@ -955,16 +695,11 @@ class HomeViewModelImpl extends HomeViewModel {
           selectedWallet?.walletID ?? "",
           historyAccountModel?.accountID ?? "",
           selectedTXID,
-          fiatCurrencyNotifier.value,
         );
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
       case NavID.twoFactorAuthDisable:
         coordinator.showTwoFactorAuthDisable();
-      case NavID.setupBackup:
-        coordinator.showSetupBackup(
-          selectedWallet?.walletID ?? "",
-        );
       case NavID.discover:
         coordinator.showDiscover();
       case NavID.buy:
@@ -984,7 +719,6 @@ class HomeViewModelImpl extends HomeViewModel {
       case NavID.addWalletAccount:
         coordinator.showAddWalletAccount(
           walletIDtoAddAccount,
-          fiatCurrencyNotifier.value,
         );
       case NavID.acceptTermsConditionDialog:
         coordinator.showAcceptTermsAndCondition(userEmail);
@@ -1004,85 +738,6 @@ class HomeViewModelImpl extends HomeViewModel {
       default:
         break;
     }
-  }
-
-  @override
-  Future<bool> addWalletAccount(
-    int walletID,
-    String serverWalletID,
-    ScriptTypeInfo scriptType,
-    String label,
-    int accountIndex,
-  ) async {
-    try {
-      await createWalletBloc.createWalletAccount(
-        serverWalletID,
-        scriptType,
-        label,
-        fiatCurrencyNotifier.value,
-        accountIndex,
-      );
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      if (errorMessage.toLowerCase() ==
-          "You have reached the creation limit for this type of wallet account"
-              .toLowerCase()) {
-        errorMessage = "";
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          coordinator.showUpgrade(
-            isWalletAccountExceedLimit: true,
-          );
-        }
-        return false;
-      }
-      CommonHelper.showErrorDialog(errorMessage);
-      errorMessage = "";
-      return false;
-    }
-    return true;
-  }
-
-  @override
-  Future<bool> addEmailAddressToWalletAccount(
-    String serverWalletID,
-    WalletModel walletModel,
-    AccountModel accountModel,
-    String serverAddressID,
-  ) async {
-    try {
-      await walletManager.addEmailAddress(
-        serverWalletID,
-        accountModel.accountID,
-        serverAddressID,
-      );
-      walletListBloc.addEmailIntegration(
-        walletModel,
-        accountModel,
-        serverAddressID,
-      );
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog(errorMessage);
-      errorMessage = "";
-      datasourceStreamSinkAdd();
-      return false;
-    }
-    datasourceStreamSinkAdd();
-    return true;
   }
 
   @override
@@ -1108,146 +763,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Map<String, ValueNotifier> getAccountFiatCurrencyNotifiers(
-      List<AccountModel> userAccounts) {
-    for (AccountModel accountModel in userAccounts) {
-      if (!accountFiatCurrencyNotifiers.containsKey(accountModel.accountID)) {
-        final valueNotifier = ValueNotifier(accountModel.getFiatCurrency());
-        valueNotifier.addListener(() {
-          updateWalletAccountFiatCurrency(accountModel, valueNotifier.value);
-        });
-        accountFiatCurrencyNotifiers[accountModel.accountID] = valueNotifier;
-      }
-    }
-    return accountFiatCurrencyNotifiers;
-  }
-
-  Future<void> updateWalletAccountFiatCurrency(
-    AccountModel accountModel,
-    FiatCurrency newFiatCurrency,
-  ) async {
-    final WalletModel walletModel =
-        await DBHelper.walletDao!.findByServerID(accountModel.walletID);
-
-    final walletClient = apiServiceManager.getWalletClient();
-    final walletAccount = await walletClient.updateWalletAccountFiatCurrency(
-      walletId: walletModel.walletID,
-      walletAccountId: accountModel.accountID,
-      newFiatCurrency: newFiatCurrency,
-    );
-
-    accountModel.fiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
-    await DBHelper.accountDao!.update(accountModel);
-    walletListBloc.updateAccountFiat(
-        walletModel, accountModel, newFiatCurrency.name.toUpperCase());
-    walletBalanceBloc.handleTransactionUpdate();
-  }
-
-  @override
   Future<void> updatePassphrase(String key, String passphrase) async {}
-
-  @override
-  Future<bool> createWallet() async {
-    WalletModel? walletModel;
-    AccountModel? accountModel;
-    try {
-      bool isFirstWallet = false;
-      final List<WalletData>? wallets =
-          await walletListBloc.walletsDataProvider.getWallets();
-      if (wallets == null) {
-        isFirstWallet = true;
-      } else if (wallets.isEmpty) {
-        isFirstWallet = true;
-      }
-
-      final FrbMnemonic mnemonic = FrbMnemonic(wordCount: WordCount.words12);
-      final String strMnemonic = mnemonic.asString();
-      final String walletName = nameTextController.text;
-      final String strPassphrase = passphraseTextController.text;
-
-      final apiWallet = await createWalletBloc.createWallet(
-        walletName,
-        strMnemonic,
-        appConfig.coinType.network,
-        WalletModel.createByProton,
-        strPassphrase,
-      );
-
-      // default Primary Account (without BvE)
-      final apiWalletAccount = await createWalletBloc.createWalletAccount(
-        apiWallet.wallet.id,
-        appConfig.scriptTypeInfo,
-        "Primary Account",
-        fiatCurrencyNotifier.value,
-        0, // default wallet account index
-      );
-
-      // Auto create Bitcoin via Email account at 84'/0'/1'
-      if (isFirstWallet) {
-        final apiWalletAccountBvE = await createWalletBloc.createWalletAccount(
-          apiWallet.wallet.id,
-          appConfig.scriptTypeInfo,
-          "Bitcoin via Email",
-          fiatCurrencyNotifier.value,
-          1, // default wallet account index
-        );
-        final String walletID = apiWallet.wallet.id;
-        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-
-        final String accountID = apiWalletAccountBvE.id;
-        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
-        if (walletModel != null && accountModel != null) {
-          final ProtonAddress? protonAddress = protonAddresses.firstOrNull;
-          if (protonAddress != null) {
-            await addEmailAddressToWalletAccount(
-              walletID,
-              walletModel,
-              accountModel,
-              protonAddress.id,
-            );
-          }
-        }
-      } else {
-        final String walletID = apiWallet.wallet.id;
-        walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-        final String accountID = apiWalletAccount.id;
-        accountModel = await DBHelper.accountDao!.findByServerID(accountID);
-        if (walletModel != null && accountModel != null) {
-          dataProviderManager.bdkTransactionDataProvider.syncWallet(
-            walletModel,
-            accountModel,
-            forceSync: true,
-            heightChanged: false,
-          );
-        }
-      }
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      final msg = parseSampleDisplayError(e);
-      if (msg.toLowerCase() ==
-          "You have reached the creation limit for this type of wallet"
-              .toLowerCase()) {
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          coordinator.showUpgrade(
-            isWalletAccountExceedLimit: false,
-          );
-        }
-        return false;
-      }
-      CommonHelper.showErrorDialog(msg);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      Sentry.captureException(e, stackTrace: stacktrace);
-      return false;
-    } catch (e, stacktrace) {
-      CommonHelper.showErrorDialog(e.toString());
-      Sentry.captureException(e, stackTrace: stacktrace);
-      return false;
-    }
-
-    return true;
-  }
 
   @override
   void updateBodyListStatus(BodyListStatus bodyListStatus) {
@@ -1273,13 +789,5 @@ class HomeViewModelImpl extends HomeViewModel {
         .setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
-  }
-
-  @override
-  Future<bool> checkFingerprint(
-    WalletModel walletModel,
-    String passphrase,
-  ) async {
-    return walletManager.checkFingerprint(walletModel, passphrase);
   }
 }

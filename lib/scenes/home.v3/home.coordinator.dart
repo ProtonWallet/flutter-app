@@ -9,6 +9,7 @@ import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
+import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
@@ -17,8 +18,6 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
-import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.instruction.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -31,12 +30,15 @@ import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.coordinator.dart';
-import 'package:wallet/scenes/home.v3/sub.views/bve.privacy/bve.privacy.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/proton.products/proton.products.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -85,14 +87,6 @@ class HomeCoordinator extends Coordinator {
   void showSend(String walletID, String accountID) {
     final view =
         SendCoordinator(nativeViewChannel, walletID, accountID).start();
-    showInBottomSheet(
-      view,
-      backgroundColor: ProtonColors.white,
-    );
-  }
-
-  void showSetupBackup(String walletID) {
-    final view = SetupBackupCoordinator(walletID).start();
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
@@ -161,13 +155,11 @@ class HomeCoordinator extends Coordinator {
     String walletID,
     String accountID,
     String txID,
-    FiatCurrency userFiatCurrency,
   ) {
     final view = HistoryDetailCoordinator(
       walletID,
       accountID,
       txID,
-      userFiatCurrency,
     ).start();
     showInBottomSheet(
       view,
@@ -187,11 +179,9 @@ class HomeCoordinator extends Coordinator {
 
   void showAddWalletAccount(
     String walletID,
-    FiatCurrency fiatCurrency,
   ) {
     final view = AddWalletAccountCoordinator(
       walletID,
-      fiatCurrency,
     ).start();
     showInBottomSheet(
       view,
@@ -254,11 +244,25 @@ class HomeCoordinator extends Coordinator {
     );
   }
 
-  void showBvEPrivacy({
-    required bool isPrimaryAccount,
+  void showImportWalletPassphrase({
+    required WalletMenuModel walletMenuModel,
   }) {
-    final view = BvEPrivacyCoordinator(
-      isPrimaryAccount: isPrimaryAccount,
+    final view = PassphraseCoordinator(
+      walletMenuModel,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showOnboardingGuide(
+    WalletListBloc walletListBloc,
+    CreateWalletBloc createWalletBloc,
+  ) {
+    final view = OnboardingGuideCoordinator(
+      walletListBloc,
+      createWalletBloc,
     ).start();
     showInBottomSheet(
       view,
@@ -275,6 +279,32 @@ class HomeCoordinator extends Coordinator {
 
   void showImportWallet(String preInputName) {
     final view = ImportCoordinator(preInputName).start();
+    showInBottomSheet(view);
+  }
+
+  void showDeleteWallet(
+    WalletMenuModel walletMenuModel, {
+    required bool triggerFromSidebar,
+  }) {
+    final view = DeleteWalletCoordinator(
+      walletMenuModel,
+      triggerFromSidebar: triggerFromSidebar,
+    ).start();
+    showInBottomSheet(view);
+  }
+
+  void showWalletSetting(
+    WalletListBloc walletListBloc,
+    WalletBalanceBloc walletBalanceBloc,
+    WalletNameBloc walletNameBloc,
+    WalletMenuModel walletMenuModel,
+  ) {
+    final view = WalletSettingCoordinator(
+      walletListBloc,
+      walletBalanceBloc,
+      walletNameBloc,
+      walletMenuModel,
+    ).start();
     showInBottomSheet(view);
   }
 

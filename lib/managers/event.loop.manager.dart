@@ -263,9 +263,9 @@ class EventLoop extends Service implements Manager {
         if (event.walletAccountEvents != null) {
           for (final walletAccountEvent in event.walletAccountEvents!) {
             if (walletAccountEvent.action == 0) {
-              final String serverAccountID = walletAccountEvent.id;
+              final String accountID = walletAccountEvent.id;
               await dataProviderManager.walletDataProvider
-                  .deleteWalletAccountByServerID(serverAccountID);
+                  .deleteWalletAccount(accountID: accountID);
               continue;
             }
             final ApiWalletAccount? account = walletAccountEvent.walletAccount;

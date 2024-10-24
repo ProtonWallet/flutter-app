@@ -360,7 +360,10 @@ class WalletsDataProvider extends DataProvider {
     final accounts = await accountDao.findAllByWalletID(wallet.walletID);
     bool isDeletingCurrentWallet = false;
     for (AccountModel accountModel in accounts) {
-      await deleteWalletAccount(accountModel: accountModel, addToStream: false);
+      await deleteWalletAccount(
+        accountID: accountModel.accountID,
+        addToStream: false,
+      );
       if (selectedServerWalletAccountID == accountModel.accountID) {
         isDeletingCurrentWallet = true;
       }
@@ -378,23 +381,13 @@ class WalletsDataProvider extends DataProvider {
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
 
-  Future<void> deleteWalletAccountByServerID(String accountID) async {
-    final AccountModel? accountModel =
-        await accountDao.findByServerID(accountID);
-    if (accountModel != null) {
-      await deleteWalletAccount(accountModel: accountModel);
-    } else {
-      logger.e("deleteWalletAccountByServerID: Account not found: $accountID");
-    }
-  }
-
   Future<void> deleteWalletAccount({
-    required AccountModel accountModel,
+    required String accountID,
     bool addToStream = true,
   }) async {
-    await accountDao.deleteByServerID(accountModel.accountID);
-    await addressDao.deleteByServerAccountID(accountModel.accountID);
-    if (selectedServerWalletAccountID == accountModel.accountID) {
+    await accountDao.deleteByServerID(accountID);
+    await addressDao.deleteByServerAccountID(accountID);
+    if (selectedServerWalletAccountID == accountID) {
       selectedServerWalletAccountID = "";
     }
     if (addToStream) {
@@ -675,6 +668,27 @@ class WalletsDataProvider extends DataProvider {
       }
     }
     return null;
+  }
+
+  Future<void> updateWalletAccountFiatCurrency(
+    String walletID,
+    String accountID,
+    FiatCurrency newFiatCurrency,
+  ) async {
+    final walletAccount = await walletClient.updateWalletAccountFiatCurrency(
+      walletId: walletID,
+      walletAccountId: accountID,
+      newFiatCurrency: newFiatCurrency,
+    );
+    final AccountModel? accountModel =
+        await accountDao.findByServerID(accountID);
+    if (accountModel != null) {
+      final newFiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
+      if (accountModel.fiatCurrency != newFiatCurrency) {
+        accountModel.fiatCurrency = newFiatCurrency;
+        await accountDao.update(accountModel);
+      }
+    }
   }
 
   @override

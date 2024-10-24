@@ -37,11 +37,6 @@ import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/bitcoin.address.list.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/delete.wallet.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/onboarding.guide.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/passphrase.dart';
-import 'package:wallet/scenes/home.v3/bottom.sheet/wallet.setting.dart';
 import 'package:wallet/scenes/home.v3/home.menu.list.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.dart';
@@ -144,8 +139,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     const SizedBox(
                                       height: 16,
                                     ),
-                                    if (viewModel.canInvite &&
-                                        viewModel.protonAddresses.isNotEmpty)
+                                    if (viewModel.canInvite)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: defaultPadding),
@@ -350,12 +344,13 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         padding: const EdgeInsets.only(
                                             bottom: 20, top: 10),
                                         child: Column(children: [
-                                          viewModel.bodyListStatus ==
-                                                  BodyListStatus.transactionList
-                                              ? TransactionList(
-                                                  viewModel: viewModel)
-                                              : BitcoinAddressList(
-                                                  viewModel: viewModel),
+                                          TransactionList(viewModel: viewModel),
+                                          // viewModel.bodyListStatus ==
+                                          //         BodyListStatus.transactionList
+                                          //     ? TransactionList(
+                                          //         viewModel: viewModel)
+                                          //     : BitcoinAddressList(
+                                          //         viewModel: viewModel),
                                         ])),
                                     if (walletTransactionState
                                             .historyTransaction.isEmpty &&
@@ -736,8 +731,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                     for (WalletMenuModel walletMenuModel
                         in state.walletsModel) {
                       if (walletMenuModel.isSelected) {
-                        WalletSettingSheet.show(
-                            context, viewModel, walletMenuModel);
+                        viewModel.coordinator.showWalletSetting(
+                          viewModel.walletListBloc,
+                          viewModel.walletBalanceBloc,
+                          viewModel.walletNameBloc,
+                          walletMenuModel,
+                        );
                         break;
                       }
 
@@ -746,8 +745,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                       for (AccountMenuModel accountMenuModel
                           in walletMenuModel.accounts) {
                         if (accountMenuModel.isSelected) {
-                          WalletSettingSheet.show(
-                              context, viewModel, walletMenuModel);
+                          viewModel.coordinator.showWalletSetting(
+                            viewModel.walletListBloc,
+                            viewModel.walletBalanceBloc,
+                            viewModel.walletNameBloc,
+                            walletMenuModel,
+                          );
                           inAccount = true;
                           break;
                         }
@@ -848,15 +851,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                         ),
                                         GestureDetector(
                                             onTap: () {
-                                              viewModel
-                                                  .nameTextController.text = "";
-                                              viewModel.passphraseTextController
-                                                  .text = "";
-                                              viewModel
-                                                  .passphraseConfirmTextController
-                                                  .text = "";
-                                              OnboardingGuideSheet.show(
-                                                  context, viewModel);
+                                              viewModel.setOnBoard();
                                             },
                                             child: Assets
                                                 .images.icon.icPlusCircle
@@ -892,25 +887,17 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   required hasBalance,
                                   required isInvalidWallet,
                                 }) {
-                                  DeleteWalletSheet.show(
-                                    context,
-                                    viewModel,
+                                  viewModel.coordinator.showDeleteWallet(
                                     wallet,
-                                    hasBalance: false,
-                                    isInvalidWallet: true,
-                                    onBackup: () {
-                                      viewModel.move(NavID.setupBackup);
-                                    },
+                                    triggerFromSidebar: true,
                                   );
                                 },
 
                                 /// update passphrase
                                 updatePassphrase: (wallet) {
-                                  PassphraseSheet.show(
-                                    context,
-                                    viewModel,
-                                    wallet,
-                                  );
+                                  viewModel.coordinator
+                                      .showImportWalletPassphrase(
+                                          walletMenuModel: wallet);
                                 },
 
                                 /// add new account into wallet
