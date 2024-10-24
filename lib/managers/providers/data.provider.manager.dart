@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/dbhelper.dart';
+
 // import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
@@ -18,9 +19,9 @@ import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
-import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
+
 // import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
@@ -143,9 +144,9 @@ class DataProviderManager extends Manager {
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
+
   // late UnleashDataProvider unleashDataProvider;
   late ExclusiveInviteDataProvider exclusiveInviteDataProvider;
-  late ProtonEmailAddressProvider protonEmailAddressProvider;
   late ConnectivityProvider connectivityProvider;
   late PriceGraphDataProvider priceGraphDataProvider;
   late ReceiveAddressDataProvider receiveAddressDataProvider;
@@ -216,6 +217,7 @@ class DataProviderManager extends Manager {
     addressKeyProvider = AddressKeyProvider(
       userManager,
       apiServiceManager.getApiService().getProtonEmailAddrClient(),
+      storage,
     );
 
     serverTransactionDataProvider = ServerTransactionDataProvider(
@@ -256,8 +258,6 @@ class DataProviderManager extends Manager {
     exclusiveInviteDataProvider = ExclusiveInviteDataProvider(
       apiServiceManager.getApiService().getInviteClient(),
     );
-
-    protonEmailAddressProvider = ProtonEmailAddressProvider();
 
     connectivityProvider = ConnectivityProvider();
 
@@ -318,7 +318,6 @@ class DataProviderManager extends Manager {
     await blockInfoDataProvider.clear();
     // await unleashDataProvider.clear();
     await exclusiveInviteDataProvider.clear();
-    await protonEmailAddressProvider.clear();
     await connectivityProvider.clear();
     await priceGraphDataProvider.clear();
     await receiveAddressDataProvider.clear();
@@ -343,7 +342,6 @@ class DataProviderManager extends Manager {
     await blockInfoDataProvider.reload();
     // await unleashDataProvider.reload();
     await exclusiveInviteDataProvider.reload();
-    await protonEmailAddressProvider.reload();
     await connectivityProvider.reload();
     await priceGraphDataProvider.reload();
     await receiveAddressDataProvider.reload();

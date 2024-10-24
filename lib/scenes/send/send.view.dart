@@ -425,8 +425,8 @@ class SendView extends ViewBase<SendViewModel> {
                             width: MediaQuery.of(context).size.width,
                             labelText: S.of(context).send_from_email,
                             title: S.of(context).choose_your_email,
-                            items: viewModel.protonEmailAddresses,
-                            itemsText: viewModel.protonEmailAddresses
+                            items: viewModel.userAddresses,
+                            itemsText: viewModel.userAddresses
                                 .map((e) => e.email)
                                 .toList(),
                             valueNotifier: viewModel.userAddressValueNotifier,

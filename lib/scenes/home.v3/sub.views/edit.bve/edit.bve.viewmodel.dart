@@ -60,9 +60,8 @@ class EditBvEViewModelImpl extends EditBvEViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      await dataProviderManager.protonEmailAddressProvider.preLoad();
-      userAddresses = await dataProviderManager.protonEmailAddressProvider
-          .getProtonEmailAddresses();
+      userAddresses = await dataProviderManager.addressKeyProvider
+          .getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }

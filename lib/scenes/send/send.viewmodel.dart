@@ -20,9 +20,9 @@ import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
+import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
-import 'package:wallet/managers/providers/proton.email.address.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -107,7 +107,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
 
   Map<String, AddressPublicKey> email2AddressKey = {};
   List<AddressPublicKey> addressPublicKeys = [];
-  List<ProtonAddress> protonEmailAddresses = [];
+  List<ProtonAddress> userAddresses = [];
 
   List<ProtonRecipient> recipients = [];
   List<String> selfBitcoinAddresses = [];
@@ -216,7 +216,7 @@ class SendViewModelImpl extends SendViewModel {
     this.walletManager,
     this.contactsDataProvider,
     this.walletKeysProvider,
-    this.protonEmailAddressProvider,
+    this.addressKeyProvider,
     this.exclusiveInviteDataProvider,
     super.userSettingsDataProvider,
     super.walletDataProvider,
@@ -236,7 +236,7 @@ class SendViewModelImpl extends SendViewModel {
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
   final WalletKeysProvider walletKeysProvider;
-  final ProtonEmailAddressProvider protonEmailAddressProvider;
+  final AddressKeyProvider addressKeyProvider;
   final ExclusiveInviteDataProvider exclusiveInviteDataProvider;
 
   late FrbAccount? _frbAccount;
@@ -302,11 +302,11 @@ class SendViewModelImpl extends SendViewModel {
         }
       });
 
-      protonEmailAddresses = [anonymousAddress] +
-          await protonEmailAddressProvider.getProtonEmailAddresses();
-      userAddressValueNotifier = ValueNotifier(protonEmailAddresses.length > 1
-          ? protonEmailAddresses[1]
-          : protonEmailAddresses.firstOrNull);
+      userAddresses =
+          [anonymousAddress] + await addressKeyProvider.getAddresses();
+      userAddressValueNotifier = ValueNotifier(userAddresses.length > 1
+          ? userAddresses[1]
+          : userAddresses.firstOrNull);
 
       addressKeys = await walletManager.getAddressKeys();
       await userSettingsDataProvider.preLoad();
@@ -794,7 +794,7 @@ class SendViewModelImpl extends SendViewModel {
       if (context.mounted) {
         SendFlowInviteSheet.show(
             context,
-            protonEmailAddresses
+            userAddresses
                 .where((e) => e.id != anonymousAddress.id)
                 .toList(),
             email,
@@ -806,7 +806,7 @@ class SendViewModelImpl extends SendViewModel {
       if (context.mounted) {
         SendFlowInviteSheet.show(
             context,
-            protonEmailAddresses
+            userAddresses
                 .where((e) => e.id != anonymousAddress.id)
                 .toList(),
             email,
