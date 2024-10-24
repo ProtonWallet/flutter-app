@@ -72,10 +72,6 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   );
 
   Map<String, AccountBitcoinAddressesInfo> accountID2AddressesInfo = {};
-  List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
-
-  Map<String, LocalBitcoinAddress2TransactionData>
-      bitcoinAddress2TransactionDataMap = {};
 
   Future<List<LocalBitcoinAddressData>> _getFromDB() async {
     final List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
@@ -152,13 +148,6 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
       return bitcoinAddressDataList;
     }
     return [];
-  }
-
-  Future<List<LocalBitcoinAddressData>> getLocalBitcoinAddressDataList() async {
-    if (bitcoinAddressDataList.isEmpty) {
-      bitcoinAddressDataList = await _getFromDB();
-    }
-    return bitcoinAddressDataList;
   }
 
   Future<Map<String, FrbAddressInfo>> getBitcoinAddress(
@@ -243,7 +232,6 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   }
 
   Future<void> insertOrUpdate(BitcoinAddressModel bitcoinAddressModel) async {
-    // TODO(fix): enhance performance here
     await bitcoinAddressDao.insertOrUpdate(
       serverWalletID: bitcoinAddressModel.serverWalletID,
       serverAccountID: bitcoinAddressModel.serverAccountID,
@@ -252,16 +240,6 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
       inEmailIntegrationPool: bitcoinAddressModel.inEmailIntegrationPool,
       used: bitcoinAddressModel.used,
     );
-    bitcoinAddressDataList = await _getFromDB();
-  }
-
-  void updateBitcoinAddress2TransactionDataMap(
-      String bitcoinAddress, String txid) {
-    if (!bitcoinAddress2TransactionDataMap.containsKey(bitcoinAddress)) {
-      bitcoinAddress2TransactionDataMap[bitcoinAddress] =
-          LocalBitcoinAddress2TransactionData(txids: []);
-    }
-    bitcoinAddress2TransactionDataMap[bitcoinAddress]!.addTXID(txid);
   }
 
   Future<BitcoinAddressModel?> findBitcoinAddressInAccount(

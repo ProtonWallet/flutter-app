@@ -246,7 +246,7 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                               SizedBoxes.box8,
                               ButtonV5(
                                 onPressed: () {
-                                  viewModel.move(NavID.importWallet);
+                                  viewModel.coordinator.showImportWallet(viewModel.nameTextController.text);
                                   Navigator.of(context).pop();
                                 },
                                 enable: !viewModel.isCreatingWallet,
