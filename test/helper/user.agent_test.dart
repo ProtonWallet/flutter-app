@@ -116,6 +116,7 @@ void main() {
       when(mockAndroidBuildVersion.release).thenReturn('11');
       when(mockAndroidInfo.version).thenReturn(mockAndroidBuildVersion);
       when(mockAndroidInfo.model).thenReturn('Pixel 4');
+      when(mockAndroidInfo.manufacturer).thenReturn('Google');
       when(mockDeviceInfo.androidInfo).thenAnswer(
         (_) async => Future.value(mockAndroidInfo),
       );
@@ -125,7 +126,7 @@ void main() {
         packageInfo: Future.value(mockPackageInfo),
       );
       final ua = await userAgent.ua;
-      expect(ua, 'ProtonWallet/1.0.0 (Android 11; Pixel 4)');
+      expect(ua, 'ProtonWallet/1.0.0 (Android 11; Google Pixel 4)');
       final appVersion = await userAgent.appVersion;
       expect(appVersion, "android-wallet@1.0.0.33-dev");
       final display = await userAgent.display;
