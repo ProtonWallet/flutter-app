@@ -54,7 +54,6 @@ abstract class HistoryDetailViewModel
     this.walletID,
     this.accountID,
     this.txID,
-    this.userFiatCurrency,
     this.userSettingsDataProvider,
     this.contactsDataProvider,
   );
@@ -80,7 +79,6 @@ abstract class HistoryDetailViewModel
   String body = "";
   Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
   int lastExchangeRateTime = 0;
-  FiatCurrency userFiatCurrency;
   ProtonExchangeRate? exchangeRate;
   String errorMessage = "";
   bool isRecipientsFromBlockChain = false;
@@ -105,7 +103,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.walletID,
     super.accountID,
     super.txID,
-    super.userFiatCurrency,
     this.userManager,
     this.walletManager,
     this.serverTransactionDataProvider,

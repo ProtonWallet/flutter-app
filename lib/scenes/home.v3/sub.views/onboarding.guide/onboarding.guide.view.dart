@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -14,34 +13,34 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
-import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.currency.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
+import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
-import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-class OnboardingGuideSheet {
-  static void show(
-    BuildContext context,
-    HomeViewModel viewModel, {
-    bool firstWallet = false,
-  }) {
-    bool passphraseConfirmed = true;
-    bool isCreatingWallet = false;
-    if (firstWallet) {
-      viewModel.nameTextController.text = "My Wallet";
-    }
-    HomeModalBottomSheet.show(context,
-        header: CustomHeader(
+class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
+  const OnboardingGuideView(OnboardingGuideViewModel viewModel)
+      : super(viewModel, const Key("OnboardingGuideView"));
+
+  @override
+  Widget build(BuildContext context) {
+    return PageLayoutV1(
+        headerWidget: CustomHeader(
           title: S.of(context).wallet_setup,
           buttonDirection: AxisDirection.right,
         ),
+        initialized: viewModel.initialized,
+        expanded: viewModel.firstWallet
+            ? MediaQuery.of(context).size.height < 400
+            : MediaQuery.of(context).size.height < 1000, // need expansion
         child: BlocBuilder<WalletListBloc, WalletListState>(
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
@@ -58,7 +57,7 @@ class OnboardingGuideSheet {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30),
-                        if (!firstWallet)
+                        if (!viewModel.firstWallet)
                           TextFieldTextV2(
                             labelText: S.of(context).name,
                             maxLength: maxAccountNameSize,
@@ -76,7 +75,7 @@ class OnboardingGuideSheet {
                                     ))),
                             alwaysShowHint: true,
                             textController: viewModel.nameTextController,
-                            myFocusNode: viewModel.nameFocusNode,
+                            myFocusNode: viewModel.walletNameFocusNode,
                             validation: (String _) {
                               return "";
                             },
@@ -95,7 +94,8 @@ class OnboardingGuideSheet {
                                 .toList(),
                             valueNotifier: viewModel.fiatCurrencyNotifier),
                         const SizedBox(height: 10),
-                        if (state.walletsModel.isNotEmpty && !firstWallet)
+                        if (state.walletsModel.isNotEmpty &&
+                            !viewModel.firstWallet)
                           ExpansionTile(
                               shape: const Border(),
                               title: Transform.translate(
@@ -144,13 +144,7 @@ class OnboardingGuideSheet {
                                     return "";
                                   },
                                   onFinish: () {
-                                    setState(() {
-                                      passphraseConfirmed = viewModel
-                                              .passphraseTextController.text ==
-                                          viewModel
-                                              .passphraseConfirmTextController
-                                              .text;
-                                    });
+                                    viewModel.checkPassphraseMatched();
                                   },
                                   isPassword: true,
                                 ),
@@ -175,13 +169,7 @@ class OnboardingGuideSheet {
                                     return "";
                                   },
                                   onFinish: () {
-                                    setState(() {
-                                      passphraseConfirmed = viewModel
-                                              .passphraseTextController.text ==
-                                          viewModel
-                                              .passphraseConfirmTextController
-                                              .text;
-                                    });
+                                    viewModel.checkPassphraseMatched();
                                   },
                                   isPassword: true,
                                 ),
@@ -209,10 +197,9 @@ class OnboardingGuideSheet {
                             child: Column(children: [
                               ButtonV6(
                                   onPressed: () async {
-                                    if (!isCreatingWallet) {
-                                      setState(() {
-                                        isCreatingWallet = true;
-                                      });
+                                    if (!viewModel.isCreatingWallet) {
+                                      viewModel
+                                          .updateCreatingWalletStatus(true);
                                       bool success = false;
                                       if (viewModel
                                               .passphraseTextController.text ==
@@ -239,13 +226,10 @@ class OnboardingGuideSheet {
                                                 .of(context)
                                                 .passphrase_are_not_match);
                                       }
-                                      setState(() {
-                                        isCreatingWallet = false;
-                                      });
-                                      // TODO(fix): add back check user already accept T&C or not to determine display import success sheet or not
-                                      // !viewModel.acceptTermsAndConditions
+                                      viewModel
+                                          .updateCreatingWalletStatus(false);
                                       if (context.mounted &&
-                                          firstWallet &&
+                                          viewModel.firstWallet &&
                                           success) {
                                         viewModel.move(
                                             NavID.acceptTermsConditionDialog);
@@ -257,7 +241,7 @@ class OnboardingGuideSheet {
                                   textStyle: FontManager.body1Median(
                                       ProtonColors.white),
                                   backgroundColor: ProtonColors.protonBlue,
-                                  enable: passphraseConfirmed,
+                                  enable: viewModel.passphraseMatched,
                                   height: 48),
                               SizedBoxes.box8,
                               ButtonV5(
@@ -265,7 +249,7 @@ class OnboardingGuideSheet {
                                   viewModel.move(NavID.importWallet);
                                   Navigator.of(context).pop();
                                 },
-                                enable: !isCreatingWallet,
+                                enable: !viewModel.isCreatingWallet,
                                 text: S.of(context).import_your_wallet,
                                 width: MediaQuery.of(context).size.width,
                                 textStyle: FontManager.body1Median(
@@ -275,7 +259,7 @@ class OnboardingGuideSheet {
                                 height: 48,
                               ),
                             ])),
-                        if (firstWallet)
+                        if (viewModel.firstWallet)
                           Column(children: [
                             SizedBoxes.box24,
                             Text.rich(

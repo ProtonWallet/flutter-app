@@ -1,4 +1,3 @@
-import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
