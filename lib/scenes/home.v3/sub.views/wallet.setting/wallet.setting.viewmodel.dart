@@ -253,8 +253,8 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses = await dataProviderManager.protonEmailAddressProvider
-          .getProtonEmailAddresses();
+      userAddresses = await dataProviderManager.addressKeyProvider
+          .getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }

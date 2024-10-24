@@ -563,7 +563,11 @@ class HomeView extends ViewBase<HomeViewModel> {
         ]),
         Row(children: [
           showBalanceLoading(
-                  viewModel, walletBalanceState, walletTransactionState)
+            viewModel,
+            walletBalanceState,
+            walletTransactionState,
+            needExchangeRate: true,
+          )
               ? const CardLoading(
                   width: 200,
                   height: 36,
@@ -616,7 +620,11 @@ class HomeView extends ViewBase<HomeViewModel> {
           height: 8,
         ),
         showBalanceLoading(
-                viewModel, walletBalanceState, walletTransactionState)
+          viewModel,
+          walletBalanceState,
+          walletTransactionState,
+          needExchangeRate: false,
+        )
             ? const CardLoading(
                 width: 200,
                 height: 16,
@@ -641,11 +649,20 @@ class HomeView extends ViewBase<HomeViewModel> {
   bool showBalanceLoading(
     HomeViewModel viewModel,
     WalletBalanceState walletBalanceState,
-    WalletTransactionState walletTransactionState,
-  ) {
-    return viewModel.currentExchangeRate.id == defaultExchangeRate.id ||
-        (walletTransactionState.isSyncing &&
-            walletBalanceState.balanceInSatoshi == 0);
+    WalletTransactionState walletTransactionState, {
+    required bool needExchangeRate,
+  }) {
+    if (needExchangeRate) {
+      /// we will need to show card loading when exchange rate is not initialized
+      /// if user has 0 balance, and the wallet is still syncing, we
+      /// will need to show card loading to let user know the wallet is still syncing
+      /// so we didn't display actual balance to user; otherwise we can display cached balance first.
+      return viewModel.currentExchangeRate.id == defaultExchangeRate.id ||
+          (walletTransactionState.isSyncing &&
+              walletBalanceState.balanceInSatoshi == 0);
+    }
+    return (walletTransactionState.isSyncing &&
+        walletBalanceState.balanceInSatoshi == 0);
   }
 
   Color getTransactionAndAddressesBackground(

@@ -57,7 +57,7 @@ class SendCoordinator extends Coordinator {
       walletManager,
       dataProvider.contactsDataProvider,
       dataProvider.walletKeysProvider,
-      dataProvider.protonEmailAddressProvider,
+      dataProvider.addressKeyProvider,
       dataProvider.exclusiveInviteDataProvider,
       dataProvider.userSettingsDataProvider,
       dataProvider.walletDataProvider,

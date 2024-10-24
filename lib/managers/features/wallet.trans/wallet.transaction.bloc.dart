@@ -62,14 +62,16 @@ class SyncWallet extends WalletTransactionEvent {
 class SelectWallet extends WalletTransactionEvent {
   final WalletMenuModel walletMenuModel;
   final bool skipSyncWallet;
+  final bool lagSync;
 
   SelectWallet(
     this.walletMenuModel, {
     required this.skipSyncWallet,
+    this.lagSync = false,
   });
 
   @override
-  List<Object> get props => [walletMenuModel, skipSyncWallet];
+  List<Object> get props => [walletMenuModel, skipSyncWallet, lagSync];
 }
 
 class UpdateWalletSyncCancelled extends WalletTransactionEvent {
@@ -182,6 +184,8 @@ class WalletTransactionBloc
 
   WalletTransactionEvent? lastEvent;
 
+  bool firstStart = true;
+
   WalletTransactionBloc(
     this.userManager,
     this.walletManager,
@@ -218,6 +222,15 @@ class WalletTransactionBloc
         walletMenuModel.accounts =
             walletData.accounts.map(AccountMenuModel.new).toList();
         if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+          /// check if we need lag sync on freshStart
+          /// this is a workaround since networking will be occupied when we do partial sync
+          /// can be removed after verify the networking part (muon)
+          bool lagSync = false;
+          if (firstStart) {
+            firstStart = false;
+            lagSync = true;
+          }
+
           /// wallet view
           if (currentWalletModel?.walletID !=
                   walletsDataProvider.selectedServerWalletID ||
@@ -226,6 +239,7 @@ class WalletTransactionBloc
             add(SelectWallet(
               walletMenuModel,
               skipSyncWallet: false, // need to sync wallet
+              lagSync: lagSync,
             ));
           }
         } else {
@@ -379,6 +393,15 @@ class WalletTransactionBloc
           currentWalletModel!.walletID != walletModel.walletID) {
         /// skip process if user change to other wallet or wallet account
         return;
+      }
+
+      if (event.lagSync) {
+        emit(state.copyWith(
+          isSyncing: isSyncing,
+          historyTransaction: historyTransaction,
+          bitcoinAddresses: bitcoinAddresses,
+        ));
+        await Future.delayed(const Duration(seconds: 5));
       }
 
       /// sync wallet after load transaction

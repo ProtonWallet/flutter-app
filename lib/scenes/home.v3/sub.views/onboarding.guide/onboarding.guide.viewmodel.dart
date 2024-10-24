@@ -80,8 +80,8 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      protonAddresses = await dataProviderManager.protonEmailAddressProvider
-          .getProtonEmailAddresses();
+      protonAddresses = await dataProviderManager.addressKeyProvider
+          .getAddresses();
     } catch (e) {
       errorMessage = e.toString();
     }

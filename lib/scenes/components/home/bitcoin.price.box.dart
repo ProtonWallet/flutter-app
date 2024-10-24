@@ -31,7 +31,7 @@ class BitcoinPriceBox extends StatefulWidget {
 }
 
 class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
-  bool isLoading = false;
+  bool initialized = false;
 
   double priceChange = 0.0;
   Timeframe timeFrame = Timeframe.oneDay;
@@ -40,7 +40,9 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
   void didUpdateWidget(BitcoinPriceBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.exchangeRate.fiatCurrency !=
-        widget.exchangeRate.fiatCurrency) {
+            widget.exchangeRate.fiatCurrency ||
+        (oldWidget.exchangeRate.id == defaultExchangeRate.id &&
+            widget.exchangeRate.id != defaultExchangeRate.id)) {
       fetchData();
     }
   }
@@ -55,9 +57,6 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
     if (widget.exchangeRate.id == defaultExchangeRate.id) {
       return;
     }
-    setState(() {
-      isLoading = true;
-    });
     PriceGraph? priceGraph;
 
     try {
@@ -76,7 +75,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
 
     if (mounted) {
       setState(() {
-        isLoading = false;
+        initialized = true;
         if (prices.isNotEmpty) {
           priceChange = (prices.last - prices.first) / prices.first * 100;
         }
@@ -108,7 +107,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                   GestureDetector(
                     onTap: () {
                       if (widget.exchangeRate.id != defaultExchangeRate.id ||
-                          isLoading) {
+                          initialized) {
                         BitcoinPriceDetailSheet.show(
                           context,
                           widget.exchangeRate,
@@ -126,8 +125,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                               )),
-                          (widget.exchangeRate.id == defaultExchangeRate.id ||
-                                  isLoading)
+                          (widget.exchangeRate.id == defaultExchangeRate.id &&
+                                  !initialized)
                               ? const SizedBox(
                                   width: 160,
                                   child: CardLoading(
@@ -188,7 +187,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                         ],
                       ),
                       if (widget.exchangeRate.id != defaultExchangeRate.id ||
-                          isLoading)
+                          initialized)
                         Expanded(
                           child: BitcoinPriceHomepageChart(
                             exchangeRate: widget.exchangeRate,
