@@ -461,6 +461,7 @@
   "error_this_email_address_is_invalid": "Sorry, this email address is invalid.",
   "error_you_can_not_send_amount_below_dust": "The amount you entered is too small. Please try a larger amount.",
   "error_you_dont_have_sufficient_balance": "Sorry, you don't have sufficient balance.",
+  "error_you_dont_have_sufficient_balance_hint_fee": "You don't have sufficient balance to cover network fee.",
   "error_you_can_not_send_to_self_account": "Sorry, you can not send bitcoin to your own account.",
   "set_passphrase": "Set passphrase",
   "setting_bitcoin_unit_label": "Bitcoin Unit",

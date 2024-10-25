@@ -54,6 +54,7 @@ class UserSettingsDataProvider extends DataProvider {
   final String userID;
   final SettingsClient settingsClient;
   final PreferencesManager shared;
+  bool initializedExchangeRate = false;
 
   //
   final WalletUserSettingsQueries settingsQueries;
@@ -152,7 +153,8 @@ class UserSettingsDataProvider extends DataProvider {
 
   Future<void> updateFiatCurrency(FiatCurrency fiatCurrency,
       {notify = true}) async {
-    if (this.fiatCurrency != fiatCurrency) {
+    if (this.fiatCurrency != fiatCurrency || !initializedExchangeRate) {
+      initializedExchangeRate = true;
       this.fiatCurrency = fiatCurrency;
 
       final settings = await getSettings();
