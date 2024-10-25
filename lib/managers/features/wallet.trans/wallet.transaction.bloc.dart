@@ -297,11 +297,7 @@ class WalletTransactionBloc
       handleTransactionDataProviderUpdate();
 
       if (onData.updatedData == UpdateType.inserted) {
-        Future.delayed(const Duration(seconds: 10), () {
-          /// wait 10 second so transaction can update first
-          /// since bdk account will be locked when it's syncing
-          syncWallet(forceSync: true, heightChanged: false);
-        });
+        syncWallet(forceSync: true, heightChanged: false);
       }
 
       /// syncWallet so that balance can get update
