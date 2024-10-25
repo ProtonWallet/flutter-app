@@ -982,19 +982,21 @@ class SendViewModelImpl extends SendViewModel {
       if (!hasValidRecipient) {
         return false;
       }
-      if (totalAmountInSAT > maxBalanceToSend + tolerateBalanceOverflow) {
-        /// no sufficient money
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          CommonHelper.showSnackbar(
-            context,
-            S.of(context).error_you_dont_have_sufficient_balance,
-            isError: true,
-          );
-        }
-        return false;
-      }
+      /// skip the check since some low value UTXO will be filter out by BDK
+      /// if the fee rate is higher
+      // if (totalAmountInSAT > maxBalanceToSend + tolerateBalanceOverflow) {
+      //   /// no sufficient money
+      //   final BuildContext? context =
+      //       Coordinator.rootNavigatorKey.currentContext;
+      //   if (context != null && context.mounted) {
+      //     CommonHelper.showSnackbar(
+      //       context,
+      //       S.of(context).error_you_dont_have_sufficient_balance,
+      //       isError: true,
+      //     );
+      //   }
+      //   return false;
+      // }
       final network = appConfig.coinType.network;
       final txBuilderHighPriority = await txBuilder.setFeeRate(
           satPerVb: BigInt.from(feeRateHighPriority.ceil()));
@@ -1323,7 +1325,7 @@ class SendViewModelImpl extends SendViewModel {
         if (context != null) {
           CommonHelper.showSnackbar(
             context,
-            S.of(context).error_you_dont_have_sufficient_balance,
+            S.of(context).error_you_dont_have_sufficient_balance_hint_fee,
             isError: true,
           );
         } else {
