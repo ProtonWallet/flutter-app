@@ -1,6 +1,8 @@
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.interface.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 
 typedef Logic = Future<void> Function();
 
@@ -27,6 +29,13 @@ class PreferencesManager implements Manager {
 
   Future<void> rebuild() async {
     await storage.write(firstTimeEntryKey, false);
+
+    /// we need to mark the `appDatabaseForceVersion` and `appBDKDatabaseForceVersion` to the correct version
+    /// since we already call appMigrationManager.init(); in app.viewmodel.dart
+    await storage.write(
+        PreferenceKeys.appDatabaseForceVersion, driftDatabaseVersion);
+    await storage.write(
+        PreferenceKeys.appBDKDatabaseForceVersion, bdkDatabaseVersion);
   }
 
   Future<void> isFirstTimeEntry(Logic run) async {
