@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';

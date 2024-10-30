@@ -214,16 +214,10 @@ class HomeViewModelImpl extends HomeViewModel {
     this.appStateManager,
   );
 
-  // user manager
+  /// Managers
   final UserManager userManager;
-
-  /// wallet manager
   final WalletManager walletManager;
-
-  // event loop manger
   final EventLoop eventLoop;
-
-  // networking
   final ProtonApiServiceManager apiServiceManager;
 
   /// native channel
