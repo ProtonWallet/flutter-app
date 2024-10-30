@@ -643,12 +643,13 @@ class WalletTransactionBloc
       serverScriptType: accountMenuModel.accountModel.scriptType,
     );
 
+    final customStopgap = await userSettingsDataProvider.getCustomStopgap();
     final Map<String, FrbAddressInfo> selfBitcoinAddressInfo =
         await localBitcoinAddressDataProvider.getBitcoinAddress(
       walletModel,
       accountMenuModel.accountModel,
       account,
-      maxAddressIndex: accountModel.lastUsedIndex + appConfig.stopGap,
+      maxAddressIndex: accountModel.lastUsedIndex + customStopgap,
     );
 
     final userKeys = await userManager.getUserKeys();
