@@ -233,6 +233,7 @@ class DataProviderManager extends Manager {
       apiServiceManager.getApiService(),
       shared,
       walletManager,
+      userSettingsDataProvider,
     );
 
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(

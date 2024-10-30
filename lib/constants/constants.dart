@@ -38,6 +38,8 @@ const List<BitcoinUnit> bitcoinUnits = [
   BitcoinUnit.sats,
 ];
 
+const List<int> stopgapOptions = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+
 const anonymousAddress = ProtonAddress(
   id: "Anonymous sender",
   email: "Anonymous sender",

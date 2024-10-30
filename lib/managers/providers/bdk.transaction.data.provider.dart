@@ -8,9 +8,11 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
@@ -72,12 +74,14 @@ class BDKTransactionDataProvider extends DataProvider {
   final ProtonApiService apiService;
 
   final PreferencesManager shared;
+  final UserSettingsDataProvider userSettingsDataProvider;
 
   BDKTransactionDataProvider(
     this.accountDao,
     this.apiService,
     this.shared,
     this.walletManager,
+    this.userSettingsDataProvider,
   );
 
   List<BDKTransactionData> bdkTransactionDataList = [];
@@ -159,11 +163,12 @@ class BDKTransactionDataProvider extends DataProvider {
 
   /// return true if at lease one full sync done
   /// i.e. preferences has at least one key starts with bdkFullSyncedPrefix, and value is true
-  bool anyFullSyncedDone(){
+  bool anyFullSyncedDone() {
     final map = shared.toMap();
     for (var entry in map.entries) {
       final key = entry.key;
-      if (key.toString().startsWith(PreferenceKeys.bdkFullSyncedPrefix) && entry.value == true) {
+      if (key.toString().startsWith(PreferenceKeys.bdkFullSyncedPrefix) &&
+          entry.value == true) {
         return true;
       }
     }
@@ -234,9 +239,12 @@ class BDKTransactionDataProvider extends DataProvider {
             lastSyncedTime[accountModel.accountID] = 0;
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync start time: $timeStart");
+            final customStopgap =
+                await userSettingsDataProvider.getCustomStopgap();
+            logger.i("customStopgap: $customStopgap");
             await blockchain?.fullSync(
               account: account,
-              stopGap: BigInt.from(appConfig.stopGap + accountModel.poolSize),
+              stopGap: BigInt.from(customStopgap + accountModel.poolSize),
             );
             await shared.write(syncCheckID, true);
             final timeEnd = DateTime.now().secondsSinceEpoch();
@@ -275,8 +283,7 @@ class BDKTransactionDataProvider extends DataProvider {
           );
         }
       } catch (e, stacktrace) {
-        final count =
-            await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
+        final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
         await shared.write(PreferenceKeys.syncErrorCount, count + 1);
         emitState(BDKSyncError(e.toString()));
         final String errorMessage =
@@ -328,8 +335,7 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   Future<void> updateErrorCount() async {
-    final count =
-        await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
+    final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
     await shared.write(PreferenceKeys.syncErrorCount, count + 1);
     final newTimeer = DateTime.now().secondsSinceEpoch() +
         _getNextBackoffDuration(count, minSeconds: 120, maxSeconds: 300);
