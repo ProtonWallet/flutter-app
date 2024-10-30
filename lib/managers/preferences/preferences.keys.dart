@@ -9,4 +9,7 @@ class PreferenceKeys {
 
   static const String displayBalanceKey = "user.settings.displayBalance";
   static const String customStopgapKey = "user.settings.custom.stopgap";
+
+  static const String appDatabaseForceVersion = "app_database_force_version";
+  static const String appBDKDatabaseForceVersion = "app_bdk_database_force_version";
 }

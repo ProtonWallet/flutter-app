@@ -79,6 +79,7 @@ class DBHelper {
   }
 
   static Future<void> init() async {
+    /// This method will init the appDatabase, then build tables to latest version if needed
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     final int appDatabaseVersion =
         preferences.getInt(PreferenceKeys.appDatabaseVersion) ?? 1;
@@ -86,15 +87,22 @@ class DBHelper {
     _appDatabase = AppDatabase();
     await _appDatabase!.init(await AppDatabase.getDatabase());
     await _appDatabase!.buildDatabase(oldVersion: appDatabaseVersion);
-    // await reset();
+
     preferences.setInt(
         PreferenceKeys.appDatabaseVersion, _appDatabase!.version);
   }
 
   static Future<void> reset() async {
-    // Notice! this method will clean all data in appDatabase, then rebuild tables
+    /// This method will clean all data in appDatabase, then rebuild tables
     if (_appDatabase != null) {
       await _appDatabase!.reset();
+
+      await _appDatabase!.buildDatabase();
+
+      final SharedPreferences preferences =
+          await SharedPreferences.getInstance();
+      preferences.setInt(
+          PreferenceKeys.appDatabaseVersion, _appDatabase!.version);
     }
   }
 }

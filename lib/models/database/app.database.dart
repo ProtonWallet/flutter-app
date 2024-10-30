@@ -47,7 +47,6 @@ class AppDatabase {
 
   Future<void> reset() async {
     await dropAllTables();
-    await buildDatabase();
   }
 
   Future<void> dropAllTables() async {

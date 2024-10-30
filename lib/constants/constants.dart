@@ -20,6 +20,7 @@ const int maxAccountNameSize = 32;
 const int reSyncTime = 600; // trigger sync at least after 600 seconds
 const int btc2satoshi = 100000000;
 const int bdkDatabaseVersion = 4;
+const int driftDatabaseVersion = 4;
 
 // desktop
 const double maxDeskTopSheetWidth = 600.0;
