@@ -200,6 +200,7 @@
   "contact_support": "Contact Support",
   "setting_receive_inviter_notification": "Receive Inviter Notification",
   "setting_receive_bve_notification": "Receive BvE Notification",
+  "setting_custom_stopgap": "Syncing stopgap",
   "two_factor_title": "2FA",
   "two_factor_code": "2FA code",
   "two_factor_code_desc": "Enter the code from your authenticator app",
