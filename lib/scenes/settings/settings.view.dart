@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -11,6 +12,7 @@ import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
+import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -113,6 +115,27 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                           activeColor: ProtonColors.protonBlue,
                           onChanged: viewModel
                               .updateReceiveEmailIntegrationNotification,
+                        ),
+                  onTap: () {},
+                ),
+                SettingsItem(
+                  title: context.local.setting_custom_stopgap,
+                  logo: !viewModel.loadedWalletUserSettings
+                      ? const CustomLoading()
+                      : Transform.translate(
+                          offset: const Offset(
+                            10,
+                            0,
+                          ),
+                          child: DropdownButtonV2(
+                            title: context.local.setting_custom_stopgap,
+                            width: 80,
+                            items: stopgapOptions,
+                            itemsText: stopgapOptions
+                                .map((v) => v.toString())
+                                .toList(),
+                            valueNotifier: viewModel.stopgapValueNotifier,
+                          ),
                         ),
                   onTap: () {},
                 ),
@@ -228,7 +251,9 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                       ),
                       SettingsItem(
                         title: context.local.help_center_clear_caches,
-                        logo: isClearing ? const CustomLoading(size: 20) : const SizedBox(),
+                        logo: isClearing
+                            ? const CustomLoading(size: 20)
+                            : const SizedBox(),
                         onTap: () {
                           if (!isClearing) {
                             viewModel.clearCacheBloc.add(ClearingCache());

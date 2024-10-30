@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
@@ -27,6 +30,7 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   void updateReceiveEmailIntegrationNotification(enable);
 
   final ClearCacheBloc clearCacheBloc;
+  late ValueNotifier<int> stopgapValueNotifier;
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -44,11 +48,20 @@ class SettingsViewModelImpl extends SettingsViewModel {
 
   bool hadLocallogin = false;
 
+  void updateStopGap(){
+    userSettingsDataProvider.setCustomStopgap(stopgapValueNotifier.value);
+  }
+
   @override
   Future<void> loadData() async {
     displayName = userManager.userInfo.userDisplayName;
     displayEmail = userManager.userInfo.userMail;
     userName = userManager.userInfo.userName;
+
+    /// init custom stopgap valueNotifier
+    final customStopgap = await userSettingsDataProvider.getCustomStopgap();
+    stopgapValueNotifier = ValueNotifier(customStopgap);
+    stopgapValueNotifier.addListener(updateStopGap);
     loadSettings();
 
     sinkAddSafe();

@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
@@ -12,8 +15,6 @@ import 'package:wallet/models/drift/wallet.user.settings.queries.dart';
 import 'package:wallet/rust/api/api_service/settings_client.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-
-const String displayBalanceKey = "user.settings.displayBalance";
 
 class UserSettingDataUpdated extends DataState {
   UserSettingDataUpdated();
@@ -64,6 +65,7 @@ class UserSettingsDataProvider extends DataProvider {
   // need to monitor the db changes apply to this cache
   WalletUserSettings? settingsData;
   bool displayBalance = true;
+  int customStopgap = 50;
 
   UserSettingsDataProvider(
     this.userID,
@@ -127,14 +129,28 @@ class UserSettingsDataProvider extends DataProvider {
     return null;
   }
 
+  Future<void> setCustomStopgap(stopgap) async {
+    customStopgap = stopgap;
+    await shared.write(PreferenceKeys.customStopgapKey, stopgap);
+  }
+
+  Future<int> getCustomStopgap() async {
+    customStopgap =
+        await shared.read(PreferenceKeys.customStopgapKey) ?? appConfig.stopGap;
+    /// cap customStopgap in valid range (10, 100)
+    customStopgap = min(max(customStopgap, 10), 100);
+    return customStopgap;
+  }
+
   Future<void> setDisplayBalance(display) async {
     displayBalance = display;
-    await shared.write(displayBalanceKey, displayBalance);
+    await shared.write(PreferenceKeys.displayBalanceKey, displayBalance);
     displayBalanceUpdateController.add(DisplayBalanceUpdated());
   }
 
   Future<bool> getDisplayBalance() async {
-    displayBalance = await shared.read(displayBalanceKey) ?? true;
+    displayBalance =
+        await shared.read(PreferenceKeys.displayBalanceKey) ?? true;
     return displayBalance;
   }
 
