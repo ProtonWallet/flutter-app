@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.migration.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
@@ -79,17 +78,13 @@ class AppViewModelImpl extends AppViewModel {
     /// sqlite db
     await DBHelper.init();
 
-    // TODO(fix): temp move to a cache managerment
-    await shared.checkif("app_database_force_version", 4, () async {
-      await rebuildDatabase();
-    });
-    final AppDatabase dbConnection = AppDatabase(shared);
+    /// cache manager
+    final appMigrationManager = AppMigrationManager(shared);
+    await appMigrationManager.init();
+    serviceManager.register(appMigrationManager);
 
-    /// remove bdk cache files to avoid migration issues in bdk@1.0.0-beta.4
-    await shared.checkif("app_bdk_database_force_version", bdkDatabaseVersion,
-        () async {
-      await BdkLibrary().clearLocalCache();
-    });
+    /// db connection
+    final AppDatabase dbConnection = AppDatabase(shared);
 
     /// networking
     final apiServiceManager = ProtonApiServiceManager(apiEnv, storage: storage);
