@@ -16,6 +16,7 @@ flutter_rust_bridge_codegen = { version = "2.1.0" }
 
 [dependencies]
 ##
+futures = "0.3"
 aes-gcm = { version = "0.10.3", features = ["zeroize"] }
 #https://crates.io/crates/secrecy
 secrecy = "0.8.0"
