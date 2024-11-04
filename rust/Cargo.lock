@@ -2713,7 +2713,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -2895,9 +2895,9 @@ dependencies = [
 
 [[package]]
 name = "muon-impl"
-version = "0.9.0"
+version = "0.9.1"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "30dc9844292fbe2ef6369555e92f92aee768dd59b299ce1251ee0f5344f7dbff"
+checksum = "9041aff34482264d57f0b57b714ad39e6261bc547af07229ed2ba67058a33918"
 dependencies = [
  "async-channel 2.3.1",
  "async-executor",
@@ -3705,6 +3705,7 @@ dependencies = [
  "flutter_logger",
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
+ "futures",
  "getrandom",
  "hyper",
  "lazy_static",
@@ -5098,7 +5099,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
