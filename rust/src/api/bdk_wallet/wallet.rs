@@ -134,20 +134,16 @@ impl FrbWallet {
 
 #[cfg(test)]
 mod test {
-
-    use andromeda_common::{Network, ScriptType};
-    use std::time::Instant;
-    use std::{env, sync::Arc};
-
-    use crate::api::bdk_wallet::storage::WalletMobileConnectorFactory;
+    use super::FrbWallet;
     use crate::api::{
         api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        bdk_wallet::blockchain::FrbBlockchainClient,
+        bdk_wallet::{blockchain::FrbBlockchainClient, storage::WalletMobileConnectorFactory},
     };
-
-    use super::FrbWallet;
+    use andromeda_common::{Network, ScriptType};
+    use std::time::Instant;
+    use std::{env, sync::Arc};
 
     #[tokio::test]
     #[ignore]
@@ -245,7 +241,7 @@ mod test {
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
-        let trans = frb_account.get_transactions(None, None).await.unwrap();
+        let trans = frb_account.get_transactions(None).await.unwrap();
 
         let mut builder = frb_account.build_tx().await.unwrap();
         builder = builder.add_recipient(
@@ -334,7 +330,7 @@ mod test {
         println!("untrusted_pending: {}", balance.inner.untrusted_pending);
         println!("balance: {}", balance.total().to_btc());
 
-        let transactions = frb_account.get_transactions(None, None).await.unwrap();
+        let transactions = frb_account.get_transactions(None).await.unwrap();
         assert!(!transactions.is_empty());
 
         let address1 = frb_account.get_address(Some(0)).await.unwrap();
@@ -355,7 +351,7 @@ mod test {
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
-        let trans = frb_account.get_transactions(None, None).await.unwrap();
+        let trans = frb_account.get_transactions(None).await.unwrap();
         assert!(!trans.is_empty());
 
         let mut tx_builder = frb_account.build_tx().await.unwrap();

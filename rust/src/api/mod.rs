@@ -1,5 +1,5 @@
 // this folder contains flutter rust bridge api
-pub mod api2;
+pub mod init;
 pub mod quark_command;
 
 // bdk
@@ -22,6 +22,7 @@ pub mod srp;
 
 // db
 pub mod db;
+pub mod logger;
 
 // provider
 // pub mod provider;

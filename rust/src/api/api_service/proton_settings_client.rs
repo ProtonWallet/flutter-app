@@ -5,8 +5,8 @@ pub use andromeda_api::proton_settings::ProtonSettingsClient as InnerProtonSetti
 use andromeda_api::{
     core::ApiClient,
     proton_settings::{
-        ApiMnemonicUserKey, SetTwoFaTOTPRequestBody, SetTwoFaTOTPResponseBody,
-        UpdateMnemonicSettingsRequestBody,
+        ApiMnemonicUserKey, ProtonSettingsClientExt, SetTwoFaTOTPRequestBody,
+        SetTwoFaTOTPResponseBody, UpdateMnemonicSettingsRequestBody,
     },
     proton_users::{ProtonSrpClientProofs, ProtonUserSettings},
 };

@@ -150,6 +150,7 @@ dependencies = [
  "andromeda-esplora",
  "anyhow",
  "async-std",
+ "bdk_chain",
  "bdk_wallet",
  "bitcoin",
  "futures",
@@ -158,6 +159,7 @@ dependencies = [
  "miniscript",
  "querystring",
  "rand_core",
+ "serde",
  "thiserror",
  "urlencoding",
  "uuid",
@@ -180,7 +182,7 @@ version = "0.1.0"
 dependencies = [
  "andromeda-api",
  "async-trait",
- "bdk_chain 0.16.0",
+ "bdk_chain",
  "bdk_core",
  "bitcoin",
  "futures",
@@ -538,18 +540,9 @@ dependencies = [
 
 [[package]]
 name = "bdk_chain"
-version = "0.16.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "163b064557cee078e8ee5dd2c88944204506f7b2b1524f78e8fcba38c346da7b"
-dependencies = [
- "bitcoin",
-]
-
-[[package]]
-name = "bdk_chain"
-version = "0.19.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e553c45ffed860aa7e0c6998c3a827fcdc039a2df76307563208ecfcae2f750"
+checksum = "3bee1fe68ec0015bce2e4c1754ebbf18d70750a1f0103e3785d34e8959fe8fd7"
 dependencies = [
  "bdk_core",
  "bitcoin",
@@ -561,9 +554,9 @@ dependencies = [
 
 [[package]]
 name = "bdk_core"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c0b45300422611971b0bbe84b04d18e38e81a056a66860c9dd3434f6d0f5396"
+checksum = "be5e187ee33d5f99f1997a700cc1dfa0524fd1de31e6414c612c9e89ccdaa133"
 dependencies = [
  "bitcoin",
  "hashbrown 0.9.1",
@@ -572,11 +565,11 @@ dependencies = [
 
 [[package]]
 name = "bdk_wallet"
-version = "1.0.0-beta.4"
+version = "1.0.0-beta.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5aeb48cd8e0a15d0bf7351fc8c30e44c474be01f4f98eb29f20ab59b645bd29c"
+checksum = "627ad309b5dc5adec0491141d40fcb8d032209c373dd47a870c702e9e5eba36a"
 dependencies = [
- "bdk_chain 0.19.0",
+ "bdk_chain",
  "bip39",
  "bitcoin",
  "miniscript",
@@ -2713,7 +2706,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -3723,6 +3716,9 @@ dependencies = [
  "serde_rusqlite",
  "thiserror",
  "tokio",
+ "tracing",
+ "tracing-appender",
+ "tracing-log",
  "tracing-subscriber",
 ]
 
@@ -4772,6 +4768,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tracing-appender"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3566e8ce28cc0a3fe42519fc80e6b4c943cc4c8cef275620eb8dac2d3d4e06cf"
+dependencies = [
+ "crossbeam-channel",
+ "thiserror",
+ "time",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "tracing-attributes"
 version = "0.1.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5099,7 +5107,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

@@ -144,10 +144,12 @@ impl FrbAccount {
 
     pub async fn get_transactions(
         &self,
-        pagination: Option<Pagination>,
         sort: Option<SortOrder>,
     ) -> Result<Vec<FrbTransactionDetails>, BridgeError> {
-        let transactions = self.inner.get_transactions(pagination, sort).await?;
+        let transactions = self
+            .inner
+            .get_transactions(Pagination::default(), sort)
+            .await?;
 
         let out_transactions = transactions
             .into_iter()

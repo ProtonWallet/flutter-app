@@ -18,7 +18,7 @@ class SettingsCoordinator extends Coordinator {
 
   void showLogs() {
     final view = LogsCoordinator().start();
-    push(view);
+    showInBottomSheet(view);
   }
 
   @override
