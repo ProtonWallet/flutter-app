@@ -89,7 +89,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                     Container(
                                       color: ProtonColors.white,
                                       padding: const EdgeInsets.all(10),
-                                      child: viewModel.initialized
+                                      child: viewModel.initialized &&
+                                              !viewModel.loadingAddress
                                           ? QrImageView(
                                               size: min(
                                                   MediaQuery.of(context)
@@ -129,7 +130,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                     const SizedBox(
                                       height: 6,
                                     ),
-                                    if (viewModel.initialized)
+                                    if (viewModel.initialized &&
+                                        !viewModel.loadingAddress)
                                       Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
