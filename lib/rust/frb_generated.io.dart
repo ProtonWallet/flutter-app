@@ -3,7 +3,6 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/api2.dart';
 import 'api/api_service/address_client.dart';
 import 'api/api_service/bitcoin_address_client.dart';
 import 'api/api_service/block_client.dart';
@@ -47,6 +46,7 @@ import 'api/crypto/wallet_key.dart';
 import 'api/crypto/wallet_key_helper.dart';
 import 'api/db/app_database_helper.dart';
 import 'api/flutter_logger.dart';
+import 'api/logger.dart';
 import 'api/proton_api.dart';
 import 'api/proton_wallet/features/wallet_creation.dart';
 import 'api/proton_wallet/storage/user_key_store.dart';

@@ -66,6 +66,7 @@ extension ProtonAddressJson on ProtonAddress {
       send: json['send'],
       displayName: json['displayName'],
       keys: (json['keys'] as List<dynamic>?)
+          // ignore: unnecessary_lambdas
           ?.map((keyJson) => ProtonAddressKeyJson.fromJson(keyJson))
           .toList(),
     );
