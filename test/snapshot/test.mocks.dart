@@ -283,6 +283,7 @@ class MockWelcomeCoordinator extends _i3.Mock
     _i13.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
+    bool? isDismissible = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -292,6 +293,7 @@ class MockWelcomeCoordinator extends _i3.Mock
             #backgroundColor: backgroundColor,
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
+            #isDismissible: isDismissible,
           },
         ),
         returnValueForMissingStub: null,
@@ -499,6 +501,7 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
     _i13.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
+    bool? isDismissible = true,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -508,6 +511,7 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
             #backgroundColor: backgroundColor,
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
+            #isDismissible: isDismissible,
           },
         ),
         returnValueForMissingStub: null,

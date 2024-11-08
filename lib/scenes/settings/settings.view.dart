@@ -143,30 +143,30 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
             ),
 
             /// Section: Logs
-            // const SizedBox(height: 12),
-            // const SectionHeader(title: 'Logs'),
-            // SettingsGroup(
-            //   children: [
-            //     SettingsItem(
-            //       title: 'Application logs',
-            //       subtitle: 'View logs',
-            //       onTap: () {
-            //         viewModel.move(NavID.logs);
-            //       },
-            //     ),
-            //     SettingsItem(
-            //       title: 'Force reload the application',
-            //       subtitle: 'Wipe cache and reload',
-            //       onTap: () {},
-            //       hidden: true,
-            //     ),
-            //     SettingsItem(
-            //       title: 'Clear all logs',
-            //       onTap: () {},
-            //       hidden: true,
-            //     ),
-            //   ],
-            // ),
+            const SizedBox(height: 12),
+            const SectionHeader(title: 'Logs'),
+            SettingsGroup(
+              children: [
+                SettingsItem(
+                  title: 'Application logs',
+                  subtitle: 'View logs',
+                  onTap: () {
+                    viewModel.move(NavID.logs);
+                  },
+                ),
+                SettingsItem(
+                  title: 'Force reload the application',
+                  subtitle: 'Wipe cache and reload',
+                  onTap: () {},
+                  hidden: true,
+                ),
+                SettingsItem(
+                  title: 'Clear all logs',
+                  onTap: () {},
+                  hidden: true,
+                ),
+              ],
+            ),
 
             // Section: Help Center
             SizedBoxes.box12,
