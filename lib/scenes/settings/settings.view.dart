@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -162,8 +163,12 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 ),
                 SettingsItem(
                   title: 'Clear all logs',
-                  onTap: () {},
-                  hidden: true,
+                  subtitle: viewModel.logsFolderSize,
+                  onTap: () async {
+                    EasyLoading.show(status: 'Clearing logs...');
+                    await viewModel.clearLogs();
+                    EasyLoading.dismiss();
+                  },
                 ),
               ],
             ),

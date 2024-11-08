@@ -1191,7 +1191,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiInitInitApp();
 
-  void crateApiLoggerInitRustLogging({required String filePath});
+  void crateApiLoggerInitRustLogging(
+      {required String filePath, required String fileName});
 
   Future<List<ApiWalletBitcoinAddress>> crateApiProtonApiAddBitcoinAddresses(
       {required String walletId,
@@ -9732,11 +9733,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  void crateApiLoggerInitRustLogging({required String filePath}) {
+  void crateApiLoggerInitRustLogging(
+      {required String filePath, required String fileName}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(filePath, serializer);
+        sse_encode_String(fileName, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 258)!;
       },
       codec: SseCodec(
@@ -9744,7 +9747,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiLoggerInitRustLoggingConstMeta,
-      argValues: [filePath],
+      argValues: [filePath, fileName],
       apiImpl: this,
     ));
   }
@@ -9752,7 +9755,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiLoggerInitRustLoggingConstMeta =>
       const TaskConstMeta(
         debugName: "init_rust_logging",
-        argNames: ["filePath"],
+        argNames: ["filePath", "fileName"],
       );
 
   @override
