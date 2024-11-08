@@ -10228,10 +10228,11 @@ fn wire__crate__api__logger__init_rust_logging_impl(
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_file_path = <String>::sse_decode(&mut deserializer);
+            let api_file_name = <String>::sse_decode(&mut deserializer);
             deserializer.end();
             transform_result_sse::<_, ()>((move || {
                 let output_ok = Result::<_, ()>::Ok({
-                    crate::api::logger::init_rust_logging(&api_file_path);
+                    crate::api::logger::init_rust_logging(&api_file_path, &api_file_name);
                 })?;
                 Ok(output_ok)
             })())

@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -15,20 +14,12 @@ import 'package:wallet/scenes/logs/logs.coordinator.dart';
 abstract class LogsViewModel extends ViewModel<LogsCoordinator> {
   LogsViewModel(super.coordinator);
 
-  String logs = "";
-
-  void shareLogs();
-
-  void clearLogs();
-
   final ScrollController scrollController = ScrollController();
 
   List<FileSystemEntity> files = [];
   late Directory folderDir;
 
   Future<void> shareFile(File file);
-
-  Future<void> downloadFile(String fileName, String downloadUrl);
 
   Future<void> deleteFile(File file);
 }
@@ -54,27 +45,41 @@ class LogsViewModelImpl extends LogsViewModel {
     // Initialize directory
     folderDir = Directory(logsPath);
     if (folderDir.existsSync()) {
-      files = folderDir.listSync().whereType<File>().toList();
-      files = files
-          .where((e) =>
-              e.path.endsWith("app.log") | e.path.endsWith("app_rust_logs.txt"))
+      files = folderDir
+          .listSync()
+          .whereType<File>()
+          .where((e) => e.path.endsWith(".log"))
           .toList();
+
+      final timestampPattern = RegExp(r'(app_logs_|app_rust_logs_)(\d{14})');
+
+      // Sort files by extracted timestamp
+      files.sort((a, b) {
+        final timestampA = _extractTimestamp(a.path, timestampPattern);
+        final timestampB = _extractTimestamp(b.path, timestampPattern);
+        return timestampA.compareTo(timestampB) * -1;
+      });
     } else {
       logger.i("Folder does not exist.");
     }
     sinkAddSafe();
   }
 
-  @override
-  Future<void> downloadFile(String fileName, String downloadUrl) async {
-    try {
-      final savePath = '${folderDir.path}/$fileName';
-      final Dio dio = Dio();
-      await dio.download(downloadUrl, savePath);
-      _loadFiles(); // Reload files after download
-    } catch (e) {
-      logger.e('Download error: $e');
+  // Extracts the timestamp from the filename and converts it to DateTime
+  DateTime _extractTimestamp(String filePath, RegExp pattern) {
+    final match = pattern.firstMatch(filePath);
+    if (match != null && match.group(2) != null) {
+      final timestampStr = match.group(2)!;
+      // Parse the timestamp string as DateTime
+      return DateTime.parse('${timestampStr.substring(0, 4)}'
+          '-${timestampStr.substring(4, 6)}'
+          '-${timestampStr.substring(6, 8)}'
+          'T${timestampStr.substring(8, 10)}'
+          ':${timestampStr.substring(10, 12)}'
+          ':${timestampStr.substring(12, 14)}');
     }
+    // Return a default DateTime far in the past if parsing fails
+    return DateTime(3000);
   }
 
   @override
@@ -103,29 +108,5 @@ class LogsViewModelImpl extends LogsViewModel {
       default:
         break;
     }
-  }
-
-  Future<void> loadLogs() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final logFile = File('${directory.path}/logs/app.log');
-    if (logFile.existsSync()) {
-      final logs = await logFile.readAsString();
-      this.logs = logs;
-    }
-  }
-
-  @override
-  void shareLogs() {
-    Share.share(logs);
-  }
-
-  @override
-  Future<void> clearLogs() async {
-    await LoggerService.reset();
-    loadLogs();
-    sinkAddSafe();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    });
   }
 }
