@@ -38,8 +38,7 @@ abstract class FrbAccount implements RustOpaqueInterface {
 
   Future<FrbTransactionDetails> getTransaction({required String txid});
 
-  Future<List<FrbTransactionDetails>> getTransactions(
-      {Pagination? pagination, SortOrder? sort});
+  Future<List<FrbTransactionDetails>> getTransactions({SortOrder? sort});
 
   Future<List<FrbLocalOutput>> getUtxos();
 

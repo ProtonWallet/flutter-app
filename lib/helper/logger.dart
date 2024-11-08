@@ -29,7 +29,7 @@ class LoggerService {
         ConsoleOutput(),
         AdvancedFileOutput(
           path: logsPath,
-          maxFileSizeKB: 5120,
+          maxFileSizeKB: 51200,
           latestFileName: "app.log",
         )
       ]),
