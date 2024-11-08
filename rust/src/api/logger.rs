@@ -17,7 +17,7 @@ lazy_static! {
 }
 
 // File size limit in bytes (50 MB)
-const MAX_LOG_SIZE: u64 = 50 * 1024 * 1024;
+const MAX_LOG_SIZE: u64 = 10 * 1024 * 1024;
 
 struct RotatingFileWriter {
     file: Arc<Mutex<File>>,
@@ -26,8 +26,8 @@ struct RotatingFileWriter {
 }
 
 impl RotatingFileWriter {
-    fn new(file_folder: &str) -> Self {
-        let file_path = format!("{}/{}", file_folder, "/app_rust_logs.txt");
+    fn new(file_folder: &str, file_name: &str) -> Self {
+        let file_path = format!("{}/{}", file_folder, file_name);
         let file = Arc::new(Mutex::new(
             Self::open_log_file(&file_path)
                 .unwrap_or_else(|err| panic!("Failed to open initial log file: {:?}", err)),
@@ -135,7 +135,7 @@ impl<'a> MakeWriter<'a> for RotatingFileWriter {
 }
 
 #[frb(sync)]
-pub fn init_rust_logging(file_path: &str) {
+pub fn init_rust_logging(file_path: &str, file_name: &str) {
     // Set the RUST_LOG environment variable
     env::set_var("RUST_LOG", "trace");
     info!("Initializing Rust logging with file: {}", file_path);
@@ -148,7 +148,7 @@ pub fn init_rust_logging(file_path: &str) {
     drop(guard_check);
 
     // Create a rotating file writer
-    let rotating_writer = RotatingFileWriter::new(file_path);
+    let rotating_writer = RotatingFileWriter::new(file_path, file_name);
     let (file_writer, guard) = tracing_appender::non_blocking(rotating_writer);
 
     // Create a layer for logging to file

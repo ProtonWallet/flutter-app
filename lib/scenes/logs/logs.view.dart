@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -22,16 +23,17 @@ class LogsView extends ViewBase<LogsViewModel> {
           ? const Center(
               child: Text('No files found in the app logs directory.'))
           : SizedBox(
-              height: 200,
-              // fixed listView height to 200 since we only has 2 log files for now
+              height: context.height * 2 / 3,
               child: ListView.builder(
                 itemCount: viewModel.files.length,
                 itemBuilder: (context, index) {
                   final file = viewModel.files[index];
                   final fileName = file.path.split('/').last;
                   return Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 16,
+                    ),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(
@@ -43,7 +45,6 @@ class LogsView extends ViewBase<LogsViewModel> {
                     ),
                     child: ListTile(
                       title: Text(fileName),
-                      subtitle: Text(file.path),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -59,7 +60,7 @@ class LogsView extends ViewBase<LogsViewModel> {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('${file.path} is deleted'),
+                                    content: Text('$fileName is deleted'),
                                   ),
                                 );
                               }

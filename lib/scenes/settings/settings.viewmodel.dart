@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
@@ -18,6 +19,8 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   String displayName = "";
   String displayEmail = "";
   String userName = "";
+  String logsFolderSize = "";
+
   late WalletUserSettings? walletUserSettings;
   bool loadedWalletUserSettings = false;
   bool receiveInviterNotification = false;
@@ -29,6 +32,8 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
 
   final ClearCacheBloc clearCacheBloc;
   late ValueNotifier<int> stopgapValueNotifier;
+
+  Future<void> clearLogs();
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -46,7 +51,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
 
   bool hadLocallogin = false;
 
-  void updateStopGap(){
+  void updateStopGap() {
     userSettingsDataProvider.setCustomStopgap(stopgapValueNotifier.value);
   }
 
@@ -61,6 +66,8 @@ class SettingsViewModelImpl extends SettingsViewModel {
     stopgapValueNotifier = ValueNotifier(customStopgap);
     stopgapValueNotifier.addListener(updateStopGap);
     loadSettings();
+
+    logsFolderSize = await LoggerService.getLogsSize();
 
     sinkAddSafe();
   }
@@ -106,5 +113,12 @@ class SettingsViewModelImpl extends SettingsViewModel {
       userSettingsDataProvider.updateReceiveInviterNotification(enable);
       sinkAddSafe();
     }
+  }
+
+  @override
+  Future<void> clearLogs() async {
+    await LoggerService.clearLogs();
+    logsFolderSize = await LoggerService.getLogsSize();
+    sinkAddSafe();
   }
 }
