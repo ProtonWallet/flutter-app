@@ -1,3 +1,5 @@
+use andromeda_api::wallet::ApiWalletData;
+use chrono::Utc;
 use rusqlite::{Result, Row};
 use serde::{Deserialize, Serialize};
 use serde_rusqlite::from_row;
@@ -30,5 +32,33 @@ pub struct WalletModel {
 impl ModelBase for WalletModel {
     fn from_row(row: &Row) -> Result<Self> {
         Ok(from_row::<WalletModel>(row).unwrap())
+    }
+}
+
+impl From<ApiWalletData> for WalletModel {
+    fn from(value: ApiWalletData) -> Self {
+        // Get the current time as a Unix timestamp
+        let current_time = Utc::now().timestamp();
+        WalletModel {
+            id: 0,
+            name: value.Wallet.Name,
+            passphrase: value.Wallet.HasPassphrase as u32,
+            public_key: value.Wallet.PublicKey.unwrap_or_default(),
+            imported: value.Wallet.IsImported as u32,
+            priority: value.Wallet.Priority as u32,
+            status: value.Wallet.Status as u32,
+            type_: value.Wallet.Type as u32,
+            create_time: current_time as u32,
+            modify_time: current_time as u32,
+            // this need to be set manually
+            user_id: String::default(),
+            wallet_id: value.Wallet.ID,
+            account_count: 1,
+            balance: f64::default(),
+            fingerprint: value.Wallet.Fingerprint,
+            show_wallet_recovery: value.WalletSettings.ShowWalletRecovery.unwrap_or(false) as u32,
+            migration_required: value.Wallet.MigrationRequired.unwrap_or(0) as u32,
+            legacy: Some(value.Wallet.Legacy.unwrap_or(0) as u32),
+        }
     }
 }

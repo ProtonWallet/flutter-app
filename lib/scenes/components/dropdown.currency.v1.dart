@@ -103,9 +103,11 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
               onTap: () {
                 showOptionsInBottomSheet(context);
                 Future.delayed(const Duration(milliseconds: 100), () {
-                  _scrollTo(widget.items.indexOf(selected) * 60 -
-                      MediaQuery.of(context).size.height / 6 +
-                      60);
+                  if (mounted) {
+                    _scrollTo(widget.items.indexOf(selected) * 60 -
+                        MediaQuery.of(context).size.height / 6 +
+                        60);
+                  }
                 });
               },
               style: widget.textStyle ??

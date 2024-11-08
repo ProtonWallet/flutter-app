@@ -1,14 +1,12 @@
 use andromeda_api::transaction::ExchangeRateOrTransactionTime;
-use chrono::Utc;
-// blockchain.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::blockchain_client::BlockchainClient;
+use chrono::Utc;
+use flutter_rust_bridge::frb;
 use log::info;
 use std::{collections::HashMap, ops::Deref, sync::Arc};
 
 use super::{account::FrbAccount, psbt::FrbPsbt};
-use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
+use crate::api::{api_service::proton_api_service::ProtonAPIService, errors::BridgeError};
 
 pub struct FrbBlockchainClient {
     pub(crate) inner: BlockchainClient,

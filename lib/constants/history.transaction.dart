@@ -1,4 +1,5 @@
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 
 class HistoryTransaction {
@@ -15,6 +16,7 @@ class HistoryTransaction {
   final String? body;
   final AccountModel accountModel;
   final List<String> bitcoinAddresses;
+  final FrbTransactionDetails frbTransactionDetails;
 
   HistoryTransaction({
     required this.txID,
@@ -25,6 +27,7 @@ class HistoryTransaction {
     required this.toList,
     required this.accountModel,
     required this.bitcoinAddresses,
+    required this.frbTransactionDetails,
     this.createTimestamp,
     this.updateTimestamp,
     this.label,

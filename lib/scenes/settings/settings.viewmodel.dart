@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
+import 'package:wallet/managers/manager.factory.dart';
+// import 'package:wallet/managers/proton.wallet.manager.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
@@ -40,6 +42,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
   final UserManager userManager;
   final NativeViewChannel nativeViewChannel;
   final UserSettingsDataProvider userSettingsDataProvider;
+  final ManagerFactory serviceManager;
 
   SettingsViewModelImpl(
     super.coordinator,
@@ -47,6 +50,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
     this.userManager,
     this.nativeViewChannel,
     this.userSettingsDataProvider,
+    this.serviceManager,
   );
 
   bool hadLocallogin = false;

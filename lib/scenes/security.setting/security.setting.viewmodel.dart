@@ -5,7 +5,7 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';

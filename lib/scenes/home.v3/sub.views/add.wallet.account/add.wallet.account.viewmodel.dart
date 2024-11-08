@@ -9,7 +9,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';

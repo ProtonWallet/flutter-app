@@ -5,9 +5,9 @@
 
 import '../../common/change_spend_policy.dart';
 import '../../common/coin_selection.dart';
-import '../../common/errors.dart';
 import '../../common/network.dart';
 import '../../frb_generated.dart';
+import '../errors.dart';
 import 'account.dart';
 import 'local_output.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -22,8 +22,6 @@ abstract class FrbTxBuilder implements RustOpaqueInterface {
 
   FrbTxBuilder clearRecipients();
 
-  ///     * UTXOs
-  ///
   FrbTxBuilder clearUtxosToSpend();
 
   Future<FrbTxBuilder> constrainRecipientAmounts();

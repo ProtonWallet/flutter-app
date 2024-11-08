@@ -5,7 +5,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet.account/delete.wallet.account.coordinator.dart';

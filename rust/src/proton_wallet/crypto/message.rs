@@ -1,7 +1,7 @@
 use super::{
     binary::{Binary, EncryptedBinary},
-    errors::WalletCryptoError,
     public_key::PublicKeys,
+    Result,
 };
 
 use proton_crypto::crypto::{
@@ -28,7 +28,7 @@ pub trait Message: Binary {
         &self,
         provider: &Provider,
         pub_keys: &PublicKeys<Provider>,
-    ) -> Result<EncryptedMessage<Self>, WalletCryptoError>
+    ) -> Result<EncryptedMessage<Self>>
     where
         Self: Sized,
     {
@@ -62,7 +62,7 @@ impl<T> EncryptedMessage<T>
 where
     T: Message,
 {
-    pub fn as_armored(&self) -> Result<String, WalletCryptoError> {
+    pub fn as_armored(&self) -> Result<String> {
         self.as_utf8_string()
     }
 
@@ -81,7 +81,7 @@ where
         &self,
         provider: &Provider,
         address_keys: &UnlockedAddressKeys<Provider>,
-    ) -> Result<T, WalletCryptoError> {
+    ) -> Result<T> {
         Ok(T::new(
             provider
                 .new_decryptor()

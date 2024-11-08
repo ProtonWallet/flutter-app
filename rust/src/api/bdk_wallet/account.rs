@@ -1,7 +1,4 @@
-use std::sync::Arc;
-
 // account.rs
-use flutter_rust_bridge::frb;
 
 use andromeda_bitcoin::{
     account::Account, transactions::Pagination, utils::SortOrder, SignOptions,
@@ -14,6 +11,8 @@ use crate::{
     proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
     BridgeError,
 };
+use flutter_rust_bridge::frb;
+use std::sync::Arc;
 
 use super::{
     address::FrbAddress, balance::FrbBalance, derivation_path::FrbDerivationPath,
@@ -22,7 +21,6 @@ use super::{
     wallet::FrbWallet,
 };
 
-// #[derive(Debug, Clone)]
 pub struct FrbAccount {
     pub(crate) inner: Arc<Account<WalletMobileConnector, WalletMobilePersister>>,
 }
@@ -32,10 +30,6 @@ impl FrbAccount {
     pub(crate) fn get_inner(&self) -> Arc<Account<WalletMobileConnector, WalletMobilePersister>> {
         self.inner.clone()
     }
-
-    // pub(crate) fn get_inner_ref(&self) -> Account<WalletMobileConnector, WalletMobilePersister> {
-    //     self.inner.deref()
-    // }
 }
 
 impl From<Arc<Account<WalletMobileConnector, WalletMobilePersister>>> for FrbAccount {
@@ -43,14 +37,6 @@ impl From<Arc<Account<WalletMobileConnector, WalletMobilePersister>>> for FrbAcc
         FrbAccount { inner: value }
     }
 }
-
-// impl From<&Account<WalletMobileConnector, WalletMobilePersister>> for FrbAccount {
-//     fn from(value: &Account<WalletMobileConnector, WalletMobilePersister>) -> Self {
-//         FrbAccount {
-//             inner: value.clone(),
-//         }
-//     }
-// }
 
 impl FrbAccount {
     /// Usually creating account need to through wallet.

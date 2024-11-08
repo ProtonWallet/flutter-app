@@ -3720,6 +3720,7 @@ dependencies = [
  "tracing-appender",
  "tracing-log",
  "tracing-subscriber",
+ "zeroize",
 ]
 
 [[package]]

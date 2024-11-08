@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.interface.dart';
 

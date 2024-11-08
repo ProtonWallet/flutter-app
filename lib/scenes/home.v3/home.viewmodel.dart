@@ -33,7 +33,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -79,7 +79,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool acceptTermsAndConditions = false;
   int currentHistoryPage = 0;
   int currentAddressPage = 0;
-  AccountModel? historyAccountModel;
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
@@ -146,7 +145,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
-  String selectedTXID = "";
   String walletIDtoAddAccount = "";
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
@@ -451,7 +449,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
     /// workaround, load addressKey to memory first, or it will need to wait until other api call finish
     /// will need to prioritize api calls in other MR
-    final _ = await dataProviderManager.addressKeyProvider.getAddressKeys();
+    final _ =
+        await dataProviderManager.addressKeyProvider.getAddressKeysForTL();
 
     /// preload data
     preLoadHomeData();
@@ -681,12 +680,6 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showSecuritySetting();
       case NavID.welcome:
         coordinator.logout();
-      case NavID.historyDetails:
-        coordinator.showHistoryDetails(
-          selectedWallet?.walletID ?? "",
-          historyAccountModel?.accountID ?? "",
-          selectedTXID,
-        );
       case NavID.twoFactorAuthSetup:
         coordinator.showTwoFactorAuthSetup();
       case NavID.twoFactorAuthDisable:

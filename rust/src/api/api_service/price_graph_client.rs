@@ -1,12 +1,12 @@
+use andromeda_api::{
+    core::ApiClient,
+    price_graph::{PriceGraph, Timeframe},
+    settings::FiatCurrencySymbol as FiatCurrency,
+};
 use std::sync::Arc;
 
-pub use andromeda_api::core::ApiClient;
-use andromeda_api::price_graph::{PriceGraph, Timeframe};
-use andromeda_api::settings::FiatCurrencySymbol as FiatCurrency;
-
-use crate::BridgeError;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct PriceGraphClient {
     pub(crate) inner: Arc<andromeda_api::price_graph::PriceGraphClient>,

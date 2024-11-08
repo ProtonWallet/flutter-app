@@ -11,13 +11,12 @@ use andromeda_api::{
     wallet_ext::WalletClientExt,
 };
 
+use super::proton_api_service::ProtonAPIService;
 use crate::{
     wallet::{CreateWalletReq, WalletTransaction},
     wallet_account::CreateWalletAccountReq,
     BridgeError,
 };
-
-use super::proton_api_service::ProtonAPIService;
 
 pub struct WalletClient {
     pub(crate) inner: Arc<andromeda_api::wallet::WalletClient>,

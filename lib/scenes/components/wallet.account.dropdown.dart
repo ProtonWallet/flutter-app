@@ -84,9 +84,11 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
             if (widget.accounts.length > 1) {
               showOptionsInBottomSheet(context);
               Future.delayed(const Duration(milliseconds: 100), () {
-                _scrollTo(_getIndexOfAccount(selected) * 60 -
-                    MediaQuery.of(context).size.height / 6 +
-                    60);
+                if (mounted) {
+                  _scrollTo(_getIndexOfAccount(selected) * 60 -
+                      MediaQuery.of(context).size.height / 6 +
+                      60);
+                }
               });
             }
           },

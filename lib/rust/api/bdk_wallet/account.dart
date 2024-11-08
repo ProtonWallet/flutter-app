@@ -4,12 +4,12 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../common/address_info.dart';
-import '../../common/errors.dart';
 import '../../common/keychain_kind.dart';
 import '../../common/network.dart';
 import '../../common/pagination.dart';
 import '../../common/script_type.dart';
 import '../../frb_generated.dart';
+import '../errors.dart';
 import 'address.dart';
 import 'balance.dart';
 import 'derivation_path.dart';

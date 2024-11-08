@@ -1,8 +1,7 @@
 // payment_link.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::payment_link::PaymentLink;
 use andromeda_common::Network;
+use flutter_rust_bridge::frb;
 
 use crate::BridgeError;
 

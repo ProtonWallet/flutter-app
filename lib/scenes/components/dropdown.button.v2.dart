@@ -110,9 +110,11 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
               onTap: () {
                 showOptionsInBottomSheet(context);
                 Future.delayed(const Duration(milliseconds: 100), () {
-                  _scrollTo(widget.items.indexOf(selected) * 60 -
-                      MediaQuery.of(context).size.height / 6 +
-                      60);
+                  if (mounted) {
+                    _scrollTo(widget.items.indexOf(selected) * 60 -
+                        MediaQuery.of(context).size.height / 6 +
+                        60);
+                  }
                 });
               },
               style: widget.textStyle ??
@@ -242,8 +244,10 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                   child: Column(children: [
                                     ListTile(
                                       trailing: selected == widget.items[index]
-                                          ? Assets.images.icon.icCheckmark
-                                          .svg(fit: BoxFit.fill, width: 20, height: 20)
+                                          ? Assets.images.icon.icCheckmark.svg(
+                                              fit: BoxFit.fill,
+                                              width: 20,
+                                              height: 20)
                                           : null,
                                       leading: widget.itemsMoreDetail != null
                                           ? CustomTooltip(

@@ -3,14 +3,14 @@ use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use super::Result;
 use crate::proton_wallet::db::{
     database::{address::AddressDatabase, database::BaseDatabase},
     error::DatabaseError,
     model::address_model::AddressModel,
-    Result,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AddressDao {
     conn: Arc<Mutex<Connection>>,
     pub database: AddressDatabase,

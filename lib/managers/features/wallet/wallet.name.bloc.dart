@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 
 /// Define the Bloc
 class WalletNameBloc {
@@ -24,13 +23,15 @@ class WalletNameBloc {
   ///### None block functions
   Future<void> updateWalletName(WalletModel walletModel, String newName) async {
     final walletID = walletModel.walletID;
-    final SecretKey secretKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
-    final String encryptedName = await WalletKeyHelper.encrypt(
-      secretKey,
-      newName,
+
+    final encryptedName = FrbWalletKeyHelper.encrypt(
+      base64SecureKey: unlockedWalletKey.toBase64(),
+      plaintext: newName,
     );
+
     await walletClient.updateWalletName(
       walletId: walletID,
       newName: encryptedName,
@@ -43,11 +44,15 @@ class WalletNameBloc {
     String newName,
   ) async {
     final walletID = walletModel.walletID;
-    final SecretKey secretKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
 
-    final newLabel = await WalletKeyHelper.encrypt(secretKey, newName);
+    final newLabel = FrbWalletKeyHelper.decrypt(
+      base64SecureKey: unlockedWalletKey.toBase64(),
+      encryptText: newName,
+    );
+
     final walletAccount = await walletClient.updateWalletAccountLabel(
       walletId: walletID,
       walletAccountId: accountModel.accountID,

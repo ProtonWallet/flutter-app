@@ -1,13 +1,11 @@
-use std::sync::Arc;
-
 pub use andromeda_api::{
     address::{AddressBalance, ApiTx},
     core::ApiClient,
 };
-
-use crate::BridgeError;
+use std::sync::Arc;
 
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct AddressClient {
     pub(crate) inner: Arc<andromeda_api::address::AddressClient>,

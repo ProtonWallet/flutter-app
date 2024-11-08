@@ -10,7 +10,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -60,8 +60,8 @@ class EditBvEViewModelImpl extends EditBvEViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses = await dataProviderManager.addressKeyProvider
-          .getAddresses();
+      userAddresses =
+          await dataProviderManager.addressKeyProvider.getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }

@@ -17,7 +17,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -80,8 +80,8 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      protonAddresses = await dataProviderManager.addressKeyProvider
-          .getAddresses();
+      protonAddresses =
+          await dataProviderManager.addressKeyProvider.getAddresses();
     } catch (e) {
       errorMessage = e.toString();
     }
