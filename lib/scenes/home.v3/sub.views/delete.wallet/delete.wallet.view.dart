@@ -10,6 +10,7 @@ import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.viewmodel.dart';
@@ -24,7 +25,13 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
   Widget build(BuildContext context) {
     return PageLayoutV1(
       expanded: MediaQuery.of(context).size.height < 500,
-      showHeader: false,
+      headerWidget: CustomHeader(
+        buttonDirection: AxisDirection.right,
+        padding: const EdgeInsets.all(0.0),
+        button: CloseButtonV1(onPressed: () {
+          Navigator.of(context).pop();
+        }),
+      ),
       child: BlocProvider.value(
         value: viewModel.deleteWalletBloc,
         child: BlocListener<DeleteWalletBloc, DeleteWalletState>(
@@ -58,12 +65,6 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: CloseButtonV1(onPressed: () {
-                  Navigator.of(context).pop();
-                }),
-              ),
               Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [

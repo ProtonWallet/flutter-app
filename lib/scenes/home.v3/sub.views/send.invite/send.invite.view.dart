@@ -8,6 +8,7 @@ import 'package:wallet/scenes/components/bottom.sheets/email.autocomplete.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -21,7 +22,15 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      showHeader: false,
+      headerWidget: CustomHeader(
+        buttonDirection: AxisDirection.left,
+        padding: const EdgeInsets.all(0.0),
+        button: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
       backgroundColor: ProtonColors.white,
       child: viewModel.state == SendInviteState.sendInvite
           ? buildSendInvite(context)
@@ -33,13 +42,6 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundProton,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })),
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
@@ -93,13 +95,6 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundProton,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })),
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [

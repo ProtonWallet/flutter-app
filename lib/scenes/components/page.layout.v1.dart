@@ -15,9 +15,9 @@ class PageLayoutV1 extends StatelessWidget {
   final bool showHeader;
   final bool initialized;
   final ScrollController? scrollController;
-
   /// we will expanded the child to match parent height if set it to true
   final bool expanded;
+  final double? height;
 
   const PageLayoutV1({
     super.key,
@@ -31,6 +31,7 @@ class PageLayoutV1 extends StatelessWidget {
     this.showHeader = true,
     this.expanded = true,
     this.initialized = true,
+    this.height,
   });
 
   @override
@@ -42,37 +43,40 @@ class PageLayoutV1 extends StatelessWidget {
         color: backgroundColor ?? ProtonColors.backgroundProton,
       ),
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (showHeader)
-                headerWidget ??
-                    BackButtonV1(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-              if (!initialized)
-                const Align(
-                  child: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: CustomLoading(
-                      size: 30,
+        child: SizedBox(
+          height: height,
+          child: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showHeader)
+                  headerWidget ??
+                      BackButtonV1(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                if (!initialized)
+                  const Align(
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CustomLoading(
+                        size: 30,
+                      ),
                     ),
                   ),
-                ),
-              if (initialized)
-                expanded
-                    ? Expanded(
-                        child: buildMain(context),
-                      )
-                    : buildMain(context),
-              if (bottomWidget != null) bottomWidget!,
-            ],
+                if (initialized)
+                  expanded
+                      ? Expanded(
+                          child: buildMain(context),
+                        )
+                      : buildMain(context),
+                if (bottomWidget != null) bottomWidget!,
+              ],
+            ),
           ),
         ),
       ),

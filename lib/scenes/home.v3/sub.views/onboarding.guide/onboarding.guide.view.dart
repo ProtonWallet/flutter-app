@@ -36,6 +36,7 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
         headerWidget: CustomHeader(
           title: S.of(context).wallet_setup,
           buttonDirection: AxisDirection.right,
+          padding: const EdgeInsets.all(0.0),
         ),
         initialized: viewModel.initialized,
         expanded: viewModel.firstWallet
