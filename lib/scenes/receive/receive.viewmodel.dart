@@ -40,6 +40,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   var selectedWallet = 1;
   int localLastUsedIndex = -1;
   bool initialized = false;
+  bool loadingAddress = false;
   bool tooManyUnusedAddress = false;
   bool warnUnusedAddress = false;
 
@@ -107,7 +108,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         accountValueNotifier.addListener(() {
           changeAccount(accountValueNotifier.value);
         });
-        changeAccount(accountModel!);
+        await changeAccount(accountModel!);
       }
     } on BridgeError catch (e, stacktrace) {
       errorMessage = parseSampleDisplayError(e);
@@ -205,6 +206,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> changeAccount(AccountModel newAccountModel) async {
+    loadingAddress = true;
+    sinkAddSafe();
     try {
       tooManyUnusedAddress = false;
       warnUnusedAddress = false;
@@ -229,6 +232,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     } catch (e) {
       logger.e(e.toString());
     }
+    loadingAddress = false;
     sinkAddSafe();
   }
 }
