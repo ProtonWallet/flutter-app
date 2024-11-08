@@ -4,6 +4,7 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/edit.bve/edit.bve.viewmodel.dart';
@@ -16,7 +17,15 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      showHeader: false,
+      headerWidget: CustomHeader(
+        buttonDirection: AxisDirection.right,
+        padding: const EdgeInsets.all(0.0),
+        button: CloseButtonV1(
+            backgroundColor: ProtonColors.backgroundProton,
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
       expanded: viewModel.userAddresses.length > 5,
       initialized: viewModel.initialized,
       backgroundColor: ProtonColors.white,
@@ -24,13 +33,6 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: CloseButtonV1(
-                  backgroundColor: ProtonColors.backgroundProton,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  })),
           Center(
             child: Text(
               S.of(context).email_integration,

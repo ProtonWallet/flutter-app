@@ -15,15 +15,7 @@ class SecureStorageManager implements Manager {
 
   /// function
   Future<void> deleteAll() async {
-    if (Platform.isWindows) {
-      logger.w(
-          "Windows not support to deleteAll secure storage, try to delete with cached keys");
-      for (String key in keys) {
-        await storage.delete(key);
-      }
-    } else {
-      await storage.deleteAll();
-    }
+    await storage.deleteAll();
   }
 
   ///
