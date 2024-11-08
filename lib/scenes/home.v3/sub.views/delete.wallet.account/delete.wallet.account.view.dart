@@ -7,6 +7,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet.account/delete.wallet.account.viewmodel.dart';
@@ -22,13 +23,14 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
         expanded: MediaQuery.of(context).size.height < 500,
-        showHeader: false,
+        headerWidget: CustomHeader(
+          buttonDirection: AxisDirection.right,
+          padding: const EdgeInsets.all(0.0),
+          button: CloseButtonV1(onPressed: () {
+            Navigator.of(context).pop();
+          }),
+        ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Align(
-              alignment: Alignment.centerRight,
-              child: CloseButtonV1(onPressed: () {
-                Navigator.of(context).pop();
-              })),
           Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [

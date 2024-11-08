@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/unlock.type.dart';
+import 'package:wallet/scenes/components/back.button.v1.dart';
+import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v3.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -19,7 +22,14 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      title: S.of(context).security,
+      headerWidget: CustomHeader(
+        title: context.local.security,
+        buttonDirection: AxisDirection.left,
+        padding: const EdgeInsets.only(bottom: 10.0),
+        button: BackButtonV1(onPressed: () {
+          Navigator.of(context).pop();
+        }),
+      ),
       child: Column(
         children: [
           const SizedBox(height: defaultPadding),

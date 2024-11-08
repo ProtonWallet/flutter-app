@@ -30,6 +30,7 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
         headerWidget: CustomHeader(
           title: S.of(context).add_wallet_account,
           buttonDirection: AxisDirection.right,
+          padding: const EdgeInsets.all(0.0),
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Column(mainAxisSize: MainAxisSize.min, children: [

@@ -62,6 +62,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
       headerWidget: CustomHeader(
         title: S.of(context).wallet_preference,
         buttonDirection: AxisDirection.left,
+        padding: const EdgeInsets.only(bottom: 10),
       ),
       scrollController: viewModel.scrollController,
       initialized: viewModel.initialized,
@@ -76,9 +77,6 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
                     TextFieldTextV2(
                       prefixIcon: Padding(
                           padding: const EdgeInsets.all(4),
