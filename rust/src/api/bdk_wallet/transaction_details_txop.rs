@@ -1,7 +1,6 @@
 // transaction_details_txop.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::transactions::DetailledTxOutput;
+use flutter_rust_bridge::frb;
 
 use crate::api::bdk_wallet::script_buf::FrbScriptBuf;
 

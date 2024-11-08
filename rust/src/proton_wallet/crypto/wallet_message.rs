@@ -78,7 +78,7 @@ mod tests {
         let message = WalletMessage::new_from_str("Message body send to recipent");
 
         let provider = new_pgp_provider();
-        let mut encryptor_keys = PublicKeys::new();
+        let mut encryptor_keys = PublicKeys::default();
 
         let locked_address_keys = get_test_user_2_locked_address_key();
         encryptor_keys

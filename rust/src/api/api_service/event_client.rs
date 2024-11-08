@@ -1,10 +1,8 @@
+use andromeda_api::core::ApiClient;
 use std::sync::Arc;
 
-use andromeda_api::core::ApiClient;
-
-use crate::{event_routes::ProtonEvent, BridgeError};
-
 use super::proton_api_service::ProtonAPIService;
+use crate::{event_routes::ProtonEvent, BridgeError};
 
 pub struct EventClient {
     pub(crate) inner: Arc<andromeda_api::event::EventClient>,

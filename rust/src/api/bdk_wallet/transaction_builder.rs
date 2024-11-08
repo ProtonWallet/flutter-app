@@ -1,8 +1,4 @@
 // transaction_builder.rs
-use crate::{
-    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
-    BridgeError,
-};
 use andromeda_bitcoin::{
     transaction_builder::{CoinSelection, TxBuilder},
     ChangeSpendPolicy,
@@ -11,6 +7,8 @@ use andromeda_common::Network;
 use flutter_rust_bridge::frb;
 
 use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt};
+use crate::proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister};
+use crate::BridgeError;
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {
@@ -80,39 +78,6 @@ impl FrbTxBuilder {
 
         Ok(inner.into())
     }
-
-    // pub fn get_recipients(&self) -> Vec<Recipient> {
-    //     let recipients = self
-    //         .inner
-    //         .recipients
-    //         .clone()
-    //         .into_iter()
-    //         .map(|recipient| {
-    //             let TmpRecipient(uuid, address, amount) = recipient;
-    //             Recipient(uuid, address, amount.to_sat())
-    //         })
-    //         .collect();
-
-    //     recipients
-    // }
-
-    /**
-     * UTXOs
-     */
-
-    // pub fn add_utxo_to_spend(&self, outpoint: FrbOutPoint) -> Result<FrbTxBuilder, BridgeError> {
-    //     let serialised = outpoint.into();
-    //     let inner = self.inner.add_utxo_to_spend(&serialised);
-
-    //     Ok(FrbTxBuilder { inner })
-    // }
-
-    // pub fn remove_utxo_to_spend(&self, outpoint: FrbOutPoint) -> Result<FrbTxBuilder, BridgeError> {
-    //     let serialised: OutPoint = outpoint.try_into()?;
-    //     let inner = self.inner.remove_utxo_to_spend(&serialised);
-
-    //     Ok(FrbTxBuilder { inner })
-    // }
 
     #[frb(sync)]
     pub fn clear_utxos_to_spend(&self) -> FrbTxBuilder {

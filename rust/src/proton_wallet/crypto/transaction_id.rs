@@ -1,11 +1,10 @@
-use core::str;
-
-use super::{errors::WalletCryptoError, private_key::UnlockedPrivateKeys};
-
 use base64::{prelude::BASE64_STANDARD, Engine};
+use core::str;
 use proton_crypto_account::proton_crypto::crypto::{
     DataEncoding, Decryptor, DecryptorSync, Encryptor, EncryptorSync, PGPProviderSync, VerifiedData,
 };
+
+use super::{private_key::UnlockedPrivateKeys, Result};
 
 /// This ID can be converted to/from strings and it is clear text
 #[derive(Debug)]
@@ -19,7 +18,7 @@ impl WalletTransactionID {
         Self::new(plaintext.as_bytes().to_vec())
     }
 
-    pub fn new_from_base64(base64: &str) -> Result<Self, WalletCryptoError> {
+    pub fn new_from_base64(base64: &str) -> Result<Self> {
         Ok(BASE64_STANDARD.decode(base64).map(Self::new)?)
     }
 
@@ -27,8 +26,14 @@ impl WalletTransactionID {
         BASE64_STANDARD.encode(&self.0)
     }
 
-    pub fn as_utf8_string(&self) -> Result<String, WalletCryptoError> {
+    pub fn as_utf8_string(&self) -> Result<String> {
         Ok(str::from_utf8(&self.0)?.to_string())
+    }
+}
+
+impl Default for WalletTransactionID {
+    fn default() -> Self {
+        Self::new(Vec::new())
     }
 }
 
@@ -42,11 +47,11 @@ impl WalletTransactionID {
         &self,
         provider: &Provider,
         unlocked_keys: &UnlockedPrivateKeys<Provider>,
-    ) -> Result<EncryptedWalletTransactionID, WalletCryptoError> {
+    ) -> Result<EncryptedWalletTransactionID> {
         let encrypted = provider
             .new_encryptor()
             .with_encryption_key(&unlocked_keys.as_self_encryption_public_key()?)
-            .encrypt_raw(&self.0, DataEncoding::Bytes)?;
+            .encrypt_raw(&self.0, DataEncoding::Armor)?;
         Ok(EncryptedWalletTransactionID::new(encrypted))
     }
 }
@@ -59,12 +64,18 @@ impl EncryptedWalletTransactionID {
         Self(data)
     }
 
-    pub fn new_from_base64(base64: &str) -> Result<Self, WalletCryptoError> {
+    pub fn new_from_base64(base64: &str) -> Result<Self> {
         Ok(BASE64_STANDARD.decode(base64).map(Self::new)?)
     }
 
     pub fn to_base64(&self) -> String {
         BASE64_STANDARD.encode(&self.0)
+    }
+}
+
+impl From<String> for EncryptedWalletTransactionID {
+    fn from(value: String) -> Self {
+        Self::new(value.into())
     }
 }
 
@@ -77,13 +88,13 @@ impl EncryptedWalletTransactionID {
         &self,
         provider: &T,
         unlocked_keys: &UnlockedPrivateKeys<T>,
-    ) -> Result<WalletTransactionID, WalletCryptoError> {
+    ) -> Result<WalletTransactionID> {
         Ok(WalletTransactionID::new(
             provider
                 .new_decryptor()
                 .with_decryption_key_refs(unlocked_keys.user_keys.as_ref())
                 .with_decryption_key_refs(unlocked_keys.addr_keys.as_ref())
-                .decrypt(&self.0, DataEncoding::Bytes)?
+                .decrypt(&self.0, DataEncoding::Armor)?
                 .into_vec(),
         ))
     }

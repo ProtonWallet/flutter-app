@@ -1,7 +1,6 @@
 // keychain_kind.rs
-use flutter_rust_bridge::frb;
-
 pub use andromeda_bitcoin::KeychainKind;
+use flutter_rust_bridge::frb;
 
 #[frb(mirror(KeychainKind))]
 pub enum _KeychainKind {

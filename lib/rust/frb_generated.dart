@@ -45,12 +45,15 @@ import 'api/bdk_wallet/wallet.dart';
 import 'api/crypto/wallet_key.dart';
 import 'api/crypto/wallet_key_helper.dart';
 import 'api/db/app_database_helper.dart';
+import 'api/errors.dart';
 import 'api/flutter_logger.dart';
 import 'api/logger.dart';
 import 'api/proton_api.dart';
-import 'api/proton_wallet/features/wallet_creation.dart';
+import 'api/proton_wallet/features/backup_mnemonic.dart';
+import 'api/proton_wallet/features/transition_layer.dart';
 import 'api/proton_wallet/storage/user_key_store.dart';
 import 'api/proton_wallet/storage/wallet_key_store.dart';
+import 'api/proton_wallet/storage/wallet_mnemonic_store.dart';
 import 'api/proton_wallet/wallet.dart';
 import 'api/rust_api.dart';
 import 'api/srp/srp_client.dart';
@@ -58,7 +61,6 @@ import 'common/address_info.dart';
 import 'common/change_spend_policy.dart';
 import 'common/coin_selection.dart';
 import 'common/confirmation_time.dart';
-import 'common/errors.dart';
 import 'common/keychain_kind.dart';
 import 'common/network.dart';
 import 'common/pagination.dart';
@@ -85,8 +87,11 @@ import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
 import 'proton_api/wallet_settings.dart';
+import 'proton_wallet/crypto/wallet_key.dart';
 import 'proton_wallet/db/model/account_model.dart';
 import 'proton_wallet/db/model/wallet_model.dart';
+import 'proton_wallet/features/backup_mnemonic.dart';
+import 'proton_wallet/storage/wallet_mnemonic_ext.dart';
 import 'srp/proofs.dart';
 
 /// Main entrypoint of the Rust API
@@ -136,7 +141,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.1.0';
 
   @override
-  int get rustContentHash => -1161629867;
+  int get rustContentHash => -946876571;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -1121,6 +1126,12 @@ abstract class RustLibApi extends BaseApi {
   Uint8List crateApiCryptoWalletKeyFrbUnlockedWalletKeyToEntropy(
       {required FrbUnlockedWalletKey that});
 
+  String crateApiCryptoWalletKeyFrbLockedWalletKeyGetArmored(
+      {required FrbLockedWalletKey that});
+
+  String crateApiCryptoWalletKeyFrbLockedWalletKeyGetSignature(
+      {required FrbLockedWalletKey that});
+
   String crateApiCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
       {required String base64SecureKey, required String encryptText});
 
@@ -1270,12 +1281,85 @@ abstract class RustLibApi extends BaseApi {
       required String walletTransactionId,
       required String label});
 
-  Future<ApiWalletAccount>
-      crateApiProtonWalletFeaturesWalletCreationFrbWalletCreationCreateWalletAccount(
-          {required FrbWalletCreation that,
+  Future<int>
+      crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicTwoFaStatus(
+          {required FrbBackupMnemonic that});
+
+  Future<MnemonicResult>
+      crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicViewSeed(
+          {required FrbBackupMnemonic that,
           required String walletId,
-          required String label,
-          required int accountIndex});
+          required String loginPassword,
+          required String twofa});
+
+  Future<FrbSenderBody>
+      crateApiProtonWalletFeaturesTransitionLayerFrbSenderBodyDefault();
+
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerChangePassword(
+          {required ProtonUserKey userKey,
+          required String passphrase,
+          required String newPassphrase});
+
+  FrbSenderBody
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptMessages(
+          {required List<ProtonUserKey> userKeys,
+          required List<ProtonAddressKey> addrKeys,
+          required String userKeyPassword,
+          String? encToList,
+          String? encSender,
+          String? encBody});
+
+  List<FrbTLTransactionID>
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptTransactionIds(
+          {required List<ProtonUserKey> userKeys,
+          required List<ProtonAddressKey> addrKeys,
+          required String userKeyPassword,
+          required List<FrbTLEncryptedTransactionID> encTransactionIds});
+
+  FrbUnlockedWalletKey
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKey(
+          {required ApiWalletKey walletKey,
+          required ProtonUserKey userKey,
+          required String userKeyPassphrase});
+
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyLegacy(
+          {required String encryptedMnemonicText,
+          required List<ProtonUserKey> userKeys,
+          required String userKeyPassword});
+
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessages(
+          {required List<ProtonAddressKey> addrKeys, required String message});
+
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithKeys(
+          {required List<String> privateKeys, required String message});
+
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithUserkey(
+          {required ProtonUserKey userKey, required String message});
+
+  FrbLockedWalletKey
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptWalletKey(
+          {required FrbUnlockedWalletKey walletKey,
+          required ProtonUserKey userKey,
+          required String userKeyPassphrase});
+
+  String crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerSign(
+      {required List<ProtonUserKey> userKeys,
+      required ProtonAddressKey addrKeys,
+      required String userKeyPassword,
+      required String message,
+      required String context});
+
+  bool
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerVerifySignature(
+          {required String privateKey,
+          required String message,
+          required String signature,
+          required String context});
 
   Future<void>
       crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreClearAuthDartCallback(
@@ -1284,14 +1368,14 @@ abstract class RustLibApi extends BaseApi {
   FrbUserKeyStore crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreNew();
 
   Future<void>
-      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPrimaryUserKeyCallback(
+      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetDefaultUserKeyCallback(
           {required FrbUserKeyStore that,
           required FutureOr<ProtonUserKey> Function(String) callback});
 
   Future<void>
-      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetUserKeysCallback(
+      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPassphraseCallback(
           {required FrbUserKeyStore that,
-          required FutureOr<List<ProtonUserKey>> Function(String) callback});
+          required FutureOr<String> Function(String) callback});
 
   Future<void>
       crateApiProtonWalletStorageWalletKeyStoreFrbWalletKeyStoreClearAuthDartCallback(
@@ -1310,12 +1394,33 @@ abstract class RustLibApi extends BaseApi {
           {required FrbWalletKeyStore that,
           required FutureOr<void> Function(List<ApiWalletKey>) callback});
 
-  Future<FrbWalletCreation>
-      crateApiProtonWalletWalletFrbProtonWalletGetWalletCrateionFeature(
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreClearAuthDartCallback(
+          {required FrbWalletMnemonicStore that});
+
+  FrbWalletMnemonicStore
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreNew();
+
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetGetWalletKeysCallback(
+          {required FrbWalletMnemonicStore that,
+          required FutureOr<List<MnemonicData>> Function() callback});
+
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetSaveWalletKeysCallback(
+          {required FrbWalletMnemonicStore that,
+          required FutureOr<void> Function(List<MnemonicData>) callback});
+
+  Future<FrbBackupMnemonic>
+      crateApiProtonWalletWalletFrbProtonWalletGetBackupMnemonicFeature(
           {required FrbProtonWallet that});
 
   Future<FrbProtonWallet> crateApiProtonWalletWalletFrbProtonWalletNew(
-      {required ArcProtonApiService api, required String dbPath});
+      {required ArcProtonApiService api,
+      required String dbPath,
+      required FrbUserKeyStore userKeyTore,
+      required FrbWalletKeyStore walletKeyStore,
+      required FrbWalletMnemonicStore walletMnemonicStore});
 
   Future<FrbAddress> crateApiRustApiApiAddressFromScript(
       {required FrbScriptBuf script, required Network network});
@@ -1338,22 +1443,22 @@ abstract class RustLibApi extends BaseApi {
   Future<String> crateApiRustApiApiGenerateSeedFromWordCount(
       {required WordCount wordCount});
 
-  Future<String> crateApiSrpSrpClientSrpClientComputeKeyPassword(
+  Future<String> crateApiSrpSrpClientFrbSrpClientComputeKeyPassword(
       {required String password, required List<int> salt});
 
-  Future<SRPProofB64> crateApiSrpSrpClientSrpClientGenerateProofs(
+  Future<SRPProofB64> crateApiSrpSrpClientFrbSrpClientGenerateProofs(
       {required String loginPassword,
       required int version,
       required String salt,
       required String modulus,
       required String serverEphemeral});
 
-  Future<SRPVerifierB64> crateApiSrpSrpClientSrpClientGenerateVerifer(
+  Future<SRPVerifierB64> crateApiSrpSrpClientFrbSrpClientGenerateVerifer(
       {required String password,
       String? saltOpt,
       required String serverModulus});
 
-  SrpClient crateApiSrpSrpClientSrpClientNew();
+  FrbSrpClient crateApiSrpSrpClientFrbSrpClientNew();
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_AddressBalance;
@@ -1490,6 +1595,15 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_FrbAppDatabasePtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_FrbBackupMnemonic;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_FrbBackupMnemonic;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbBackupMnemonicPtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_FrbBalance;
@@ -1653,15 +1767,6 @@ abstract class RustLibApi extends BaseApi {
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbWalletPtr;
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_FrbWalletCreation;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_FrbWalletCreation;
-
-  CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_FrbWalletCreationPtr;
-
-  RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_FrbWalletKeyStore;
 
   RustArcDecrementStrongCountFnType
@@ -1669,6 +1774,15 @@ abstract class RustLibApi extends BaseApi {
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_FrbWalletKeyStorePtr;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_FrbWalletMnemonicStore;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_FrbWalletMnemonicStore;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbWalletMnemonicStorePtr;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_InviteClient;
@@ -9108,6 +9222,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
+  String crateApiCryptoWalletKeyFrbLockedWalletKeyGetArmored(
+      {required FrbLockedWalletKey that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_frb_locked_wallet_key(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 236)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateApiCryptoWalletKeyFrbLockedWalletKeyGetArmoredConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiCryptoWalletKeyFrbLockedWalletKeyGetArmoredConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_locked_wallet_key_get_armored",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateApiCryptoWalletKeyFrbLockedWalletKeyGetSignature(
+      {required FrbLockedWalletKey that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_frb_locked_wallet_key(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 237)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiCryptoWalletKeyFrbLockedWalletKeyGetSignatureConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiCryptoWalletKeyFrbLockedWalletKeyGetSignatureConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_locked_wallet_key_get_signature",
+            argNames: ["that"],
+          );
+
+  @override
   String crateApiCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
       {required String base64SecureKey, required String encryptText}) {
     return handler.executeSync(SyncTask(
@@ -9115,7 +9282,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(base64SecureKey, serializer);
         sse_encode_String(encryptText, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 236)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 238)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -9143,7 +9310,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(base64SecureKey, serializer);
         sse_encode_String(plaintext, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 237)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 239)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -9169,7 +9336,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 238)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 240)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -9196,7 +9363,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 239)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 241)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -9223,7 +9390,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_usize(length, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 240)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 242)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -9253,7 +9420,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_u_32(oldVersion, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 241, port: port_);
+            funcId: 243, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9283,7 +9450,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(walletId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 242, port: port_);
+            funcId: 244, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9313,7 +9480,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(accountId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 243, port: port_);
+            funcId: 245, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9343,7 +9510,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAppDatabase(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 244, port: port_);
+            funcId: 246, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_account_model,
@@ -9374,7 +9541,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(walletId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 245, port: port_);
+            funcId: 247, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_account_model,
@@ -9404,7 +9571,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAppDatabase(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 246, port: port_);
+            funcId: 248, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_wallet_model,
@@ -9435,7 +9602,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(userId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 247, port: port_);
+            funcId: 249, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_wallet_model,
@@ -9466,7 +9633,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(userId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 248, port: port_);
+            funcId: 250, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_wallet_model,
@@ -9497,7 +9664,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(accountId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 249, port: port_);
+            funcId: 251, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_account_model,
@@ -9528,7 +9695,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_String(walletId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 250, port: port_);
+            funcId: 252, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_wallet_model,
@@ -9555,7 +9722,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(databaseUrl, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 251)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 253)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -9584,7 +9751,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_box_autoadd_wallet_model(wallet, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 252, port: port_);
+            funcId: 254, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_wallet_model,
@@ -9615,7 +9782,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_box_autoadd_account_model(account, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 253, port: port_);
+            funcId: 255, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_account_model,
@@ -9643,7 +9810,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_StreamSink_log_entry_Sse(sink, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 254, port: port_);
+            funcId: 256, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9668,7 +9835,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 255, port: port_);
+            funcId: 257, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9692,7 +9859,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_i_32(i, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 256, port: port_);
+            funcId: 258, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9715,7 +9882,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 257, port: port_);
+            funcId: 259, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9740,7 +9907,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(filePath, serializer);
         sse_encode_String(fileName, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 258)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 260)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9770,7 +9937,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_list_bitcoin_address(bitcoinAddresses, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 259, port: port_);
+            funcId: 261, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_api_wallet_bitcoin_address,
@@ -9800,7 +9967,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_String(addressId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 260, port: port_);
+            funcId: 262, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet_account,
@@ -9826,7 +9993,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_bitcoin_unit(symbol, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 261, port: port_);
+            funcId: 263, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet_user_settings,
@@ -9852,7 +10019,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(latestEventId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 262, port: port_);
+            funcId: 264, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_proton_event,
@@ -9890,7 +10057,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_opt_String(exchangeRateId, serializer);
         sse_encode_opt_String(transactionTime, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 263, port: port_);
+            funcId: 265, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_transaction,
@@ -9931,7 +10098,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(walletId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 264, port: port_);
+            funcId: 266, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9958,7 +10125,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletId, serializer);
         sse_encode_String(walletAccountId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 265, port: port_);
+            funcId: 267, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -9982,7 +10149,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 266, port: port_);
+            funcId: 268, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_child_session,
@@ -10008,7 +10175,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(email, serializer);
         sse_encode_u_8(internalOnly, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 267, port: port_);
+            funcId: 269, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_all_key_address_key,
@@ -10035,7 +10202,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_fiat_currency(fiatCurrency, serializer);
         sse_encode_opt_box_autoadd_u_64(time, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 268, port: port_);
+            funcId: 270, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_proton_exchange_rate,
@@ -10059,7 +10226,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 269, port: port_);
+            funcId: 271, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -10083,7 +10250,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 270, port: port_);
+            funcId: 272, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_proton_address,
@@ -10114,7 +10281,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_opt_box_autoadd_u_8(onlyRequest, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 271, port: port_);
+            funcId: 273, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_api_wallet_bitcoin_address,
@@ -10140,7 +10307,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(email, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 272, port: port_);
+            funcId: 274, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_email_integration_bitcoin_address,
@@ -10170,7 +10337,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_String(addressId, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 273, port: port_);
+            funcId: 275, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet_account,
@@ -10202,7 +10369,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountBitcoinAddressId, serializer);
         sse_encode_box_autoadd_bitcoin_address(bitcoinAddress, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 274, port: port_);
+            funcId: 276, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet_bitcoin_address,
@@ -10242,7 +10409,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletAccountId, serializer);
         sse_encode_String(newLabel, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 275, port: port_);
+            funcId: 277, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet_account,
@@ -10269,7 +10436,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletId, serializer);
         sse_encode_String(newName, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 276, port: port_);
+            funcId: 278, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_api_wallet,
@@ -10301,7 +10468,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(walletTransactionId, serializer);
         sse_encode_String(label, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 277, port: port_);
+            funcId: 279, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_wallet_transaction,
@@ -10325,39 +10492,480 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<ApiWalletAccount>
-      crateApiProtonWalletFeaturesWalletCreationFrbWalletCreationCreateWalletAccount(
-          {required FrbWalletCreation that,
-          required String walletId,
-          required String label,
-          required int accountIndex}) {
+  Future<int>
+      crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicTwoFaStatus(
+          {required FrbBackupMnemonic that}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
             that, serializer);
-        sse_encode_String(walletId, serializer);
-        sse_encode_String(label, serializer);
-        sse_encode_i_32(accountIndex, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 278, port: port_);
+            funcId: 280, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_api_wallet_account,
+        decodeSuccessData: sse_decode_u_8,
         decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta:
-          kCrateApiProtonWalletFeaturesWalletCreationFrbWalletCreationCreateWalletAccountConstMeta,
-      argValues: [that, walletId, label, accountIndex],
+          kCrateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicTwoFaStatusConstMeta,
+      argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiProtonWalletFeaturesWalletCreationFrbWalletCreationCreateWalletAccountConstMeta =>
+      get kCrateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicTwoFaStatusConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbWalletCreation_create_wallet_account",
-            argNames: ["that", "walletId", "label", "accountIndex"],
+            debugName: "FrbBackupMnemonic_two_fa_status",
+            argNames: ["that"],
+          );
+
+  @override
+  Future<MnemonicResult>
+      crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicViewSeed(
+          {required FrbBackupMnemonic that,
+          required String walletId,
+          required String loginPassword,
+          required String twofa}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+            that, serializer);
+        sse_encode_String(walletId, serializer);
+        sse_encode_String(loginPassword, serializer);
+        sse_encode_String(twofa, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 281, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_mnemonic_result,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicViewSeedConstMeta,
+      argValues: [that, walletId, loginPassword, twofa],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicViewSeedConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbBackupMnemonic_view_seed",
+            argNames: ["that", "walletId", "loginPassword", "twofa"],
+          );
+
+  @override
+  Future<FrbSenderBody>
+      crateApiProtonWalletFeaturesTransitionLayerFrbSenderBodyDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 282, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_frb_sender_body,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbSenderBodyDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbSenderBodyDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_sender_body_default",
+            argNames: [],
+          );
+
+  @override
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerChangePassword(
+          {required ProtonUserKey userKey,
+          required String passphrase,
+          required String newPassphrase}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_proton_user_key(userKey, serializer);
+        sse_encode_String(passphrase, serializer);
+        sse_encode_String(newPassphrase, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 283)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerChangePasswordConstMeta,
+      argValues: [userKey, passphrase, newPassphrase],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerChangePasswordConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_change_password",
+            argNames: ["userKey", "passphrase", "newPassphrase"],
+          );
+
+  @override
+  FrbSenderBody
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptMessages(
+          {required List<ProtonUserKey> userKeys,
+          required List<ProtonAddressKey> addrKeys,
+          required String userKeyPassword,
+          String? encToList,
+          String? encSender,
+          String? encBody}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_proton_user_key(userKeys, serializer);
+        sse_encode_list_proton_address_key(addrKeys, serializer);
+        sse_encode_String(userKeyPassword, serializer);
+        sse_encode_opt_String(encToList, serializer);
+        sse_encode_opt_String(encSender, serializer);
+        sse_encode_opt_String(encBody, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 284)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_frb_sender_body,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptMessagesConstMeta,
+      argValues: [
+        userKeys,
+        addrKeys,
+        userKeyPassword,
+        encToList,
+        encSender,
+        encBody
+      ],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptMessagesConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_decrypt_messages",
+            argNames: [
+              "userKeys",
+              "addrKeys",
+              "userKeyPassword",
+              "encToList",
+              "encSender",
+              "encBody"
+            ],
+          );
+
+  @override
+  List<FrbTLTransactionID>
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptTransactionIds(
+          {required List<ProtonUserKey> userKeys,
+          required List<ProtonAddressKey> addrKeys,
+          required String userKeyPassword,
+          required List<FrbTLEncryptedTransactionID> encTransactionIds}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_proton_user_key(userKeys, serializer);
+        sse_encode_list_proton_address_key(addrKeys, serializer);
+        sse_encode_String(userKeyPassword, serializer);
+        sse_encode_list_frb_tl_encrypted_transaction_id(
+            encTransactionIds, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 285)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_frb_tl_transaction_id,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptTransactionIdsConstMeta,
+      argValues: [userKeys, addrKeys, userKeyPassword, encTransactionIds],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptTransactionIdsConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_decrypt_transaction_ids",
+            argNames: [
+              "userKeys",
+              "addrKeys",
+              "userKeyPassword",
+              "encTransactionIds"
+            ],
+          );
+
+  @override
+  FrbUnlockedWalletKey
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKey(
+          {required ApiWalletKey walletKey,
+          required ProtonUserKey userKey,
+          required String userKeyPassphrase}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_api_wallet_key(walletKey, serializer);
+        sse_encode_box_autoadd_proton_user_key(userKey, serializer);
+        sse_encode_String(userKeyPassphrase, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 286)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyConstMeta,
+      argValues: [walletKey, userKey, userKeyPassphrase],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_decrypt_wallet_key",
+            argNames: ["walletKey", "userKey", "userKeyPassphrase"],
+          );
+
+  @override
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyLegacy(
+          {required String encryptedMnemonicText,
+          required List<ProtonUserKey> userKeys,
+          required String userKeyPassword}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(encryptedMnemonicText, serializer);
+        sse_encode_list_proton_user_key(userKeys, serializer);
+        sse_encode_String(userKeyPassword, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 287)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyLegacyConstMeta,
+      argValues: [encryptedMnemonicText, userKeys, userKeyPassword],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptWalletKeyLegacyConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_decrypt_wallet_key_legacy",
+            argNames: ["encryptedMnemonicText", "userKeys", "userKeyPassword"],
+          );
+
+  @override
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessages(
+          {required List<ProtonAddressKey> addrKeys, required String message}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_proton_address_key(addrKeys, serializer);
+        sse_encode_String(message, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 288)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesConstMeta,
+      argValues: [addrKeys, message],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_encrypt_messages",
+            argNames: ["addrKeys", "message"],
+          );
+
+  @override
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithKeys(
+          {required List<String> privateKeys, required String message}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_String(privateKeys, serializer);
+        sse_encode_String(message, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 289)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithKeysConstMeta,
+      argValues: [privateKeys, message],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithKeysConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_encrypt_messages_with_keys",
+            argNames: ["privateKeys", "message"],
+          );
+
+  @override
+  String
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithUserkey(
+          {required ProtonUserKey userKey, required String message}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_proton_user_key(userKey, serializer);
+        sse_encode_String(message, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 290)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithUserkeyConstMeta,
+      argValues: [userKey, message],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithUserkeyConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_encrypt_messages_with_userkey",
+            argNames: ["userKey", "message"],
+          );
+
+  @override
+  FrbLockedWalletKey
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptWalletKey(
+          {required FrbUnlockedWalletKey walletKey,
+          required ProtonUserKey userKey,
+          required String userKeyPassphrase}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey(
+            walletKey, serializer);
+        sse_encode_box_autoadd_proton_user_key(userKey, serializer);
+        sse_encode_String(userKeyPassphrase, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 291)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_frb_locked_wallet_key,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptWalletKeyConstMeta,
+      argValues: [walletKey, userKey, userKeyPassphrase],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptWalletKeyConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_encrypt_wallet_key",
+            argNames: ["walletKey", "userKey", "userKeyPassphrase"],
+          );
+
+  @override
+  String crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerSign(
+      {required List<ProtonUserKey> userKeys,
+      required ProtonAddressKey addrKeys,
+      required String userKeyPassword,
+      required String message,
+      required String context}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_proton_user_key(userKeys, serializer);
+        sse_encode_box_autoadd_proton_address_key(addrKeys, serializer);
+        sse_encode_String(userKeyPassword, serializer);
+        sse_encode_String(message, serializer);
+        sse_encode_String(context, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 292)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerSignConstMeta,
+      argValues: [userKeys, addrKeys, userKeyPassword, message, context],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerSignConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_sign",
+            argNames: [
+              "userKeys",
+              "addrKeys",
+              "userKeyPassword",
+              "message",
+              "context"
+            ],
+          );
+
+  @override
+  bool
+      crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerVerifySignature(
+          {required String privateKey,
+          required String message,
+          required String signature,
+          required String context}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(privateKey, serializer);
+        sse_encode_String(message, serializer);
+        sse_encode_String(signature, serializer);
+        sse_encode_String(context, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 293)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: sse_decode_bridge_error,
+      ),
+      constMeta:
+          kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerVerifySignatureConstMeta,
+      argValues: [privateKey, message, signature, context],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerVerifySignatureConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_transition_layer_verify_signature",
+            argNames: ["privateKey", "message", "signature", "context"],
           );
 
   @override
@@ -10370,7 +10978,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUserKeyStore(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 279, port: port_);
+            funcId: 294, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -10395,7 +11003,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 280)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 295)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10418,7 +11026,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @override
   Future<void>
-      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPrimaryUserKeyCallback(
+      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetDefaultUserKeyCallback(
           {required FrbUserKeyStore that,
           required FutureOr<ProtonUserKey> Function(String) callback}) {
     return handler.executeNormal(NormalTask(
@@ -10429,56 +11037,56 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs_String_Output_proton_user_key_AnyhowException(
             callback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 281, port: port_);
+            funcId: 296, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPrimaryUserKeyCallbackConstMeta,
+          kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetDefaultUserKeyCallbackConstMeta,
       argValues: [that, callback],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPrimaryUserKeyCallbackConstMeta =>
+      get kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetDefaultUserKeyCallbackConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbUserKeyStore_set_get_primary_user_key_callback",
+            debugName: "FrbUserKeyStore_set_get_default_user_key_callback",
             argNames: ["that", "callback"],
           );
 
   @override
   Future<void>
-      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetUserKeysCallback(
+      crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPassphraseCallback(
           {required FrbUserKeyStore that,
-          required FutureOr<List<ProtonUserKey>> Function(String) callback}) {
+          required FutureOr<String> Function(String) callback}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUserKeyStore(
             that, serializer);
-        sse_encode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
+        sse_encode_DartFn_Inputs_String_Output_String_AnyhowException(
             callback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 282, port: port_);
+            funcId: 297, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetUserKeysCallbackConstMeta,
+          kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPassphraseCallbackConstMeta,
       argValues: [that, callback],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetUserKeysCallbackConstMeta =>
+      get kCrateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPassphraseCallbackConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbUserKeyStore_set_get_user_keys_callback",
+            debugName: "FrbUserKeyStore_set_get_passphrase_callback",
             argNames: ["that", "callback"],
           );
 
@@ -10492,7 +11100,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 283, port: port_);
+            funcId: 298, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -10518,7 +11126,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 284)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 299)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10552,7 +11160,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs__Output_list_api_wallet_key_AnyhowException(
             callback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 285, port: port_);
+            funcId: 300, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -10585,7 +11193,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_DartFn_Inputs_list_api_wallet_key_Output_unit_AnyhowException(
             callback, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 286, port: port_);
+            funcId: 301, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
@@ -10606,8 +11214,131 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
-  Future<FrbWalletCreation>
-      crateApiProtonWalletWalletFrbProtonWalletGetWalletCrateionFeature(
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreClearAuthDartCallback(
+          {required FrbWalletMnemonicStore that}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+            that, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 302, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreClearAuthDartCallbackConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreClearAuthDartCallbackConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbWalletMnemonicStore_clear_auth_dart_callback",
+            argNames: ["that"],
+          );
+
+  @override
+  FrbWalletMnemonicStore
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreNew() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 303)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreNewConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreNewConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbWalletMnemonicStore_new",
+            argNames: [],
+          );
+
+  @override
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetGetWalletKeysCallback(
+          {required FrbWalletMnemonicStore that,
+          required FutureOr<List<MnemonicData>> Function() callback}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+            that, serializer);
+        sse_encode_DartFn_Inputs__Output_list_mnemonic_data_AnyhowException(
+            callback, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 304, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetGetWalletKeysCallbackConstMeta,
+      argValues: [that, callback],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetGetWalletKeysCallbackConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbWalletMnemonicStore_set_get_wallet_keys_callback",
+            argNames: ["that", "callback"],
+          );
+
+  @override
+  Future<void>
+      crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetSaveWalletKeysCallback(
+          {required FrbWalletMnemonicStore that,
+          required FutureOr<void> Function(List<MnemonicData>) callback}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+            that, serializer);
+        sse_encode_DartFn_Inputs_list_mnemonic_data_Output_unit_AnyhowException(
+            callback, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 305, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetSaveWalletKeysCallbackConstMeta,
+      argValues: [that, callback],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetSaveWalletKeysCallbackConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbWalletMnemonicStore_set_save_wallet_keys_callback",
+            argNames: ["that", "callback"],
+          );
+
+  @override
+  Future<FrbBackupMnemonic>
+      crateApiProtonWalletWalletFrbProtonWalletGetBackupMnemonicFeature(
           {required FrbProtonWallet that}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
@@ -10615,38 +11346,48 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbProtonWallet(
             that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 287, port: port_);
+            funcId: 306, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
-            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation,
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateApiProtonWalletWalletFrbProtonWalletGetWalletCrateionFeatureConstMeta,
+          kCrateApiProtonWalletWalletFrbProtonWalletGetBackupMnemonicFeatureConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiProtonWalletWalletFrbProtonWalletGetWalletCrateionFeatureConstMeta =>
+      get kCrateApiProtonWalletWalletFrbProtonWalletGetBackupMnemonicFeatureConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbProtonWallet_get_wallet_crateion_feature",
+            debugName: "FrbProtonWallet_get_backup_mnemonic_feature",
             argNames: ["that"],
           );
 
   @override
   Future<FrbProtonWallet> crateApiProtonWalletWalletFrbProtonWalletNew(
-      {required ArcProtonApiService api, required String dbPath}) {
+      {required ArcProtonApiService api,
+      required String dbPath,
+      required FrbUserKeyStore userKeyTore,
+      required FrbWalletKeyStore walletKeyStore,
+      required FrbWalletMnemonicStore walletMnemonicStore}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcProtonAPIService(
             api, serializer);
         sse_encode_String(dbPath, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUserKeyStore(
+            userKeyTore, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
+            walletKeyStore, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+            walletMnemonicStore, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 288, port: port_);
+            funcId: 307, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10654,7 +11395,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: null,
       ),
       constMeta: kCrateApiProtonWalletWalletFrbProtonWalletNewConstMeta,
-      argValues: [api, dbPath],
+      argValues: [
+        api,
+        dbPath,
+        userKeyTore,
+        walletKeyStore,
+        walletMnemonicStore
+      ],
       apiImpl: this,
     ));
   }
@@ -10662,7 +11409,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiProtonWalletWalletFrbProtonWalletNewConstMeta =>
       const TaskConstMeta(
         debugName: "FrbProtonWallet_new",
-        argNames: ["api", "dbPath"],
+        argNames: [
+          "api",
+          "dbPath",
+          "userKeyTore",
+          "walletKeyStore",
+          "walletMnemonicStore"
+        ],
       );
 
   @override
@@ -10675,7 +11428,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             script, serializer);
         sse_encode_network(network, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 289, port: port_);
+            funcId: 308, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10703,7 +11456,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(address, serializer);
         sse_encode_network(network, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 290, port: port_);
+            funcId: 309, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10730,7 +11483,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(path, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 291, port: port_);
+            funcId: 310, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10756,7 +11509,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 292, port: port_);
+            funcId: 311, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10784,7 +11537,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_list_prim_u_8_loose(rawOutputScript, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 293, port: port_);
+            funcId: 312, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -10811,7 +11564,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(mnemonic, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 294, port: port_);
+            funcId: 313, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -10837,7 +11590,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_word_count(wordCount, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 295, port: port_);
+            funcId: 314, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -10856,7 +11609,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> crateApiSrpSrpClientSrpClientComputeKeyPassword(
+  Future<String> crateApiSrpSrpClientFrbSrpClientComputeKeyPassword(
       {required String password, required List<int> salt}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
@@ -10864,26 +11617,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(password, serializer);
         sse_encode_list_prim_u_8_loose(salt, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 296, port: port_);
+            funcId: 315, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: sse_decode_bridge_error,
       ),
-      constMeta: kCrateApiSrpSrpClientSrpClientComputeKeyPasswordConstMeta,
+      constMeta: kCrateApiSrpSrpClientFrbSrpClientComputeKeyPasswordConstMeta,
       argValues: [password, salt],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSrpSrpClientSrpClientComputeKeyPasswordConstMeta =>
-      const TaskConstMeta(
-        debugName: "srp_client_compute_key_password",
-        argNames: ["password", "salt"],
-      );
+  TaskConstMeta
+      get kCrateApiSrpSrpClientFrbSrpClientComputeKeyPasswordConstMeta =>
+          const TaskConstMeta(
+            debugName: "frb_srp_client_compute_key_password",
+            argNames: ["password", "salt"],
+          );
 
   @override
-  Future<SRPProofB64> crateApiSrpSrpClientSrpClientGenerateProofs(
+  Future<SRPProofB64> crateApiSrpSrpClientFrbSrpClientGenerateProofs(
       {required String loginPassword,
       required int version,
       required String salt,
@@ -10898,21 +11652,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(modulus, serializer);
         sse_encode_String(serverEphemeral, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 297, port: port_);
+            funcId: 316, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_srp_proof_b_64,
         decodeErrorData: sse_decode_bridge_error,
       ),
-      constMeta: kCrateApiSrpSrpClientSrpClientGenerateProofsConstMeta,
+      constMeta: kCrateApiSrpSrpClientFrbSrpClientGenerateProofsConstMeta,
       argValues: [loginPassword, version, salt, modulus, serverEphemeral],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSrpSrpClientSrpClientGenerateProofsConstMeta =>
+  TaskConstMeta get kCrateApiSrpSrpClientFrbSrpClientGenerateProofsConstMeta =>
       const TaskConstMeta(
-        debugName: "srp_client_generate_proofs",
+        debugName: "frb_srp_client_generate_proofs",
         argNames: [
           "loginPassword",
           "version",
@@ -10923,7 +11677,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<SRPVerifierB64> crateApiSrpSrpClientSrpClientGenerateVerifer(
+  Future<SRPVerifierB64> crateApiSrpSrpClientFrbSrpClientGenerateVerifer(
       {required String password,
       String? saltOpt,
       required String serverModulus}) {
@@ -10934,54 +11688,54 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_opt_String(saltOpt, serializer);
         sse_encode_String(serverModulus, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 298, port: port_);
+            funcId: 317, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_srp_verifier_b_64,
         decodeErrorData: sse_decode_bridge_error,
       ),
-      constMeta: kCrateApiSrpSrpClientSrpClientGenerateVeriferConstMeta,
+      constMeta: kCrateApiSrpSrpClientFrbSrpClientGenerateVeriferConstMeta,
       argValues: [password, saltOpt, serverModulus],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSrpSrpClientSrpClientGenerateVeriferConstMeta =>
+  TaskConstMeta get kCrateApiSrpSrpClientFrbSrpClientGenerateVeriferConstMeta =>
       const TaskConstMeta(
-        debugName: "srp_client_generate_verifer",
+        debugName: "frb_srp_client_generate_verifer",
         argNames: ["password", "saltOpt", "serverModulus"],
       );
 
   @override
-  SrpClient crateApiSrpSrpClientSrpClientNew() {
+  FrbSrpClient crateApiSrpSrpClientFrbSrpClientNew() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 299)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 318)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_srp_client,
+        decodeSuccessData: sse_decode_frb_srp_client,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiSrpSrpClientSrpClientNewConstMeta,
+      constMeta: kCrateApiSrpSrpClientFrbSrpClientNewConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSrpSrpClientSrpClientNewConstMeta =>
+  TaskConstMeta get kCrateApiSrpSrpClientFrbSrpClientNewConstMeta =>
       const TaskConstMeta(
-        debugName: "srp_client_new",
+        debugName: "frb_srp_client_new",
         argNames: [],
       );
 
   Future<void> Function(int, dynamic)
-      encode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
-          FutureOr<List<ProtonUserKey>> Function(String) raw) {
+      encode_DartFn_Inputs_String_Output_String_AnyhowException(
+          FutureOr<String> Function(String) raw) {
     return (callId, rawArg0) async {
       final arg0 = dco_decode_String(rawArg0);
 
-      Box<List<ProtonUserKey>>? rawOutput;
+      Box<String>? rawOutput;
       Box<AnyhowException>? rawError;
       try {
         rawOutput = Box(await raw(arg0));
@@ -10993,7 +11747,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       assert((rawOutput != null) ^ (rawError != null));
       if (rawOutput != null) {
         serializer.buffer.putUint8(0);
-        sse_encode_list_proton_user_key(rawOutput.value, serializer);
+        sse_encode_String(rawOutput.value, serializer);
       } else {
         serializer.buffer.putUint8(1);
         sse_encode_AnyhowException(rawError!.value, serializer);
@@ -11075,6 +11829,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     };
   }
 
+  Future<void> Function(
+    int,
+  ) encode_DartFn_Inputs__Output_list_mnemonic_data_AnyhowException(
+      FutureOr<List<MnemonicData>> Function() raw) {
+    return (
+      callId,
+    ) async {
+      Box<List<MnemonicData>>? rawOutput;
+      Box<AnyhowException>? rawError;
+      try {
+        rawOutput = Box(await raw());
+      } catch (e, s) {
+        rawError = Box(AnyhowException("$e\n\n$s"));
+      }
+
+      final serializer = SseSerializer(generalizedFrbRustBinding);
+      assert((rawOutput != null) ^ (rawError != null));
+      if (rawOutput != null) {
+        serializer.buffer.putUint8(0);
+        sse_encode_list_mnemonic_data(rawOutput.value, serializer);
+      } else {
+        serializer.buffer.putUint8(1);
+        sse_encode_AnyhowException(rawError!.value, serializer);
+      }
+      final output = serializer.intoRaw();
+
+      generalizedFrbRustBinding.dartFnDeliverOutput(
+          callId: callId,
+          ptr: output.ptr,
+          rustVecLen: output.rustVecLen,
+          dataLen: output.dataLen);
+    };
+  }
+
   Future<void> Function(int, dynamic)
       encode_DartFn_Inputs_child_session_Output_String_AnyhowException(
           FutureOr<String> Function(ChildSession) raw) {
@@ -11113,6 +11901,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           FutureOr<void> Function(List<ApiWalletKey>) raw) {
     return (callId, rawArg0) async {
       final arg0 = dco_decode_list_api_wallet_key(rawArg0);
+
+      Box<void>? rawOutput;
+      Box<AnyhowException>? rawError;
+      try {
+        rawOutput = Box(await raw(arg0));
+      } catch (e, s) {
+        rawError = Box(AnyhowException("$e\n\n$s"));
+      }
+
+      final serializer = SseSerializer(generalizedFrbRustBinding);
+      assert((rawOutput != null) ^ (rawError != null));
+      if (rawOutput != null) {
+        serializer.buffer.putUint8(0);
+        sse_encode_unit(rawOutput.value, serializer);
+      } else {
+        serializer.buffer.putUint8(1);
+        sse_encode_AnyhowException(rawError!.value, serializer);
+      }
+      final output = serializer.intoRaw();
+
+      generalizedFrbRustBinding.dartFnDeliverOutput(
+          callId: callId,
+          ptr: output.ptr,
+          rustVecLen: output.rustVecLen,
+          dataLen: output.dataLen);
+    };
+  }
+
+  Future<void> Function(int, dynamic)
+      encode_DartFn_Inputs_list_mnemonic_data_Output_unit_AnyhowException(
+          FutureOr<void> Function(List<MnemonicData>) raw) {
+    return (callId, rawArg0) async {
+      final arg0 = dco_decode_list_mnemonic_data(rawArg0);
 
       Box<void>? rawOutput;
       Box<AnyhowException>? rawError;
@@ -11268,6 +12089,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAppDatabase;
 
   RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_FrbBackupMnemonic => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_FrbBackupMnemonic => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic;
+
+  RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_FrbBalance => wire
           .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance;
 
@@ -11420,20 +12249,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWallet;
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_FrbWalletCreation => wire
-          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation;
-
-  RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_FrbWalletCreation => wire
-          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation;
-
-  RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_FrbWalletKeyStore => wire
           .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore;
 
   RustArcDecrementStrongCountFnType
       get rust_arc_decrement_strong_count_FrbWalletKeyStore => wire
           .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore;
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_FrbWalletMnemonicStore => wire
+          .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_FrbWalletMnemonicStore => wire
+          .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore;
 
   RustArcIncrementStrongCountFnType
       get rust_arc_increment_strong_count_InviteClient => wire
@@ -11668,6 +12497,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbBackupMnemonic
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   FrbBalance
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           dynamic raw) {
@@ -11820,19 +12657,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   FrbWalletKeyStore
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalDcoDecode(
+        raw as List<dynamic>);
   }
 
   @protected
@@ -11989,6 +12827,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbWalletMnemonicStore
+      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalDcoDecode(
+        raw as List<dynamic>);
+  }
+
+  @protected
   ProtonApiService
       dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           dynamic raw) {
@@ -12100,6 +12947,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return FrbAppDatabaseImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  FrbBackupMnemonic
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -12255,19 +13110,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   FrbWalletKeyStore
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalDcoDecode(
+        raw as List<dynamic>);
   }
 
   @protected
@@ -12360,8 +13216,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FutureOr<List<ProtonUserKey>> Function(String)
-      dco_decode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
+  FutureOr<String> Function(String)
+      dco_decode_DartFn_Inputs_String_Output_String_AnyhowException(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError('');
@@ -12384,6 +13240,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FutureOr<List<MnemonicData>> Function()
+      dco_decode_DartFn_Inputs__Output_list_mnemonic_data_AnyhowException(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError('');
+  }
+
+  @protected
   FutureOr<String> Function(ChildSession)
       dco_decode_DartFn_Inputs_child_session_Output_String_AnyhowException(
           dynamic raw) {
@@ -12394,6 +13258,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   FutureOr<void> Function(List<ApiWalletKey>)
       dco_decode_DartFn_Inputs_list_api_wallet_key_Output_unit_AnyhowException(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError('');
+  }
+
+  @protected
+  FutureOr<void> Function(List<MnemonicData>)
+      dco_decode_DartFn_Inputs_list_mnemonic_data_Output_unit_AnyhowException(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError('');
@@ -12588,6 +13460,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbBackupMnemonic
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   FrbBalance
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           dynamic raw) {
@@ -12740,19 +13620,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalDcoDecode(raw as List<dynamic>);
-  }
-
-  @protected
   FrbWalletKeyStore
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalDcoDecode(
+        raw as List<dynamic>);
   }
 
   @protected
@@ -13237,6 +14118,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbLockedWalletKey dco_decode_box_autoadd_frb_locked_wallet_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_frb_locked_wallet_key(raw);
+  }
+
+  @protected
   GatewayProvider dco_decode_box_autoadd_gateway_provider(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_gateway_provider(raw);
@@ -13280,6 +14167,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ProtonAddressKey dco_decode_box_autoadd_proton_address_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_proton_address_key(raw);
+  }
+
+  @protected
   ProtonExchangeRate dco_decode_box_autoadd_proton_exchange_rate(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_proton_exchange_rate(raw);
@@ -13296,6 +14189,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonUser dco_decode_box_autoadd_proton_user(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_proton_user(raw);
+  }
+
+  @protected
+  ProtonUserKey dco_decode_box_autoadd_proton_user_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_proton_user_key(raw);
   }
 
   @protected
@@ -13450,6 +14349,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 13:
         return BridgeError_Fork(
+          dco_decode_String(raw[1]),
+        );
+      case 14:
+        return BridgeError_Database(
           dco_decode_String(raw[1]),
         );
       default:
@@ -13639,6 +14542,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbLockedWalletKey dco_decode_frb_locked_wallet_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return FrbLockedWalletKey(
+      field0: dco_decode_locked_wallet_key(arr[0]),
+    );
+  }
+
+  @protected
   FrbOutPoint dco_decode_frb_out_point(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -13660,6 +14574,62 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       field0: dco_decode_String(arr[0]),
       field1: dco_decode_u_64(arr[1]),
     );
+  }
+
+  @protected
+  FrbSenderBody dco_decode_frb_sender_body(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return FrbSenderBody(
+      toList: dco_decode_String(arr[0]),
+      sender: dco_decode_String(arr[1]),
+      body: dco_decode_String(arr[2]),
+    );
+  }
+
+  @protected
+  FrbSrpClient dco_decode_frb_srp_client(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 0)
+      throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
+    return FrbSrpClient.raw();
+  }
+
+  @protected
+  FrbTLEncryptedTransactionID dco_decode_frb_tl_encrypted_transaction_id(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return FrbTLEncryptedTransactionID(
+      encryptedTransactionId: dco_decode_String(arr[0]),
+      index: dco_decode_u_32(arr[1]),
+    );
+  }
+
+  @protected
+  FrbTLTransactionID dco_decode_frb_tl_transaction_id(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return FrbTLTransactionID(
+      transactionId: dco_decode_String(arr[0]),
+      index: dco_decode_u_32(arr[1]),
+    );
+  }
+
+  @protected
+  FrbTransitionLayer dco_decode_frb_transition_layer(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 0)
+      throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
+    return FrbTransitionLayer();
   }
 
   @protected
@@ -13932,6 +14902,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<FrbTLEncryptedTransactionID>
+      dco_decode_list_frb_tl_encrypted_transaction_id(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_frb_tl_encrypted_transaction_id)
+        .toList();
+  }
+
+  @protected
+  List<FrbTLTransactionID> dco_decode_list_frb_tl_transaction_id(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_frb_tl_transaction_id)
+        .toList();
+  }
+
+  @protected
   List<MigratedWalletAccount> dco_decode_list_migrated_wallet_account(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -13947,6 +14934,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return (raw as List<dynamic>)
         .map(dco_decode_migrated_wallet_transaction)
         .toList();
+  }
+
+  @protected
+  List<MnemonicData> dco_decode_list_mnemonic_data(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_mnemonic_data).toList();
   }
 
   @protected
@@ -14100,6 +15093,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedWalletKey dco_decode_locked_wallet_key(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return LockedWalletKey(
+      encrypted: dco_decode_String(arr[0]),
+      signature: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
   LogEntry dco_decode_log_entry(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -14167,6 +15172,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       modulusId: dco_decode_String(arr[1]),
       salt: dco_decode_String(arr[2]),
       verifier: dco_decode_String(arr[3]),
+    );
+  }
+
+  @protected
+  MnemonicData dco_decode_mnemonic_data(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return MnemonicData(
+      walletId: dco_decode_String(arr[0]),
+      mnemonic: dco_decode_opt_String(arr[1]),
+    );
+  }
+
+  @protected
+  MnemonicResult dco_decode_mnemonic_result(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return MnemonicResult(
+      walletId: dco_decode_String(arr[0]),
+      walletName: dco_decode_String(arr[1]),
+      walletMnemonic: dco_decode_String(arr[2]),
     );
   }
 
@@ -14858,15 +15888,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  SrpClient dco_decode_srp_client(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 0)
-      throw Exception('unexpected arr length: expect 0 but see ${arr.length}');
-    return SrpClient.raw();
-  }
-
-  @protected
   SRPProofB64 dco_decode_srp_proof_b_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -15289,6 +16310,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbBackupMnemonic
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   FrbBalance
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           SseDeserializer deserializer) {
@@ -15460,20 +16490,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   FrbWalletKeyStore
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -15649,6 +16679,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbWalletMnemonicStore
+      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   ProtonApiService
       sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           SseDeserializer deserializer) {
@@ -15771,6 +16810,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return FrbAppDatabaseImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  FrbBackupMnemonic
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -15946,20 +16994,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   FrbWalletKeyStore
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -16269,6 +17317,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbBackupMnemonic
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbBackupMnemonicImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   FrbBalance
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           SseDeserializer deserializer) {
@@ -16440,20 +17497,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  FrbWalletCreation
-      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return FrbWalletCreationImpl.frbInternalSseDecode(
-        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
-  }
-
-  @protected
   FrbWalletKeyStore
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return FrbWalletKeyStoreImpl.frbInternalSseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  FrbWalletMnemonicStore
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbWalletMnemonicStoreImpl.frbInternalSseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -16993,6 +18050,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbLockedWalletKey sse_decode_box_autoadd_frb_locked_wallet_key(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_frb_locked_wallet_key(deserializer));
+  }
+
+  @protected
   GatewayProvider sse_decode_box_autoadd_gateway_provider(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -17041,6 +18105,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ProtonAddressKey sse_decode_box_autoadd_proton_address_key(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_proton_address_key(deserializer));
+  }
+
+  @protected
   ProtonExchangeRate sse_decode_box_autoadd_proton_exchange_rate(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -17058,6 +18129,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonUser sse_decode_box_autoadd_proton_user(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_proton_user(deserializer));
+  }
+
+  @protected
+  ProtonUserKey sse_decode_box_autoadd_proton_user_key(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_proton_user_key(deserializer));
   }
 
   @protected
@@ -17210,6 +18288,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 13:
         var var_field0 = sse_decode_String(deserializer);
         return BridgeError_Fork(var_field0);
+      case 14:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_Database(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -17400,6 +18481,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  FrbLockedWalletKey sse_decode_frb_locked_wallet_key(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_locked_wallet_key(deserializer);
+    return FrbLockedWalletKey(field0: var_field0);
+  }
+
+  @protected
   FrbOutPoint sse_decode_frb_out_point(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_txid = sse_decode_String(deserializer);
@@ -17413,6 +18502,49 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_field0 = sse_decode_String(deserializer);
     var var_field1 = sse_decode_u_64(deserializer);
     return FrbPsbtRecipient(field0: var_field0, field1: var_field1);
+  }
+
+  @protected
+  FrbSenderBody sse_decode_frb_sender_body(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_toList = sse_decode_String(deserializer);
+    var var_sender = sse_decode_String(deserializer);
+    var var_body = sse_decode_String(deserializer);
+    return FrbSenderBody(
+        toList: var_toList, sender: var_sender, body: var_body);
+  }
+
+  @protected
+  FrbSrpClient sse_decode_frb_srp_client(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbSrpClient.raw();
+  }
+
+  @protected
+  FrbTLEncryptedTransactionID sse_decode_frb_tl_encrypted_transaction_id(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_encryptedTransactionId = sse_decode_String(deserializer);
+    var var_index = sse_decode_u_32(deserializer);
+    return FrbTLEncryptedTransactionID(
+        encryptedTransactionId: var_encryptedTransactionId, index: var_index);
+  }
+
+  @protected
+  FrbTLTransactionID sse_decode_frb_tl_transaction_id(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_transactionId = sse_decode_String(deserializer);
+    var var_index = sse_decode_u_32(deserializer);
+    return FrbTLTransactionID(
+        transactionId: var_transactionId, index: var_index);
+  }
+
+  @protected
+  FrbTransitionLayer sse_decode_frb_transition_layer(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return FrbTransitionLayer();
   }
 
   @protected
@@ -17831,6 +18963,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<FrbTLEncryptedTransactionID>
+      sse_decode_list_frb_tl_encrypted_transaction_id(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <FrbTLEncryptedTransactionID>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_frb_tl_encrypted_transaction_id(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<FrbTLTransactionID> sse_decode_list_frb_tl_transaction_id(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <FrbTLTransactionID>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_frb_tl_transaction_id(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<MigratedWalletAccount> sse_decode_list_migrated_wallet_account(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -17852,6 +19011,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <MigratedWalletTransaction>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_migrated_wallet_transaction(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<MnemonicData> sse_decode_list_mnemonic_data(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <MnemonicData>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_mnemonic_data(deserializer));
     }
     return ans_;
   }
@@ -18134,6 +19306,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedWalletKey sse_decode_locked_wallet_key(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_encrypted = sse_decode_String(deserializer);
+    var var_signature = sse_decode_String(deserializer);
+    return LockedWalletKey(encrypted: var_encrypted, signature: var_signature);
+  }
+
+  @protected
   LogEntry sse_decode_log_entry(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_timeMillis = sse_decode_i_64(deserializer);
@@ -18201,6 +19381,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         modulusId: var_modulusId,
         salt: var_salt,
         verifier: var_verifier);
+  }
+
+  @protected
+  MnemonicData sse_decode_mnemonic_data(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_walletId = sse_decode_String(deserializer);
+    var var_mnemonic = sse_decode_opt_String(deserializer);
+    return MnemonicData(walletId: var_walletId, mnemonic: var_mnemonic);
+  }
+
+  @protected
+  MnemonicResult sse_decode_mnemonic_result(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_walletId = sse_decode_String(deserializer);
+    var var_walletName = sse_decode_String(deserializer);
+    var var_walletMnemonic = sse_decode_String(deserializer);
+    return MnemonicResult(
+        walletId: var_walletId,
+        walletName: var_walletName,
+        walletMnemonic: var_walletMnemonic);
   }
 
   @protected
@@ -19128,12 +20328,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  SrpClient sse_decode_srp_client(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return SrpClient.raw();
-  }
-
-  @protected
   SRPProofB64 sse_decode_srp_proof_b_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_clientEphemeral = sse_decode_String(deserializer);
@@ -19575,6 +20769,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          FrbBackupMnemonic self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbBackupMnemonicImpl).frbInternalSseEncode(move: true),
+        serializer);
+  }
+
+  @protected
+  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           FrbBalance self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -19759,21 +20963,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          FrbWalletCreation self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as FrbWalletCreationImpl).frbInternalSseEncode(move: true),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           FrbWalletKeyStore self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as FrbWalletKeyStoreImpl).frbInternalSseEncode(move: true),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          FrbWalletMnemonicStore self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbWalletMnemonicStoreImpl).frbInternalSseEncode(move: true),
         serializer);
   }
 
@@ -19967,6 +21171,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          FrbWalletMnemonicStore self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbWalletMnemonicStoreImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
       sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
           ProtonApiService self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -20100,6 +21314,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as FrbAppDatabaseImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          FrbBackupMnemonic self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbBackupMnemonicImpl).frbInternalSseEncode(move: false),
         serializer);
   }
 
@@ -20291,21 +21515,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          FrbWalletCreation self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as FrbWalletCreationImpl).frbInternalSseEncode(move: false),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           FrbWalletKeyStore self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as FrbWalletKeyStoreImpl).frbInternalSseEncode(move: false),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          FrbWalletMnemonicStore self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbWalletMnemonicStoreImpl).frbInternalSseEncode(move: false),
         serializer);
   }
 
@@ -20421,14 +21645,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void
-      sse_encode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
-          FutureOr<List<ProtonUserKey>> Function(String) self,
-          SseSerializer serializer) {
+  void sse_encode_DartFn_Inputs_String_Output_String_AnyhowException(
+      FutureOr<String> Function(String) self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_DartOpaque(
-        encode_DartFn_Inputs_String_Output_list_proton_user_key_AnyhowException(
-            self),
+        encode_DartFn_Inputs_String_Output_String_AnyhowException(self),
         serializer);
   }
 
@@ -20452,6 +21673,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_DartFn_Inputs__Output_list_mnemonic_data_AnyhowException(
+      FutureOr<List<MnemonicData>> Function() self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_DartOpaque(
+        encode_DartFn_Inputs__Output_list_mnemonic_data_AnyhowException(self),
+        serializer);
+  }
+
+  @protected
   void sse_encode_DartFn_Inputs_child_session_Output_String_AnyhowException(
       FutureOr<String> Function(ChildSession) self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -20467,6 +21697,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_DartOpaque(
         encode_DartFn_Inputs_list_api_wallet_key_Output_unit_AnyhowException(
+            self),
+        serializer);
+  }
+
+  @protected
+  void sse_encode_DartFn_Inputs_list_mnemonic_data_Output_unit_AnyhowException(
+      FutureOr<void> Function(List<MnemonicData>) self,
+      SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_DartOpaque(
+        encode_DartFn_Inputs_list_mnemonic_data_Output_unit_AnyhowException(
             self),
         serializer);
   }
@@ -20687,6 +21928,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBackupMnemonic(
+          FrbBackupMnemonic self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbBackupMnemonicImpl).frbInternalSseEncode(move: null),
+        serializer);
+  }
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbBalance(
           FrbBalance self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -20871,21 +22122,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletCreation(
-          FrbWalletCreation self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-        (self as FrbWalletCreationImpl).frbInternalSseEncode(move: null),
-        serializer);
-  }
-
-  @protected
-  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletKeyStore(
           FrbWalletKeyStore self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
         (self as FrbWalletKeyStoreImpl).frbInternalSseEncode(move: null),
+        serializer);
+  }
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbWalletMnemonicStore(
+          FrbWalletMnemonicStore self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+        (self as FrbWalletMnemonicStoreImpl).frbInternalSseEncode(move: null),
         serializer);
   }
 
@@ -21339,6 +22590,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_frb_locked_wallet_key(
+      FrbLockedWalletKey self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_frb_locked_wallet_key(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_gateway_provider(
       GatewayProvider self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -21388,6 +22646,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_proton_address_key(
+      ProtonAddressKey self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_proton_address_key(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_proton_exchange_rate(
       ProtonExchangeRate self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -21406,6 +22671,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ProtonUser self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_proton_user(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_proton_user_key(
+      ProtonUserKey self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_proton_user_key(self, serializer);
   }
 
   @protected
@@ -21555,6 +22827,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case BridgeError_Fork(field0: final field0):
         sse_encode_i_32(13, serializer);
         sse_encode_String(field0, serializer);
+      case BridgeError_Database(field0: final field0):
+        sse_encode_i_32(14, serializer);
+        sse_encode_String(field0, serializer);
       default:
         throw UnimplementedError('');
     }
@@ -21698,6 +22973,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_frb_locked_wallet_key(
+      FrbLockedWalletKey self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_locked_wallet_key(self.field0, serializer);
+  }
+
+  @protected
   void sse_encode_frb_out_point(FrbOutPoint self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.txid, serializer);
@@ -21710,6 +22992,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.field0, serializer);
     sse_encode_u_64(self.field1, serializer);
+  }
+
+  @protected
+  void sse_encode_frb_sender_body(
+      FrbSenderBody self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.toList, serializer);
+    sse_encode_String(self.sender, serializer);
+    sse_encode_String(self.body, serializer);
+  }
+
+  @protected
+  void sse_encode_frb_srp_client(FrbSrpClient self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_frb_tl_encrypted_transaction_id(
+      FrbTLEncryptedTransactionID self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.encryptedTransactionId, serializer);
+    sse_encode_u_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_frb_tl_transaction_id(
+      FrbTLTransactionID self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.transactionId, serializer);
+    sse_encode_u_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_frb_transition_layer(
+      FrbTransitionLayer self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 
   @protected
@@ -22037,6 +23355,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_frb_tl_encrypted_transaction_id(
+      List<FrbTLEncryptedTransactionID> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_frb_tl_encrypted_transaction_id(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_frb_tl_transaction_id(
+      List<FrbTLTransactionID> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_frb_tl_transaction_id(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_migrated_wallet_account(
       List<MigratedWalletAccount> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -22053,6 +23391,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_migrated_wallet_transaction(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_mnemonic_data(
+      List<MnemonicData> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_mnemonic_data(item, serializer);
     }
   }
 
@@ -22277,6 +23625,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_locked_wallet_key(
+      LockedWalletKey self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.encrypted, serializer);
+    sse_encode_String(self.signature, serializer);
+  }
+
+  @protected
   void sse_encode_log_entry(LogEntry self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_64(self.timeMillis, serializer);
@@ -22322,6 +23678,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.modulusId, serializer);
     sse_encode_String(self.salt, serializer);
     sse_encode_String(self.verifier, serializer);
+  }
+
+  @protected
+  void sse_encode_mnemonic_data(MnemonicData self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.walletId, serializer);
+    sse_encode_opt_String(self.mnemonic, serializer);
+  }
+
+  @protected
+  void sse_encode_mnemonic_result(
+      MnemonicResult self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.walletId, serializer);
+    sse_encode_String(self.walletName, serializer);
+    sse_encode_String(self.walletMnemonic, serializer);
   }
 
   @protected
@@ -23072,11 +24444,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_sort_order(SortOrder self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.index, serializer);
-  }
-
-  @protected
-  void sse_encode_srp_client(SrpClient self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
   }
 
   @protected
@@ -23908,6 +25275,43 @@ class FrbAppDatabaseImpl extends RustOpaque implements FrbAppDatabase {
 }
 
 @sealed
+class FrbBackupMnemonicImpl extends RustOpaque implements FrbBackupMnemonic {
+  // Not to be used by end users
+  FrbBackupMnemonicImpl.frbInternalDcoDecode(List<dynamic> wire)
+      : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  FrbBackupMnemonicImpl.frbInternalSseDecode(
+      BigInt ptr, int externalSizeOnNative)
+      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_FrbBackupMnemonic,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_FrbBackupMnemonic,
+    rustArcDecrementStrongCountPtr: RustLib
+        .instance.api.rust_arc_decrement_strong_count_FrbBackupMnemonicPtr,
+  );
+
+  Future<int> twoFaStatus() => RustLib.instance.api
+          .crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicTwoFaStatus(
+        that: this,
+      );
+
+  Future<MnemonicResult> viewSeed(
+          {required String walletId,
+          required String loginPassword,
+          required String twofa}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletFeaturesBackupMnemonicFrbBackupMnemonicViewSeed(
+              that: this,
+              walletId: walletId,
+              loginPassword: loginPassword,
+              twofa: twofa);
+}
+
+@sealed
 class FrbBalanceImpl extends RustOpaque implements FrbBalance {
   // Not to be used by end users
   FrbBalanceImpl.frbInternalDcoDecode(List<dynamic> wire)
@@ -24176,8 +25580,6 @@ class FrbMnemonicImpl extends RustOpaque implements FrbMnemonic {
         RustLib.instance.api.rust_arc_decrement_strong_count_FrbMnemonicPtr,
   );
 
-  /// Create a new Mnemonic in the specified language from the given entropy.
-  /// Entropy must be a multiple of 32 bits (4 bytes) and 128-256 bits in length.
   /// Returns the Mnemonic as a string.
   String asString() =>
       RustLib.instance.api.crateApiBdkWalletMnemonicFrbMnemonicAsString(
@@ -24240,8 +25642,8 @@ class FrbProtonWalletImpl extends RustOpaque implements FrbProtonWallet {
         RustLib.instance.api.rust_arc_decrement_strong_count_FrbProtonWalletPtr,
   );
 
-  Future<FrbWalletCreation> getWalletCrateionFeature() => RustLib.instance.api
-          .crateApiProtonWalletWalletFrbProtonWalletGetWalletCrateionFeature(
+  Future<FrbBackupMnemonic> getBackupMnemonicFeature() => RustLib.instance.api
+          .crateApiProtonWalletWalletFrbProtonWalletGetBackupMnemonicFeature(
         that: this,
       );
 }
@@ -24476,8 +25878,6 @@ class FrbTxBuilderImpl extends RustOpaque implements FrbTxBuilder {
         that: this,
       );
 
-  ///     * UTXOs
-  ///
   FrbTxBuilder clearUtxosToSpend() => RustLib.instance.api
           .crateApiBdkWalletTransactionBuilderFrbTxBuilderClearUtxosToSpend(
         that: this,
@@ -24672,49 +26072,17 @@ class FrbUserKeyStoreImpl extends RustOpaque implements FrbUserKeyStore {
         that: this,
       );
 
-  Future<void> setGetPrimaryUserKeyCallback(
+  Future<void> setGetDefaultUserKeyCallback(
           {required FutureOr<ProtonUserKey> Function(String) callback}) =>
       RustLib.instance.api
-          .crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPrimaryUserKeyCallback(
+          .crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetDefaultUserKeyCallback(
               that: this, callback: callback);
 
-  Future<void> setGetUserKeysCallback(
-          {required FutureOr<List<ProtonUserKey>> Function(String) callback}) =>
+  Future<void> setGetPassphraseCallback(
+          {required FutureOr<String> Function(String) callback}) =>
       RustLib.instance.api
-          .crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetUserKeysCallback(
+          .crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreSetGetPassphraseCallback(
               that: this, callback: callback);
-}
-
-@sealed
-class FrbWalletCreationImpl extends RustOpaque implements FrbWalletCreation {
-  // Not to be used by end users
-  FrbWalletCreationImpl.frbInternalDcoDecode(List<dynamic> wire)
-      : super.frbInternalDcoDecode(wire, _kStaticData);
-
-  // Not to be used by end users
-  FrbWalletCreationImpl.frbInternalSseDecode(
-      BigInt ptr, int externalSizeOnNative)
-      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-  static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_FrbWalletCreation,
-    rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_FrbWalletCreation,
-    rustArcDecrementStrongCountPtr: RustLib
-        .instance.api.rust_arc_decrement_strong_count_FrbWalletCreationPtr,
-  );
-
-  Future<ApiWalletAccount> createWalletAccount(
-          {required String walletId,
-          required String label,
-          required int accountIndex}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletFeaturesWalletCreationFrbWalletCreationCreateWalletAccount(
-              that: this,
-              walletId: walletId,
-              label: label,
-              accountIndex: accountIndex);
 }
 
 @sealed
@@ -24818,6 +26186,45 @@ class FrbWalletKeyStoreImpl extends RustOpaque implements FrbWalletKeyStore {
           {required FutureOr<void> Function(List<ApiWalletKey>) callback}) =>
       RustLib.instance.api
           .crateApiProtonWalletStorageWalletKeyStoreFrbWalletKeyStoreSetSaveWalletKeysCallback(
+              that: this, callback: callback);
+}
+
+@sealed
+class FrbWalletMnemonicStoreImpl extends RustOpaque
+    implements FrbWalletMnemonicStore {
+  // Not to be used by end users
+  FrbWalletMnemonicStoreImpl.frbInternalDcoDecode(List<dynamic> wire)
+      : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  FrbWalletMnemonicStoreImpl.frbInternalSseDecode(
+      BigInt ptr, int externalSizeOnNative)
+      : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib
+        .instance.api.rust_arc_increment_strong_count_FrbWalletMnemonicStore,
+    rustArcDecrementStrongCount: RustLib
+        .instance.api.rust_arc_decrement_strong_count_FrbWalletMnemonicStore,
+    rustArcDecrementStrongCountPtr: RustLib
+        .instance.api.rust_arc_decrement_strong_count_FrbWalletMnemonicStorePtr,
+  );
+
+  Future<void> clearAuthDartCallback() => RustLib.instance.api
+          .crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreClearAuthDartCallback(
+        that: this,
+      );
+
+  Future<void> setGetWalletKeysCallback(
+          {required FutureOr<List<MnemonicData>> Function() callback}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetGetWalletKeysCallback(
+              that: this, callback: callback);
+
+  Future<void> setSaveWalletKeysCallback(
+          {required FutureOr<void> Function(List<MnemonicData>) callback}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreSetSaveWalletKeysCallback(
               that: this, callback: callback);
 }
 

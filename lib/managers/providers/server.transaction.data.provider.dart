@@ -70,35 +70,16 @@ class ServerTransactionDataProvider extends DataProvider {
     return [];
   }
 
-  Future<List<TransactionModel>> _getFromDBByAccount(String accountID) async {
-    final transactions = await transactionDao.findAllByServerAccountID(
-      accountID,
-    );
-
-    return transactions;
-  }
-
   Future<ServerTransactionData> getServerTransactionDataByWalletAccount(
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    List<TransactionModel> transactions = await transactionDao.findAllByServerAccountID(
-      accountModel.accountID,
-    );
-    if (transactions.isEmpty){
-      /// fetch from server when no local cache
-      await fetchTransactions(
-        walletModel.walletID,
-        accountModel.accountID,
-        isInitializeProcess: true,
-      );
-      transactions = await transactionDao.findAllByServerAccountID(
-        accountModel.accountID,
-      );
-    }
     return ServerTransactionData(
       accountModel: accountModel,
-      transactions: transactions,
+      transactions: await getTransByAccountID(
+        walletModel.walletID,
+        accountModel.accountID,
+      ),
     );
   }
 
@@ -106,24 +87,22 @@ class ServerTransactionDataProvider extends DataProvider {
     String walletID,
     String accountID,
   ) async {
-    // check cache first
-    final List<ServerTransactionData> transactionDataList =
-        await getServerTransactionData();
-    for (ServerTransactionData serverTransactionData in transactionDataList) {
-      if (serverTransactionData.accountModel.walletID == walletID &&
-          serverTransactionData.accountModel.accountID == accountID) {
-        return serverTransactionData.transactions;
-      }
+    List<TransactionModel> transactions =
+        await transactionDao.findAllByServerAccountID(
+      accountID,
+    );
+    if (transactions.isEmpty) {
+      /// fetch from server when no local cache
+      await fetchTransactions(
+        walletID,
+        accountID,
+        isInitializeProcess: true,
+      );
+      transactions = await transactionDao.findAllByServerAccountID(
+        accountID,
+      );
     }
-    // fetch from server
-    await fetchTransactions(walletID, accountID);
-
-    // fetch from db
-    final dbTrans = await _getFromDBByAccount(accountID);
-    if (dbTrans.isNotEmpty) {
-      return dbTrans;
-    }
-    return [];
+    return transactions;
   }
 
   Future<List<ServerTransactionData>> getServerTransactionData() async {

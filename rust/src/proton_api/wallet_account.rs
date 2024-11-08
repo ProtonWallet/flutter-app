@@ -4,7 +4,7 @@ use andromeda_api::{
 };
 use flutter_rust_bridge::frb;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct CreateWalletAccountReq {
     // Label of the account
     pub label: String,
@@ -54,4 +54,46 @@ pub struct _ApiWalletAccount {
 pub struct _ApiEmailAddress {
     pub ID: String,
     pub Email: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use andromeda_api::wallet::CreateWalletAccountRequestBody;
+
+    fn mock_create_wallet_account_req() -> CreateWalletAccountReq {
+        CreateWalletAccountReq {
+            label: "Test Account".to_string(),
+            derivation_path: "m/44'/0'/0'/0".to_string(),
+            script_type: 1,
+        }
+    }
+
+    fn mock_create_wallet_account_request_body() -> CreateWalletAccountRequestBody {
+        CreateWalletAccountRequestBody {
+            Label: "Test Account".to_string(),
+            DerivationPath: "m/44'/0'/0'/0".to_string(),
+            ScriptType: 1,
+        }
+    }
+
+    #[test]
+    fn test_create_wallet_account_req_to_body_conversion() {
+        let req = mock_create_wallet_account_req();
+        let req_body: CreateWalletAccountRequestBody = req.clone().into();
+
+        assert_eq!(req_body.Label, req.label);
+        assert_eq!(req_body.DerivationPath, req.derivation_path);
+        assert_eq!(req_body.ScriptType, req.script_type);
+    }
+
+    #[test]
+    fn test_create_wallet_account_body_to_req_conversion() {
+        let req_body = mock_create_wallet_account_request_body();
+        let req: CreateWalletAccountReq = req_body.clone().into();
+
+        assert_eq!(req.label, req_body.Label);
+        assert_eq!(req.derivation_path, req_body.DerivationPath);
+        assert_eq!(req.script_type, req_body.ScriptType);
+    }
 }

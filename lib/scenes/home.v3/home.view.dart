@@ -24,7 +24,7 @@ import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.da
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/button.v5.dart';

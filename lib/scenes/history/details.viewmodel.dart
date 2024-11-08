@@ -2,11 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -14,6 +11,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
@@ -21,10 +19,8 @@ import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/providers/wallet.name.provider.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
-import 'package:wallet/managers/users/user.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/exchangerate.model.dart';
 import 'package:wallet/models/transaction.info.model.dart';
@@ -33,9 +29,13 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -46,14 +46,15 @@ abstract class HistoryDetailViewModel
     extends ViewModel<HistoryDetailCoordinator> {
   String walletID;
   String accountID;
-  String txID;
+  FrbTransactionDetails frbTransactionDetails;
+  String txID = "";
   String userLabel = "";
 
   HistoryDetailViewModel(
     super.coordinator,
     this.walletID,
     this.accountID,
-    this.txID,
+    this.frbTransactionDetails,
     this.userSettingsDataProvider,
     this.contactsDataProvider,
   );
@@ -102,7 +103,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.coordinator,
     super.walletID,
     super.accountID,
-    super.txID,
+    super.frbTransactionDetails,
     this.userManager,
     this.walletManager,
     this.serverTransactionDataProvider,
@@ -111,6 +112,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.userSettingsDataProvider,
     super.contactsDataProvider,
     this.walletNameService,
+    this.addressKeyProvider,
   );
 
   late FrbAccount _frbAccount;
@@ -121,13 +123,15 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   final WalletClient walletClient;
   final WalletKeysProvider walletKeysProvider;
   final WalletNameProvider walletNameService;
+  final AddressKeyProvider addressKeyProvider;
 
   Uint8List? entropy;
-  SecretKey? secretKey;
-  List<AddressKey> addressKeys = [];
+  FrbUnlockedWalletKey? unlockedWalletKey;
+  List<ProtonAddressKey> addressKeys = [];
 
   @override
   Future<void> loadData() async {
+    txID = frbTransactionDetails.txid;
     memoController = TextEditingController();
     memoFocusNode = FocusNode();
     memoFocusNode.addListener(userFinishMemo);
@@ -137,7 +141,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
     if (addressKeys.isEmpty) {
-      addressKeys = await walletManager.getAddressKeys();
+      addressKeys = await addressKeyProvider.getAddressKeysForTL();
     }
 
     var serverTrans = await serverTransactionDataProvider.getTransByAccountID(
@@ -145,7 +149,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       accountID,
     );
 
-    secretKey = await walletKeysProvider.getWalletSecretKey(
+    unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
 
@@ -166,8 +170,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       walletID,
       accountID,
     ))!;
-    final List<FrbTransactionDetails> history =
-        await _frbAccount.getTransactions();
     strWallet = await walletNameService.getNameWithID(walletID);
     strAccount = await walletNameService.getAccountLabelWithID(accountID);
 
@@ -182,145 +184,91 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         "details.viewmodel error: $e stacktrace: $stacktrace",
       );
     }
+    final transaction = frbTransactionDetails;
+    amount = transaction.received.toDouble() - transaction.sent.toDouble();
+    fee = transaction.fees!.toDouble();
+    isSend = amount < 0;
+    // bdk sent include fee, so need add back to make display send amount without fee
+    if (isSend) {
+      amount += (transaction.fees ?? BigInt.zero).toDouble();
+    }
 
-    bool foundedInBDKHistory = false;
-    for (var transaction in history) {
-      if (transaction.txid == txID) {
-        amount = transaction.received.toDouble() - transaction.sent.toDouble();
-        fee = transaction.fees!.toDouble();
-        isSend = amount < 0;
-        // bdk sent include fee, so need add back to make display send amount without fee
-        if (isSend) {
-          amount += (transaction.fees ?? BigInt.zero).toDouble();
-        }
-
-        transaction.time.when(
-          confirmed: (confirmationTime) {
-            logger.d('Confirmed transaction time: $confirmationTime');
-            transactionTime = confirmationTime.toInt();
-          },
-          unconfirmed: (lastSeen) {
-            logger.d('Unconfirmed transaction last seen: $lastSeen');
-            // needs to show in progress if it's not confirmed
-            // transactionTime = lastSeen;
-          },
-        );
-
-        foundedInBDKHistory = true;
-        if (isSend) {
-          if (recipients.isEmpty) {
-            final TransactionDetailFromBlockChain?
-                transactionDetailFromBlockChain =
-                await WalletManager.getTransactionDetailsFromBlockStream(txID);
-            if (transactionDetailFromBlockChain != null) {
-              isRecipientsFromBlockChain = true;
-              bool hasFindMineBitcoinAddress = false;
-              for (Recipient recipient
-                  in transactionDetailFromBlockChain.recipients) {
-                if (!hasFindMineBitcoinAddress) {
-                  if (await walletManager.isMineBitcoinAddress(
-                      _frbAccount, recipient.bitcoinAddress)) {
-                    hasFindMineBitcoinAddress = true;
-                    continue;
-                  }
-                }
-                recipients.add(TransactionInfoModel(
-                    id: null,
-                    externalTransactionID: Uint8List(0),
-                    amountInSATS: recipient.amountInSATS.abs(),
-                    feeInSATS: fee.abs().toInt(),
-                    isSend: 1,
-                    transactionTime: 0,
-                    feeMode: 0,
-                    serverWalletID: walletID,
-                    serverAccountID: accountID,
-                    toEmail: "",
-                    toBitcoinAddress: recipient.bitcoinAddress));
-              }
-            }
-          }
-        } else {
-          addresses.add(txID);
-          final TransactionDetailFromBlockChain?
-              transactionDetailFromBlockChain =
-              await WalletManager.getTransactionDetailsFromBlockStream(txID);
-          if (transactionDetailFromBlockChain != null) {
-            for (Recipient recipient
-                in transactionDetailFromBlockChain.recipients) {
+    transaction.time.when(
+      confirmed: (confirmationTime) {
+        logger.d('Confirmed transaction time: $confirmationTime');
+        transactionTime = confirmationTime.toInt();
+      },
+      unconfirmed: (lastSeen) {
+        logger.d('Unconfirmed transaction last seen: $lastSeen');
+        // needs to show in progress if it's not confirmed
+        // transactionTime = lastSeen;
+      },
+    );
+    if (isSend) {
+      if (recipients.isEmpty) {
+        final TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+            await WalletManager.getTransactionDetailsFromBlockStream(txID);
+        if (transactionDetailFromBlockChain != null) {
+          isRecipientsFromBlockChain = true;
+          bool hasFindMineBitcoinAddress = false;
+          for (Recipient recipient
+              in transactionDetailFromBlockChain.recipients) {
+            if (!hasFindMineBitcoinAddress) {
               if (await walletManager.isMineBitcoinAddress(
                   _frbAccount, recipient.bitcoinAddress)) {
-                selfBitcoinAddress = recipient.bitcoinAddress;
-                break;
+                hasFindMineBitcoinAddress = true;
+                continue;
               }
             }
+            recipients.add(TransactionInfoModel(
+                id: null,
+                externalTransactionID: Uint8List(0),
+                amountInSATS: recipient.amountInSATS.abs(),
+                feeInSATS: fee.abs().toInt(),
+                isSend: 1,
+                transactionTime: 0,
+                feeMode: 0,
+                serverWalletID: walletID,
+                serverAccountID: accountID,
+                toEmail: "",
+                toBitcoinAddress: recipient.bitcoinAddress));
           }
         }
-        sinkAddSafe();
-        break;
+      }
+    } else {
+      addresses.add(txID);
+      final TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
+          await WalletManager.getTransactionDetailsFromBlockStream(txID);
+      if (transactionDetailFromBlockChain != null) {
+        for (Recipient recipient
+            in transactionDetailFromBlockChain.recipients) {
+          if (await walletManager.isMineBitcoinAddress(
+              _frbAccount, recipient.bitcoinAddress)) {
+            selfBitcoinAddress = recipient.bitcoinAddress;
+            break;
+          }
+        }
       }
     }
+    sinkAddSafe();
 
-    if (!foundedInBDKHistory) {
-      try {
-        if (recipients.isNotEmpty) {
-          // get transaction info locally, for sender
-          fee = recipients.first.feeInSATS.toDouble();
-          isSend = true;
-          amount = 0;
-          for (TransactionInfoModel recipient in recipients) {
-            amount -= recipient.amountInSATS.toDouble();
-          }
-        } else {
-          final TransactionDetailFromBlockChain?
-              transactionDetailFromBlockChain =
-              await WalletManager.getTransactionDetailsFromBlockStream(txID);
-          if (transactionDetailFromBlockChain != null) {
-            fee = transactionDetailFromBlockChain.feeInSATS.toDouble();
-            Recipient? me;
-            for (Recipient recipient
-                in transactionDetailFromBlockChain.recipients) {
-              final BitcoinAddressModel? bitcoinAddressModel =
-                  await DBHelper.bitcoinAddressDao!.findBitcoinAddressInAccount(
-                recipient.bitcoinAddress,
-                accountID,
-              );
-              if (bitcoinAddressModel != null) {
-                me = recipient;
-                break;
-              }
-            }
-            if (me != null) {
-              isSend = false;
-              selfBitcoinAddress = me.bitcoinAddress;
-              amount = me.amountInSATS.toDouble();
-            }
-          }
-        }
-      } catch (e, stacktrace) {
-        logger.e(
-          "details.viewmodel error: $e stacktrace: $stacktrace",
-        );
-      }
-    }
     logger.i("transactionModel == null ? ${transactionModel == null}");
-    if (transactionModel == null && secretKey != null) {
-      final String hashedTransactionID =
-          await WalletKeyHelper.getHmacHashedString(
-        secretKey!,
+    if (transactionModel == null && unlockedWalletKey != null) {
+      final hashedTransactionID = await WalletKeyHelper.getHmacHashedString(
+        unlockedWalletKey!,
         txID,
       );
 
       /// default label
-      final String encryptedLabel = await WalletKeyHelper.encrypt(
-        secretKey!,
-        "",
+      final String encryptedLabel = FrbWalletKeyHelper.encrypt(
+        base64SecureKey: unlockedWalletKey!.toBase64(),
+        plaintext: "",
       );
 
-      final primaryUserKey = await userManager.getPrimaryKey();
-      final String transactionId = proton_crypto.encrypt(
-        primaryUserKey.privateKey,
-        txID,
-      );
+      final primaryUserKey = await userManager.getPrimaryKeyForTL();
+      final transactionId = FrbTransitionLayer.encryptMessagesWithUserkey(
+          userKey: primaryUserKey, message: txID);
+
       final DateTime now = DateTime.now();
       try {
         // TODO(fix): move this to provider
@@ -386,6 +334,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
                 txID,
               );
               if (transactionModel == null) {
+                /// show hashedTXID has been used error
+                CommonHelper.showErrorDialog(responseError.error);
                 rethrow;
               }
             }
@@ -397,16 +347,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       }
     }
-    if (secretKey != null) {
+    if (unlockedWalletKey != null) {
       if (transactionModel!.label.isNotEmpty) {
-        userLabel = await WalletKeyHelper.decrypt(
-            secretKey!, utf8.decode(transactionModel!.label));
+        userLabel = FrbWalletKeyHelper.decrypt(
+          base64SecureKey: unlockedWalletKey!.toBase64(),
+          encryptText: utf8.decode(transactionModel!.label),
+        );
       }
       final walletModel = await DBHelper.walletDao!.findByServerID(walletID);
       try {
-        strWallet = await WalletKeyHelper.decrypt(
-          secretKey!,
-          walletModel.name,
+        strWallet = FrbWalletKeyHelper.decrypt(
+          base64SecureKey: unlockedWalletKey!.toBase64(),
+          encryptText: walletModel.name,
         );
       } catch (e) {
         strWallet = walletModel.name;
@@ -414,70 +366,19 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
     memoController.text = userLabel;
 
-    for (AddressKey addressKey in addressKeys) {
-      try {
-        /// Decrypt 'to' email if needed
-        if (toEmail.isEmpty) {
-          final encToList = transactionModel?.tolist;
-          if (encToList != null) {
-            toEmail = addressKey.decrypt(encToList);
-          }
-        }
-
-        /// Decrypt 'from' email if needed
-        if (fromEmail.isEmpty) {
-          final encSender = transactionModel?.sender;
-          if (encSender != null) {
-            fromEmail = addressKey.decrypt(encSender);
-          }
-        }
-
-        /// Decrypt body if needed
-        if (body.isEmpty) {
-          final encBody = transactionModel?.body;
-          if (encBody != null) {
-            body = addressKey.decrypt(encBody);
-          }
-        }
-      } catch (e, stacktrace) {
-        logger.e(
-          "details.viewmodel error: $e stacktrace: $stacktrace",
-        );
-      }
-    }
-
-    final userKeys = await userManager.getUserKeys();
-    for (final userKey in userKeys) {
-      try {
-        /// Decrypt 'to' email if needed
-        if (toEmail.isEmpty) {
-          final encToList = transactionModel?.tolist;
-          if (encToList != null) {
-            toEmail = userKey.decrypt(encToList);
-          }
-        }
-
-        /// Decrypt 'from' email if needed
-        if (fromEmail.isEmpty) {
-          final encSender = transactionModel?.sender;
-          if (encSender != null) {
-            fromEmail = userKey.decrypt(encSender);
-          }
-        }
-
-        /// Decrypt body if needed
-        if (body.isEmpty) {
-          final encBody = transactionModel?.body;
-          if (encBody != null) {
-            body = userKey.decrypt(encBody);
-          }
-        }
-      } catch (e, stacktrace) {
-        logger.e(
-          "details.viewmodel error: $e stacktrace: $stacktrace",
-        );
-      }
-    }
+    final decryptedBoday = FrbTransitionLayer.decryptMessages(
+      userKeys: await userManager.getUserKeysForTL(),
+      addrKeys: addressKeys.isEmpty
+          ? addressKeys
+          : await addressKeyProvider.getAddressKeysForTL(),
+      userKeyPassword: userManager.getUserKeyPassphrase(),
+      encBody: transactionModel?.body,
+      encToList: transactionModel?.tolist,
+      encSender: transactionModel?.sender,
+    );
+    toEmail = decryptedBoday.toList;
+    fromEmail = decryptedBoday.sender;
+    body = decryptedBoday.body;
 
     if (toEmail == "null") {
       toEmail = "";
@@ -524,6 +425,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         }
       }
     }
+
     if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
       final ExchangeRateModel? exchangeRateModel = await DBHelper
           .exchangeRateDao!
@@ -569,44 +471,25 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     List<TransactionModel> transactions,
     String lookupTxID,
   ) async {
-    final userKeys = await userManager.getUserKeys();
+    final userKeys = await userManager.getUserKeysForTL();
+    final addressKeys = await addressKeyProvider.getAddressKeysForTL();
+    final passphrase = userManager.getUserKeyPassphrase();
+
+    final frbTransactionIds = FrbTransitionLayer.decryptTransactionIds(
+      userKeys: userKeys,
+      addrKeys: addressKeys,
+      userKeyPassword: passphrase,
+      encTransactionIds: transactions.toFrbTLEncryptedTransactionID(),
+    );
+
     for (var tranMode in transactions) {
-      final String encryptedTxID = tranMode.transactionID;
-      String clearTxID = "";
-      for (final userKey in userKeys) {
-        try {
-          clearTxID = proton_crypto.decrypt(
-            userKey.privateKey,
-            userKey.passphrase,
-            encryptedTxID,
-          );
-          break;
-        } catch (e, stacktrace) {
-          logger.i(
-            "details.viewmodel error: $e stacktrace: $stacktrace",
-          );
-        }
-      }
-      if (clearTxID.isEmpty) {
-        for (AddressKey addressKey in addressKeys) {
-          try {
-            clearTxID = addressKey.decrypt(encryptedTxID);
-          } catch (e, stacktrace) {
-            logger.e(
-              "details.viewmodel error: $e stacktrace: $stacktrace",
-            );
-          }
-          if (clearTxID.isNotEmpty) {
-            break;
-          }
-        }
-      }
-      tranMode.externalTransactionID = utf8.encode(clearTxID);
-      if (lookupTxID == clearTxID) {
+      final foundTxID = frbTransactionIds
+          .firstWhere((element) => element.index == tranMode.id)
+          .transactionId;
+      if (foundTxID == lookupTxID && foundTxID.isNotEmpty) {
         return tranMode;
       }
     }
-
     return null;
   }
 
@@ -615,10 +498,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     try {
       final WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
       if (!memoFocusNode.hasFocus) {
-        if (userLabel != memoController.text && secretKey != null) {
+        if (userLabel != memoController.text && unlockedWalletKey != null) {
           userLabel = memoController.text;
-          final String encryptedLabel =
-              await WalletKeyHelper.encrypt(secretKey!, userLabel);
+          final encryptedLabel = FrbWalletKeyHelper.encrypt(
+            base64SecureKey: unlockedWalletKey!.toBase64(),
+            plaintext: userLabel,
+          );
           transactionModel!.label = utf8.encode(encryptedLabel);
           await proton_api.updateWalletTransactionLabel(
             walletId: transactionModel!.serverWalletID,
@@ -660,20 +545,25 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     String senderName,
     String senderEmail,
   ) async {
-    final UserKey primaryUserkey = await userManager.getPrimaryKey();
+    final primaryUserkey = await userManager.getPrimaryKeyForTL();
     final Map<String, dynamic> jsonMap = {
       "name": senderName,
       "email": senderEmail,
     };
     final String jsonString = jsonEncode(jsonMap);
-    final String encryptedName = primaryUserkey.encrypt(jsonString);
+    final encryptedName = FrbTransitionLayer.encryptMessagesWithUserkey(
+      userKey: primaryUserkey,
+      message: jsonString,
+    );
+
     transactionModel!.sender = encryptedName;
     final WalletTransaction _ =
         await walletClient.updateExternalWalletTransactionSender(
-            walletId: transactionModel!.serverWalletID,
-            walletAccountId: transactionModel!.serverAccountID,
-            walletTransactionId: transactionModel!.serverID,
-            sender: encryptedName);
+      walletId: transactionModel!.serverWalletID,
+      walletAccountId: transactionModel!.serverAccountID,
+      walletTransactionId: transactionModel!.serverID,
+      sender: encryptedName,
+    );
     await serverTransactionDataProvider.insertOrUpdate(
       transactionModel!,
       notifyDataUpdate: true,

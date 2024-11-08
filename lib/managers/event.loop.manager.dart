@@ -1,26 +1,23 @@
 import 'dart:async';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/services/service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
@@ -115,8 +112,7 @@ class EventLoop extends Service implements Manager {
         checkRecovery = false;
         await stateRecovery([LoadingTask.homeRecheck]);
       }
-      final count =
-          await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
+      final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
       if (count > 0) {
         await stateRecovery([LoadingTask.syncRecheck]);
       }
@@ -170,21 +166,15 @@ class EventLoop extends Service implements Manager {
 
   Future<void> fetchEvents() async {
     logger.i("event loop runOnce()");
-    final Map<String, List<ApiWalletKey>> walletID2ProtonWalletKey = {};
     try {
       final events =
           await proton_api.collectEvents(latestEventId: latestEventId);
       for (ProtonEvent event in events) {
+        // check wallet key events
         if (event.walletKeyEvents != null) {
-          for (WalletKeyEvent walletKeyEvent in event.walletKeyEvents!) {
+          for (final walletKeyEvent in event.walletKeyEvents!) {
             final ApiWalletKey? walletKey = walletKeyEvent.walletKey;
             if (walletKey != null) {
-              final String serverWalletID = walletKey.walletId;
-              if (!walletID2ProtonWalletKey.containsKey(serverWalletID)) {
-                walletID2ProtonWalletKey[serverWalletID] = [];
-              }
-              walletID2ProtonWalletKey[serverWalletID]!.add(walletKey);
-
               await dataProviderManager.walletKeysProvider.saveApiWalletKeys(
                 [walletKey],
               );
@@ -202,44 +192,8 @@ class EventLoop extends Service implements Manager {
               continue;
             }
             final ApiWallet? walletData = walletEvent.wallet;
-
             if (walletData != null) {
-              SecretKey? secretKey;
               final String walletID = walletData.id;
-              if (walletID2ProtonWalletKey.containsKey(walletID)) {
-                for (ApiWalletKey? apiWalletKey
-                    in walletID2ProtonWalletKey[walletID]!) {
-                  try {
-                    if (apiWalletKey == null) {
-                      continue;
-                    }
-                    final WalletKey walletKey = WalletKey.fromApiWalletKey(
-                      apiWalletKey,
-                    );
-                    final userKey =
-                        await userManager.getUserKey(walletKey.userKeyId);
-
-                    secretKey = WalletKeyHelper.decryptWalletKey(
-                      userKey,
-                      walletKey,
-                    );
-
-                    // TODO(fix): fix me use it
-                    final bool isValidWalletKeySignature =
-                        await WalletKeyHelper.verifySecretKeySignature(
-                      userKey,
-                      walletKey,
-                      secretKey,
-                    );
-                    logger.i(
-                      "isValidWalletKeySignature = $isValidWalletKeySignature",
-                    );
-                    break;
-                  } catch (e) {
-                    continue;
-                  }
-                }
-              }
               const int status = WalletModel.statusActive;
               await dataProviderManager.walletDataProvider.insertOrUpdateWallet(
                 userID: userManager.userID,
@@ -260,12 +214,14 @@ class EventLoop extends Service implements Manager {
             }
           }
         }
+
         if (event.walletAccountEvents != null) {
           for (final walletAccountEvent in event.walletAccountEvents!) {
             if (walletAccountEvent.action == 0) {
               final String accountID = walletAccountEvent.id;
-              await dataProviderManager.walletDataProvider
-                  .deleteWalletAccount(accountID: accountID);
+              await dataProviderManager.walletDataProvider.deleteWalletAccount(
+                accountID: accountID,
+              );
               continue;
             }
             final ApiWalletAccount? account = walletAccountEvent.walletAccount;
@@ -400,7 +356,6 @@ class EventLoop extends Service implements Manager {
     }
   }
 
-  // TODO(fix): fix me handle the !
   Future<void> handleBitcoinAddress() async {
     final userID = userManager.userInfo.userId;
     final walletModels = await DBHelper.walletDao!.findAllByUserID(userID);

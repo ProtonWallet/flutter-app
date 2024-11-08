@@ -3,17 +3,17 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/errors.dart';
 import '../../frb_generated.dart';
 import '../../srp/proofs.dart';
+import '../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class SrpClient {
-  const SrpClient.raw();
+class FrbSrpClient {
+  const FrbSrpClient.raw();
 
   static Future<String> computeKeyPassword(
           {required String password, required List<int> salt}) =>
-      RustLib.instance.api.crateApiSrpSrpClientSrpClientComputeKeyPassword(
+      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientComputeKeyPassword(
           password: password, salt: salt);
 
   static Future<SRPProofB64> generateProofs(
@@ -22,7 +22,7 @@ class SrpClient {
           required String salt,
           required String modulus,
           required String serverEphemeral}) =>
-      RustLib.instance.api.crateApiSrpSrpClientSrpClientGenerateProofs(
+      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientGenerateProofs(
           loginPassword: loginPassword,
           version: version,
           salt: salt,
@@ -33,11 +33,11 @@ class SrpClient {
           {required String password,
           String? saltOpt,
           required String serverModulus}) =>
-      RustLib.instance.api.crateApiSrpSrpClientSrpClientGenerateVerifer(
+      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientGenerateVerifer(
           password: password, saltOpt: saltOpt, serverModulus: serverModulus);
 
-  factory SrpClient() =>
-      RustLib.instance.api.crateApiSrpSrpClientSrpClientNew();
+  factory FrbSrpClient() =>
+      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientNew();
 
   @override
   int get hashCode => 0;
@@ -45,5 +45,5 @@ class SrpClient {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SrpClient && runtimeType == other.runtimeType;
+      other is FrbSrpClient && runtimeType == other.runtimeType;
 }

@@ -4,9 +4,7 @@ import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -20,7 +18,6 @@ import 'package:wallet/managers/providers/balance.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/address.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/address.dart';
@@ -28,6 +25,7 @@ import 'package:wallet/rust/api/bdk_wallet/balance.dart';
 import 'package:wallet/rust/api/bdk_wallet/storage.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -189,8 +187,9 @@ class WalletManager implements Manager {
 
   Future<double> getWalletBalance(String walletID) async {
     double balance = 0.0;
-    final List accounts =
-        await DBHelper.accountDao!.findAllByWalletID(walletID);
+    final accounts = await DBHelper.accountDao!.findAllByWalletID(
+      walletID,
+    );
     for (AccountModel accountModel in accounts) {
       balance += await getWalletAccountBalance(walletID, accountModel.walletID);
     }
@@ -204,9 +203,11 @@ class WalletManager implements Manager {
   }
 
   static Future<List<String>> getAccountAddressIDs(
-      String serverAccountID) async {
-    final List<AddressModel> result =
-        await DBHelper.addressDao!.findByServerAccountID(serverAccountID);
+    String serverAccountID,
+  ) async {
+    final result = await DBHelper.addressDao!.findByServerAccountID(
+      serverAccountID,
+    );
     return result.map((e) => e.serverID).toList();
   }
 
@@ -271,39 +272,31 @@ class WalletManager implements Manager {
     return emailIntegrationBitcoinAddress;
   }
 
-  Future<List<AddressKey>> getAddressKeys() async {
-    List<ProtonAddress> addresses = await proton_api.getProtonAddress();
-    addresses = addresses.where((element) => element.status == 1).toList();
+  Future<List<ProtonAddressKey>> getAddressKeysForTL() async {
+    final addresses = (await proton_api.getProtonAddress())
+        .where((address) => address.status == 1)
+        .toList();
 
-    final userKeys = await userManager.getUserKeys();
-    final List<AddressKey> addressKeys = [];
-    for (ProtonAddress address in addresses) {
-      for (ProtonAddressKey addressKey in address.keys ?? []) {
-        final String addressKeyPrivateKey = addressKey.privateKey ?? "";
-        final String addressKeyToken = addressKey.token ?? "";
-        for (final uKey in userKeys) {
-          try {
-            final String addressKeyPassphrase = proton_crypto.decrypt(
-              uKey.privateKey,
-              uKey.passphrase,
-              addressKeyToken,
-            );
-            addressKeys.add(AddressKey(
-              id: address.id,
-              privateKey: addressKeyPrivateKey,
-              passphrase: addressKeyPassphrase,
-            ));
-            break;
-          } catch (e, stacktrace) {
-            logger.e(
-              "getAddressKeys decrypt error: $e stacktrace: $stacktrace",
-            );
-          }
-        }
-      }
-    }
+    return addresses
+        .expand((address) => address.keys ?? [])
+        .cast<ProtonAddressKey>()
+        .toList();
+  }
 
-    return addressKeys;
+  Future<List<ProtonAddressKey>> getAddressKeysForTLAddressID(
+      List<String> addressIDs) async {
+    final addresses = (await proton_api.getProtonAddress())
+        .where(
+            (address) => address.status == 1 && addressIDs.contains(address.id))
+        .toList();
+
+    final addressKeys = addresses
+        .expand((address) => address.keys ?? [])
+        .cast<ProtonAddressKey>()
+        .toList();
+
+    final keys = addressKeys.where((key) => key.primary == 1).toList();
+    return keys;
   }
 
   Future<bool> checkFingerprint(
@@ -426,7 +419,7 @@ class WalletManager implements Manager {
     final walletModel = await DBHelper.walletDao!.findByServerID(
       accountModel.walletID,
     );
-    final int localLastUsedIndex = await dataProviderManager
+    final localLastUsedIndex = await dataProviderManager
         .localBitcoinAddressDataProvider
         .getLastUsedIndex(walletModel, accountModel);
     await dataProviderManager.receiveAddressDataProvider
@@ -440,11 +433,11 @@ class WalletManager implements Manager {
     String serverAccountID,
   ) async {
     int unFetchedBitcoinAddressCount = 0;
-    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
-        await proton_api.getWalletBitcoinAddress(
-            walletId: serverWalletID,
-            walletAccountId: serverAccountID,
-            onlyRequest: 0);
+    // get bitcoin addresses from api, make sure the data is up to date
+    final walletBitcoinAddresses = await proton_api.getWalletBitcoinAddress(
+        walletId: serverWalletID,
+        walletAccountId: serverAccountID,
+        onlyRequest: 0);
 
     /// resync the email address in case that user update it on web
     /// and mobile didn't get event loop yet
@@ -452,14 +445,16 @@ class WalletManager implements Manager {
       serverWalletID,
       serverAccountID,
     );
-    final List<String> addressIDs =
-        await WalletManager.getAccountAddressIDs(serverAccountID);
+    final addressIDs = await WalletManager.getAccountAddressIDs(
+      serverAccountID,
+    );
+
     if (addressIDs.isEmpty) {
       /// don't need to do health check if no email address link to account
       /// probably due to web disable BvE
       return;
     }
-    List<AddressKey> addressKeys = await getAddressKeys();
+    List<ProtonAddressKey> addressKeys = await getAddressKeysForTL();
     addressKeys = addressKeys
         .where((addressKey) => addressIDs.contains(addressKey.id))
         .toList();
@@ -501,14 +496,17 @@ class WalletManager implements Manager {
       bool isValidSignature = false;
       if (walletBitcoinAddress.bitcoinAddress != null &&
           walletBitcoinAddress.bitcoinAddressSignature != null) {
-        for (AddressKey addressKey in addressKeys) {
-          final String armoredPublicKey =
-              proton_crypto.getArmoredPublicKey(addressKey.privateKey);
-          isValidSignature = await verifySignature(
-              armoredPublicKey,
-              walletBitcoinAddress.bitcoinAddress!,
-              walletBitcoinAddress.bitcoinAddressSignature!,
-              gpgContextWalletBitcoinAddress);
+        for (final addressKey in addressKeys) {
+          isValidSignature = FrbTransitionLayer.verifySignature(
+              privateKey: addressKey.privateKey!,
+              message: walletBitcoinAddress.bitcoinAddress!,
+              signature: walletBitcoinAddress.bitcoinAddressSignature!,
+              context: gpgContextWalletBitcoinAddress);
+          // isValidSignature = await verifySignature(
+          //     armoredPublicKey,
+          //     walletBitcoinAddress.bitcoinAddress!,
+          //     walletBitcoinAddress.bitcoinAddressSignature!,
+          //     gpgContextWalletBitcoinAddress);
           if (isValidSignature) {
             break;
           }
@@ -577,30 +575,28 @@ class WalletManager implements Manager {
     String bitcoinAddress,
     String gpgContext,
   ) async {
-    final addressIDs =
-        await WalletManager.getAccountAddressIDs(serverAccountID);
-    List<AddressKey> addressKeys = await getAddressKeys();
-    addressKeys = addressKeys
-        .where((addressKey) => addressIDs.contains(addressKey.id))
-        .toList();
+    final addressIDs = await WalletManager.getAccountAddressIDs(
+      serverAccountID,
+    );
 
-    final List<String> signatures = [];
-    for (AddressKey addressKey in addressKeys) {
-      signatures.add(proton_crypto.getSignatureWithContext(
-          addressKey.privateKey,
-          addressKey.passphrase,
-          bitcoinAddress,
-          gpgContext));
+    final userkeys = await userManager.getUserKeysForTL();
+    final passphrase = userManager.getUserKeyPassphrase();
+    final addressKeys = await getAddressKeysForTLAddressID(addressIDs);
+
+    final signatures = [];
+    for (final addressKey in addressKeys) {
+      final signature = FrbTransitionLayer.sign(
+        userKeys: userkeys,
+        addrKeys: addressKey,
+        userKeyPassword: passphrase,
+        message: bitcoinAddress,
+        context: gpgContext,
+      );
+      signatures.add(signature);
     }
     return signatures.isNotEmpty
         ? signatures[0]
         : "-----BEGIN PGP SIGNATURE-----*-----END PGP SIGNATURE-----";
-  }
-
-  static Future<bool> verifySignature(String publicAddressKey, String message,
-      String signature, String gpgContext) async {
-    return proton_crypto.verifySignatureWithContext(
-        publicAddressKey, message, signature, gpgContext);
   }
 
   static String getEmailFromWalletTransaction(
@@ -676,19 +672,18 @@ class WalletManager implements Manager {
       final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final TransactionDetailFromBlockChain transactionDetailFromBlockChain =
-            TransactionDetailFromBlockChain(
-                txid: txid,
-                feeInSATS: data['fee'],
-                blockHeight: data['status']['block_height'] ?? 0,
-                timestamp: data['status']['block_time'] ?? 0);
-        final List<dynamic> recipientMapList = data['vout']
+        final transactionDetailFromBlockChain = TransactionDetailFromBlockChain(
+            txid: txid,
+            feeInSATS: data['fee'],
+            blockHeight: data['status']['block_height'] ?? 0,
+            timestamp: data['status']['block_time'] ?? 0);
+        final recipientMapList = data['vout']
             .map((output) => {
                   'address': output['scriptpubkey_address'],
                   'value': output['value']
                 })
             .toList();
-        for (var recipientMap in recipientMapList) {
+        for (final recipientMap in recipientMapList) {
           transactionDetailFromBlockChain.addRecipient(Recipient(
               bitcoinAddress: recipientMap["address"],
               amountInSATS: recipientMap["value"]));

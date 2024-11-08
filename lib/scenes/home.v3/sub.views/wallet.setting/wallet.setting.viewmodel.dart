@@ -15,8 +15,8 @@ import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -253,8 +253,8 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses = await dataProviderManager.addressKeyProvider
-          .getAddresses();
+      userAddresses =
+          await dataProviderManager.addressKeyProvider.getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }

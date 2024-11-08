@@ -35,7 +35,7 @@ impl RotatingFileWriter {
         Self {
             file,
             file_folder: file_folder.to_string(),
-            file_path: file_path,
+            file_path,
         }
     }
 

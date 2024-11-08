@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry/sentry.dart';
@@ -10,7 +9,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.event.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
@@ -25,7 +23,8 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 
 /// Define the Bloc
@@ -82,7 +81,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     walletsDataSubscription =
         walletsDataProvider.dataUpdateController.stream.listen((onData) {
-      // TODO(fix): improve me
       add(StartLoading());
     });
 
@@ -101,7 +99,6 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     walletPassDataSubscription =
         walletPassProvider.dataUpdateController.stream.listen((onData) {
-      // TODO(fix): improve me
       add(StartLoading());
     });
 
@@ -135,79 +132,63 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             walletPassProvider,
           );
 
-          final walletKey = await walletKeysProvider.getWalletKey(
-            wallet.wallet.walletID,
-          );
-          SecretKey? secretKey;
-          if (walletKey != null) {
-            final userKey = await userManager.getUserKey(walletKey.userKeyId);
-            secretKey = WalletKeyHelper.decryptWalletKey(
-              userKey,
-              walletKey,
-            );
-
-            final isValidWalletKeySignature =
-                await WalletKeyHelper.verifySecretKeySignature(
-              userKey,
-              walletKey,
-              secretKey,
-            );
-
-            walletModel.isSignatureValid = isValidWalletKeySignature;
-            logger.i(
-              "WalletListBloc isValidWalletKeySignature = $isValidWalletKeySignature",
-            );
-          }
           walletModel.accountSize = wallet.accounts.length;
           walletModel.walletName = wallet.wallet.name;
-          if (secretKey != null) {
+
+          try {
+            final unlockedWalletKey = await walletKeysProvider
+                .getWalletSecretKey(wallet.wallet.walletID);
+
             try {
-              walletModel.walletName = await WalletKeyHelper.decrypt(
-                secretKey,
-                wallet.wallet.name,
+              walletModel.walletName = FrbWalletKeyHelper.decrypt(
+                base64SecureKey: unlockedWalletKey.toBase64(),
+                encryptText: wallet.wallet.name,
               );
             } catch (e) {
               logger.e(e.toString());
             }
-          }
-          for (AccountModel account in wallet.accounts) {
-            final AccountMenuModel accMenuModel = AccountMenuModel(account);
-            if (walletModel.walletModel.walletID ==
-                    walletsDataProvider.selectedServerWalletID &&
-                accMenuModel.accountModel.accountID ==
-                    walletsDataProvider.selectedServerWalletAccountID) {
-              hasSelected = true;
-              accMenuModel.isSelected = true;
-            }
-            if (secretKey != null) {
+
+            for (final account in wallet.accounts) {
+              final accMenuModel = AccountMenuModel(account);
+              if (walletModel.walletModel.walletID ==
+                      walletsDataProvider.selectedServerWalletID &&
+                  accMenuModel.accountModel.accountID ==
+                      walletsDataProvider.selectedServerWalletAccountID) {
+                hasSelected = true;
+                accMenuModel.isSelected = true;
+              }
               final encrypted = base64Encode(account.label);
               try {
-                accMenuModel.label = await WalletKeyHelper.decrypt(
-                  secretKey,
-                  encrypted,
+                accMenuModel.label = FrbWalletKeyHelper.decrypt(
+                  base64SecureKey: unlockedWalletKey.toBase64(),
+                  encryptText: encrypted,
                 );
               } catch (e) {
                 logger.e(e.toString());
               }
+
+              final settings = await userSettingsDataProvider.getSettings();
+              final fiatCurrency = account.getFiatCurrency();
+
+              /// setup btcBalance
+              accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
+                (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
+                0, // default 0 balance
+              );
+
+              final fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
+              accMenuModel.currencyBalance = "$fiatSign ----";
+
+              accMenuModel.emailIds = await WalletManager.getAccountAddressIDs(
+                account.accountID,
+              );
+              walletModel.accounts.add(accMenuModel);
             }
-
-            final settings = await userSettingsDataProvider.getSettings();
-            final fiatCurrency = account.getFiatCurrency();
-
-            /// setup btcBalance
-            accMenuModel.btcBalance = ExchangeCalculator.getBitcoinUnitLabel(
-              (settings?.bitcoinUnit ?? "btc").toBitcoinUnit(),
-              0, // default 0 balance
-            );
-
-            final fiatSign = CommonHelper.getFiatCurrencySign(fiatCurrency);
-            accMenuModel.currencyBalance = "$fiatSign ----";
-
-            accMenuModel.emailIds = await WalletManager.getAccountAddressIDs(
-              account.accountID,
-            );
-            walletModel.accounts.add(accMenuModel);
+          } catch (e, stacktrace) {
+            Sentry.captureException(e, stackTrace: stacktrace);
+            logger.e(e.toString());
           }
+
           walletsModel.add(walletModel);
         }
         emit(state.copyWith(initialized: true, walletsModel: walletsModel));

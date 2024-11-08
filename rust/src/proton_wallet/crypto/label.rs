@@ -1,7 +1,7 @@
 use super::{
     binary::{Binary, EncryptedBinary},
-    errors::WalletCryptoError,
     wallet_key::UnlockedWalletKey,
+    Result,
 };
 
 pub trait Label: Binary {
@@ -19,7 +19,7 @@ pub trait Label: Binary {
     fn encrypt_with(
         &self,
         key: &UnlockedWalletKey,
-    ) -> Result<EncryptedLabel<Self>, WalletCryptoError>
+    ) -> Result<EncryptedLabel<Self>>
     where
         Self: Sized,
     {
@@ -58,7 +58,7 @@ where
     /// # Returns
     /// - `Ok(T)`: On success, returns the decrypted label of type `T`.
     /// - `Err(WalletCryptoError)`: On failure, returns an error describing what went wrong during decryption.
-    pub fn decrypt_with(&self, key: &UnlockedWalletKey) -> Result<T, WalletCryptoError> {
+    pub fn decrypt_with(&self, key: &UnlockedWalletKey) -> Result<T> {
         key.decrypt(&self.0).map(T::new)
     }
 }

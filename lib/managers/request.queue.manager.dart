@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 
 Future<T> retry<T>(
   Future<T> Function() action, {

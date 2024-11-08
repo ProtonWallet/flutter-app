@@ -1,13 +1,11 @@
+use andromeda_api::{
+    core::ApiClient,
+    payment_gateway::{ApiCountry, ApiSimpleFiatCurrency, GatewayProvider, PaymentMethod, Quote},
+};
 use std::{collections::HashMap, sync::Arc};
 
-pub use andromeda_api::core::ApiClient;
-use andromeda_api::payment_gateway::{
-    ApiCountry, ApiSimpleFiatCurrency, GatewayProvider, PaymentMethod, Quote,
-};
-
-use crate::BridgeError;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct OnRampGatewayClient {
     pub(crate) inner: Arc<andromeda_api::payment_gateway::PaymentGatewayClient>,

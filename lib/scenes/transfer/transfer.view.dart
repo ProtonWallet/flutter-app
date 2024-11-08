@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/rust/api/api2.dart';
 import 'package:wallet/scenes/core/view.dart';
 
 import 'transfer.viewmodel.dart';
@@ -19,8 +18,6 @@ class TransferView extends ViewBase<TransferViewModel> {
       ),
       body: Column(
         children: [
-          Text("Test Greet Fn: `${greet(name: "World!!!")}`"),
-          Text("Test helloworld Fn: `${helloworld()}`"),
           Text("AuthInfo-Code: `${viewModel.testCode}`"),
           Text("WalletsResponse-Code: `${viewModel.testCodeTwo}`")
         ],

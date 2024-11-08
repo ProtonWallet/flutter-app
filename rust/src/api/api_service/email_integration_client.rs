@@ -1,10 +1,8 @@
 use std::sync::Arc;
-
 use andromeda_api::core::ApiClient;
 
-use crate::{wallet::EmailIntegrationBitcoinAddress, BridgeError};
-
 use super::proton_api_service::ProtonAPIService;
+use crate::{wallet::EmailIntegrationBitcoinAddress, BridgeError};
 
 pub struct EmailIntegrationClient {
     pub(crate) inner: Arc<andromeda_api::email_integration::EmailIntegrationClient>,

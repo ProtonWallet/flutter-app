@@ -283,7 +283,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
 
             /// Debug tools -- code will the Tree shaking in production
             if (kDebugMode) ...[
-              buildDebugSection(),
+              buildDebugSection(viewModel),
             ]
           ],
         ),

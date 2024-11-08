@@ -13,6 +13,13 @@ impl Binary for WalletName {
         &self.0
     }
 }
+
+impl From<String> for WalletName {
+    fn from(value: String) -> Self {
+        Self(value.into())
+    }
+}
+
 impl Label for WalletName {}
 pub type EncryptedWalletName = EncryptedLabel<WalletName>;
 
@@ -51,7 +58,7 @@ mod tests {
     #[test]
     fn test_encrypt_and_decrypt_label() {
         let wallet_key = WalletKeyProvider::generate();
-        let label = WalletName::new_from_str("Sensitive Label Data");
+        let label = WalletName::from("Sensitive Label Data".to_owned());
         let encrypted_label = label.encrypt_with(&wallet_key).unwrap();
         assert_ne!(encrypted_label.as_bytes(), label.as_bytes());
         let decrypted_label = encrypted_label.decrypt_with(&wallet_key).unwrap();

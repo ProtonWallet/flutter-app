@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/wallet.keys.store.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
+import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 
 class WalletKeysProvider extends DataProvider {
@@ -24,15 +24,21 @@ class WalletKeysProvider extends DataProvider {
   );
 
   /// trying to get wallet key from secrue store and decrypt it use userkey
-  Future<SecretKey> getWalletSecretKey(String serverWalletID) async {
+  Future<FrbUnlockedWalletKey> getWalletSecretKey(String serverWalletID) async {
     final walletKey = await getWalletKey(serverWalletID);
     if (walletKey == null) {
       throw Exception("Wallet key not found");
     }
 
-    final userKey = await userManager.getUserKey(walletKey.userKeyId);
-    final secretKey = WalletKeyHelper.decryptWalletKey(userKey, walletKey);
-    return secretKey;
+    final userKey = await userManager.getUserKeyForTL(walletKey.userKeyId);
+    final passphrase = userManager.getUserKeyPassphrase();
+
+    final frbUnlockedWalletKey = FrbTransitionLayer.decryptWalletKey(
+        walletKey: walletKey.toApiWalletKey(),
+        userKey: userKey,
+        userKeyPassphrase: passphrase);
+
+    return frbUnlockedWalletKey;
   }
 
   Future<WalletKey?> getWalletKey(String walletID) async {

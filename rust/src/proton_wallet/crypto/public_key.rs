@@ -4,7 +4,7 @@ use proton_crypto_account::{
     proton_crypto::crypto::PGPProviderSync,
 };
 
-use super::errors::WalletCryptoError;
+use super::Result;
 
 /// Collection of public keys.
 pub struct PublicKeys<Provider: PGPProviderSync>(Vec<Provider::PublicKey>);
@@ -31,7 +31,7 @@ impl<Provider: PGPProviderSync> PublicKeys<Provider> {
         &mut self,
         provider: &Provider,
         address_keys: &AddressKeys,
-    ) -> Result<(), WalletCryptoError> {
+    ) -> Result<()> {
         for key in address_keys.as_ref() {
             // Import the public key from the private key in the AddressKeys set.
             self.import_and_add_key(provider, key.private_key.as_ref())?;
@@ -44,7 +44,7 @@ impl<Provider: PGPProviderSync> PublicKeys<Provider> {
     //     &mut self,
     //     provider: &Provider,
     //     address_keys: &APIPublicAddressKeys,
-    // ) -> Result<(), WalletCryptoError> {
+    // ) -> Result<()> {
     //     let keys = address_keys.import(&provider)?;
     //     Ok(())
     // }
@@ -54,16 +54,12 @@ impl<Provider: PGPProviderSync> PublicKeys<Provider> {
         &mut self,
         provider: &Provider,
         armored_key: &ArmoredPrivateKey,
-    ) -> Result<(), WalletCryptoError> {
+    ) -> Result<()> {
         self.import_and_add_key(provider, armored_key.as_ref())
     }
 
     /// Helper method to import a public key from a private key and add it to the collection.
-    fn import_and_add_key(
-        &mut self,
-        provider: &Provider,
-        private_key: &str,
-    ) -> Result<(), WalletCryptoError> {
+    fn import_and_add_key(&mut self, provider: &Provider, private_key: &str) -> Result<()> {
         // Add the public key to the internal collection
         self.0
             .push(provider.public_key_import(private_key, DataEncoding::Armor)?);

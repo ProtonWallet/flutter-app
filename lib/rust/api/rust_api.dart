@@ -3,7 +3,6 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../common/errors.dart';
 import '../common/network.dart';
 import '../common/word_count.dart';
 import '../frb_generated.dart';
@@ -11,6 +10,7 @@ import 'bdk_wallet/address.dart';
 import 'bdk_wallet/blockchain.dart';
 import 'bdk_wallet/derivation_path.dart';
 import 'bdk_wallet/script_buf.dart';
+import 'errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 class Api {

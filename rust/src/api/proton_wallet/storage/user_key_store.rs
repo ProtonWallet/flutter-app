@@ -20,21 +20,21 @@ impl FrbUserKeyStore {
         }
     }
 
-    pub async fn set_get_primary_user_key_callback(
+    pub async fn set_get_default_user_key_callback(
         &mut self,
         callback: impl Fn(String) -> DartFnFuture<ProtonUserKey> + Send + Sync + 'static,
     ) {
         self.inner
-            .set_get_primary_user_key_callback(Arc::new(callback))
+            .set_get_default_user_key_callback(Arc::new(callback))
             .await
     }
 
-    pub async fn set_get_user_keys_callback(
+    pub async fn set_get_passphrase_callback(
         &mut self,
-        callback: impl Fn(String) -> DartFnFuture<Vec<ProtonUserKey>> + Send + Sync + 'static,
+        callback: impl Fn(String) -> DartFnFuture<String> + Send + Sync + 'static,
     ) {
         self.inner
-            .set_get_user_keys_callback(Arc::new(callback))
+            .set_get_user_key_passphrase_callback(Arc::new(callback))
             .await
     }
 

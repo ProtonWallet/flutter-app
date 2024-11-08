@@ -1,13 +1,11 @@
+use andromeda_api::core::ApiClient;
 use std::sync::Arc;
 
-use andromeda_api::core::ApiClient;
-
+use super::proton_api_service::ProtonAPIService;
 use crate::{
     proton_address::{AllKeyAddressKey, ProtonAddress},
     BridgeError,
 };
-
-use super::proton_api_service::ProtonAPIService;
 
 pub struct ProtonEmailAddressClient {
     pub(crate) inner: Arc<andromeda_api::proton_email_address::ProtonEmailAddressClient>,

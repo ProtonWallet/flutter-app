@@ -1,7 +1,8 @@
-use super::proton_api_service::ProtonAPIService;
-use crate::BridgeError;
 use andromeda_api::{contacts::ApiContactEmails, core::ApiClient};
 use std::sync::Arc;
+
+use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct ContactsClient {
     pub(crate) inner: Arc<andromeda_api::contacts::ContactsClient>,

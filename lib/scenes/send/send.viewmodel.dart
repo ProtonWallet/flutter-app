@@ -2,12 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:sentry/sentry.dart';
-import 'package:wallet/constants/address.key.dart';
-import 'package:wallet/constants/address.public.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -16,7 +12,6 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/event.loop.manager.dart';
@@ -38,9 +33,12 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_builder.dart';
+import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/api/rust_api.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -105,8 +103,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Map<String, String> bitcoinAddresses = {};
   Map<String, bool> bitcoinAddressesInvalidSignature = {};
 
-  Map<String, AddressPublicKey> email2AddressKey = {};
-  List<AddressPublicKey> addressPublicKeys = [];
+  Map<String, String> email2AddressKey = {};
+  List<String> addressPublicKeys = [];
   List<ProtonAddress> userAddresses = [];
 
   List<ProtonRecipient> recipients = [];
@@ -114,7 +112,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   List<String> accountAddressIDs = [];
   int balance = 0;
   double feeRateHighPriority = 20.0;
-  List<AddressKey> addressKeys = [];
+  List<ProtonAddressKey> addressKeys = [];
   double feeRateMedianPriority = 15.0;
   double feeRateLowPriority = 10.0;
   double feeRateSatPerVByte = 15.0;
@@ -245,7 +243,7 @@ class SendViewModelImpl extends SendViewModel {
   bool isValid = false;
   FiatCurrencyWrapper? previousCurrencyWrapper;
 
-  SecretKey? secretKey;
+  FrbUnlockedWalletKey? unlockedWalletKey;
 
   void startExchangeRateUpdateService() {
     isValid = true;
@@ -308,7 +306,7 @@ class SendViewModelImpl extends SendViewModel {
           ? userAddresses[1]
           : userAddresses.firstOrNull);
 
-      addressKeys = await walletManager.getAddressKeys();
+      addressKeys = await addressKeyProvider.getAddressKeysForTL();
       await userSettingsDataProvider.preLoad();
       exchangeRate = userSettingsDataProvider.exchangeRate;
       amountDisplayDigit = ExchangeCalculator.getDisplayDigit(exchangeRate);
@@ -615,12 +613,15 @@ class SendViewModelImpl extends SendViewModel {
               bool verifySignature = false;
               for (AllKeyAddressKey recipientAddressKey
                   in recipientAddressKeys) {
-                verifySignature = await WalletManager.verifySignature(
-                    recipientAddressKey.publicKey,
-                    emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
-                    emailIntegrationBitcoinAddress.bitcoinAddressSignature ??
+                verifySignature = FrbTransitionLayer.verifySignature(
+                    privateKey: recipientAddressKey.publicKey,
+                    message:
+                        emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
+                    signature: emailIntegrationBitcoinAddress
+                            .bitcoinAddressSignature ??
                         "",
-                    gpgContextWalletBitcoinAddress);
+                    context: gpgContextWalletBitcoinAddress);
+
                 if (verifySignature) {
                   break;
                 }
@@ -746,8 +747,7 @@ class SendViewModelImpl extends SendViewModel {
                 for (AllKeyAddressKey allKeyAddressKey
                     in recipientAddressKeys) {
                   // TODO(fix): use default key
-                  email2AddressKey[email] =
-                      AddressPublicKey(publicKey: allKeyAddressKey.publicKey);
+                  email2AddressKey[email] = allKeyAddressKey.publicKey;
                   break;
                 }
               }
@@ -794,9 +794,7 @@ class SendViewModelImpl extends SendViewModel {
       if (context.mounted) {
         SendFlowInviteSheet.show(
             context,
-            userAddresses
-                .where((e) => e.id != anonymousAddress.id)
-                .toList(),
+            userAddresses.where((e) => e.id != anonymousAddress.id).toList(),
             email,
             _sendInviteForNewComer);
       }
@@ -806,9 +804,7 @@ class SendViewModelImpl extends SendViewModel {
       if (context.mounted) {
         SendFlowInviteSheet.show(
             context,
-            userAddresses
-                .where((e) => e.id != anonymousAddress.id)
-                .toList(),
+            userAddresses.where((e) => e.id != anonymousAddress.id).toList(),
             email,
             _sendInviteForEmailIntegration);
       }
@@ -982,6 +978,7 @@ class SendViewModelImpl extends SendViewModel {
       if (!hasValidRecipient) {
         return false;
       }
+
       /// skip the check since some low value UTXO will be filter out by BDK
       /// if the fee rate is higher
       // if (totalAmountInSAT > maxBalanceToSend + tolerateBalanceOverflow) {
@@ -1064,12 +1061,12 @@ class SendViewModelImpl extends SendViewModel {
         emailAddressID = addressKeys.firstOrNull?.id;
       }
       String? encryptedLabel;
-      final SecretKey secretKey = await walletKeysProvider.getWalletSecretKey(
+      final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
         walletModel!.walletID,
       );
-      encryptedLabel = await WalletKeyHelper.encrypt(
-        secretKey,
-        memoTextController.text,
+      encryptedLabel = FrbWalletKeyHelper.encrypt(
+        base64SecureKey: unlockedWalletKey.toBase64(),
+        plaintext: memoTextController.text,
       );
 
       String? encryptedMessage;
@@ -1087,18 +1084,17 @@ class SendViewModelImpl extends SendViewModel {
       }
 
       if (addressPublicKeys.isNotEmpty) {
-        for (AddressKey addressKey in addressKeys) {
+        for (final addressKey in addressKeys) {
           if (addressKey.id == emailAddressID) {
             // need to use self addressKey to encrypt the body too
-            final String pgpArmoredPublicKey =
-                proton_crypto.getArmoredPublicKey(addressKey.privateKey);
-            addressPublicKeys
-                .add(AddressPublicKey(publicKey: pgpArmoredPublicKey));
+            addressPublicKeys.add(addressKey.privateKey ?? "");
             break;
           }
         }
-        encryptedMessage = AddressPublicKey.encryptWithKeys(
-            addressPublicKeys, emailBodyController.text);
+        encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
+          privateKeys: addressPublicKeys,
+          message: emailBodyController.text,
+        );
       }
 
       if (_frbAccount == null) {
@@ -1359,15 +1355,15 @@ class SendViewModelImpl extends SendViewModel {
   }
 
   Future<String> decryptAccountName(String encryptedName) async {
-    secretKey ??= await walletKeysProvider.getWalletSecretKey(
+    unlockedWalletKey ??= await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
     String decryptedName = "Default Wallet Account";
-    if (secretKey != null) {
+    if (unlockedWalletKey != null) {
       try {
-        decryptedName = await WalletKeyHelper.decrypt(
-          secretKey!,
-          encryptedName,
+        decryptedName = FrbWalletKeyHelper.decrypt(
+          base64SecureKey: unlockedWalletKey!.toBase64(),
+          encryptText: encryptedName,
         );
       } catch (e) {
         logger.e(e.toString());

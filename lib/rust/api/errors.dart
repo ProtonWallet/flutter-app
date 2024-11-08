@@ -8,6 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'errors.freezed.dart';
 
+// These functions are ignored because they are not marked as `pub`: `find_error_type`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
+
 @freezed
 sealed class BridgeError with _$BridgeError implements FrbException {
   const BridgeError._();
@@ -80,6 +83,9 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.fork(
     String field0,
   ) = BridgeError_Fork;
+  const factory BridgeError.database(
+    String field0,
+  ) = BridgeError_Database;
 }
 
 class ResponseError {

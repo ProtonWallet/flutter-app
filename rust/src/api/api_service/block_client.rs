@@ -1,9 +1,8 @@
 use andromeda_api::core::ApiClient;
 use std::sync::Arc;
 
-use crate::BridgeError;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct BlockClient {
     pub(crate) inner: Arc<andromeda_api::block::BlockClient>,

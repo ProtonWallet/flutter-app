@@ -14,9 +14,9 @@ abstract class FrbUserKeyStore implements RustOpaqueInterface {
   factory FrbUserKeyStore() => RustLib.instance.api
       .crateApiProtonWalletStorageUserKeyStoreFrbUserKeyStoreNew();
 
-  Future<void> setGetPrimaryUserKeyCallback(
+  Future<void> setGetDefaultUserKeyCallback(
       {required FutureOr<ProtonUserKey> Function(String) callback});
 
-  Future<void> setGetUserKeysCallback(
-      {required FutureOr<List<ProtonUserKey>> Function(String) callback});
+  Future<void> setGetPassphraseCallback(
+      {required FutureOr<String> Function(String) callback});
 }

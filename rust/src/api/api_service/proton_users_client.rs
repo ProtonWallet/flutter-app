@@ -1,14 +1,14 @@
-use crate::BridgeError;
-
-use super::proton_api_service::ProtonAPIService;
-pub use andromeda_api::ProtonUsersClient as InnerProtonUsersClient;
 use andromeda_api::{
     core::ApiClient,
     proton_users::{
         GetAuthInfoRequest, GetAuthInfoResponseBody, GetAuthModulusResponse, ProtonSrpClientProofs,
         ProtonUser, ProtonUserSettings, ProtonUsersClientExt,
     },
+    ProtonUsersClient as InnerProtonUsersClient,
 };
+
+use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct ProtonUsersClient {
     pub(crate) inner: InnerProtonUsersClient,

@@ -18,6 +18,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.instruction.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -153,12 +154,12 @@ class HomeCoordinator extends Coordinator {
   void showHistoryDetails(
     String walletID,
     String accountID,
-    String txID,
+    FrbTransactionDetails frbTransactionDetails,
   ) {
     final view = HistoryDetailCoordinator(
       walletID,
       accountID,
-      txID,
+      frbTransactionDetails,
     ).start();
     showInBottomSheet(
       view,

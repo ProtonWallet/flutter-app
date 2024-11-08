@@ -160,3 +160,111 @@ impl From<ApiContactsEmailEvent> for ContactEmailEvent {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use andromeda_api::{
+        contacts::ApiContactEmails,
+        event::{
+            ApiContactsEmailEvent, ApiProtonEvent, ApiWalletAccountEvent, ApiWalletEvent,
+            ApiWalletKeyEvent, ApiWalletSettingsEvent, ApiWalletTransactionsEvent,
+        },
+    };
+
+    fn mock_api_proton_event() -> ApiProtonEvent {
+        ApiProtonEvent {
+            Code: 200,
+            EventID: "event_id_123".to_string(),
+            Refresh: 0,
+            More: 0,
+            ContactEmails: Some(vec![ApiContactsEmailEvent {
+                ID: "email_event_id".to_string(),
+                Action: 1,
+                ContactEmail: Some(ApiContactEmails {
+                    ID: "email_1".to_string(),
+                    Name: "Test Name".to_string(),
+                    Email: "test@example.com".to_string(),
+                    CanonicalEmail: "test@example.com".to_string(),
+                    IsProton: 0,
+                }),
+            }]),
+            Wallets: Some(vec![ApiWalletEvent {
+                ID: "wallet_event_id".to_string(),
+                Action: 2,
+                Wallet: None,
+            }]),
+            WalletAccounts: Some(vec![ApiWalletAccountEvent {
+                ID: "wallet_account_event_id".to_string(),
+                Action: 3,
+                WalletAccount: None,
+            }]),
+            WalletKeys: Some(vec![ApiWalletKeyEvent {
+                ID: "wallet_key_event_id".to_string(),
+                Action: 4,
+                WalletKey: None,
+            }]),
+            WalletSettings: Some(vec![ApiWalletSettingsEvent {
+                ID: "wallet_settings_event_id".to_string(),
+                Action: 5,
+                WalletSettings: None,
+            }]),
+            WalletTransactions: Some(vec![ApiWalletTransactionsEvent {
+                ID: "wallet_txn_event_id".to_string(),
+                Action: 6,
+                WalletTransaction: None,
+            }]),
+            WalletUserSettings: None,
+            User: None,
+            UserSettings: None,
+        }
+    }
+
+    #[test]
+    fn test_proton_event_conversion() {
+        let api_event = mock_api_proton_event();
+        let proton_event: ProtonEvent = api_event.into();
+
+        assert_eq!(proton_event.code, 200);
+        assert_eq!(proton_event.event_id, "event_id_123");
+        assert!(proton_event.contact_email_events.is_some());
+        assert!(proton_event.wallet_events.is_some());
+        assert!(proton_event.wallet_account_events.is_some());
+        assert!(proton_event.wallet_key_events.is_some());
+        assert!(proton_event.wallet_transaction_events.is_some());
+        assert!(proton_event.wallet_setting_events.is_some());
+    }
+
+    #[test]
+    fn test_wallet_event_conversion() {
+        let api_wallet_event = ApiWalletEvent {
+            ID: "wallet_event_id".to_string(),
+            Action: 2,
+            Wallet: None,
+        };
+        let wallet_event: WalletEvent = api_wallet_event.into();
+        assert_eq!(wallet_event.id, "wallet_event_id");
+        assert_eq!(wallet_event.action, 2);
+        assert!(wallet_event.wallet.is_none());
+    }
+
+    #[test]
+    fn test_contact_email_event_conversion() {
+        let api_contact_event = ApiContactsEmailEvent {
+            ID: "email_event_id".to_string(),
+            Action: 1,
+            ContactEmail: Some(ApiContactEmails {
+                ID: "email_1".to_string(),
+                Name: "Test Name".to_string(),
+                Email: "test@example.com".to_string(),
+                CanonicalEmail: "test@example.com".to_string(),
+                IsProton: 0,
+            }),
+        };
+        let contact_email_event: ContactEmailEvent = api_contact_event.into();
+
+        assert_eq!(contact_email_event.id, "email_event_id");
+        assert_eq!(contact_email_event.action, 1);
+        assert!(contact_email_event.contact_email.is_some());
+    }
+}

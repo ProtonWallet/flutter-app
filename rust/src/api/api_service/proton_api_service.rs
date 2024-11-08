@@ -1,31 +1,30 @@
 //proton_api_service.rs
-use super::address_client::AddressClient;
-use super::discovery_content_client::DiscoveryContentClient;
-use super::invite_client::InviteClient;
-use super::onramp_gateway_client::OnRampGatewayClient;
-use super::price_graph_client::PriceGraphClient;
-use super::proton_settings_client::ProtonSettingsClient;
-use super::proton_users_client::ProtonUsersClient;
-use super::wallet_auth_store::ProtonWalletAuthStore;
-use super::{
-    bitcoin_address_client::BitcoinAddressClient, block_client::BlockClient,
-    email_integration_client::EmailIntegrationClient, event_client::EventClient,
-    exchange_rate_client::ExchangeRateClient, proton_contacts_client::ContactsClient,
-    proton_email_addr_client::ProtonEmailAddressClient, settings_client::SettingsClient,
-    transaction_client::TransactionClient, wallet_client::WalletClient,
+use andromeda_api::{
+    wallet::ApiWalletData, wallet_ext::WalletClientExt, ApiConfig, Auth, ProtonWalletApiClient,
+    Tokens,
 };
-use crate::api::proton_api::{logout, set_proton_api};
-use crate::api::srp::srp_client::SrpClient;
-use crate::{auth_credential::AuthCredential, BridgeError};
-use andromeda_api::wallet::ApiWalletData;
-use andromeda_api::wallet_ext::WalletClientExt;
-// use andromeda_api::wallet_ext::WalletClientExt;
-use andromeda_api::{ApiConfig, Auth, ProtonWalletApiClient, Tokens};
-use base64::prelude::BASE64_STANDARD;
-use base64::Engine;
+use base64::{prelude::BASE64_STANDARD, Engine};
 use flutter_rust_bridge::frb;
 use log::info;
 use std::sync::Arc;
+
+use super::{
+    address_client::AddressClient, bitcoin_address_client::BitcoinAddressClient,
+    block_client::BlockClient, discovery_content_client::DiscoveryContentClient,
+    email_integration_client::EmailIntegrationClient, event_client::EventClient,
+    exchange_rate_client::ExchangeRateClient, invite_client::InviteClient,
+    onramp_gateway_client::OnRampGatewayClient, price_graph_client::PriceGraphClient,
+    proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
+    proton_settings_client::ProtonSettingsClient, proton_users_client::ProtonUsersClient,
+    settings_client::SettingsClient, transaction_client::TransactionClient,
+    wallet_auth_store::ProtonWalletAuthStore, wallet_client::WalletClient,
+};
+use crate::{
+    api::proton_api::{logout, set_proton_api},
+    auth_credential::AuthCredential,
+    proton_wallet::crypto::srp::SrpClient,
+    BridgeError,
+};
 
 #[derive(Clone)]
 pub struct ProtonAPIService {
@@ -235,12 +234,11 @@ impl ProtonAPIService {
 
 #[cfg(test)]
 mod test {
-
-    use crate::{
-        api::api_service::{
+    use crate::api::{
+        api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        BridgeError,
+        errors::BridgeError,
     };
 
     #[tokio::test]

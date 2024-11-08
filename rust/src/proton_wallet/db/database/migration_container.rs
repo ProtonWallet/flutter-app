@@ -1,8 +1,11 @@
 use log::{info, warn};
 use std::collections::BTreeMap;
 
-use super::migration::{Migration, SimpleMigration};
-use crate::proton_wallet::db::{error::DatabaseError, Result};
+use super::{
+    migration::{Migration, SimpleMigration},
+    Result,
+};
+use crate::proton_wallet::db::error::DatabaseError;
 
 #[derive(Debug)]
 pub struct MigrationContainer {

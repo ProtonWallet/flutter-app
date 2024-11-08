@@ -1,7 +1,6 @@
 // balance.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::Balance;
+use flutter_rust_bridge::frb;
 
 use super::amount::FrbAmount;
 

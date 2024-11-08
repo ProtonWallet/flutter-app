@@ -3,13 +3,13 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/errors.dart';
 import '../../frb_generated.dart';
 import '../../proton_api/exchange_rate.dart';
 import '../../proton_api/user_settings.dart';
 import '../../proton_api/wallet.dart';
 import '../../proton_api/wallet_account.dart';
 import '../../proton_api/wallet_settings.dart';
+import '../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_api_service.dart';
 

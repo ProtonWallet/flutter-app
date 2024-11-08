@@ -7,8 +7,8 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 
 /// recovery steps
@@ -146,7 +146,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
               await protonUsersApi.getAuthInfo(intent: "Proton");
 
           /// build srp client proof
-          final clientProofs = await SrpClient.generateProofs(
+          final clientProofs = await FrbSrpClient.generateProofs(
               loginPassword: loginPassword,
               version: authInfo.version,
               salt: authInfo.salt,

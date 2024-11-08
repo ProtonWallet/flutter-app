@@ -10,7 +10,7 @@ use crate::proton_wallet::db::{
     Result,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ProtonUserKeyDaoImpl {
     conn: Arc<Mutex<Connection>>,
     pub database: ProtonUserKeyDatabase,
@@ -114,7 +114,7 @@ impl ProtonUserKeyDaoImpl {
     }
 
     pub async fn get_all(&self) -> Result<Vec<ProtonUserKeyModel>> {
-        Ok(self.database.get_all().await?)
+        self.database.get_all().await
     }
 }
 

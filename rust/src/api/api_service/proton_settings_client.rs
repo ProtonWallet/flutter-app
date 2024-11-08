@@ -1,15 +1,15 @@
-use crate::BridgeError;
-
-use super::proton_api_service::ProtonAPIService;
-pub use andromeda_api::proton_settings::ProtonSettingsClient as InnerProtonSettingsClient;
 use andromeda_api::{
     core::ApiClient,
     proton_settings::{
-        ApiMnemonicUserKey, ProtonSettingsClientExt, SetTwoFaTOTPRequestBody,
-        SetTwoFaTOTPResponseBody, UpdateMnemonicSettingsRequestBody,
+        ApiMnemonicUserKey, ProtonSettingsClient as InnerProtonSettingsClient,
+        ProtonSettingsClientExt, SetTwoFaTOTPRequestBody, SetTwoFaTOTPResponseBody,
+        UpdateMnemonicSettingsRequestBody,
     },
     proton_users::{ProtonSrpClientProofs, ProtonUserSettings},
 };
+
+use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct ProtonSettingsClient {
     pub(crate) inner: InnerProtonSettingsClient,

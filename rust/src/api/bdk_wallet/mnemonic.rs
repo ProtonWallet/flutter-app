@@ -1,11 +1,11 @@
 // mnemonic.rs
-use flutter_rust_bridge::frb;
-
-use crate::BridgeError;
 use andromeda_bitcoin::{
     mnemonic::{get_words_autocomplete, Mnemonic},
     WordCount,
 };
+use flutter_rust_bridge::frb;
+
+use crate::BridgeError;
 
 #[derive(Debug)]
 pub struct FrbMnemonic {
@@ -41,12 +41,6 @@ impl FrbMnemonic {
     pub(crate) fn from_str(mnemonic: &str) -> Result<FrbMnemonic, BridgeError> {
         Self::from_string(mnemonic.to_string())
     }
-
-    /// Create a new Mnemonic in the specified language from the given entropy.
-    /// Entropy must be a multiple of 32 bits (4 bytes) and 128-256 bits in length.
-    // pub fn from_entropy(entropy: Vec<u8>) -> Result<Self, BridgeError> {
-    //     BdkMnemonic::from_entropy(entropy.as_slice())
-    // }
 
     /// Returns the Mnemonic as a string.
     #[frb(sync)]

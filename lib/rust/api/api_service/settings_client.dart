@@ -3,9 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/errors.dart';
 import '../../frb_generated.dart';
 import '../../proton_api/user_settings.dart';
+import '../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'proton_api_service.dart';
 

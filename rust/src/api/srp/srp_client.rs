@@ -1,23 +1,21 @@
-use std::str::from_utf8;
-
 // srp_client.rs
 use flutter_rust_bridge::frb;
-
 use proton_crypto::{
     new_srp_provider,
     srp::{SRPProvider, SRPVerifierB64},
 };
 use proton_crypto_account::proton_crypto;
 use proton_srp::{mailbox_password_hash, SRPProofB64};
+use std::str::from_utf8;
 
 use crate::BridgeError;
 
-pub struct SrpClient {}
+pub struct FrbSrpClient {}
 
-impl SrpClient {
+impl FrbSrpClient {
     #[frb(sync)]
     pub fn new() -> Self {
-        SrpClient {}
+        FrbSrpClient {}
     }
 
     pub fn generate_proofs(

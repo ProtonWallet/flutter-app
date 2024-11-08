@@ -40,7 +40,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   }
 
   Widget buildNoHistory(
-      BuildContext context, HistoryDetailViewModel viewModel) {
+    BuildContext context,
+    HistoryDetailViewModel viewModel,
+  ) {
     String fiatCurrencyName =
         viewModel.userSettingsDataProvider.getFiatCurrencyName();
     String fiatCurrencySign =
@@ -65,349 +67,364 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
         color: ProtonColors.white,
       ),
-      child: Column(
-        children: [
-          CustomHeader(
-            title: S.of(context).transaction_detail,
-            buttonDirection: AxisDirection.left,
-            button: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundProton,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                }),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: viewModel.scrollController,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    !viewModel.initialized
-                        ? const CardLoading(
-                            height: 50,
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                            margin: EdgeInsets.only(top: 4),
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          right: 4, top: 2),
-                                      padding: const EdgeInsets.all(2.0),
-                                      child: viewModel.isSend
-                                          ? Assets.images.icon.send.svg(
-                                              fit: BoxFit.fill,
-                                              width: 25,
-                                              height: 25,
-                                            )
-                                          : Assets.images.icon.receive.svg(
-                                              fit: BoxFit.fill,
-                                              width: 25,
-                                              height: 25,
-                                            ),
-                                    ),
-                                    Text(
-                                        viewModel.isSend
-                                            ? S.of(context).you_sent
-                                            : S.of(context).you_received,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textHint))
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    viewModel.displayBalance
-                                        ? Text(
-                                            "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
-                                            style: FontManager
-                                                .transactionHistoryAmountTitle(
-                                                    ProtonColors.textNorm))
-                                        : Text(
-                                            "$fiatCurrencySign$hidedBalanceString",
-                                            style: FontManager
-                                                .transactionHistoryAmountTitle(
-                                                    ProtonColors.textNorm)),
-                                    const SizedBox(width: 4),
-                                    Text(fiatCurrencyName,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textNorm)),
-                                  ],
-                                ),
-                                viewModel.displayBalance
-                                    ? Text(
-                                        ExchangeCalculator.getBitcoinUnitLabel(
-                                            viewModel.userSettingsDataProvider
-                                                .bitcoinUnit,
-                                            viewModel.amount.toInt().abs()),
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textHint))
-                                    : Text(getHidedBitcoinAmountString(),
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textHint)),
-                              ]),
-                    const SizedBox(height: 20),
-                    viewModel.isSend
-                        ? buildSendInfo(context)
-                        : buildReceiveInfo(context),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    if (viewModel.transactionTime != null)
-                      TransactionHistoryItem(
-                        title: S.of(context).trans_date,
-                        content: CommonHelper.formatLocaleTime(
-                            context, viewModel.transactionTime!),
-                        backgroundColor: ProtonColors.white,
-                        isLoading: !viewModel.initialized,
+      child: SafeArea(
+        child: Column(
+          children: [
+            CustomHeader(
+              title: S.of(context).transaction_detail,
+              buttonDirection: AxisDirection.left,
+              button: CloseButtonV1(
+                  backgroundColor: ProtonColors.backgroundProton,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: viewModel.scrollController,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      !viewModel.initialized
+                          ? const CardLoading(
+                              height: 50,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              margin: EdgeInsets.only(top: 4),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 4, top: 2),
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: viewModel.isSend
+                                            ? Assets.images.icon.send.svg(
+                                                fit: BoxFit.fill,
+                                                width: 25,
+                                                height: 25,
+                                              )
+                                            : Assets.images.icon.receive.svg(
+                                                fit: BoxFit.fill,
+                                                width: 25,
+                                                height: 25,
+                                              ),
+                                      ),
+                                      Text(
+                                          viewModel.isSend
+                                              ? S.of(context).you_sent
+                                              : S.of(context).you_received,
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textHint))
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      viewModel.displayBalance
+                                          ? Text(
+                                              "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
+                                              style: FontManager
+                                                  .transactionHistoryAmountTitle(
+                                                      ProtonColors.textNorm))
+                                          : Text(
+                                              "$fiatCurrencySign$hidedBalanceString",
+                                              style: FontManager
+                                                  .transactionHistoryAmountTitle(
+                                                      ProtonColors.textNorm)),
+                                      const SizedBox(width: 4),
+                                      Text(fiatCurrencyName,
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textNorm)),
+                                    ],
+                                  ),
+                                  viewModel.displayBalance
+                                      ? Text(
+                                          ExchangeCalculator
+                                              .getBitcoinUnitLabel(
+                                                  viewModel
+                                                      .userSettingsDataProvider
+                                                      .bitcoinUnit,
+                                                  viewModel.amount
+                                                      .toInt()
+                                                      .abs()),
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textHint))
+                                      : Text(getHidedBitcoinAmountString(),
+                                          style: FontManager.body2Regular(
+                                              ProtonColors.textHint)),
+                                ]),
+                      const SizedBox(height: 20),
+                      viewModel.isSend
+                          ? buildSendInfo(context)
+                          : buildReceiveInfo(context),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
                       ),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    TransactionHistoryItem(
-                      title: S.of(context).trans_status,
-                      content: viewModel.transactionTime != null
-                          ? S.of(context).completed
-                          : viewModel.isSend
-                              ? S.of(context).in_progress_broadcasted
-                              : S.of(context).in_progress_waiting_for_confirm,
-                      contentColor: viewModel.transactionTime != null
-                          ? ProtonColors.signalSuccess
-                          : ProtonColors.signalError,
-                      backgroundColor: ProtonColors.white,
-                      isLoading: !viewModel.initialized,
-                    ),
-                    const Divider(
-                      thickness: 0.2,
-                      height: 1,
-                    ),
-                    if (viewModel.body.isNotEmpty)
-                      Column(children: [
+                      if (viewModel.transactionTime != null)
                         TransactionHistoryItem(
-                          title: viewModel.isSend
-                              ? S.of(context).trans_message_to_recipient
-                              : S.of(context).trans_message_from_sender,
-                          content: viewModel.body,
+                          title: S.of(context).trans_date,
+                          content: CommonHelper.formatLocaleTime(
+                              context, viewModel.transactionTime!),
                           backgroundColor: ProtonColors.white,
                           isLoading: !viewModel.initialized,
                         ),
-                        const Divider(
-                          thickness: 0.2,
-                          height: 1,
-                        ),
-                      ]),
-                    !viewModel.initialized
-                        ? const CardLoading(
-                            height: 50,
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
-                            margin: EdgeInsets.only(top: 4),
-                          )
-                        : !viewModel.isEditing
-                            ? GestureDetector(
-                                onTap: () {
-                                  viewModel.editMemo();
-                                },
-                                child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    padding:
-                                        const EdgeInsets.all(defaultPadding),
-                                    decoration: BoxDecoration(
-                                        color: ProtonColors
-                                            .transactionNoteBackground,
-                                        borderRadius:
-                                            BorderRadius.circular(32.0)),
-                                    child: Row(
-                                      children: [
-                                        Assets.images.icon.icNote.svg(
-                                            fit: BoxFit.fill,
-                                            width: 32,
-                                            height: 32),
-                                        const SizedBox(width: 10),
-                                        viewModel.memoController.text.isNotEmpty
-                                            ? Expanded(
-                                                child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      S
-                                                          .of(context)
-                                                          .message_to_myself,
-                                                      style: FontManager
-                                                          .captionRegular(
-                                                              ProtonColors
-                                                                  .textHint)),
-                                                  Row(children: [
-                                                    Expanded(
-                                                        child: Text(
-                                                            viewModel
-                                                                .memoController
-                                                                .text,
-                                                            style: FontManager
-                                                                .body2Median(
-                                                                    ProtonColors
-                                                                        .textNorm)))
-                                                  ]),
-                                                ],
-                                              ))
-                                            : Expanded(
-                                                child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      S
-                                                          .of(context)
-                                                          .message_to_myself,
-                                                      style: FontManager
-                                                          .captionRegular(
-                                                              ProtonColors
-                                                                  .textNorm)),
-                                                  Text(
-                                                      S
-                                                          .of(context)
-                                                          .trans_add_note,
-                                                      style: FontManager
-                                                          .body2Median(
-                                                              ProtonColors
-                                                                  .textHint)),
-                                                ],
-                                              )),
-                                      ],
-                                    )))
-                            : Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: TextFieldTextV2(
-                                  labelText: S.of(context).message_to_myself,
-                                  textController: viewModel.memoController,
-                                  myFocusNode: viewModel.memoFocusNode,
-                                  paddingSize: 7,
-                                  maxLines: null,
-                                  showCounterText: true,
-                                  maxLength: maxMemoTextCharSize,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(
-                                        maxMemoTextCharSize)
-                                  ],
-                                  validation: (String value) {
-                                    return "";
-                                  },
-                                  radius: 32,
-                                ),
-                              ),
-                    ExpansionTile(
-                        shape: const Border(),
-                        title: Transform.translate(
-                          offset: const Offset(-16, 0),
-                          child: Text(S.of(context).view_more,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak)),
-                        ),
-                        iconColor: ProtonColors.textHint,
-                        collapsedIconColor: ProtonColors.textHint,
-                        onExpansionChanged: (isExpanded) {
-                          if (isExpanded) {
-                            Future.delayed(const Duration(milliseconds: 300),
-                                () {
-                              viewModel.scrollController.animateTo(
-                                viewModel
-                                    .scrollController.position.maxScrollExtent,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
-                              );
-                            });
-                          }
-                        },
-                        children: [
-                          viewModel.displayBalance
-                              ? TransactionHistoryItem(
-                                  title: S.of(context).trans_metwork_fee,
-                                  titleTooltip:
-                                      S.of(context).trans_metwork_fee_desc,
-                                  content:
-                                      "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()), displayDigits: displayDigits)}",
-                                  memo: ExchangeCalculator.getBitcoinUnitLabel(
-                                      viewModel
-                                          .userSettingsDataProvider.bitcoinUnit,
-                                      viewModel.fee.toInt()),
-                                  backgroundColor: ProtonColors.white,
-                                  isLoading: !viewModel.initialized,
-                                )
-                              : TransactionHistoryItem(
-                                  title: S.of(context).trans_metwork_fee,
-                                  titleTooltip:
-                                      S.of(context).trans_metwork_fee_desc,
-                                  content:
-                                      "$fiatCurrencyName $hidedBalanceString",
-                                  memo: getHidedBitcoinAmountString(),
-                                  backgroundColor: ProtonColors.white,
-                                  isLoading: !viewModel.initialized,
-                                ),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
+                      ),
+                      TransactionHistoryItem(
+                        title: S.of(context).trans_status,
+                        content: viewModel.transactionTime != null
+                            ? S.of(context).completed
+                            : viewModel.isSend
+                                ? S.of(context).in_progress_broadcasted
+                                : S.of(context).in_progress_waiting_for_confirm,
+                        contentColor: viewModel.transactionTime != null
+                            ? ProtonColors.signalSuccess
+                            : ProtonColors.signalError,
+                        backgroundColor: ProtonColors.white,
+                        isLoading: !viewModel.initialized,
+                      ),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
+                      ),
+                      if (viewModel.body.isNotEmpty)
+                        Column(children: [
+                          TransactionHistoryItem(
+                            title: viewModel.isSend
+                                ? S.of(context).trans_message_to_recipient
+                                : S.of(context).trans_message_from_sender,
+                            content: viewModel.body,
+                            backgroundColor: ProtonColors.white,
+                            isLoading: !viewModel.initialized,
+                          ),
                           const Divider(
                             thickness: 0.2,
                             height: 1,
                           ),
-                          viewModel.displayBalance
-                              ? TransactionHistoryItem(
-                                  title: S.of(context).trans_total,
-                                  content: viewModel.isSend
-                                      ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
-                                      : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
-                                  memo: viewModel.isSend
-                                      ? ExchangeCalculator.getBitcoinUnitLabel(
-                                          viewModel.userSettingsDataProvider
-                                              .bitcoinUnit,
-                                          (viewModel.amount.toInt() -
-                                                  viewModel.fee.toInt())
-                                              .abs())
-                                      : ExchangeCalculator.getBitcoinUnitLabel(
-                                          viewModel.userSettingsDataProvider
-                                              .bitcoinUnit,
-                                          viewModel.amount.toInt() +
-                                              viewModel.fee.toInt()),
-                                  backgroundColor: ProtonColors.white,
-                                  isLoading: !viewModel.initialized,
-                                )
-                              : TransactionHistoryItem(
-                                  title: S.of(context).trans_total,
-                                  content:
-                                      "$fiatCurrencyName $hidedBalanceString",
-                                  memo: getHidedBitcoinAmountString(),
-                                  backgroundColor: ProtonColors.white,
-                                  isLoading: !viewModel.initialized,
+                        ]),
+                      !viewModel.initialized
+                          ? const CardLoading(
+                              height: 50,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              margin: EdgeInsets.only(top: 4),
+                            )
+                          : !viewModel.isEditing
+                              ? GestureDetector(
+                                  onTap: () {
+                                    viewModel.editMemo();
+                                  },
+                                  child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      padding:
+                                          const EdgeInsets.all(defaultPadding),
+                                      decoration: BoxDecoration(
+                                          color: ProtonColors
+                                              .transactionNoteBackground,
+                                          borderRadius:
+                                              BorderRadius.circular(32.0)),
+                                      child: Row(
+                                        children: [
+                                          Assets.images.icon.icNote.svg(
+                                              fit: BoxFit.fill,
+                                              width: 32,
+                                              height: 32),
+                                          const SizedBox(width: 10),
+                                          viewModel.memoController.text
+                                                  .isNotEmpty
+                                              ? Expanded(
+                                                  child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        S
+                                                            .of(context)
+                                                            .message_to_myself,
+                                                        style: FontManager
+                                                            .captionRegular(
+                                                                ProtonColors
+                                                                    .textHint)),
+                                                    Row(children: [
+                                                      Expanded(
+                                                          child: Text(
+                                                              viewModel
+                                                                  .memoController
+                                                                  .text,
+                                                              style: FontManager
+                                                                  .body2Median(
+                                                                      ProtonColors
+                                                                          .textNorm)))
+                                                    ]),
+                                                  ],
+                                                ))
+                                              : Expanded(
+                                                  child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        S
+                                                            .of(context)
+                                                            .message_to_myself,
+                                                        style: FontManager
+                                                            .captionRegular(
+                                                                ProtonColors
+                                                                    .textNorm)),
+                                                    Text(
+                                                        S
+                                                            .of(context)
+                                                            .trans_add_note,
+                                                        style: FontManager
+                                                            .body2Median(
+                                                                ProtonColors
+                                                                    .textHint)),
+                                                  ],
+                                                )),
+                                        ],
+                                      )))
+                              : Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: TextFieldTextV2(
+                                    labelText: S.of(context).message_to_myself,
+                                    textController: viewModel.memoController,
+                                    myFocusNode: viewModel.memoFocusNode,
+                                    paddingSize: 7,
+                                    maxLines: null,
+                                    showCounterText: true,
+                                    maxLength: maxMemoTextCharSize,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(
+                                          maxMemoTextCharSize)
+                                    ],
+                                    validation: (String value) {
+                                      return "";
+                                    },
+                                    radius: 32,
+                                  ),
                                 ),
-                          const SizedBox(height: 20),
-                          ButtonV5(
-                              onPressed: () {
-                                launchUrl(Uri.parse(
-                                    "${appConfig.esploraWebpageUrl}search?q=${viewModel.txID}"));
-                              },
-                              text: S.of(context).view_on_blockstream,
-                              width: MediaQuery.of(context).size.width,
-                              backgroundColor: ProtonColors.protonBlue,
-                              textStyle:
-                                  FontManager.body1Median(ProtonColors.white),
-                              height: 48),
-                          const SizedBox(height: 20),
-                        ])
-                  ],
+                      ExpansionTile(
+                          shape: const Border(),
+                          title: Transform.translate(
+                            offset: const Offset(-16, 0),
+                            child: Text(S.of(context).view_more,
+                                style: FontManager.body2Median(
+                                    ProtonColors.textWeak)),
+                          ),
+                          iconColor: ProtonColors.textHint,
+                          collapsedIconColor: ProtonColors.textHint,
+                          onExpansionChanged: (isExpanded) {
+                            if (isExpanded) {
+                              Future.delayed(const Duration(milliseconds: 300),
+                                  () {
+                                viewModel.scrollController.animateTo(
+                                  viewModel.scrollController.position
+                                      .maxScrollExtent,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
+                                );
+                              });
+                            }
+                          },
+                          children: [
+                            viewModel.displayBalance
+                                ? TransactionHistoryItem(
+                                    title: S.of(context).trans_metwork_fee,
+                                    titleTooltip:
+                                        S.of(context).trans_metwork_fee_desc,
+                                    content:
+                                        "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.fee.toInt()), displayDigits: displayDigits)}",
+                                    memo:
+                                        ExchangeCalculator.getBitcoinUnitLabel(
+                                            viewModel.userSettingsDataProvider
+                                                .bitcoinUnit,
+                                            viewModel.fee.toInt()),
+                                    backgroundColor: ProtonColors.white,
+                                    isLoading: !viewModel.initialized,
+                                  )
+                                : TransactionHistoryItem(
+                                    title: S.of(context).trans_metwork_fee,
+                                    titleTooltip:
+                                        S.of(context).trans_metwork_fee_desc,
+                                    content:
+                                        "$fiatCurrencyName $hidedBalanceString",
+                                    memo: getHidedBitcoinAmountString(),
+                                    backgroundColor: ProtonColors.white,
+                                    isLoading: !viewModel.initialized,
+                                  ),
+                            const Divider(
+                              thickness: 0.2,
+                              height: 1,
+                            ),
+                            viewModel.displayBalance
+                                ? TransactionHistoryItem(
+                                    title: S.of(context).trans_total,
+                                    content: viewModel.isSend
+                                        ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
+                                        : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
+                                    memo: viewModel.isSend
+                                        ? ExchangeCalculator
+                                            .getBitcoinUnitLabel(
+                                                viewModel
+                                                    .userSettingsDataProvider
+                                                    .bitcoinUnit,
+                                                (viewModel.amount.toInt() -
+                                                        viewModel.fee.toInt())
+                                                    .abs())
+                                        : ExchangeCalculator
+                                            .getBitcoinUnitLabel(
+                                                viewModel
+                                                    .userSettingsDataProvider
+                                                    .bitcoinUnit,
+                                                viewModel.amount.toInt() +
+                                                    viewModel.fee.toInt()),
+                                    backgroundColor: ProtonColors.white,
+                                    isLoading: !viewModel.initialized,
+                                  )
+                                : TransactionHistoryItem(
+                                    title: S.of(context).trans_total,
+                                    content:
+                                        "$fiatCurrencyName $hidedBalanceString",
+                                    memo: getHidedBitcoinAmountString(),
+                                    backgroundColor: ProtonColors.white,
+                                    isLoading: !viewModel.initialized,
+                                  ),
+                            const SizedBox(height: 20),
+                            ButtonV5(
+                                onPressed: () {
+                                  launchUrl(Uri.parse(
+                                      "${appConfig.esploraWebpageUrl}search?q=${viewModel.txID}"));
+                                },
+                                text: S.of(context).view_on_blockstream,
+                                width: MediaQuery.of(context).size.width,
+                                backgroundColor: ProtonColors.protonBlue,
+                                textStyle:
+                                    FontManager.body1Median(ProtonColors.white),
+                                height: 48),
+                            const SizedBox(height: 20),
+                          ])
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

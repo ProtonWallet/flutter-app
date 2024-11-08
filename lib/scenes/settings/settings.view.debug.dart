@@ -2,7 +2,7 @@ part of 'settings.view.dart';
 
 /// this is experimental code.
 mixin SettingsViewMixin {
-  Column buildDebugSection() {
+  Column buildDebugSection(SettingsViewModel viewModel) {
     return Column(
       children: [
         const SizedBox(height: 12),
@@ -40,6 +40,15 @@ mixin SettingsViewMixin {
                   );
                 }
               },
+            ),
+            SettingsItem(
+              title: "Debug Button",
+              logo: Assets.images.icon.icArrowOutSquare.svg(
+                height: 20,
+                width: 20,
+                fit: BoxFit.fill,
+              ),
+              onTap: () {},
             ),
           ],
         ),

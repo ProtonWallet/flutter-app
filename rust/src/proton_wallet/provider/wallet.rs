@@ -1,3 +1,4 @@
+use andromeda_api::wallet_ext::WalletClientExt;
 use async_trait::async_trait;
 use std::sync::Arc;
 
@@ -7,7 +8,10 @@ use crate::proton_wallet::{
         dao::{account_dao::AccountDao, wallet_dao::WalletDao},
         model::{account_model::AccountModel, wallet_model::WalletModel},
     },
-    storage::wallet_mnemonic::WalletMnemonicStore,
+    storage::{
+        wallet_mnemonic::WalletMnemonicStore,
+        wallet_mnemonic_ext::{MnemonicData, WalletDatasWrap},
+    },
 };
 
 /// Implementation of the WalletDataProvider interface, which interacts with wallet data
@@ -16,6 +20,8 @@ pub struct WalletDataProviderImpl {
     pub(crate) wallet_dao: Arc<dyn WalletDao>,
     pub(crate) account_dao: Arc<dyn AccountDao>,
     pub(crate) wallet_mnemonic_store: Arc<dyn WalletMnemonicStore>,
+    pub(crate) wallet_client: Arc<dyn WalletClientExt + Send + Sync>,
+    pub(crate) user_id: String,
 }
 
 #[async_trait]
@@ -23,54 +29,55 @@ pub struct WalletDataProviderImpl {
 pub trait WalletDataProvider: Send + Sync {
     async fn get_wallet(&self, wallet_id: &str) -> Result<WalletModel>;
     async fn get_wallet_mnemonic(&self, wallet_id: &str) -> Result<String>;
+    async fn get_new_derivation_path(
+        &self,
+        wallet_id: &str,
+        bip_version: u32,
+        coin_type: u32,
+    ) -> Result<String>;
 }
 
 #[async_trait]
 impl WalletDataProvider for WalletDataProviderImpl {
     /// Retrieves a wallet using its `wallet_id`. Returns an error if no wallet is found.
     async fn get_wallet(&self, wallet_id: &str) -> Result<WalletModel> {
-        let res = self.wallet_dao.get_by_server_id(wallet_id).await?;
-        res.ok_or(ProviderError::NoWalletKeysFound)
+        if let Some(walle_data) = self.wallet_dao.get_by_server_id(wallet_id).await? {
+            return Ok(walle_data);
+        }
+
+        // fetch from server
+        self.load_from_server().await?;
+
+        if let Some(walle_data) = self.wallet_dao.get_by_server_id(wallet_id).await? {
+            return Ok(walle_data);
+        }
+
+        // throw error
+        Err(ProviderError::NoWalletKeysFound)
     }
 
     /// Retrieves the wallet mnemonic associated with the `wallet_id`.
     async fn get_wallet_mnemonic(&self, wallet_id: &str) -> Result<String> {
-        self.wallet_mnemonic_store
-            .get_wallet_mnemonic(wallet_id.to_string())
-            .await
-            .map_err(ProviderError::from)
-    }
-}
-
-impl WalletDataProviderImpl {
-    /// Constructor for `WalletDataProviderImpl`, initializing required DAOs and mnemonic store.
-    pub fn new(
-        wallet_dao: Arc<dyn WalletDao>,
-        account_dao: Arc<dyn AccountDao>,
-        wallet_mnemonic_store: Arc<dyn WalletMnemonicStore>,
-    ) -> Self {
-        WalletDataProviderImpl {
-            wallet_dao,
-            account_dao,
-            wallet_mnemonic_store,
+        // Find the key by ID
+        if let Some(mnemonic) = self.find_mnemonic_from_store(wallet_id).await? {
+            return Ok(mnemonic);
         }
-    }
 
-    /// Deletes a wallet by its `wallet_id`.
-    pub async fn delete_by_wallet_id(&mut self, wallet_id: &str) -> Result<()> {
-        self.wallet_dao.delete_by_wallet_id(wallet_id).await?;
-        Ok(())
-    }
+        // fetch from server
+        self.load_from_server().await?;
 
-    /// Retrieves all wallets associated with a specific user based on their `user_id`.
-    pub async fn get_all_by_user_id(&mut self, user_id: &str) -> Result<Vec<WalletModel>> {
-        Ok(self.wallet_dao.get_all_by_user_id(user_id).await?)
+        // Find the key by ID
+        if let Some(mnemonic) = self.find_mnemonic_from_store(wallet_id).await? {
+            return Ok(mnemonic);
+        }
+
+        Err(ProviderError::NoMnemonicFound)
     }
 
     /// Generates a new derivation path for the wallet based on `bip_version` and `coin_type`.
     /// It ensures no conflicts with existing derivation paths.
-    pub async fn get_new_derivation_path(
-        &mut self,
+    async fn get_new_derivation_path(
+        &self,
         wallet_id: &str,
         bip_version: u32,
         coin_type: u32,
@@ -97,13 +104,72 @@ impl WalletDataProviderImpl {
             }
         }
     }
+}
+
+impl WalletDataProviderImpl {
+    async fn find_mnemonic_from_store(&self, wallet_id: &str) -> Result<Option<String>> {
+        // Find the key by ID
+        let wallet_mnemonics = self.wallet_mnemonic_store.get_wallet_mnemonics().await?;
+        if let Some(mnemonic) = wallet_mnemonics
+            .iter()
+            .find(|item| item.wallet_id == wallet_id)
+        {
+            return Ok(mnemonic.mnemonic.clone());
+        }
+        Ok(None)
+    }
+
+    async fn load_from_server(&self) -> Result<()> {
+        // fetch from server
+        let wallets = self.wallet_client.get_wallets().await?;
+
+        // save to local cache
+        for wallet_data in wallets.clone() {
+            let item: WalletModel = wallet_data.into();
+            self.wallet_dao.upsert(&item).await?;
+        }
+
+        // save to mnemonic store
+        let mnemonics: Vec<MnemonicData> = WalletDatasWrap(wallets).into();
+        self.wallet_mnemonic_store
+            .save_api_wallet_mnemonics(mnemonics)
+            .await?;
+
+        Ok(())
+    }
+}
+
+impl WalletDataProviderImpl {
+    /// Constructor for `WalletDataProviderImpl`, initializing required DAOs and mnemonic store.
+    pub fn new(
+        wallet_dao: Arc<dyn WalletDao>,
+        account_dao: Arc<dyn AccountDao>,
+        wallet_mnemonic_store: Arc<dyn WalletMnemonicStore>,
+        wallet_client: Arc<dyn WalletClientExt + Send + Sync>,
+        user_id: String,
+    ) -> Self {
+        WalletDataProviderImpl {
+            wallet_dao,
+            account_dao,
+            wallet_mnemonic_store,
+            wallet_client,
+            user_id,
+        }
+    }
+
+    /// Deletes a wallet by its `wallet_id`.
+    pub async fn delete_by_wallet_id(&mut self, wallet_id: &str) -> Result<()> {
+        self.wallet_dao.delete_by_wallet_id(wallet_id).await?;
+        Ok(())
+    }
+
+    /// Retrieves all wallets associated with a specific user based on their `user_id`.
+    pub async fn get_all_by_user_id(&mut self, user_id: &str) -> Result<Vec<WalletModel>> {
+        Ok(self.wallet_dao.get_all_by_user_id(user_id).await?)
+    }
 
     /// Checks if the derivation path already exists among the provided `accounts`.
-    fn is_derivation_path_exist(
-        &mut self,
-        accounts: &[AccountModel],
-        derivation_path: &str,
-    ) -> bool {
+    fn is_derivation_path_exist(&self, accounts: &[AccountModel], derivation_path: &str) -> bool {
         accounts
             .iter()
             .any(|account| account.derivation_path == derivation_path)
@@ -111,7 +177,7 @@ impl WalletDataProviderImpl {
 
     /// Formats the derivation path based on `bip_version`, `coin_type`, and `account_index`.
     fn format_derivation_path(
-        &mut self,
+        &self,
         bip_version: u32,
         coin_type: u32,
         account_index: u32,
@@ -148,6 +214,12 @@ pub mod mock {
         impl WalletDataProvider for WalletDataProvider {
             async fn get_wallet(&self, wallet_id: &str) -> Result<WalletModel>;
             async fn get_wallet_mnemonic(&self, wallet_id: &str) -> Result<String>;
+            async fn get_new_derivation_path(
+                &self,
+                wallet_id: &str,
+                bip_version: u32,
+                coin_type: u32,
+            ) -> Result<String>;
         }
     }
 }
@@ -163,6 +235,7 @@ mod tests {
         },
         storage::wallet_mnemonic::mock::MockWalletMnemonicStore,
     };
+    use andromeda_api::{tests::wallet_mock::mock_utils::MockWalletClient, wallet::ApiWalletData};
     use rusqlite::Connection;
     use std::sync::Arc;
     use tokio::sync::Mutex;
@@ -178,48 +251,48 @@ mod tests {
         WalletModel {
             id,
             name: name.to_string(),
-            passphrase: 0,
             public_key: public_key.to_string(),
-            imported: 0,
-            priority: 1,
-            status: 1,
-            type_: 2,
-            create_time: 1633072800,
-            modify_time: 1633159200,
             user_id: "user123".to_string(),
             wallet_id: wallet_id.to_string(),
-            account_count: 3,
-            balance: 150.75,
             fingerprint: Some("abc123xyz".to_string()),
-            show_wallet_recovery: 1,
-            migration_required: 0,
             legacy,
+            ..Default::default()
         }
     }
 
     #[tokio::test]
     async fn test_get_wallet() {
-        let mock_mnemonic_store = MockWalletMnemonicStore::new();
+        let mut mock_mnemonic_store = MockWalletMnemonicStore::new();
         let conn_arc = Arc::new(Mutex::new(Connection::open_in_memory().unwrap()));
         let wallet_dao = WalletDaoImpl::new(conn_arc.clone());
         let account_dao = AccountDaoImpl::new(conn_arc.clone());
+        let mut mock_wallet_client = MockWalletClient::new();
 
         let _ = wallet_dao.database.migration_0().await;
         let _ = account_dao.database.migration_0().await;
         let _ = account_dao.database.migration_1().await;
 
+        mock_mnemonic_store
+            .expect_save_api_wallet_mnemonics()
+            .returning(|_| Ok(()));
+
+        mock_wallet_client
+            .expect_get_wallets()
+            .times(1)
+            .returning(|| Ok(vec![ApiWalletData::default()]));
+
         let mut wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            Arc::new(mock_wallet_client),
+            "user123".to_string(),
         );
 
         let wallet =
             build_mock_wallet(1, "wallet123", "MyWallet", "binary_encoded_string", Some(1));
-
         // Upsert the wallet into the database.
         wallet_provider.upsert(wallet.clone()).await.unwrap();
-
         // Test retrieving the wallet by its ID.
         let wallet_result = wallet_provider.get_wallet("wallet123").await;
         assert!(wallet_result.is_ok());
@@ -246,15 +319,23 @@ mod tests {
         let account_dao = AccountDaoImpl::new(conn_arc.clone());
 
         mock_mnemonic_store
-            .expect_get_wallet_mnemonic()
-            .with(mockall::predicate::eq("wallet123".to_string()))
+            .expect_get_wallet_mnemonics()
             .times(1)
-            .returning(|_| Ok("mock_mnemonic".to_string()));
+            .returning(|| {
+                Ok(vec![MnemonicData {
+                    wallet_id: "wallet123".to_string(),
+                    mnemonic: Some("mock_mnemonic".to_string()),
+                }])
+            });
+
+        let mock_wallet_client = Arc::new(MockWalletClient::new());
 
         let wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            mock_wallet_client,
+            "user123".to_string(),
         );
         // Test retrieving the wallet mnemonic.
         let mnemonic_result = wallet_provider
@@ -275,10 +356,14 @@ mod tests {
         let _ = account_dao.database.migration_0().await;
         let _ = account_dao.database.migration_1().await;
 
+        let mock_wallet_client = Arc::new(MockWalletClient::new());
+
         let mut wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            mock_wallet_client,
+            "user123".to_string(),
         );
 
         let wallet =
@@ -308,10 +393,14 @@ mod tests {
         let _ = account_dao.database.migration_0().await;
         let _ = account_dao.database.migration_1().await;
 
+        let mock_wallet_client = Arc::new(MockWalletClient::new());
+
         let mut wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            mock_wallet_client,
+            "user123".to_string(),
         );
         // Try to retrieve a wallet that doesn't exist.
         let wallet_result = wallet_provider.get("non_existing_wallet").await;
@@ -329,10 +418,14 @@ mod tests {
         let _ = account_dao.database.migration_0().await;
         let _ = account_dao.database.migration_1().await;
 
+        let mock_wallet_client = Arc::new(MockWalletClient::new());
+
         let mut wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            mock_wallet_client,
+            "user123".to_string(),
         );
 
         let wallet =
@@ -385,10 +478,15 @@ mod tests {
 
         // Mock wallet mnemonic store.
         let mock_mnemonic_store = MockWalletMnemonicStore::new();
+
+        let mock_wallet_client = Arc::new(MockWalletClient::new());
+
         let mut wallet_provider = WalletDataProviderImpl::new(
             Arc::new(wallet_dao.clone()),
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
+            mock_wallet_client,
+            "user123".to_string(),
         );
 
         // Create wallet models for testing.
