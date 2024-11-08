@@ -19,7 +19,7 @@ pub(crate) struct WalletMobilePersister {
 }
 
 impl WalletMobilePersister {
-    fn new(db_path: String) -> Self {
+    fn new(db_path: &str) -> Self {
         info!(
             "Initializing WalletMobilePersister with db_path: {}",
             db_path
@@ -91,11 +91,11 @@ impl WalletPersister for WalletMobilePersister {
 
 #[derive(Debug, Clone)]
 pub struct WalletMobileConnector {
-    store: WalletMobilePersister,
+    pub(crate) store: WalletMobilePersister,
 }
 
 impl WalletMobileConnector {
-    pub fn new(db_path: String) -> Self {
+    pub fn new(db_path: &str) -> Self {
         Self {
             store: WalletMobilePersister::new(db_path),
         }
@@ -105,5 +105,25 @@ impl WalletMobileConnector {
 impl WalletPersisterConnector<WalletMobilePersister> for WalletMobileConnector {
     fn connect(&self) -> WalletMobilePersister {
         self.store.clone()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use andromeda_bitcoin::storage::ChangeSet;
+
+    #[test]
+    fn test_wallet_mobile_persister_initialize() {
+        let db_path = "./proton_wallet_bdk_test.sqlite";
+        let connector = WalletMobileConnector::new(db_path);
+        let mut mobile_persister = connector.connect();
+
+        let result = WalletMobilePersister::initialize(&mut mobile_persister);
+        assert!(result.is_ok(), "Expected initialization to pass");
+
+        let changeset = ChangeSet::default();
+        let result = WalletPersister::persist(&mut mobile_persister, &changeset);
+        assert!(result.is_ok(), "Expected persisting to pass");
     }
 }

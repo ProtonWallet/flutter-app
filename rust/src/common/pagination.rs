@@ -1,8 +1,6 @@
 // pagination.rs
+pub use andromeda_bitcoin::{transactions::Pagination, utils::SortOrder};
 use flutter_rust_bridge::frb;
-
-pub use andromeda_bitcoin::transactions::Pagination;
-pub use andromeda_bitcoin::utils::SortOrder;
 
 #[frb(mirror(Pagination))]
 pub struct _Pagination {

@@ -85,12 +85,16 @@ class QRScannerWidgetState extends State<QRScannerWidget> {
         try {
           widget.textEditingController.text = scanData.code ?? "";
           if (widget.callback != null) {
-            Navigator.of(context).pop();
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
             widget.callback!();
           }
         } catch (e) {
           CommonHelper.showErrorDialog(e.toString());
-          Navigator.of(context).pop();
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
         }
       }
     });

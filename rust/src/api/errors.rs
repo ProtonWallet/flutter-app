@@ -1,12 +1,13 @@
-use std::{error::Error, fmt, sync::PoisonError};
-
 // errors.rs
 use andromeda_api::error::Error as AndromedaApiError;
 use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
 use proton_crypto_account::proton_crypto;
 use rusqlite::Error as RusqlitError;
+use std::{error::Error, fmt, sync::PoisonError};
 
-use crate::proton_wallet::{crypto::errors::WalletCryptoError, features::error::FeaturesError};
+use crate::proton_wallet::{
+    crypto::errors::WalletCryptoError, db::error::DatabaseError, features::error::FeaturesError,
+};
 
 #[derive(thiserror::Error, Debug)]
 pub enum BridgeError {
@@ -64,6 +65,15 @@ pub enum BridgeError {
     /// Fork error
     #[error("An Fork error occurred: {0}")]
     Fork(String),
+
+    #[error("Wallet database error: {0}")]
+    Database(String),
+}
+
+impl From<DatabaseError> for BridgeError {
+    fn from(value: DatabaseError) -> Self {
+        BridgeError::Database(format!("DatabaseError occurred: {:?}", value.source()))
+    }
 }
 
 impl From<WalletCryptoError> for BridgeError {

@@ -143,9 +143,9 @@ class TransactionListTitle extends StatelessWidget {
                       //         size: 10, color: ProtonColors.textHint)),
                       Expanded(
                           child: Text(
-                        S
-                            .of(context)
-                            .trans_body((body ?? "").replaceAll("\n", " ")),
+                        S.of(context).trans_body((body ?? "")
+                            .replaceAll("\r", " ")
+                            .replaceAll("\n", " ")),
                         style: FontManager.body2Median(ProtonColors.textWeak),
                         overflow: TextOverflow.ellipsis,
                       ))

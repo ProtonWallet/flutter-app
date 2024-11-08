@@ -1,7 +1,6 @@
 // network.rs
-use flutter_rust_bridge::frb;
-
 pub use andromeda_common::Network;
+use flutter_rust_bridge::frb;
 
 #[frb(mirror(Network))]
 pub enum _Network {

@@ -12,8 +12,8 @@ import 'package:wallet/managers/providers/wallet.mnemonic.provider.dart';
 import 'package:wallet/managers/providers/wallet.name.provider.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -81,12 +81,13 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   Future<void> viewSeed(String loginPassword, String twofa) async {
+    // TODO(migrate): use Rust function
     try {
       final authInfo =
           this.authInfo ?? await protonUsersApi.getAuthInfo(intent: "Proton");
 
       /// build srp client proof
-      final clientProofs = await SrpClient.generateProofs(
+      final clientProofs = await FrbSrpClient.generateProofs(
           loginPassword: loginPassword,
           version: authInfo.version,
           salt: authInfo.salt,

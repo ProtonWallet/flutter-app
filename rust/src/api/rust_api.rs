@@ -1,15 +1,15 @@
 // rust_api.rs
-use super::bdk_wallet::address::FrbAddress;
-use super::bdk_wallet::blockchain::FrbBlockchainClient;
-use super::bdk_wallet::derivation_path::FrbDerivationPath;
-use super::bdk_wallet::mnemonic::FrbMnemonic;
-use super::bdk_wallet::script_buf::FrbScriptBuf;
-use super::proton_api::retrieve_proton_api;
-
-use crate::BridgeError;
+use andromeda_bitcoin::WordCount;
 use andromeda_common::Network;
 
-use andromeda_bitcoin::WordCount;
+use super::{
+    bdk_wallet::{
+        address::FrbAddress, blockchain::FrbBlockchainClient, derivation_path::FrbDerivationPath,
+        mnemonic::FrbMnemonic, script_buf::FrbScriptBuf,
+    },
+    errors::BridgeError,
+    proton_api::retrieve_proton_api,
+};
 
 pub struct Api {}
 impl Api {

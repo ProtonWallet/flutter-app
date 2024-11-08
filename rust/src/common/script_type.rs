@@ -1,7 +1,6 @@
 // script_type.rs
-use flutter_rust_bridge::frb;
-
 pub use andromeda_common::ScriptType;
+use flutter_rust_bridge::frb;
 
 #[frb(mirror(ScriptType))]
 pub enum _ScriptType {

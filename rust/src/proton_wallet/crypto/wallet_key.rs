@@ -1,12 +1,10 @@
-use core::str;
-use std::io::Write;
-
 use aes_gcm::{
     aead::{Aead, KeyInit},
     AeadCore, Aes256Gcm, Key, Nonce,
 };
 use andromeda_api::wallet::ApiWalletKey;
 use base64::{prelude::BASE64_STANDARD, Engine};
+use core::str;
 use proton_crypto::crypto::{
     DetachedSignatureVariant, EncryptorDetachedSignatureWriter, UnixTimestamp,
 };
@@ -17,14 +15,16 @@ use proton_crypto_account::{
         PGPProviderSync, VerifiedData,
     },
 };
+use std::io::Write;
 
-use super::errors::WalletCryptoError;
+use super::{errors::WalletCryptoError, Result};
 
 const SIGNATURE_CONTEXT_WALLET_KEY: &str = "wallet.key";
 
 // UnlockedWalletKey represents a key that can be used to encrypt and decrypt data.
 // Wrapped in a tuple struct, it hides its internal representation while still allowing
 // certain operations.
+#[derive(Clone)]
 pub struct UnlockedWalletKey(pub(crate) Key<Aes256Gcm>);
 
 impl UnlockedWalletKey {
@@ -49,7 +49,7 @@ impl UnlockedWalletKey {
         &self,
         provider: &T,
         user_key: &UnlockedUserKey<T>,
-    ) -> Result<LockedWalletKey, WalletCryptoError> {
+    ) -> Result<LockedWalletKey> {
         // Buffer to store encrypted data
         let mut result_data: Vec<u8> = Vec::new();
         let signing_context =
@@ -129,7 +129,7 @@ impl UnlockedWalletKey {
     /// - `Ok(Vec<u8>)`: On success, returns the original plaintext as a vector of bytes.
     /// - `Err(WalletCryptoError)`: On failure, returns an error indicating what went wrong during decryption.
     ///
-    pub fn decrypt(&self, encrypted_bytes: &[u8]) -> Result<Vec<u8>, WalletCryptoError> {
+    pub fn decrypt(&self, encrypted_bytes: &[u8]) -> Result<Vec<u8>> {
         // Ensure the encrypted data is large enough to contain an IV (12 bytes).
         if encrypted_bytes.len() < 12 {
             // The encrypted data is too small. Something's fishy!
@@ -171,7 +171,7 @@ impl UnlockedWalletKey {
     /// # Returns
     /// - `Ok(Vec<u8>)`: On success, returns a vector of bytes containing the concatenated IV and ciphertext.
     /// - `Err(WalletCryptoError)`: On failure, returns an error indicating what went wrong during encryption.
-    pub fn encrypt(&self, clear_bytes: &[u8]) -> Result<Vec<u8>, WalletCryptoError> {
+    pub fn encrypt(&self, clear_bytes: &[u8]) -> Result<Vec<u8>> {
         // get the cipher
         let cipher = self.get_cipher();
         // Generate a random nonce (IV)
@@ -184,20 +184,20 @@ impl UnlockedWalletKey {
         Ok(encrypted_data)
     }
 
-    #[allow(dead_code)]
-    fn encrypt_with_associated_data(
-        &self,
-        _associated_data: &[u8],
-        _clear_bytes: &[u8],
-    ) -> Result<Vec<u8>, WalletCryptoError> {
-        unimplemented!("This function is not implemented yet. place holder for future")
-    }
+    // #[allow(dead_code)]
+    // fn encrypt_with_associated_data(
+    //     &self,
+    //     _associated_data: &[u8],
+    //     _clear_bytes: &[u8],
+    // ) -> Result<Vec<u8>> {
+    //     unimplemented!("This function is not implemented yet. place holder for future")
+    // }
 }
 
 // armored wallet key
 pub struct LockedWalletKey {
-    encrypted: String,
-    signature: String,
+    pub(crate) encrypted: String,
+    pub(crate) signature: String,
 }
 
 impl From<ApiWalletKey> for LockedWalletKey {
@@ -242,7 +242,7 @@ impl LockedWalletKey {
         &self,
         provider: &T,
         user_keys: impl AsRef<[DecryptedUserKey<T::PrivateKey, T::PublicKey>]>,
-    ) -> Result<UnlockedWalletKey, WalletCryptoError> {
+    ) -> Result<UnlockedWalletKey> {
         let verification_context = provider.new_verification_context(
             SIGNATURE_CONTEXT_WALLET_KEY.to_owned(),
             true,

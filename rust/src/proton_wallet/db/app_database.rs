@@ -14,8 +14,9 @@ use super::{
     database::{
         database::BaseDatabase, migration::SimpleMigration, migration_container::MigrationContainer,
     },
+    Result,
 };
-use crate::proton_wallet::db::{database::migration::Migration, Result};
+use crate::proton_wallet::db::database::migration::Migration;
 
 #[derive(Debug)]
 pub struct AppDatabase {
@@ -33,6 +34,12 @@ pub struct AppDatabase {
     pub proton_user_key_dao: ProtonUserKeyDaoImpl,
     pub transaction_dao: TransactionDao,
     pub wallet_user_settings_dao: WalletUserSettingsDao,
+}
+
+impl Default for AppDatabase {
+    fn default() -> Self {
+        Self::new("./test_proton_wallet_rust_db.sqlite")
+    }
 }
 
 impl AppDatabase {

@@ -1,23 +1,25 @@
-use andromeda_api::wallet_ext::WalletClientExt;
-use lazy_static::lazy_static;
-use log::info;
-use std::sync::{Arc, RwLock};
-
-use crate::api::api_service::proton_api_service::ProtonAPIService;
-use crate::proton_api::{
-    event_routes::ProtonEvent,
-    exchange_rate::ProtonExchangeRate,
-    proton_address::{AllKeyAddressKey, ProtonAddress},
-    wallet::{BitcoinAddress, EmailIntegrationBitcoinAddress, WalletTransaction},
-};
-use crate::BridgeError;
 use andromeda_api::{
     bitcoin_address::ApiWalletBitcoinAddress,
     settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},
     wallet::{ApiWallet, ApiWalletAccount, CreateWalletTransactionRequestBody},
+    wallet_ext::WalletClientExt,
     ChildSession,
 };
 use andromeda_common::BitcoinUnit;
+use lazy_static::lazy_static;
+use log::info;
+use std::sync::{Arc, RwLock};
+
+use crate::{
+    api::api_service::proton_api_service::ProtonAPIService,
+    proton_api::{
+        event_routes::ProtonEvent,
+        exchange_rate::ProtonExchangeRate,
+        proton_address::{AllKeyAddressKey, ProtonAddress},
+        wallet::{BitcoinAddress, EmailIntegrationBitcoinAddress, WalletTransaction},
+    },
+    BridgeError,
+};
 
 lazy_static! {
     static ref PROTON_API: RwLock<Option<Arc<ProtonAPIService>>> = RwLock::new(None);

@@ -3,9 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/errors.dart';
 import '../../common/word_count.dart';
 import '../../frb_generated.dart';
+import '../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `from_str`
@@ -13,8 +13,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbMnemonic>>
 abstract class FrbMnemonic implements RustOpaqueInterface {
-  /// Create a new Mnemonic in the specified language from the given entropy.
-  /// Entropy must be a multiple of 32 bits (4 bytes) and 128-256 bits in length.
   /// Returns the Mnemonic as a string.
   String asString();
 

@@ -1,7 +1,8 @@
-use super::proton_api_service::ProtonAPIService;
-use crate::{exchange_rate::ProtonExchangeRate, BridgeError};
 use andromeda_api::{core::ApiClient, settings::FiatCurrencySymbol as FiatCurrency};
 use std::sync::Arc;
+
+use super::proton_api_service::ProtonAPIService;
+use crate::{api::errors::BridgeError, exchange_rate::ProtonExchangeRate};
 
 pub struct ExchangeRateClient {
     pub(crate) inner: Arc<andromeda_api::exchange_rate::ExchangeRateClient>,

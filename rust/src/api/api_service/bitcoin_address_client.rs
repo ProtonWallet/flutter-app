@@ -1,10 +1,8 @@
+use andromeda_api::{bitcoin_address::ApiWalletBitcoinAddress, core::ApiClient};
 use std::sync::Arc;
 
-use andromeda_api::{bitcoin_address::ApiWalletBitcoinAddress, core::ApiClient};
-
-use crate::{wallet::BitcoinAddress, BridgeError};
-
 use super::proton_api_service::ProtonAPIService;
+use crate::{wallet::BitcoinAddress, BridgeError};
 
 pub struct BitcoinAddressClient {
     pub(crate) inner: Arc<andromeda_api::bitcoin_address::BitcoinAddressClient>,

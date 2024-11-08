@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/constants/address.key.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
@@ -31,8 +27,10 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/address.dart';
-import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart';
+import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/common/address_info.dart';
 import 'package:wallet/rust/common/transaction_time.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -330,7 +328,7 @@ class WalletTransactionBloc
       lastEvent = event;
 
       final WalletModel walletModel = event.walletMenuModel.walletModel;
-      final SecretKey? secretKey = await getSecretKey(
+      final unlockedWalletKey = await getUnlockedWalletKey(
         event.walletMenuModel.walletModel,
       );
 
@@ -339,9 +337,11 @@ class WalletTransactionBloc
       bool isSyncing = false;
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
-        final List<HistoryTransaction> historyTransactionsInAccount =
-            await getHistoryTransactions(
-                walletModel, accountMenuModel, secretKey);
+        final historyTransactionsInAccount = await getHistoryTransactions(
+          walletModel,
+          accountMenuModel,
+          unlockedWalletKey,
+        );
 
         newHistoryTransactions += historyTransactionsInAccount;
 
@@ -430,14 +430,17 @@ class WalletTransactionBloc
       lastEvent = event;
 
       final WalletModel walletModel = event.walletMenuModel.walletModel;
-      final SecretKey? secretKey =
-          await getSecretKey(event.walletMenuModel.walletModel);
+      final unlockedWalletKey =
+          await getUnlockedWalletKey(event.walletMenuModel.walletModel);
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
       final List<HistoryTransaction> historyTransactionsInAccount =
           await getHistoryTransactions(
-              walletModel, event.accountMenuModel, secretKey);
+        walletModel,
+        event.accountMenuModel,
+        unlockedWalletKey,
+      );
       newHistoryTransactions += historyTransactionsInAccount;
 
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
@@ -514,10 +517,13 @@ class WalletTransactionBloc
   }
 
   TransactionModel? findServerTransactionByTXID(
-      List<TransactionModel> transactions, String txid) {
-    for (TransactionModel transactionModel in transactions) {
-      final String transactionTXID =
-          utf8.decode(transactionModel.externalTransactionID);
+    List<TransactionModel> transactions,
+    String txid,
+  ) {
+    for (final transactionModel in transactions) {
+      final transactionTXID = utf8.decode(
+        transactionModel.externalTransactionID,
+      );
       if (transactionTXID == txid) {
         return transactionModel;
       }
@@ -526,7 +532,8 @@ class WalletTransactionBloc
   }
 
   List<HistoryTransaction> sortHistoryTransaction(
-      List<HistoryTransaction> historyTransactions) {
+    List<HistoryTransaction> historyTransactions,
+  ) {
     historyTransactions.sort((a, b) {
       if (a.updateTimestamp == null && b.updateTimestamp == null) {
         return -1;
@@ -576,48 +583,16 @@ class WalletTransactionBloc
     return newHistoryTransactions;
   }
 
-  String tryDecryptWithKeys(List<dynamic> keys, String encryptedString) {
-    String result = "";
-    bool hasError = false;
-    for (final key in keys) {
-      try {
-        if (encryptedString.isNotEmpty) {
-          result = key.decrypt(encryptedString);
-          hasError = false;
-          break;
-        }
-      } catch (e) {
-        hasError = true;
-        logger.e(e.toString());
-      }
-    }
-    if (result.isEmpty && hasError) {
-      for (final key in keys) {
-        try {
-          if (encryptedString.isNotEmpty) {
-            result = key.decryptBinary(encryptedString);
-            break;
-          }
-        } catch (e) {
-          logger.e(e.toString());
-        }
-      }
-    }
-    if (result == "null") {
-      result = "";
-    }
-    return result;
-  }
-
   Future<List<HistoryTransaction>> getHistoryTransactions(
-      WalletModel walletModel,
-      AccountMenuModel accountMenuModel,
-      SecretKey? secretKey) async {
+    WalletModel walletModel,
+    AccountMenuModel accountMenuModel,
+    FrbUnlockedWalletKey unlockedWalletKey,
+  ) async {
     /// getAddressKeys take ~1 second to initialize at first call
     /// since it need to fetch from server
     /// and if some network been occupied, it will need to wait more
     /// current workaround is to put a initialize call in homepage
-    final addressKeys = await addressKeyProvider.getAddressKeys();
+    final addressKeys = await addressKeyProvider.getAddressKeysForTL();
     final Map<String, HistoryTransaction> newHistoryTransactionsMap = {};
     final AccountModel accountModel = accountMenuModel.accountModel;
     final BDKTransactionData bdkTransactionData =
@@ -636,7 +611,6 @@ class WalletTransactionBloc
       accountModel,
     );
 
-    // TODO(fix): replace it
     final FrbAccount? account = await walletManager.loadWalletWithID(
       walletModel.walletID,
       accountMenuModel.accountModel.accountID,
@@ -652,43 +626,27 @@ class WalletTransactionBloc
       maxAddressIndex: accountModel.lastUsedIndex + customStopgap,
     );
 
-    final userKeys = await userManager.getUserKeys();
+    final userKeys = await userManager.getUserKeysForTL();
+    final addrKeys = await addressKeyProvider.getAddressKeysForTL();
+    final userKeyPassword = userManager.getUserKeyPassphrase();
+
+    final frbTransactionIds = FrbTransitionLayer.decryptTransactionIds(
+      userKeys: userKeys,
+      addrKeys: addrKeys,
+      userKeyPassword: userKeyPassword,
+      encTransactionIds:
+          serverTransactionData.transactions.toFrbTLEncryptedTransactionID(),
+    );
+
     for (final transactionModel in serverTransactionData.transactions) {
-      String txid = "";
-      for (final uKey in userKeys) {
-        try {
-          txid = proton_crypto.decrypt(
-            uKey.privateKey,
-            uKey.passphrase,
-            transactionModel.transactionID,
-          );
-          break;
-        } catch (e, stacktrace) {
-          logger.i(
-            "getHistoryTransactions error: $e stacktrace: $stacktrace",
-          );
-        }
-      }
-      if (txid.isEmpty) {
-        for (AddressKey addressKey in addressKeys) {
-          try {
-            txid = addressKey.decrypt(transactionModel.transactionID);
-          } catch (e, stacktrace) {
-            logger.e(
-              "getHistoryTransactions error: $e stacktrace: $stacktrace",
-            );
-          }
-          if (txid.isNotEmpty) {
-            break;
-          }
-        }
-      }
-      transactionModel.externalTransactionID = utf8.encode(txid);
+      final lookupTxID = frbTransactionIds
+          .firstWhere((element) => element.index == transactionModel.id)
+          .transactionId;
+      transactionModel.externalTransactionID = utf8.encode(lookupTxID);
     }
 
     /// checking transactions from bdk
-    for (FrbTransactionDetails transactionDetail
-        in bdkTransactionData.transactions) {
+    for (final transactionDetail in bdkTransactionData.transactions) {
       final List<String> bitcoinAddressesInTransaction = [];
       final String txID = transactionDetail.txid;
       final List<FrbDetailledTxOutput> output = transactionDetail.outputs;
@@ -739,35 +697,46 @@ class WalletTransactionBloc
       }
 
       final TransactionModel? transactionModel = findServerTransactionByTXID(
-          serverTransactionData.transactions, transactionDetail.txid);
+        serverTransactionData.transactions,
+        transactionDetail.txid,
+      );
       String userLabel = "";
-      if (secretKey != null) {
-        userLabel = transactionModel != null
-            ? await WalletKeyHelper.decrypt(
-                secretKey, utf8.decode(transactionModel.label))
-            : "";
+      try {
+        if (transactionModel != null) {
+          final encryptedLabel = utf8.decode(transactionModel.label);
+          if (encryptedLabel.isNotEmpty) {
+            userLabel = FrbWalletKeyHelper.decrypt(
+              base64SecureKey: unlockedWalletKey.toBase64(),
+              encryptText: encryptedLabel,
+            );
+          }
+        }
+      } catch (e, stacktrace) {
+        logger.w("$e, $stacktrace");
       }
+
       String toList = "";
       String sender = "";
       String body = "";
       bool isInternalTransaction = false;
 
       if (transactionModel != null) {
-        final String encryptedToList = transactionModel.tolist ?? "";
-        final String encryptedSender = transactionModel.sender ?? "";
-        final String encryptedBody = transactionModel.body ?? "";
-        toList = tryDecryptWithKeys(userKeys, encryptedToList);
-        sender = tryDecryptWithKeys(userKeys, encryptedSender);
-        body = tryDecryptWithKeys(userKeys, encryptedBody);
-        if (toList.isEmpty) {
-          toList = tryDecryptWithKeys(addressKeys, encryptedToList);
-        }
-        if (sender.isEmpty) {
-          sender = tryDecryptWithKeys(addressKeys, encryptedSender);
-        }
-        if (body.isEmpty) {
-          body = tryDecryptWithKeys(addressKeys, encryptedBody);
-        }
+        final userKeysTL = await userManager.getUserKeysForTL();
+        final decryptedBoday = FrbTransitionLayer.decryptMessages(
+          userKeys: userKeysTL,
+          addrKeys: addressKeys.isEmpty
+              ? addressKeys
+              : await addressKeyProvider.getAddressKeysForTL(),
+          userKeyPassword: userManager.getUserKeyPassphrase(),
+          encBody: transactionModel.body,
+          encToList: transactionModel.tolist,
+          encSender: transactionModel.sender,
+        );
+
+        toList = decryptedBoday.toList;
+        sender = decryptedBoday.sender;
+        body = decryptedBoday.body;
+
         isInternalTransaction = (transactionModel.type ==
                 TransactionType.protonToProtonSend.index ||
             transactionModel.type ==
@@ -818,6 +787,7 @@ class WalletTransactionBloc
         body: body.isNotEmpty ? body : null,
         exchangeRate: exchangeRate,
         bitcoinAddresses: bitcoinAddressesInTransaction,
+        frbTransactionDetails: transactionDetail,
       );
     }
     return newHistoryTransactionsMap.values.toList();
@@ -862,7 +832,9 @@ class WalletTransactionBloc
     return exchangeRate;
   }
 
-  Future<SecretKey?> getSecretKey(WalletModel walletModel) async {
+  Future<FrbUnlockedWalletKey> getUnlockedWalletKey(
+    WalletModel walletModel,
+  ) async {
     return walletKeysProvider.getWalletSecretKey(
       walletModel.walletID,
     );

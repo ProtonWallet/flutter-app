@@ -1,10 +1,10 @@
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.dao.impl.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 
 class WalletNameProvider extends DataProvider {
   final WalletKeysProvider walletKeysProvider;
@@ -21,10 +21,10 @@ class WalletNameProvider extends DataProvider {
     final AccountModel accountModel = await accountDao.findByServerID(
       accountID,
     );
-    final secretKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       accountModel.walletID,
     );
-    await accountModel.decrypt(secretKey);
+    await accountModel.decrypt(unlockedWalletKey);
     return accountModel.labelDecrypt;
   }
 
@@ -34,10 +34,12 @@ class WalletNameProvider extends DataProvider {
       walletID,
     );
     encryptedName = walletRecord.name;
-    final secretKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
-    final name = await WalletKeyHelper.decrypt(secretKey, encryptedName);
+    final name = FrbWalletKeyHelper.decrypt(
+        base64SecureKey: unlockedWalletKey.toBase64(),
+        encryptText: encryptedName);
     return name;
   }
 

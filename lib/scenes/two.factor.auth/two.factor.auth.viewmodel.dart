@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
@@ -8,8 +9,8 @@ import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -63,7 +64,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     try {
       final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 
-      final clientProofs = await SrpClient.generateProofs(
+      final clientProofs = await FrbSrpClient.generateProofs(
           loginPassword: loginPassword,
           version: authInfo.version,
           salt: authInfo.salt,

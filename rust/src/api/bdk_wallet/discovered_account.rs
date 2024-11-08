@@ -1,8 +1,8 @@
+use andromeda_bitcoin::DerivationPath;
 use andromeda_common::ScriptType;
 use flutter_rust_bridge::frb;
 
 use crate::api::bdk_wallet::derivation_path::FrbDerivationPath;
-use andromeda_bitcoin::DerivationPath;
 
 pub struct DiscoveredAccount {
     pub(crate) script_type: ScriptType,

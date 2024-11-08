@@ -125,7 +125,7 @@ impl UserKeysProviderImpl {
     async fn get_default_user_key(&self) -> Result<LockedKey> {
         Ok(self
             .user_key_store
-            .get_primary_user_key(self.user_id.clone())
+            .get_default_user_key(self.user_id.clone())
             .await?)
     }
 }
@@ -258,7 +258,7 @@ mod tests {
             .returning(|_| Ok(Some(ProtonUserKeyModel::default())));
 
         mock_store
-            .expect_get_primary_user_key()
+            .expect_get_default_user_key()
             .with(mockall::predicate::eq("test_user_id".to_string()))
             .returning(|_| Ok(get_test_user_2_locked_user_key()));
         mock_store
@@ -316,8 +316,8 @@ mod tests {
             ..Default::default()
         };
         mock_store
-            .expect_get_primary_user_key()
-            .returning(|_| Err(WalletStorageError::CallbackNotSet));
+            .expect_get_default_user_key()
+            .returning(|_| Err(WalletStorageError::CallbackNotSet("".to_owned())));
 
         mock_client
             .expect_get_user_info()

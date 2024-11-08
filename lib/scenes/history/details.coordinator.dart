@@ -2,6 +2,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -10,14 +11,14 @@ import 'package:wallet/scenes/history/details.viewmodel.dart';
 
 class HistoryDetailCoordinator extends Coordinator {
   late ViewBase widget;
+  final FrbTransactionDetails frbTransactionDetails;
   final String walletID;
   final String accountID;
-  final String txID;
 
   HistoryDetailCoordinator(
     this.walletID,
     this.accountID,
-    this.txID,
+    this.frbTransactionDetails,
   );
 
   @override
@@ -36,7 +37,7 @@ class HistoryDetailCoordinator extends Coordinator {
       this,
       walletID,
       accountID,
-      txID,
+      frbTransactionDetails,
       userManager,
       walletManager,
       serverTransactionDataProvider,
@@ -45,6 +46,7 @@ class HistoryDetailCoordinator extends Coordinator {
       dataProviderManager.userSettingsDataProvider,
       dataProviderManager.contactsDataProvider,
       dataProviderManager.walletNameProvider,
+      dataProviderManager.addressKeyProvider,
     );
     widget = HistoryDetailView(
       viewModel,

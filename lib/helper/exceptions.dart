@@ -1,4 +1,4 @@
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 
 ResponseError? parseResponseError(BridgeError exception) {
   return exception.maybeMap(
@@ -30,6 +30,7 @@ String parseSampleDisplayError(BridgeError exception) {
     walletFeature: (e) => e.field0,
     login: (e) => e.field0,
     fork: (e) => e.field0,
+    database: (e) => e.field0,
   );
 }
 

@@ -1,7 +1,6 @@
 // word_count.rs
-use flutter_rust_bridge::frb;
-
 pub use andromeda_bitcoin::WordCount;
+use flutter_rust_bridge::frb;
 
 #[frb(mirror(WordCount))]
 pub enum _WordCount {

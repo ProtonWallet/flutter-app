@@ -33,6 +33,7 @@ mixin _$BridgeError {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -51,6 +52,7 @@ mixin _$BridgeError {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -69,6 +71,7 @@ mixin _$BridgeError {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -91,6 +94,7 @@ mixin _$BridgeError {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -109,6 +113,7 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -127,6 +132,7 @@ mixin _$BridgeError {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -236,6 +242,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return apiLock(field0);
   }
@@ -257,6 +264,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return apiLock?.call(field0);
   }
@@ -278,6 +286,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -306,6 +315,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return apiLock(this);
   }
@@ -327,6 +337,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return apiLock?.call(this);
   }
@@ -348,6 +359,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -455,6 +467,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return generic(field0);
   }
@@ -476,6 +489,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return generic?.call(field0);
   }
@@ -497,6 +511,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -525,6 +540,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return generic(this);
   }
@@ -546,6 +562,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return generic?.call(this);
   }
@@ -567,6 +584,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -676,6 +694,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return muonAuthSession(field0);
   }
@@ -697,6 +716,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return muonAuthSession?.call(field0);
   }
@@ -718,6 +738,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -746,6 +767,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return muonAuthSession(this);
   }
@@ -767,6 +789,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return muonAuthSession?.call(this);
   }
@@ -788,6 +811,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -897,6 +921,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return muonAuthRefresh(field0);
   }
@@ -918,6 +943,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return muonAuthRefresh?.call(field0);
   }
@@ -939,6 +965,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -967,6 +994,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return muonAuthRefresh(this);
   }
@@ -988,6 +1016,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return muonAuthRefresh?.call(this);
   }
@@ -1009,6 +1038,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -1118,6 +1148,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return muonClient(field0);
   }
@@ -1139,6 +1170,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return muonClient?.call(field0);
   }
@@ -1160,6 +1192,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1188,6 +1221,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return muonClient(this);
   }
@@ -1209,6 +1243,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return muonClient?.call(this);
   }
@@ -1230,6 +1265,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1339,6 +1375,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return muonSession(field0);
   }
@@ -1360,6 +1397,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return muonSession?.call(field0);
   }
@@ -1381,6 +1419,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1409,6 +1448,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return muonSession(this);
   }
@@ -1430,6 +1470,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return muonSession?.call(this);
   }
@@ -1451,6 +1492,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1561,6 +1603,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return andromedaBitcoin(field0);
   }
@@ -1582,6 +1625,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return andromedaBitcoin?.call(field0);
   }
@@ -1603,6 +1647,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1631,6 +1676,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return andromedaBitcoin(this);
   }
@@ -1652,6 +1698,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return andromedaBitcoin?.call(this);
   }
@@ -1673,6 +1720,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1783,6 +1831,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return apiResponse(field0);
   }
@@ -1804,6 +1853,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return apiResponse?.call(field0);
   }
@@ -1825,6 +1875,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -1853,6 +1904,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return apiResponse(this);
   }
@@ -1874,6 +1926,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return apiResponse?.call(this);
   }
@@ -1895,6 +1948,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -2002,6 +2056,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return apiSrp(field0);
   }
@@ -2023,6 +2078,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return apiSrp?.call(field0);
   }
@@ -2044,6 +2100,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -2072,6 +2129,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return apiSrp(this);
   }
@@ -2093,6 +2151,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return apiSrp?.call(this);
   }
@@ -2114,6 +2173,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -2221,6 +2281,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return aesGcm(field0);
   }
@@ -2242,6 +2303,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return aesGcm?.call(field0);
   }
@@ -2263,6 +2325,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -2291,6 +2354,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return aesGcm(this);
   }
@@ -2312,6 +2376,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return aesGcm?.call(this);
   }
@@ -2333,6 +2398,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -2442,6 +2508,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return walletCrypto(field0);
   }
@@ -2463,6 +2530,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return walletCrypto?.call(field0);
   }
@@ -2484,6 +2552,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -2512,6 +2581,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return walletCrypto(this);
   }
@@ -2533,6 +2603,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return walletCrypto?.call(this);
   }
@@ -2554,6 +2625,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -2663,6 +2735,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return walletFeature(field0);
   }
@@ -2684,6 +2757,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return walletFeature?.call(field0);
   }
@@ -2705,6 +2779,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -2733,6 +2808,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return walletFeature(this);
   }
@@ -2754,6 +2830,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return walletFeature?.call(this);
   }
@@ -2775,6 +2852,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -2882,6 +2960,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return login(field0);
   }
@@ -2903,6 +2982,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return login?.call(field0);
   }
@@ -2924,6 +3004,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -2952,6 +3033,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return login(this);
   }
@@ -2973,6 +3055,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return login?.call(this);
   }
@@ -2994,6 +3077,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -3101,6 +3185,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
   }) {
     return fork(field0);
   }
@@ -3122,6 +3207,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
   }) {
     return fork?.call(field0);
   }
@@ -3143,6 +3229,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -3171,6 +3258,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
   }) {
     return fork(this);
   }
@@ -3192,6 +3280,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
   }) {
     return fork?.call(this);
   }
@@ -3213,6 +3302,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -3234,4 +3324,230 @@ abstract class BridgeError_Fork extends BridgeError {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_ForkImplCopyWith<_$BridgeError_ForkImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_DatabaseImplCopyWith<$Res> {
+  factory _$$BridgeError_DatabaseImplCopyWith(_$BridgeError_DatabaseImpl value,
+          $Res Function(_$BridgeError_DatabaseImpl) then) =
+      __$$BridgeError_DatabaseImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_DatabaseImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_DatabaseImpl>
+    implements _$$BridgeError_DatabaseImplCopyWith<$Res> {
+  __$$BridgeError_DatabaseImplCopyWithImpl(_$BridgeError_DatabaseImpl _value,
+      $Res Function(_$BridgeError_DatabaseImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_DatabaseImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_DatabaseImpl extends BridgeError_Database {
+  const _$BridgeError_DatabaseImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.database(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_DatabaseImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_DatabaseImplCopyWith<_$BridgeError_DatabaseImpl>
+      get copyWith =>
+          __$$BridgeError_DatabaseImplCopyWithImpl<_$BridgeError_DatabaseImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+  }) {
+    return database(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+  }) {
+    return database?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    required TResult orElse(),
+  }) {
+    if (database != null) {
+      return database(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+  }) {
+    return database(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+  }) {
+    return database?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    required TResult orElse(),
+  }) {
+    if (database != null) {
+      return database(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_Database extends BridgeError {
+  const factory BridgeError_Database(final String field0) =
+      _$BridgeError_DatabaseImpl;
+  const BridgeError_Database._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_DatabaseImplCopyWith<_$BridgeError_DatabaseImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,5 +1,3 @@
-use super::proton_api_service::ProtonAPIService;
-use crate::BridgeError;
 use andromeda_api::{
     core::ApiClient,
     settings::{
@@ -9,6 +7,9 @@ use andromeda_api::{
 };
 use andromeda_common::BitcoinUnit;
 use std::sync::Arc;
+
+use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct SettingsClient {
     pub(crate) inner: Arc<andromeda_api::settings::SettingsClient>,

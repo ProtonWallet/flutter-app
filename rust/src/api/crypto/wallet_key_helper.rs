@@ -1,3 +1,8 @@
+use flutter_rust_bridge::frb;
+use rand::RngCore;
+use secrecy::ExposeSecret;
+
+use super::wallet_key::FrbUnlockedWalletKey;
 use crate::{
     proton_wallet::crypto::{
         mnemonic::{EncryptedWalletMnemonic, WalletMnemonic},
@@ -5,11 +10,6 @@ use crate::{
     },
     BridgeError,
 };
-use flutter_rust_bridge::frb;
-use rand::RngCore;
-use secrecy::ExposeSecret;
-
-use super::wallet_key::FrbUnlockedWalletKey;
 
 pub struct FrbWalletKeyHelper {}
 

@@ -1,13 +1,7 @@
-import 'dart:typed_data';
-
-import 'package:cryptography/cryptography.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -15,6 +9,8 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/common/network.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
@@ -63,28 +59,26 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     String walletPassphrase,
   ) async {
     /// Generate a wallet secret key
-    final SecretKey secretKey = WalletKeyHelper.generateSecretKey();
-    final Uint8List entropy =
-        Uint8List.fromList(await secretKey.extractBytes());
+    final unlockedWalletKey = FrbWalletKeyHelper.generateSecretKey();
+    // final Uint8List entropy = Uint8List.fromList(unlockedWalletKey.toEntropy());
 
-    /// get first user key (primary user key)
-    final primaryUserKey = await userManager.getPrimaryKey();
-    final String userPrivateKey = primaryUserKey.privateKey;
-    final String userKeyID = primaryUserKey.keyID;
-    final String passphrase = primaryUserKey.passphrase;
+    // /// get first user key (primary user key)
+    // final primaryUserKey = await userManager.getPrimaryKey();
+    // final String userPrivateKey = primaryUserKey.privateKey;
+    // final String userKeyID = primaryUserKey.keyID;
+    // final String passphrase = primaryUserKey.passphrase;
 
     /// encrypt mnemonic with wallet key
-    final String encryptedMnemonic = await WalletKeyHelper.encrypt(
-      secretKey,
-      mnemonicStr,
+    final encryptedMnemonic = FrbWalletKeyHelper.encrypt(
+      base64SecureKey: unlockedWalletKey.toBase64(),
+      plaintext: mnemonicStr,
     );
 
     /// encrypt wallet name with wallet key
-    final String clearWalletName =
-        walletName.isNotEmpty ? walletName : "My Wallet";
-    final String encryptedWalletName = await WalletKeyHelper.encrypt(
-      secretKey,
-      clearWalletName,
+    final clearWalletName = walletName.isNotEmpty ? walletName : "My Wallet";
+    final encryptedWalletName = FrbWalletKeyHelper.encrypt(
+      base64SecureKey: unlockedWalletKey.toBase64(),
+      plaintext: clearWalletName,
     );
 
     /// get fingerprint from mnemonic
@@ -95,29 +89,27 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
     final String fingerprint = frbWallet.getFingerprint();
 
+    final primaryUserKey = await userManager.getPrimaryKeyForTL();
+    final passphrase = userManager.getUserKeyPassphrase();
+
+    final encryptedWalletKey = FrbTransitionLayer.encryptWalletKey(
+        walletKey: unlockedWalletKey,
+        userKey: primaryUserKey,
+        userKeyPassphrase: passphrase);
+
     /// encrypt wallet key with user private key
-    final String encryptedWalletKey = proton_crypto.encryptBinaryArmor(
-      userPrivateKey,
-      entropy,
-    );
+    final String encryptedArmoredWalletKey = encryptedWalletKey.getArmored();
 
     /// sign wallet key with user private key
-    final String walletKeySignature =
-        proton_crypto.getBinarySignatureWithContext(
-      userPrivateKey,
-      passphrase,
-      entropy,
-      gpgContextWalletKey,
-    );
+    final String walletKeySignature = encryptedWalletKey.getSignature();
 
     final CreateWalletReq walletReq = _buildWalletRequest(
         encryptedWalletName,
         walletType,
         encryptedMnemonic,
         fingerprint,
-        userPrivateKey,
-        userKeyID,
-        encryptedWalletKey,
+        primaryUserKey.id,
+        encryptedArmoredWalletKey,
         walletKeySignature,
         walletPassphrase.isNotEmpty);
 
@@ -150,7 +142,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
   ) async {
     final String serverWalletID = walletID;
 
-    final secretKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       serverWalletID,
     );
 
@@ -163,7 +155,10 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     final CreateWalletAccountReq request = CreateWalletAccountReq(
-      label: await WalletKeyHelper.encrypt(secretKey, label),
+      label: FrbWalletKeyHelper.encrypt(
+        base64SecureKey: unlockedWalletKey.toBase64(),
+        plaintext: label,
+      ),
       derivationPath: derivationPath,
       scriptType: scriptType.index,
     );
@@ -182,7 +177,6 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     int type,
     String mnemonic,
     String fingerprint,
-    String userKey,
     String userKeyID,
     String encryptedWalletKey,
     String walletKeySignature,

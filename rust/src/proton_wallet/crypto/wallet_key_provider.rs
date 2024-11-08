@@ -4,12 +4,12 @@ use aes_gcm::{
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
 
-use super::{errors::WalletCryptoError, wallet_key::UnlockedWalletKey};
+use super::{errors::WalletCryptoError, wallet_key::UnlockedWalletKey, Result};
 
 pub trait WalletKeyInterface {
     fn generate() -> UnlockedWalletKey;
-    fn restore(key_bytes: &[u8]) -> Result<UnlockedWalletKey, WalletCryptoError>;
-    fn restore_base64(key_base64: &str) -> Result<UnlockedWalletKey, WalletCryptoError>;
+    fn restore(key_bytes: &[u8]) -> Result<UnlockedWalletKey>;
+    fn restore_base64(key_base64: &str) -> Result<UnlockedWalletKey>;
 }
 
 pub(crate) struct WalletKeyProvider {}
@@ -22,7 +22,7 @@ impl WalletKeyInterface for WalletKeyProvider {
     }
 
     // restore a wallet key from a byte array
-    fn restore(key_bytes: &[u8]) -> Result<UnlockedWalletKey, WalletCryptoError> {
+    fn restore(key_bytes: &[u8]) -> Result<UnlockedWalletKey> {
         if key_bytes.len() != 32 {
             return Err(WalletCryptoError::AesGcmInvalidKeyLength);
         }
@@ -30,7 +30,7 @@ impl WalletKeyInterface for WalletKeyProvider {
     }
 
     // restore wallet key from encode base64 string
-    fn restore_base64(key_base64: &str) -> Result<UnlockedWalletKey, WalletCryptoError> {
+    fn restore_base64(key_base64: &str) -> Result<UnlockedWalletKey> {
         let key_bytes = BASE64_STANDARD.decode(key_base64)?;
         // Check if the decoded key length is correct (32 bytes for AES-256-GCM).
         if key_bytes.len() != 32 {

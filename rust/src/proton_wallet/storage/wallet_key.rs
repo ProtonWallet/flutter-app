@@ -3,20 +3,16 @@ use async_trait::async_trait;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use super::{error::WalletStorageError, Result};
 use crate::proton_wallet::common::callbacks::{WalletKeysFetcher, WalletKeysSeter};
-
-use super::error::WalletStorageError;
 
 #[async_trait]
 pub trait WalletKeyStore: Send + Sync {
     /// Fetch wallet keys associated with the given wallet ID
-    async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>, WalletStorageError>;
+    async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>>;
 
     /// Save the given wallet keys
-    async fn save_api_wallet_keys(
-        &self,
-        wallet_keys: Vec<ApiWalletKey>,
-    ) -> Result<(), WalletStorageError>;
+    async fn save_api_wallet_keys(&self, wallet_keys: Vec<ApiWalletKey>) -> Result<()>;
 }
 
 // Struct that stores wallet keys securely using Dart callbacks
@@ -65,29 +61,30 @@ impl WalletKeySecureStore {
 #[async_trait]
 impl WalletKeyStore for WalletKeySecureStore {
     /// Fetch wallet keys for a specific wallet ID
-    async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>, WalletStorageError> {
+    async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>> {
         let cb = self.get_wallet_keys_callback.lock().await;
         if let Some(callback) = cb.as_ref() {
             let keys = callback().await;
             Ok(keys)
         } else {
             // Return an error if no callback is set
-            Err(WalletStorageError::CallbackNotSet)
+            Err(WalletStorageError::CallbackNotSet(
+                "Get wallet key".to_owned(),
+            ))
         }
     }
 
     /// Save the wallet keys using the callback
-    async fn save_api_wallet_keys(
-        &self,
-        wallet_keys: Vec<ApiWalletKey>,
-    ) -> Result<(), WalletStorageError> {
+    async fn save_api_wallet_keys(&self, wallet_keys: Vec<ApiWalletKey>) -> Result<()> {
         let cb = self.save_wallet_keys_callback.lock().await;
         if let Some(callback) = cb.as_ref() {
             callback(wallet_keys).await;
             Ok(())
         } else {
             // Return an error if no callback is set
-            Err(WalletStorageError::CallbackNotSet)
+            Err(WalletStorageError::CallbackNotSet(
+                "Save wallet key".to_owned(),
+            ))
         }
     }
 }
@@ -102,8 +99,8 @@ pub mod mock {
         pub WalletKeySecureStore {}
         #[async_trait]
         impl WalletKeyStore for WalletKeySecureStore {
-            async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>, WalletStorageError>;
-            async fn save_api_wallet_keys(&self, wallet_keys: Vec<ApiWalletKey>) -> Result<(), WalletStorageError>;
+            async fn get_wallet_keys(&self) -> Result<Vec<ApiWalletKey>>;
+            async fn save_api_wallet_keys(&self, wallet_keys: Vec<ApiWalletKey>) -> Result<()>;
         }
     }
 }
@@ -147,7 +144,10 @@ mod tests {
 
         let result = store.get_wallet_keys().await;
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), WalletStorageError::CallbackNotSet);
+        assert_eq!(
+            result.err().unwrap(),
+            WalletStorageError::CallbackNotSet("Get wallet key".to_owned())
+        );
     }
 
     #[tokio::test]
@@ -171,7 +171,10 @@ mod tests {
         let keys = vec![ApiWalletKey::default()];
         let result = store.save_api_wallet_keys(keys).await;
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), WalletStorageError::CallbackNotSet);
+        assert_eq!(
+            result.err().unwrap(),
+            WalletStorageError::CallbackNotSet("Save wallet key".to_owned())
+        );
     }
 
     #[tokio::test]
@@ -185,11 +188,12 @@ mod tests {
 
         let result = store.get_wallet_keys().await;
         assert!(result.is_ok());
-
         store.clear().await;
-
         let result = store.get_wallet_keys().await;
         assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), WalletStorageError::CallbackNotSet);
+        assert_eq!(
+            result.err().unwrap(),
+            WalletStorageError::CallbackNotSet("Get wallet key".to_owned())
+        );
     }
 }

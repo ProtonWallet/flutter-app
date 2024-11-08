@@ -4,11 +4,11 @@ use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use super::Result;
 use crate::proton_wallet::db::{
     database::{account::AccountDatabase, database::BaseDatabase},
     error::DatabaseError,
     model::account_model::AccountModel,
-    Result,
 };
 
 #[derive(Debug, Clone)]

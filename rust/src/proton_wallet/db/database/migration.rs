@@ -6,6 +6,7 @@ pub trait Migration: Send + Sync {
 
     fn migrate(&self) -> impl std::future::Future<Output = ()> + Send;
 }
+
 pub struct SimpleMigration {
     start_version: u32,
     end_version: u32,

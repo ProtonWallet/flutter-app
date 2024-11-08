@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
-import 'package:wallet/constants/address.key.dart';
-import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -118,34 +115,12 @@ class AddressKeyProvider extends DataProvider {
     await storage.set(key, addresses.toJsonString());
   }
 
-  Future<List<AddressKey>> getAddressKeys() async {
-    final List<AddressKey> addressKeysOut = [];
+  Future<List<ProtonAddressKey>> getAddressKeysForTL() async {
     final addresses = await getAddresses();
-    final userKeys = await userManager.getUserKeys();
-    for (ProtonAddress address in addresses) {
-      for (ProtonAddressKey addressKey in address.keys ?? []) {
-        final String addressKeyPrivateKey = addressKey.privateKey ?? "";
-        final String addressKeyToken = addressKey.token ?? "";
-        for (final uKey in userKeys) {
-          try {
-            final String addressKeyPassphrase = proton_crypto.decrypt(
-              uKey.privateKey,
-              uKey.passphrase,
-              addressKeyToken,
-            );
-            addressKeysOut.add(AddressKey(
-              id: address.id,
-              privateKey: addressKeyPrivateKey,
-              passphrase: addressKeyPassphrase,
-            ));
-            break;
-          } catch (e) {
-            logger.e(e.toString());
-          }
-        }
-      }
-    }
-    return addressKeysOut;
+    return addresses
+        .expand((address) => address.keys ?? [])
+        .cast<ProtonAddressKey>()
+        .toList();
   }
 
   Future<void> _fetchFromServer() async {

@@ -1,13 +1,11 @@
 // transaction_details.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::transactions::{TransactionDetails, TransactionTime};
-
-use crate::api::bdk_wallet::derivation_path::FrbDerivationPath;
+use flutter_rust_bridge::frb;
 
 use super::{
     transaction_details_txin::FrbDetailledTxIn, transaction_details_txop::FrbDetailledTxOutput,
 };
+use crate::api::bdk_wallet::derivation_path::FrbDerivationPath;
 
 #[derive(Clone, Debug)]
 pub struct FrbTransactionDetails {

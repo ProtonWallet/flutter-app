@@ -1,3 +1,5 @@
+use proton_crypto::CryptoError;
+
 use crate::proton_wallet::{
     crypto::errors::WalletCryptoError, db::error::DatabaseError, storage::error::WalletStorageError,
 };
@@ -29,8 +31,14 @@ pub enum ProviderError {
     NoWalletKeysFound,
 
     #[error("Wallet mnemonic not found")]
+    NoMnemonicFound,
+
+    #[error("Wallet mnemonic not found")]
     NoWalletMnemonicFound,
 
     #[error("Accounts full (maximum account size = {0})")]
     ReachedMaxAccountSize(usize),
+
+    #[error("Crypto Srp error: {0}")]
+    Srp(#[from] CryptoError),
 }

@@ -1,10 +1,9 @@
 use andromeda_api::core::ApiClient;
+pub use andromeda_bitcoin::Transaction as bdkTransaction;
 use std::sync::Arc;
 
-use crate::BridgeError;
-pub use andromeda_bitcoin::Transaction as bdkTransaction;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct TransactionClient {
     pub(crate) inner: Arc<andromeda_api::transaction::TransactionClient>,

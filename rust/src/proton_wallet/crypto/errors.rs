@@ -1,6 +1,6 @@
 use aes_gcm::Error as AesGcmError;
 use proton_crypto::crypto::VerificationError;
-use proton_crypto_account::proton_crypto::CryptoError;
+use proton_crypto_account::{errors::AccountCryptoError, proton_crypto::CryptoError};
 
 #[derive(Debug, thiserror::Error)]
 pub enum WalletCryptoError {
@@ -30,6 +30,18 @@ pub enum WalletCryptoError {
 
     #[error("No user keys or address keys found error")]
     NoKeysFound,
+
+    #[error("Srp mailbox hash error: {0}")]
+    MailboxHash(#[from] proton_srp::MailboxHashError),
+
+    #[error("The password is too short!")]
+    SrpPasswordTooShort,
+
+    #[error("Account crypto error: {0}")]
+    AccountCrypto(#[from] AccountCryptoError),
+
+    #[error("Relock private key mismatched: {0}")]
+    RelockKeyCountMismatch(String),
 }
 
 // map aes_gcm::Error to WalletCryptoError

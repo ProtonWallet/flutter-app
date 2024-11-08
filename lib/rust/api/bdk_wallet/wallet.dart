@@ -3,11 +3,11 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/errors.dart';
 import '../../common/network.dart';
 import '../../common/pagination.dart';
 import '../../common/script_type.dart';
 import '../../frb_generated.dart';
+import '../errors.dart';
 import 'account.dart';
 import 'balance.dart';
 import 'blockchain.dart';

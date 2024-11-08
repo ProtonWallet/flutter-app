@@ -4,8 +4,8 @@ use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use super::table_names::TableName;
-use crate::proton_wallet::db::{error::DatabaseError, model::model::ModelBase, Result};
+use super::{table_names::TableName, Result};
+use crate::proton_wallet::db::{error::DatabaseError, model::model::ModelBase};
 
 #[async_trait]
 pub trait BaseDatabase {

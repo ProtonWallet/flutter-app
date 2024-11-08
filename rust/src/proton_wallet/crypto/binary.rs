@@ -1,8 +1,7 @@
+use base64::{prelude::BASE64_STANDARD, Engine};
 use core::str;
 
-use base64::{prelude::BASE64_STANDARD, Engine};
-
-use super::errors::WalletCryptoError;
+use super::Result;
 
 /// A trait representing a binary data type that can be initialized from raw bytes,
 /// base64-encoded strings, or plaintext strings. This trait also provides utilities
@@ -26,7 +25,7 @@ pub trait Binary {
     ///
     /// # Errors
     /// Returns a `WalletCryptoError` if the base64 string cannot be decoded.
-    fn new_from_base64(base64: &str) -> Result<Self, WalletCryptoError>
+    fn new_from_base64(base64: &str) -> Result<Self>
     where
         Self: Sized,
     {
@@ -47,7 +46,7 @@ pub trait Binary {
     ///
     /// # Errors
     /// Returns a `WalletCryptoError` if the binary data cannot be converted into a valid UTF-8 string.
-    fn as_utf8_string(&self) -> Result<String, WalletCryptoError>
+    fn as_utf8_string(&self) -> Result<String>
     where
         Self: Sized,
     {
@@ -68,7 +67,7 @@ pub trait EncryptedBinary {
     ///
     /// # Errors
     /// Returns a `WalletCryptoError` if the base64 string cannot be decoded.
-    fn new_from_base64(base64: &str) -> Result<Self, WalletCryptoError>
+    fn new_from_base64(base64: &str) -> Result<Self>
     where
         Self: Sized,
     {
@@ -87,7 +86,7 @@ pub trait EncryptedBinary {
     ///
     /// # Errors
     /// Returns a `WalletCryptoError` if the binary data cannot be converted into a valid UTF-8 string.
-    fn as_utf8_string(&self) -> Result<String, WalletCryptoError>
+    fn as_utf8_string(&self) -> Result<String>
     where
         Self: Sized,
     {

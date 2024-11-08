@@ -14,6 +14,7 @@ import 'package:wallet/models/drift/users.queries.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/auth_credential.dart';
+import 'package:wallet/rust/proton_api/proton_users.dart';
 
 import 'user.key.dart';
 
@@ -112,6 +113,44 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
     await storage.set("userPassphrase", userInfo.userPassphrase);
   }
 
+  Future<ProtonUserKey> getDefaultKey() async {
+    // default key if can't found any keys
+    final userKeyID = userInfo.userKeyID;
+    final privateKey = userInfo.userPrivateKey;
+
+    return ProtonUserKey(
+      id: userKeyID,
+      version: 4,
+      privateKey: privateKey,
+      primary: 1,
+      active: 1,
+      fingerprint: '',
+    );
+  }
+
+  Future<ProtonUserKey> getPrimaryKeyForTL() async {
+    final userKeyID = userInfo.userKeyID;
+    final privateKey = userInfo.userPrivateKey;
+    final keys = await getUserKeysForTL();
+    final found = keys.where((item) => item.primary == 1);
+    if (found.isNotEmpty) {
+      final key = found.first;
+      return key;
+    }
+    if (userKeyID == "" || privateKey == "") {
+      throw Exception(
+          "First key is null, cannot decrypt wallet key. relogin or debug.");
+    }
+    return ProtonUserKey(
+      id: userKeyID,
+      privateKey: privateKey,
+      version: 4,
+      fingerprint: '',
+      primary: 1,
+      active: 1,
+    );
+  }
+
   Future<UserKey> getPrimaryKey() async {
     // default key if can't found any keys
     final userKeyID = userInfo.userKeyID;
@@ -165,6 +204,43 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
       privateKey: privateKey,
       passphrase: passphrase,
     );
+  }
+
+  Future<List<ProtonUserKey>> getUserKeysForTL() async {
+    final keys = await userDataProvider.getUserKeys(userID);
+    if (keys.isEmpty) {
+      throw Exception(
+        "Can't find any user keys",
+      );
+    }
+    return keys.toProtonUserKeys();
+  }
+
+  Future<ProtonUserKey> getUserKeyForTL(String keyID) async {
+    final userKeyID = userInfo.userKeyID;
+    final privateKey = userInfo.userPrivateKey;
+    final keys = await getUserKeysForTL();
+    final found = keys.where((item) => item.id == keyID);
+    if (found.isNotEmpty) {
+      final key = found.first;
+      return key;
+    }
+    if (userKeyID == "" || privateKey == "") {
+      throw Exception(
+          "First key is null, cannot decrypt wallet key. relogin  or debug.");
+    }
+    return ProtonUserKey(
+      id: userKeyID,
+      privateKey: privateKey,
+      version: 4,
+      fingerprint: '',
+      primary: 1,
+      active: 1,
+    );
+  }
+
+  String getUserKeyPassphrase() {
+    return userInfo.userPassphrase;
   }
 
   Future<List<UserKey>> getUserKeys() async {

@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
+import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class AccountModel {
@@ -61,13 +61,15 @@ class AccountModel {
     };
   }
 
-  Future<void> decrypt(SecretKey secretKey) async {
+  Future<void> decrypt(FrbUnlockedWalletKey unlockedWalletKey) async {
     // TODO(fix): fix me why 5 times
     for (int i = 0; i < 5; i++) {
       try {
         final String value = base64Encode(label);
         if (value != "") {
-          labelDecrypt = await WalletKeyHelper.decrypt(secretKey, value);
+          labelDecrypt = FrbWalletKeyHelper.decrypt(
+              base64SecureKey: unlockedWalletKey.toBase64(),
+              encryptText: value);
         }
         break;
       } catch (e) {
