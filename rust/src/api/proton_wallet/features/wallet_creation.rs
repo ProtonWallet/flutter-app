@@ -1,9 +1,11 @@
-use andromeda_api::wallet::{ApiWalletAccount, WalletClient};
+use andromeda_api::wallet::ApiWalletAccount;
 
-use crate::{proton_wallet::features::wallet::wallet_creation::WalletCreation, BridgeError};
+use crate::{
+    api::errors::BridgeError, proton_wallet::features::wallet::wallet_creation::WalletCreation,
+};
 
 pub struct FrbWalletCreation {
-    pub(crate) inner: WalletCreation<WalletClient>,
+    pub(crate) inner: WalletCreation,
 }
 
 impl FrbWalletCreation {

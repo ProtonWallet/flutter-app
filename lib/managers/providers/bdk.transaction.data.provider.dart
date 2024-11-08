@@ -1,6 +1,7 @@
 // bdk.transaction.data.provider.dart
 import 'dart:async';
 import 'dart:math';
+
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -19,8 +20,8 @@ import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/rust_api.dart';
-import 'package:wallet/rust/common/errors.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;
@@ -82,12 +83,10 @@ class BDKTransactionDataProvider extends DataProvider {
     this.userSettingsDataProvider,
   );
 
-  List<BDKTransactionData> bdkTransactionDataList = [];
   Map<String, bool> isWalletSyncing = {};
   Map<String, int> lastSyncedTime = {};
 
   Future<void> init(List<WalletModel> wallets) async {
-    bdkTransactionDataList.clear();
     resetErrorCount();
     for (WalletModel walletModel in wallets) {
       final accounts = await accountDao.findAllByWalletID(walletModel.walletID);
@@ -98,10 +97,6 @@ class BDKTransactionDataProvider extends DataProvider {
           forceSync: false,
           heightChanged: false,
         );
-        bdkTransactionDataList.add(await _getBDKTransactionData(
-          walletModel,
-          accountModel,
-        ));
       }
     }
   }
@@ -125,16 +120,8 @@ class BDKTransactionDataProvider extends DataProvider {
 
   Future<BDKTransactionData> getBDKTransactionDataByWalletAccount(
       WalletModel walletModel, AccountModel accountModel) async {
-    // TODO(fix): use cache to enhance performance
-    // for (BDKTransactionData bdkTransactionData in bdkTransactionDataList) {
-    //   if (bdkTransactionData.accountModel.serverAccountID ==
-    //       accountModel.serverAccountID) {
-    //     return bdkTransactionData;
-    //   }
-    // }
     final BDKTransactionData bdkTransactionData =
         await _getBDKTransactionData(walletModel, accountModel);
-    // bdkTransactionDataList.add(bdkTransactionData);
     return bdkTransactionData;
   }
 
@@ -304,7 +291,6 @@ class BDKTransactionDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
-    bdkTransactionDataList.clear();
     isWalletSyncing.clear();
     lastSyncedTime.clear();
   }

@@ -1,9 +1,8 @@
 // address.rs
-use flutter_rust_bridge::frb;
-use std::str::FromStr;
-
 use andromeda_bitcoin::{Address as BdkAddress, ConsensusParams};
 use andromeda_common::Network;
+use flutter_rust_bridge::frb;
+use std::str::FromStr;
 
 use super::script_buf::FrbScriptBuf;
 use crate::BridgeError;

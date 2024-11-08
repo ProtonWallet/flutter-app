@@ -458,10 +458,12 @@ class WalletsDataProvider extends DataProvider {
     String serverAccountID,
   ) async {
     try {
-      final List<ApiEmailAddress> addresses =
-          await walletClient.getWalletAccountAddresses(
-              walletId: serverWalletID, walletAccountId: serverAccountID);
-      for (ApiEmailAddress address in addresses) {
+      final addresses = await walletClient.getWalletAccountAddresses(
+        walletId: serverWalletID,
+        walletAccountId: serverAccountID,
+      );
+
+      for (final address in addresses) {
         await addEmailAddressToWalletAccount(
           serverWalletID,
           serverAccountID,

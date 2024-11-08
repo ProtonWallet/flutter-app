@@ -24,6 +24,6 @@ impl WalletConnectorFactory<WalletMobileConnector, WalletMobilePersister>
             "{}/proton_wallet_bdk_{}.sqlite",
             self.folder_path, clean_key
         );
-        WalletMobileConnector::new(db_path)
+        WalletMobileConnector::new(&db_path)
     }
 }

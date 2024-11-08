@@ -36,7 +36,6 @@ class ProtonApiServiceManager implements Manager {
 
   Future<void> saveSession(ChildSession session) async {
     // Notes:: the user manager saving the session in parallel make sure await each other
-    // TODO(fix): merge this with user manager.dart. maybe have a different class to handle session only
     await storage.set("sessionId", session.sessionId);
     await storage.set("accessToken", session.accessToken);
     await storage.set("refreshToken", session.refreshToken);

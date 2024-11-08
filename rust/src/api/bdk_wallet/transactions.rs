@@ -1,7 +1,6 @@
 // transactions.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::Transaction as BdkTransaction;
+use flutter_rust_bridge::frb;
 
 use crate::BridgeError;
 

@@ -1,7 +1,6 @@
 // transaction_time.rs
-use flutter_rust_bridge::frb;
-
 pub use andromeda_bitcoin::transactions::TransactionTime;
+use flutter_rust_bridge::frb;
 
 #[frb(mirror(TransactionTime))]
 pub enum _TransactionTime {

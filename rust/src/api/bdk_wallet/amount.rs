@@ -1,7 +1,6 @@
 // amount.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::Amount as BdkAmount;
+use flutter_rust_bridge::frb;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FrbAmount {

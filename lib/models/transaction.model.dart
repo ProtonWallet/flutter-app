@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
+
 class TransactionModel {
   int id;
   int type;
@@ -85,5 +87,16 @@ class TransactionModel {
       subject: map['subject'],
       body: map['body'],
     );
+  }
+}
+
+extension TransactionModelArray on List<TransactionModel> {
+  List<FrbTLEncryptedTransactionID> toFrbTLEncryptedTransactionID() {
+    return map(
+      (e) => FrbTLEncryptedTransactionID(
+        encryptedTransactionId: e.transactionID,
+        index: e.id,
+      ),
+    ).toList();
   }
 }

@@ -9,7 +9,7 @@ import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
-import 'package:wallet/rust/common/errors.dart';
+import 'package:wallet/rust/api/errors.dart';
 
 enum LoadingTask {
   eligible,

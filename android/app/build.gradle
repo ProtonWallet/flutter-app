@@ -7,8 +7,9 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services") // for FCM
     id("dagger.hilt.android.plugin")
-    //id("io.sentry.android.gradle")
     id("org.jetbrains.kotlin.plugin.serialization")
+    // Uncomment when needed
+    //id("io.sentry.android.gradle")
     //alias(libs.plugins.proton.environmentConfig)
 }
 
@@ -120,8 +121,12 @@ android {
     }
 
     packagingOptions{
-        pickFirst '**'
+       pickFirst '**'
+        // jniLibs {
+        //     useLegacyPackaging = true
+        // }
     }
+
     flavorDimensions "default"
     productFlavors {
         dev {

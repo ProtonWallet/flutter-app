@@ -1,11 +1,8 @@
+use andromeda_api::{core::ApiClient, discovery_content::Content};
 use std::sync::Arc;
 
-pub use andromeda_api::core::ApiClient;
-use andromeda_api::discovery_content::Content;
-
-use crate::BridgeError;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct DiscoveryContentClient {
     pub(crate) inner: Arc<andromeda_api::discovery_content::DiscoverContentClient>,

@@ -3,11 +3,11 @@ use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use super::Result;
 use crate::proton_wallet::db::{
     database::{database::BaseDatabase, exchange_rate::ExchangeRateDatabase},
     error::DatabaseError,
     model::exchange_rate_model::ExchangeRateModel,
-    Result,
 };
 
 #[derive(Debug)]

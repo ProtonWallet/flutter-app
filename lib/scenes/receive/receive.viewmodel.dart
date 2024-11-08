@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
@@ -17,8 +17,9 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/common/address_info.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -188,12 +189,12 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   Future<String> decryptAccountName(String encryptedName) async {
     String decryptedName = "Default Wallet Account";
     try {
-      final secretKey = await walletKeysProvider.getWalletSecretKey(
+      final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
         serverWalletID,
       );
-      decryptedName = await WalletKeyHelper.decrypt(
-        secretKey,
-        encryptedName,
+      decryptedName = FrbWalletKeyHelper.decrypt(
+        base64SecureKey: unlockedWalletKey.toBase64(),
+        encryptText: encryptedName,
       );
     } catch (e) {
       logger.e(e.toString());

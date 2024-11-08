@@ -2,8 +2,7 @@ use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use super::{database::BaseDatabase, table_names::TableName};
-use crate::proton_wallet::db::Result;
+use super::{database::BaseDatabase, table_names::TableName, Result};
 
 #[derive(Debug, Clone)]
 pub struct WalletUserSettingsDatabase {

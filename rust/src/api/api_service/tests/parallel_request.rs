@@ -22,7 +22,7 @@ mod test {
         let now = Local::now();
         let formatted_time = now.format("%H:%M:%S").to_string();
         println!("Job {}, end at {}", job_id, formatted_time);
-        return now;
+        now
     }
 
     #[tokio::test]
@@ -49,12 +49,12 @@ mod test {
         println!("Following job should run in parallel in production env");
         let results = join_all(jobs_should_run_in_parallel).await;
         let mut is_inorder = true;
-        let _ = for window in results.windows(2) {
+        for window in results.windows(2) {
             if window[0] > window[1] {
                 is_inorder = false;
                 break;
             }
-        };
+        }
 
         assert!(
             !is_inorder,

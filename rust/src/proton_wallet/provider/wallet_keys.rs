@@ -3,12 +3,12 @@ use std::{collections::HashMap, sync::Arc};
 use tokio::sync::Mutex;
 
 use super::{error::ProviderError, user_keys::UserKeysProvider, Result};
-use crate::{
-    api::crypto::wallet_key::UnlockedWalletKey,
-    proton_wallet::{
-        crypto::{private_key::LockedPrivateKeys, wallet_key::LockedWalletKey},
-        storage::wallet_key::WalletKeyStore,
+use crate::proton_wallet::{
+    crypto::{
+        private_key::LockedPrivateKeys,
+        wallet_key::{LockedWalletKey, UnlockedWalletKey},
     },
+    storage::wallet_key::WalletKeyStore,
 };
 use andromeda_api::{wallet::ApiWalletKey, wallet_ext::WalletClientExt};
 use proton_crypto::new_pgp_provider;
@@ -16,7 +16,7 @@ use proton_crypto::new_pgp_provider;
 /// Implementation of the wallet keys provider that handles key retrieval, unlocking, and caching.
 pub struct WalletKeysProviderImpl {
     /// Provides user keys required for unlocking wallet keys.
-    pub(crate) user_key_provider: Arc<dyn UserKeysProvider>,
+    pub(crate) user_keys_provider: Arc<dyn UserKeysProvider>,
 
     /// Secure store for wallet keys.
     pub(crate) wallet_key_store: Arc<dyn WalletKeyStore>,
@@ -49,9 +49,9 @@ impl WalletKeysProvider for WalletKeysProviderImpl {
         let locked_wallet_key = self.get_locked_wallet_key(wallet_id).await?;
 
         // Fetch user keys and passphrase
-        let user_keys = self.user_key_provider.get_user_keys().await?;
+        let user_keys = self.user_keys_provider.get_user_keys().await?;
         let locked_private_keys = LockedPrivateKeys::from_user_keys(user_keys);
-        let key_secret = self.user_key_provider.get_user_key_passphrase().await?;
+        let key_secret = self.user_keys_provider.get_user_key_passphrase().await?;
 
         // Unlock the user keys and wallet key
         let provider = new_pgp_provider();
@@ -80,12 +80,12 @@ impl WalletKeysProvider for WalletKeysProviderImpl {
 impl WalletKeysProviderImpl {
     /// Creates a new instance of `WalletKeysProviderImpl`.
     pub fn new(
-        user_key_provider: Arc<dyn UserKeysProvider>,
+        user_keys_provider: Arc<dyn UserKeysProvider>,
         wallet_key_store: Arc<dyn WalletKeyStore>,
         wallet_client: Arc<dyn WalletClientExt + Send + Sync>,
     ) -> Self {
         WalletKeysProviderImpl {
-            user_key_provider,
+            user_keys_provider,
             wallet_key_store,
             wallet_client,
             wallet_keys: Arc::new(Mutex::new(None)),

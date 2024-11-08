@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:proton_crypto/proton_crypto.dart' as proton_crypto;
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/logger.dart';
@@ -12,8 +11,9 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
+import 'package:wallet/rust/api/errors.dart';
+import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/api/srp/srp_client.dart';
-import 'package:wallet/rust/common/errors.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/srp/proofs.dart';
 
@@ -96,7 +96,7 @@ class ProtonRecoveryBloc
               await protonUsersApi.getAuthInfo(intent: "Proton");
 
           /// build srp client proof
-          final clientProofs = await SrpClient.generateProofs(
+          final clientProofs = await FrbSrpClient.generateProofs(
               loginPassword: loginPassword,
               version: authInfo.version,
               salt: authInfo.salt,
@@ -138,7 +138,7 @@ class ProtonRecoveryBloc
             final mnemonicWords = mnemonic.asWords();
             final recoveryPassword = randomEntropy.base64encode();
 
-            final hashedPassword = await SrpClient.computeKeyPassword(
+            final hashedPassword = await FrbSrpClient.computeKeyPassword(
               password: recoveryPassword,
               salt: salt,
             );
@@ -158,19 +158,17 @@ class ProtonRecoveryBloc
 
             /// reencrypt password for now only support one
             for (ProtonUserKey key in userKeys) {
-              final newKey = proton_crypto.changePrivateKeyPassword(
-                key.privateKey,
-                oldPassphrase,
-                hashedPassword,
-              );
+              final newKey = FrbTransitionLayer.changePassword(
+                  userKey: key,
+                  passphrase: oldPassphrase,
+                  newPassphrase: hashedPassword);
               mnUserKeys.add(MnemonicUserKey(id: key.id, privateKey: newKey));
             }
 
             /// get srp module
             final serverModule = await protonUsersApi.getAuthModule();
 
-            /// get clear text and verify signature
-            final SRPVerifierB64 verifier = await SrpClient.generateVerifer(
+            final SRPVerifierB64 verifier = await FrbSrpClient.generateVerifer(
               password: recoveryPassword,
               serverModulus: serverModule.modulus,
             );
@@ -247,7 +245,7 @@ class ProtonRecoveryBloc
         final mnemonicWords = mnemonic.asWords();
         final recoveryPassword = randomEntropy.base64encode();
 
-        final hashedPassword = await SrpClient.computeKeyPassword(
+        final hashedPassword = await FrbSrpClient.computeKeyPassword(
           password: recoveryPassword,
           salt: salt,
         );
@@ -267,11 +265,10 @@ class ProtonRecoveryBloc
 
         /// reencrypt password for now only support one
         for (ProtonUserKey key in userKeys) {
-          final newKey = proton_crypto.changePrivateKeyPassword(
-            key.privateKey,
-            oldPassphrase,
-            hashedPassword,
-          );
+          final newKey = FrbTransitionLayer.changePassword(
+              userKey: key,
+              passphrase: oldPassphrase,
+              newPassphrase: hashedPassword);
           mnUserKeys.add(MnemonicUserKey(id: key.id, privateKey: newKey));
         }
 
@@ -283,7 +280,7 @@ class ProtonRecoveryBloc
                 await protonUsersApi.getAuthInfo(intent: "Proton");
 
             /// build srp client proof
-            final clientProofs = await SrpClient.generateProofs(
+            final clientProofs = await FrbSrpClient.generateProofs(
                 loginPassword: loginPassword,
                 version: authInfo.version,
                 salt: authInfo.salt,
@@ -317,8 +314,7 @@ class ProtonRecoveryBloc
           /// get srp module
           final serverModule = await protonUsersApi.getAuthModule();
 
-          /// get clear text and verify signature
-          final SRPVerifierB64 verifier = await SrpClient.generateVerifer(
+          final SRPVerifierB64 verifier = await FrbSrpClient.generateVerifer(
             password: recoveryPassword,
             serverModulus: serverModule.modulus,
           );
@@ -416,7 +412,7 @@ class ProtonRecoveryBloc
             await protonUsersApi.getAuthInfo(intent: "Proton");
 
         /// build srp client proof
-        final clientProofs = await SrpClient.generateProofs(
+        final clientProofs = await FrbSrpClient.generateProofs(
             loginPassword: loginPassword,
             version: authInfo.version,
             salt: authInfo.salt,

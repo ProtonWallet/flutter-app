@@ -1,30 +1,30 @@
-use std::sync::Arc;
-
 use andromeda_api::{
-    wallet::{
-        ApiWalletAccount, ApiWalletData, CreateWalletAccountRequestBody, CreateWalletRequestBody,
-    },
+    wallet::{ApiWalletData, CreateWalletRequestBody},
     wallet_ext::WalletClientExt,
 };
-use proton_crypto_account::{keys::UserKeys, proton_crypto::new_pgp_provider, salts::KeySecret};
+use proton_crypto_account::proton_crypto::new_pgp_provider;
+use std::sync::Arc;
 
+use super::Result;
 use crate::proton_wallet::{
     crypto::{
-        binary::Binary,
+        binary::{Binary, EncryptedBinary},
+        label::Label,
         mnemonic::WalletMnemonic,
-        wallet_account_label::WalletAccountLabel,
+        private_key::LockedPrivateKeys,
         wallet_key_provider::{WalletKeyInterface, WalletKeyProvider as CryptoWalletKeyProvider},
+        wallet_name::WalletName,
     },
     features::error::FeaturesError,
-    provider::wallet_keys::WalletKeysProviderImpl,
+    provider::user_keys::UserKeysProvider,
 };
 
-pub struct WalletCreation<T: WalletClientExt> {
-    pub(crate) wallet_client: Arc<T>,
-    pub(crate) wallet_key_provider: Option<WalletKeysProviderImpl>,
+pub struct WalletCreation {
+    pub(crate) wallet_client: Arc<dyn WalletClientExt>,
+    pub(crate) user_keys_provider: Arc<dyn UserKeysProvider>,
 }
 
-impl<T: WalletClientExt> WalletCreation<T> {
+impl WalletCreation {
     /// Creates a new wallet
     ///
     /// This function generates a wallet secret key, encrypts the wallet's mnemonic
@@ -48,135 +48,206 @@ impl<T: WalletClientExt> WalletCreation<T> {
     ///
     /// This function will return an error if any step in the wallet creation process
     /// fails, such as key generation, encryption, or communication with the server.
-    async fn create_wallet(
+    pub async fn create_wallet(
         &self,
         key_id: String,
-        primary_user_key: &UserKeys,
-        user_key_passphrase: &KeySecret,
         wallet_name: String,
         mnemonic_str: String,
         fingerprint: String,
         wallet_type: u8,
         wallet_passphrase: Option<String>,
-    ) -> Result<ApiWalletData, FeaturesError> {
+    ) -> Result<ApiWalletData> {
         // check if primary_user_key has a primary user key
 
         // Generate a wallet secret key
-        let secret_key = CryptoWalletKeyProvider::generate();
+        let wallet_key = CryptoWalletKeyProvider::generate();
 
         // Encrypt mnemonic with wallet key
-        let clear_mnemonic_body = WalletMnemonic::new_from_str(&mnemonic_str);
-        let result = clear_mnemonic_body.encrypt_with(&secret_key)?;
-        let base64_encrypted_mnemonic = result.to_base64();
+        let encrypted_mnemonic = WalletMnemonic::new_from_str(&mnemonic_str)
+            .encrypt_with(&wallet_key)?
+            .to_base64();
 
-        // Encrypt wallet name with wallet key
-        let clear_wallet_name = if !wallet_name.is_empty() {
+        // Select wallet name
+        let selected_wallet_name = if !wallet_name.is_empty() {
             wallet_name.to_string()
         } else {
             "My Wallet".to_string()
         };
-        let clear_wallet_namne_body = WalletMnemonic::new_from_str(&clear_wallet_name);
-        let result = clear_wallet_namne_body.encrypt_with(&secret_key)?;
-        let base64_encrypted_wallet_name = result.to_base64();
+
+        // Encrypt wallet name with wallet key
+        let encrypted_wallet_name = WalletName::new_from_str(&selected_wallet_name)
+            .encrypt_with(&wallet_key)?
+            .to_base64();
 
         // Encrypt wallet key with user private key
         let provider = new_pgp_provider();
-        let unlocked = primary_user_key.unlock(&provider, user_key_passphrase);
-        let first = unlocked.unlocked_keys.first().unwrap();
-        let encrypted = secret_key.lock_with(&provider, first)?;
+        let locked_user_key =
+            LockedPrivateKeys::from_primary(self.user_keys_provider.get_primary_key().await?);
+        let user_key_passphrase = self.user_keys_provider.get_user_key_passphrase().await?;
+        let unlocked = locked_user_key.unlock_with(&provider, &user_key_passphrase);
+        let first_key = unlocked
+            .user_keys
+            .first()
+            .ok_or(FeaturesError::NoUnlockedUserKeyFound)?;
+        let encrypted = wallet_key.lock_with(&provider, first_key)?;
 
         let wallet_req = CreateWalletRequestBody {
-            Name: base64_encrypted_wallet_name,
+            Name: encrypted_wallet_name,
             IsImported: wallet_type,
             Type: 1,
             HasPassphrase: wallet_passphrase.is_some() as u8,
             UserKeyID: key_id,
             WalletKey: encrypted.get_armored(),
             WalletKeySignature: encrypted.get_signature(),
-            Mnemonic: Some(base64_encrypted_mnemonic),
+            Mnemonic: Some(encrypted_mnemonic),
             Fingerprint: Some(fingerprint),
             PublicKey: None,
             IsAutoCreated: 0,
         };
 
-        let wallet_data = self.wallet_client.create_wallet(wallet_req).await?;
-        Ok(wallet_data)
-    }
-
-    pub async fn create_wallet_account(
-        &self,
-        wallet_id: String,
-        // script_type: &ScriptTypeInfo,
-        label: String,
-        // fiat_currency: &FiatCurrency,
-        account_index: i32,
-    ) -> Result<ApiWalletAccount, FeaturesError> {
-        let clear_label = WalletAccountLabel::new_from_str(&label);
-
-        // Create request
-        let request = CreateWalletAccountRequestBody {
-            DerivationPath: "".to_owned(),
-            Label: "".to_owned(),
-            ScriptType: 1,
-        };
-
-        let api_wallet_account = self
-            .wallet_client
-            .create_wallet_account(wallet_id, request)
-            .await?;
-        Ok(api_wallet_account)
+        self.wallet_client
+            .create_wallet(wallet_req)
+            .await
+            .map_err(Into::into)
     }
 }
 
 #[cfg(test)]
 #[cfg(feature = "mocking")]
-mod test {
-    use std::sync::Arc;
-
-    use andromeda_api::{tests::wallet_mock::mock_utils::MockWalletClient, wallet::ApiWalletData};
-
+mod tests {
     use crate::{
         mocks::user_keys::tests::{
             get_test_user_1_locked_user_key, get_test_user_1_locked_user_key_secret,
         },
-        proton_wallet::features::wallet::wallet_creation::WalletCreation,
+        proton_wallet::provider::{error::ProviderError, user_keys::mock::MockUserKeysProvider},
     };
+
+    use super::*;
+    use andromeda_api::{tests::wallet_mock::mock_utils::MockWalletClient, wallet::ApiWallet};
 
     #[tokio::test]
     async fn test_create_wallet_success() {
-        let user_keys = get_test_user_1_locked_user_key();
-        let key_secret = get_test_user_1_locked_user_key_secret();
-        let mut mock_client = MockWalletClient::new();
-        mock_client.expect_create_wallet().returning({
-            |req| {
-                let mut out = ApiWalletData::default();
-                out.Wallet.Name = req.Name;
-                out.WalletKey.UserKeyID = req.UserKeyID;
-                out.WalletKey.WalletKey = req.WalletKey;
-                out.WalletKey.WalletKeySignature = req.WalletKeySignature;
-                Ok(out)
-            }
+        let mut mock_wallet_client = MockWalletClient::new();
+        let mut mock_user_keys_provider = MockUserKeysProvider::new();
+
+        // Setup mock wallet client to simulate successful wallet creation
+        mock_wallet_client.expect_create_wallet().returning(|_| {
+            Ok(ApiWalletData {
+                Wallet: ApiWallet {
+                    Name: "My Test Wallet".to_string(),
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
         });
+
+        // Setup mock user keys provider for primary key and passphrase
+        mock_user_keys_provider
+            .expect_get_primary_key()
+            .returning(|| Ok(get_test_user_1_locked_user_key().0.first().unwrap().clone()));
+        mock_user_keys_provider
+            .expect_get_user_key_passphrase()
+            .returning(|| Ok(get_test_user_1_locked_user_key_secret()));
+
         let wallet_creation = WalletCreation {
-            wallet_client: Arc::new(mock_client),
-            wallet_key_provider: None,
+            wallet_client: Arc::new(mock_wallet_client),
+            user_keys_provider: Arc::new(mock_user_keys_provider),
         };
+
+        // Execute wallet creation
         let result = wallet_creation
             .create_wallet(
-                "aTdvCsWuv2V_YQQ5nLKsWPkHWMrlHfUxL9aTWakz6blhwI0q_j4MKnxO29xMQ4slCRvo3lFLE8ljb3kvMP2PQQ==".to_string(),
-                &user_keys,
-                &key_secret,
-                "My Wallet".to_string(),
-                "dummy_mnemonic".to_string(),
-                "dummy_fingerprint".to_string(),
+                "key_id_123".to_string(),
+                "My Test Wallet".to_string(),
+                "test mnemonic".to_string(),
+                "test_fingerprint".to_string(),
                 1,
                 None,
             )
             .await
-            .unwrap();
-        assert_eq!(result.WalletKey.UserKeyID, "aTdvCsWuv2V_YQQ5nLKsWPkHWMrlHfUxL9aTWakz6blhwI0q_j4MKnxO29xMQ4slCRvo3lFLE8ljb3kvMP2PQQ==");
+            .expect("Wallet creation should succeed");
+
+        assert_eq!(result.Wallet.Name, "My Test Wallet");
     }
 
     #[tokio::test]
-    async fn test_create_wallet_fail_encryption() {}
+    async fn test_create_wallet_user_key_error() {
+        let mut mock_wallet_client = MockWalletClient::new();
+        let mut mock_user_keys_provider = MockUserKeysProvider::new();
+
+        // Setup mock wallet client to simulate failure
+        mock_wallet_client
+            .expect_create_wallet()
+            .returning(|_| Err(andromeda_api::error::Error::Http));
+
+        // Simulate error in retrieving primary key from user keys provider
+        mock_user_keys_provider
+            .expect_get_primary_key()
+            .returning(|| Err(ProviderError::NoUserKeysFound));
+
+        let wallet_creation = WalletCreation {
+            wallet_client: Arc::new(mock_wallet_client),
+            user_keys_provider: Arc::new(mock_user_keys_provider),
+        };
+
+        // Execute wallet creation and expect failure due to missing primary key
+        let result = wallet_creation
+            .create_wallet(
+                "key_id_123".to_string(),
+                "Test Wallet".to_string(),
+                "test mnemonic".to_string(),
+                "test_fingerprint".to_string(),
+                1,
+                None,
+            )
+            .await;
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Wallet provider error: User key not found"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_create_wallet_encryption_failure() {
+        let mut mock_wallet_client = MockWalletClient::new();
+        let mut mock_user_keys_provider = MockUserKeysProvider::new();
+
+        // Setup mock wallet client for successful API call
+        mock_wallet_client
+            .expect_create_wallet()
+            .returning(|_| Err(andromeda_api::error::Error::Http));
+
+        // Setup mock user keys provider for primary key and passphrase
+        mock_user_keys_provider
+            .expect_get_primary_key()
+            .returning(|| Ok(get_test_user_1_locked_user_key().0.first().unwrap().clone()));
+        mock_user_keys_provider
+            .expect_get_user_key_passphrase()
+            .returning(|| Ok(get_test_user_1_locked_user_key_secret()));
+
+        let wallet_creation = WalletCreation {
+            wallet_client: Arc::new(mock_wallet_client),
+            user_keys_provider: Arc::new(mock_user_keys_provider),
+        };
+
+        // Execute wallet creation and expect failure due to encryption issue
+        let result = wallet_creation
+            .create_wallet(
+                "key_id_123".to_string(),
+                "Failing Wallet".to_string(),
+                "test mnemonic".to_string(),
+                "test_fingerprint".to_string(),
+                1,
+                None,
+            )
+            .await;
+
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Andromeda api error: HTTP error"
+        );
+    }
 }

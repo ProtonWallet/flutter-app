@@ -1,11 +1,11 @@
+use andromeda_api::{
+    core::ApiClient,
+    invite::{InviteNotificationType, RemainingMonthlyInvitations},
+};
 use std::sync::Arc;
 
-pub use andromeda_api::core::ApiClient;
-use andromeda_api::invite::{InviteNotificationType, RemainingMonthlyInvitations};
-
-use crate::BridgeError;
-
 use super::proton_api_service::ProtonAPIService;
+use crate::BridgeError;
 
 pub struct InviteClient {
     pub(crate) inner: Arc<andromeda_api::invite::InviteClient>,

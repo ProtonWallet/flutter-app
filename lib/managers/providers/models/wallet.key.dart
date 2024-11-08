@@ -80,13 +80,17 @@ class WalletKey {
   }
 
   static List<ApiWalletKey> toApiWalletKeys(List<WalletKey> items) {
-    return items
-        .map((item) => ApiWalletKey(
-              walletId: item.walletId,
-              userKeyId: item.userKeyId,
-              walletKey: item.walletKey,
-              walletKeySignature: item.walletKeySignature,
-            ))
-        .toList();
+    return items.map((item) => item.toApiWalletKey()).toList();
+  }
+}
+
+extension WalletKeyExt on WalletKey {
+  ApiWalletKey toApiWalletKey() {
+    return ApiWalletKey(
+      walletId: walletId,
+      userKeyId: userKeyId,
+      walletKey: walletKey,
+      walletKeySignature: walletKeySignature,
+    );
   }
 }

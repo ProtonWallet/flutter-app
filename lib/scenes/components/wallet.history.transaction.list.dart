@@ -8,15 +8,16 @@ import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 typedef ShowDetailCallback = void Function(
-  String txid,
-  AccountModel accountModel,
+  String walletID,
+  String accountID,
+  FrbTransactionDetails frbTransactionDetails,
 );
 
 class WalletHistoryTransactionList extends StatefulWidget {
@@ -96,8 +97,11 @@ class WalletHistoryTransactionListState
             note: transactionsFiltered[index].label ?? "",
             body: transactionsFiltered[index].body ?? "",
             onTap: () {
-              widget.showDetailCallback(transactionsFiltered[index].txID,
-                  transactionsFiltered[index].accountModel);
+              widget.showDetailCallback(
+                transactionsFiltered[index].accountModel.walletID,
+                transactionsFiltered[index].accountModel.accountID,
+                transactionsFiltered[index].frbTransactionDetails,
+              );
             },
             timestamp: transactionsFiltered[index].createTimestamp,
             isSend: transactionsFiltered[index].amountInSATS < 0,

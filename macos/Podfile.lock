@@ -19,8 +19,6 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - proton_crypto (1.0.2):
-    - FlutterMacOS
   - rust_builder (0.0.1):
     - FlutterMacOS
   - share_plus (0.0.1):
@@ -62,7 +60,6 @@ DEPENDENCIES:
   - local_auth_darwin (from `Flutter/ephemeral/.symlinks/plugins/local_auth_darwin/darwin`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
-  - proton_crypto (from `Flutter/ephemeral/.symlinks/plugins/proton_crypto/macos`)
   - rust_builder (from `Flutter/ephemeral/.symlinks/plugins/rust_builder/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -93,8 +90,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
-  proton_crypto:
-    :path: Flutter/ephemeral/.symlinks/plugins/proton_crypto/macos
   rust_builder:
     :path: Flutter/ephemeral/.symlinks/plugins/rust_builder/macos
   share_plus:
@@ -118,7 +113,6 @@ SPEC CHECKSUMS:
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   package_info_plus: fa739dd842b393193c5ca93c26798dff6e3d0e0c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  proton_crypto: 882de21478c88afeb51f70797f689338d7a42509
   rust_builder: 5957f1cf6598cb9ac376a2a7dbc3c08179c8774c
   share_plus: 36537c04ce0c3e3f5bd297ce4318b6d5ee5fd6cf
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78

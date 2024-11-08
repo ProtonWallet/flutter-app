@@ -1,12 +1,10 @@
 // psbt.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::psbt::Psbt;
 use andromeda_common::Network;
-
-use crate::{api::bdk_wallet::address::FrbAddress, BridgeError};
+use flutter_rust_bridge::frb;
 
 use super::{amount::FrbAmount, transactions::FrbTransaction};
+use crate::api::{bdk_wallet::address::FrbAddress, errors::BridgeError};
 
 #[derive(Clone)]
 pub struct FrbPsbtRecipient(pub String, pub u64);

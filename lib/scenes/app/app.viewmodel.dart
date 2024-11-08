@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/dbhelper.dart';
+import 'package:wallet/helper/path.helper.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.migration.manager.dart';
@@ -128,10 +129,14 @@ class AppViewModelImpl extends AppViewModel {
     // TODO(fix): this is bad.
     dataProviderManager.walletManager = walletManager;
 
+    final dbPath = await getDatabaseFolderPath();
+
     /// new rust proton wallet manager
     final protonWalletManager = ProtonWalletManager(
       apiServiceManager,
       storage,
+      userManager,
+      dbPath,
     );
     serviceManager.register(protonWalletManager);
 

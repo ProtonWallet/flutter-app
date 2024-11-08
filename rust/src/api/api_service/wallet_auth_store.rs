@@ -1,12 +1,12 @@
-use std::sync::Arc;
-
 use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
 use log::info;
-
-use crate::{proton_wallet::common::callbacks::DartFnFuture, BridgeError};
+use std::sync::Arc;
 use tokio::sync::Mutex;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
+
+use crate::proton_wallet::common::callbacks::DartFnFuture;
+use crate::BridgeError;
 
 lazy_static::lazy_static! {
     static ref GLOBAL_SESSION_DART_CALLBACK: Mutex<Option<Arc<DartCallback>>> = Mutex::new(None);
@@ -126,7 +126,7 @@ impl Store for ProtonWalletAuthStore {
         self.inner.get_auth()
     }
 
-    fn set_auth(&mut self, auth: Auth) -> Result<Auth, StoreFailure> {
+    fn set_auth(&mut self, auth: Auth) -> std::result::Result<Auth, StoreFailure> {
         info!("Custom set_auth: {:?}", auth.clone());
         let result = self.inner.set_auth(auth.clone())?;
         self.refresh_auth_credential(auth.clone());

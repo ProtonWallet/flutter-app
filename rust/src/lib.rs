@@ -12,8 +12,9 @@ pub mod proton_wallet;
 pub mod srp;
 
 pub mod mocks;
+pub mod ldk;
 
-pub use crate::common::errors::BridgeError;
+pub use crate::api::errors::BridgeError;
 pub use crate::proton_api::*;
 
 pub use andromeda_api::wallet::CreateWalletAccountRequestBody;

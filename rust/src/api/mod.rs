@@ -22,7 +22,10 @@ pub mod srp;
 
 // db
 pub mod db;
+
+// errors
 pub mod logger;
+pub mod errors;
 
 // provider
 // pub mod provider;

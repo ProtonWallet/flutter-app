@@ -17,6 +17,7 @@ analyzer:
     - lib/ffi_golang/**
     - rust_builder/**
     - lib/l10n/generated/**
+    - gopenpgp_plugin/**
 
 linter:
   # https://dart.dev/lints.

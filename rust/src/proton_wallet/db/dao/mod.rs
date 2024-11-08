@@ -10,3 +10,5 @@ pub mod proton_user_key_dao;
 pub mod transaction_dao;
 pub mod wallet_dao;
 pub mod wallet_user_settings_dao;
+
+type Result<T> = super::Result<T>;

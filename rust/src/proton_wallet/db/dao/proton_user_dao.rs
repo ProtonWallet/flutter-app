@@ -3,13 +3,13 @@ use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use super::Result;
 use crate::proton_wallet::db::{
     database::{database::BaseDatabase, proton_user::ProtonUserDatabase},
     model::proton_user_model::ProtonUserModel,
-    Result,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ProtonUserDao {
     conn: Arc<Mutex<Connection>>,
     pub database: ProtonUserDatabase,

@@ -1,10 +1,8 @@
-use std::{ops::Deref, sync::Arc};
-
 // wallet.rs
-use flutter_rust_bridge::frb;
-
 use andromeda_bitcoin::{transactions::Pagination, utils::SortOrder, wallet::Wallet};
 use andromeda_common::{Network, ScriptType};
+use flutter_rust_bridge::frb;
+use std::{ops::Deref, sync::Arc};
 
 use super::{
     account::FrbAccount, balance::FrbBalance, derivation_path::FrbDerivationPath,

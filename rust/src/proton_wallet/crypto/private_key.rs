@@ -1,14 +1,20 @@
 use proton_crypto_account::{
     errors::KeyError,
     keys::{
-        AddressKeys, LockedKey, UnlockedAddressKey, UnlockedAddressKeys, UnlockedUserKey,
-        UnlockedUserKeys, UserKeys,
+        AddressKeys, ArmoredPrivateKey, KeyId, LocalUserKey, LockedKey, UnlockedAddressKey,
+        UnlockedAddressKeys, UnlockedUserKey, UnlockedUserKeys, UserKeys,
     },
     proton_crypto::crypto::{AsPublicKeyRef, PGPProvider, PGPProviderSync},
     salts::KeySecret,
 };
 
-use super::errors::WalletCryptoError;
+use super::{errors::WalletCryptoError, Result};
+
+#[derive(Debug, Clone)]
+pub struct RelockedKey {
+    pub private_key: ArmoredPrivateKey,
+    pub key_id: KeyId,
+}
 
 pub struct UnlockedPrivateKeys<Provider: PGPProviderSync> {
     pub(crate) user_keys: UnlockedUserKeys<Provider>,
@@ -44,9 +50,7 @@ impl<Provider: PGPProviderSync> UnlockedPrivateKeys<Provider> {
 impl<Provider: PGPProviderSync> UnlockedPrivateKeys<Provider> {
     /// Gathers available public keys from address, if no address keys return user keys.
     /// If there are no valid public keys, returns a `WalletCryptoError::NoKeysFound`.
-    pub fn as_self_encryption_public_key(
-        &self,
-    ) -> Result<<Provider as PGPProvider>::PublicKey, WalletCryptoError> {
+    pub fn as_self_encryption_public_key(&self) -> Result<<Provider as PGPProvider>::PublicKey> {
         // First, check if there are any address keys
         let pub_keys: Vec<<Provider as PGPProvider>::PublicKey> = if !self.addr_keys.is_empty() {
             // If address keys are not empty, return only address keys
@@ -77,16 +81,17 @@ pub struct LockedPrivateKeys {
 
 impl LockedPrivateKeys {
     pub fn from_primary(primary_key: LockedKey) -> Self {
-        Self {
-            user_keys: UserKeys::new([primary_key]),
-            addr_keys: AddressKeys::new([]),
-        }
+        Self::from_keys([primary_key].to_vec(), [].to_vec())
     }
 
     pub fn from_user_keys(user_keys: Vec<LockedKey>) -> Self {
+        Self::from_keys(user_keys, [].to_vec())
+    }
+
+    pub fn from_keys(user_keys: Vec<LockedKey>, addr_keys: Vec<LockedKey>) -> Self {
         Self {
             user_keys: UserKeys::new(user_keys),
-            addr_keys: AddressKeys::new([]),
+            addr_keys: AddressKeys::new(addr_keys),
         }
     }
 }
@@ -116,6 +121,47 @@ impl LockedPrivateKeys {
             user_keys_failed: unlocked_user_keys.failed,
             addr_keys_failed: unlocked_addr_keys.failed,
         }
+    }
+
+    /// Unlocks user using the given provider and secret.
+    /// Then relock the user keys with new secret.
+    ///
+    pub fn relock_user_key_with<T: PGPProviderSync>(
+        provider: &T,
+        user_keys: UserKeys,
+        old_key_secret: &KeySecret,
+        new_key_secret: &KeySecret,
+    ) -> Result<Vec<RelockedKey>> {
+        // unlock user keys
+        let unlocked_user_keys = user_keys.unlock(provider, old_key_secret);
+        if !unlocked_user_keys.failed.is_empty()
+            || unlocked_user_keys.unlocked_keys.len() != user_keys.0.len()
+        {
+            return Err(WalletCryptoError::RelockKeyCountMismatch(
+                "Unlock User Keys".to_owned(),
+            ));
+        }
+
+        // relock user keys
+        let mut new_private_keys: Vec<RelockedKey> = Vec::new();
+        for unlocked_key in unlocked_user_keys.unlocked_keys {
+            let new_private_key =
+                LocalUserKey::relock_user_key(provider, &unlocked_key, new_key_secret)?;
+            let new_key = RelockedKey {
+                private_key: new_private_key.private_key,
+                key_id: unlocked_key.id.clone(),
+            };
+            new_private_keys.push(new_key);
+        }
+
+        // check count
+        if new_private_keys.len() != user_keys.0.len() {
+            return Err(WalletCryptoError::RelockKeyCountMismatch(
+                "Lock User Keys".to_owned(),
+            ));
+        }
+
+        Ok(new_private_keys)
     }
 }
 
