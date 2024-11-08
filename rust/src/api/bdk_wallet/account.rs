@@ -7,6 +7,7 @@ use andromeda_bitcoin::{
     account::Account, transactions::Pagination, utils::SortOrder, SignOptions,
 };
 use andromeda_common::{Network, ScriptType};
+use log::debug;
 
 use crate::{
     common::address_info::FrbAddressInfo,
@@ -150,6 +151,8 @@ impl FrbAccount {
             .inner
             .get_transactions(Pagination::default(), sort)
             .await?;
+
+        debug!("BDK Debug: get_transactions count: {}", transactions.len());
 
         let out_transactions = transactions
             .into_iter()

@@ -41,7 +41,7 @@ class WalletManager implements Manager {
 
   WalletManager(this.userManager, this.dataProviderManager);
 
-  HashMap<String, FrbWallet> frbWallets = HashMap<String, FrbWallet>();
+  // HashMap<String, FrbWallet> frbWallets = HashMap<String, FrbWallet>();
 
   Future<FrbAccount?> loadWalletWithID(
     String walletID,
@@ -53,25 +53,24 @@ class WalletManager implements Manager {
     if (walletModel == null) return null;
     final walletServerID = walletModel.walletID;
 
-    var frbWallet = frbWallets[walletServerID];
-    if (frbWallet == null) {
-      final walletPassProvider = dataProviderManager.walletPassphraseProvider;
-      final passphrase = await walletPassProvider.getPassphrase(
-        walletServerID,
-      );
+    FrbWallet frbWallet;
+    // frbWallets[walletServerID];
+    final walletPassProvider = dataProviderManager.walletPassphraseProvider;
+    final passphrase = await walletPassProvider.getPassphrase(
+      walletServerID,
+    );
 
-      final mnemonic = await getMnemonicWithID(walletID);
-      if (walletModel.passphrase == 1 && passphrase == null) {
-        /// wallet has passphrase, but user didn't set correct passphrase yet
-        return null;
-      }
-      frbWallet = FrbWallet(
-        network: appConfig.coinType.network,
-        bip39Mnemonic: mnemonic,
-        bip38Passphrase: passphrase,
-      );
-      frbWallets[walletModel.walletID] = frbWallet;
+    final mnemonic = await getMnemonicWithID(walletID);
+    if (walletModel.passphrase == 1 && passphrase == null) {
+      /// wallet has passphrase, but user didn't set correct passphrase yet
+      return null;
     }
+    frbWallet = FrbWallet(
+      network: appConfig.coinType.network,
+      bip39Mnemonic: mnemonic,
+      bip38Passphrase: passphrase,
+    );
+    // frbWallets[walletModel.walletID] = frbWallet;
 
     final String? derivationPath = await getDerivationPathWithID(accountID);
     if (derivationPath == null) {
@@ -134,10 +133,10 @@ class WalletManager implements Manager {
   ///
   Future<void> cleanBDKCache() async {
     /// dispose the frbWallet so we can delete the local cached sqlite files
-    for (final frbWallet in frbWallets.values) {
-      frbWallet.dispose();
-    }
-    frbWallets.clear();
+    // for (final frbWallet in frbWallets.values) {
+    //   frbWallet.dispose();
+    // }
+    // frbWallets.clear();
     await bdkLib.clearLocalCache();
   }
 
