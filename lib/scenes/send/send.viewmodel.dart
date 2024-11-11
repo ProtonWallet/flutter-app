@@ -1164,8 +1164,8 @@ class SendViewModelImpl extends SendViewModel {
       return;
     }
     feeRateHighPriority = fees["1"] ?? 0;
-    feeRateMedianPriority = fees["6"] ?? 0;
-    feeRateLowPriority = fees["12"] ?? 0;
+    feeRateMedianPriority = fees["3"] ?? 0;
+    feeRateLowPriority = fees["6"] ?? 0;
 
     sinkAddSafe();
   }
