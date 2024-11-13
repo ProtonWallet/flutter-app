@@ -188,7 +188,7 @@ class GatewayDataProvider extends DataProvider {
       amount: amount,
       btcAddress: btcAddress,
       fiatCurrency: fiatCurrency,
-      payMethod: payMethod,
+      paymentMethod: payMethod,
       provider: provider,
     );
 

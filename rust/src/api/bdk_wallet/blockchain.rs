@@ -1,4 +1,4 @@
-use andromeda_api::transaction::ExchangeRateOrTransactionTime;
+use andromeda_api::transaction::{BroadcastMessage, ExchangeRateOrTransactionTime};
 use andromeda_bitcoin::blockchain_client::BlockchainClient;
 use chrono::Utc;
 use flutter_rust_bridge::frb;
@@ -70,6 +70,7 @@ impl FrbBlockchainClient {
         transaction_time: Option<String>,
         address_id: Option<String>,
         body: Option<String>,
+        message: Option<BroadcastMessage>,
         recipients: Option<HashMap<String, String>>,
         is_anonymous: Option<u8>,
     ) -> Result<String, BridgeError> {
@@ -95,6 +96,7 @@ impl FrbBlockchainClient {
                 exchange_rate_or_transaction_time,
                 address_id,
                 body,
+                message,
                 recipients,
                 is_anonymous,
             )
