@@ -48,4 +48,8 @@ pub struct _Quote {
     pub NetworkFee: String,
     pub PaymentGatewayFee: String,
     pub PaymentMethod: PaymentMethod,
+    // new added
+    pub PurchaseAmount: Option<String>,
+    pub PaymentProcessingFee: Option<String>,
+    pub OrderID: Option<String>,
 }

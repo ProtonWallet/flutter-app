@@ -64,12 +64,18 @@ impl OnRampGatewayClient {
         amount: String,
         btc_address: String,
         fiat_currency: String,
-        pay_method: PaymentMethod,
+        payment_method: PaymentMethod,
         provider: GatewayProvider,
     ) -> Result<String, BridgeError> {
         Ok(self
             .inner
-            .create_on_ramp_checkout(amount, btc_address, fiat_currency, pay_method, provider)
+            .create_on_ramp_checkout_url(
+                amount,
+                btc_address,
+                fiat_currency,
+                payment_method,
+                provider,
+            )
             .await?)
     }
 }
