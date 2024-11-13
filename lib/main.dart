@@ -44,10 +44,10 @@ void main() async {
         ..environment = appConfig.apiEnv.toString(), appRunner: () async {
     /// init everything in zone
     WidgetsFlutterBinding.ensureInitialized();
-    await LoggerService.initDartLogger();
+    // await LoggerService.initDartLogger();
     AppConfig.initAppEnv();
     await RustLib.init();
-    await LoggerService.initRustLogger();
+    // await LoggerService.initRustLogger();
     final app = AppCoordinator();
     runApp(app.start());
   });

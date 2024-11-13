@@ -108,10 +108,10 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : CupertinoSwitch(
-                          value: viewModel.receiveInviterNotification,
-                          activeColor: ProtonColors.protonBlue,
-                          onChanged: viewModel.updateReceiveInviterNotification,
-                        ),
+                    value: viewModel.receiveInviterNotification,
+                    activeColor: ProtonColors.protonBlue,
+                    onChanged: viewModel.updateReceiveInviterNotification,
+                  ),
                   onTap: () {},
                 ),
                 SettingsItem(
@@ -119,11 +119,11 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : CupertinoSwitch(
-                          value: viewModel.receiveEmailIntegrationNotification,
-                          activeColor: ProtonColors.protonBlue,
-                          onChanged: viewModel
-                              .updateReceiveEmailIntegrationNotification,
-                        ),
+                    value: viewModel.receiveEmailIntegrationNotification,
+                    activeColor: ProtonColors.protonBlue,
+                    onChanged: viewModel
+                        .updateReceiveEmailIntegrationNotification,
+                  ),
                   onTap: () {},
                 ),
                 SettingsItem(
@@ -131,54 +131,56 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : Transform.translate(
-                          offset: const Offset(
-                            10,
-                            0,
-                          ),
-                          child: DropdownButtonV2(
-                            title: context.local.setting_custom_stopgap,
-                            width: 80,
-                            items: stopgapOptions,
-                            itemsText: stopgapOptions
-                                .map((v) => v.toString())
-                                .toList(),
-                            valueNotifier: viewModel.stopgapValueNotifier,
-                          ),
-                        ),
+                    offset: const Offset(
+                      10,
+                      0,
+                    ),
+                    child: DropdownButtonV2(
+                      title: context.local.setting_custom_stopgap,
+                      width: 80,
+                      items: stopgapOptions,
+                      itemsText: stopgapOptions
+                          .map((v) => v.toString())
+                          .toList(),
+                      valueNotifier: viewModel.stopgapValueNotifier,
+                    ),
+                  ),
                   onTap: () {},
                 ),
               ],
             ),
 
-            /// Section: Logs
-            const SizedBox(height: 12),
-            const SectionHeader(title: 'Logs'),
-            SettingsGroup(
-              children: [
-                SettingsItem(
-                  title: 'Application logs',
-                  subtitle: 'View logs',
-                  onTap: () {
-                    viewModel.move(NavID.logs);
-                  },
-                ),
-                SettingsItem(
-                  title: 'Force reload the application',
-                  subtitle: 'Wipe cache and reload',
-                  onTap: () {},
-                  hidden: true,
-                ),
-                SettingsItem(
-                  title: 'Clear all logs',
-                  subtitle: viewModel.logsFolderSize,
-                  onTap: () async {
-                    EasyLoading.show(status: 'Clearing logs...');
-                    await viewModel.clearLogs();
-                    EasyLoading.dismiss();
-                  },
-                ),
-              ],
-            ),
+            if (kDebugMode) ...[
+              /// Section: Logs
+              const SizedBox(height: 12),
+              const SectionHeader(title: 'Logs'),
+              SettingsGroup(
+                children: [
+                  SettingsItem(
+                    title: 'Application logs',
+                    subtitle: 'View logs',
+                    onTap: () {
+                      viewModel.move(NavID.logs);
+                    },
+                  ),
+                  SettingsItem(
+                    title: 'Force reload the application',
+                    subtitle: 'Wipe cache and reload',
+                    onTap: () {},
+                    hidden: true,
+                  ),
+                  SettingsItem(
+                    title: 'Clear all logs',
+                    subtitle: viewModel.logsFolderSize,
+                    onTap: () async {
+                      EasyLoading.show(status: 'Clearing logs...');
+                      await viewModel.clearLogs();
+                      EasyLoading.dismiss();
+                    },
+                  ),
+                ],
+              ),
+            ],
 
             // Section: Help Center
             SizedBoxes.box12,
@@ -187,7 +189,9 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
               listener: (context, state) {
                 if (!state.isClearing && state.hasCache) {
                   CommonHelper.showSnackbar(
-                      context, S.of(context).local_cache_clear);
+                      context, S
+                      .of(context)
+                      .local_cache_clear);
                 }
               },
               child: BlocSelector<ClearCacheBloc, ClearCacheState, bool>(
