@@ -58,6 +58,7 @@ import 'api/proton_wallet/wallet.dart';
 import 'api/rust_api.dart';
 import 'api/srp/srp_client.dart';
 import 'common/address_info.dart';
+import 'common/broadcast_message.dart';
 import 'common/change_spend_policy.dart';
 import 'common/coin_selection.dart';
 import 'common/confirmation_time.dart';
@@ -1234,6 +1235,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_box_autoadd_bool(dynamic raw);
 
   @protected
+  BroadcastMessage dco_decode_box_autoadd_broadcast_message(dynamic raw);
+
+  @protected
   CreateWalletAccountReq dco_decode_box_autoadd_create_wallet_account_req(
       dynamic raw);
 
@@ -1334,6 +1338,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BridgeError dco_decode_bridge_error(dynamic raw);
+
+  @protected
+  BroadcastMessage dco_decode_broadcast_message(dynamic raw);
 
   @protected
   ChangeSpendPolicy dco_decode_change_spend_policy(dynamic raw);
@@ -1683,6 +1690,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  BroadcastMessage? dco_decode_opt_box_autoadd_broadcast_message(dynamic raw);
 
   @protected
   FlagsSettings? dco_decode_opt_box_autoadd_flags_settings(dynamic raw);
@@ -2861,6 +2871,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
+  BroadcastMessage sse_decode_box_autoadd_broadcast_message(
+      SseDeserializer deserializer);
+
+  @protected
   CreateWalletAccountReq sse_decode_box_autoadd_create_wallet_account_req(
       SseDeserializer deserializer);
 
@@ -2980,6 +2994,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   BridgeError sse_decode_bridge_error(SseDeserializer deserializer);
+
+  @protected
+  BroadcastMessage sse_decode_broadcast_message(SseDeserializer deserializer);
 
   @protected
   ChangeSpendPolicy sse_decode_change_spend_policy(
@@ -3376,6 +3393,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  BroadcastMessage? sse_decode_opt_box_autoadd_broadcast_message(
+      SseDeserializer deserializer);
 
   @protected
   FlagsSettings? sse_decode_opt_box_autoadd_flags_settings(
@@ -4621,6 +4642,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_broadcast_message(
+      BroadcastMessage self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_create_wallet_account_req(
       CreateWalletAccountReq self, SseSerializer serializer);
 
@@ -4742,6 +4767,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_bridge_error(BridgeError self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_broadcast_message(
+      BroadcastMessage self, SseSerializer serializer);
 
   @protected
   void sse_encode_change_spend_policy(
@@ -5151,6 +5180,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_broadcast_message(
+      BroadcastMessage? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_flags_settings(
