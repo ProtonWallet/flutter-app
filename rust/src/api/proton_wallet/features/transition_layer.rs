@@ -264,9 +264,8 @@ impl FrbTransitionLayer {
                 locked_private_keys.unlock_with(&provider, &user_key_secret);
 
             // encrypted_mnemonic
-            let encrypted_mnemonic = encrypted_mnemonic_legacy
-                .decrypt_with(&provider, &unlocked_private_keys)
-                .unwrap();
+            let encrypted_mnemonic =
+                encrypted_mnemonic_legacy.decrypt_with(&provider, &unlocked_private_keys)?;
 
             Ok(encrypted_mnemonic.to_base64())
         });
