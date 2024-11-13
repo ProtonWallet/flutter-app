@@ -44,9 +44,9 @@ class WalletMnemonicProvider extends DataProvider {
         );
       } catch (e, stacktrace) {
         logger.i(
-          "getMnemonicWithID() error: $e stacktrace: $stacktrace",
+          "Cannot decrypt with old encryption scheme, try new encryption scheme. Detail error: $e stacktrace: $stacktrace",
         );
-        throw Exception("Cannot decrypt with old encryption scheme");
+        encryptedMnemonicString = encryptedMnemonic.mnemonic;
       }
     }
     final mnemonic = FrbWalletKeyHelper.decrypt(
