@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/broadcast_message.dart';
 import '../../frb_generated.dart';
 import '../errors.dart';
 import 'account.dart';
@@ -25,6 +26,7 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
       String? transactionTime,
       String? addressId,
       String? body,
+      BroadcastMessage? message,
       Map<String, String>? recipients,
       int? isAnonymous});
 

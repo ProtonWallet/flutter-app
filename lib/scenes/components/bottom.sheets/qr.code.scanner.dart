@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/rust/api/bdk_wallet/payment_link.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 void showQRScanBottomSheet(
@@ -83,7 +86,18 @@ class QRScannerWidgetState extends State<QRScannerWidget> {
           _isProcessing = true;
         });
         try {
-          widget.textEditingController.text = scanData.code ?? "";
+          var scanResult = scanData.code ?? "";
+          if (scanResult.isNotEmpty) {
+            try {
+              scanResult = FrbPaymentLink.tryParse(
+                str: scanResult,
+                network: appConfig.coinType.network,
+              ).toAddress();
+            } catch (e) {
+              logger.e(e.toString());
+            }
+          }
+          widget.textEditingController.text = scanResult;
           if (widget.callback != null) {
             if (mounted) {
               Navigator.of(context).pop();
@@ -91,6 +105,7 @@ class QRScannerWidgetState extends State<QRScannerWidget> {
             widget.callback!();
           }
         } catch (e) {
+          logger.e(e.toString());
           CommonHelper.showErrorDialog(e.toString());
           if (mounted) {
             Navigator.of(context).pop();

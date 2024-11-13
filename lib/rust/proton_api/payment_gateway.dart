@@ -80,6 +80,9 @@ class Quote {
   final String networkFee;
   final String paymentGatewayFee;
   final PaymentMethod paymentMethod;
+  final String? purchaseAmount;
+  final String? paymentProcessingFee;
+  final String? orderId;
 
   const Quote({
     required this.bitcoinAmount,
@@ -88,6 +91,9 @@ class Quote {
     required this.networkFee,
     required this.paymentGatewayFee,
     required this.paymentMethod,
+    this.purchaseAmount,
+    this.paymentProcessingFee,
+    this.orderId,
   });
 
   @override
@@ -97,7 +103,10 @@ class Quote {
       fiatCurrencySymbol.hashCode ^
       networkFee.hashCode ^
       paymentGatewayFee.hashCode ^
-      paymentMethod.hashCode;
+      paymentMethod.hashCode ^
+      purchaseAmount.hashCode ^
+      paymentProcessingFee.hashCode ^
+      orderId.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -109,5 +118,8 @@ class Quote {
           fiatCurrencySymbol == other.fiatCurrencySymbol &&
           networkFee == other.networkFee &&
           paymentGatewayFee == other.paymentGatewayFee &&
-          paymentMethod == other.paymentMethod;
+          paymentMethod == other.paymentMethod &&
+          purchaseAmount == other.purchaseAmount &&
+          paymentProcessingFee == other.paymentProcessingFee &&
+          orderId == other.orderId;
 }
