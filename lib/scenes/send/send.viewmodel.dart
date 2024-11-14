@@ -1084,12 +1084,10 @@ class SendViewModelImpl extends SendViewModel {
       }
 
       if (addressPublicKeys.isNotEmpty) {
-        for (final addressKey in addressKeys) {
-          if (addressKey.id == emailAddressID) {
-            // need to use self addressKey to encrypt the body too
-            addressPublicKeys.add(addressKey.privateKey ?? "");
-            break;
-          }
+        final addressKey =
+            await addressKeyProvider.getPrimaryAddressKey(emailAddressID ?? "");
+        if (addressKey != null && addressKey.privateKey != null) {
+          addressPublicKeys.add(addressKey.privateKey!);
         }
         encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
           privateKeys: addressPublicKeys,
