@@ -254,11 +254,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               ),
                               child: KeyboardVisibilityBuilder(
                                 builder: (context, isKeyboardVisible) {
-                                  // if (!isKeyboardVisible) {
-                                  //   removeOverlay();
-                                  // } else {
-                                  //   showOverlay(context, viewModel.keyboardDone);
-                                  // }
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
