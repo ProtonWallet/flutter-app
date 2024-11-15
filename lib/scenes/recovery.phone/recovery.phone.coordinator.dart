@@ -26,7 +26,7 @@ class RecoveryPhoneCoordinator extends Coordinator {
       userManager,
       apiServiceManager.getProtonUsersApiClient(),
       dataProviderManager.userDataProvider,
-      apiServiceManager.getSettingsApiClient(),
+      apiServiceManager.getProtonSettingsApiClient(),
       appStateManager,
     );
 

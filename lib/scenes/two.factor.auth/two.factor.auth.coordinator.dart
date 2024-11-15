@@ -26,7 +26,7 @@ class TwoFactorAuthCoordinator extends Coordinator {
       this,
       userManager,
       apiServices.getProtonUsersApiClient(),
-      apiServices.getSettingsApiClient(),
+      apiServices.getProtonSettingsApiClient(),
       dataProvider.userDataProvider,
     );
     widget = TwoFactorAuthView(

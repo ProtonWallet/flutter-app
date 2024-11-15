@@ -45,7 +45,7 @@ class ImportCoordinator extends Coordinator {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final userManager = serviceManager.get<UserManager>();
     final walletManager = serviceManager.get<WalletManager>();
-    final apiService = serviceManager.get<ProtonApiServiceManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final bloc = CreateWalletBloc(
       userManager,
       dataProviderManager.walletDataProvider,
@@ -57,8 +57,9 @@ class ImportCoordinator extends Coordinator {
       dataProviderManager,
       preInputName,
       bloc,
-      apiService.getApiService(),
+      apiServiceManager.getApiService(),
       walletManager,
+      apiServiceManager.getApiService().getProtonEmailAddrClient(),
     );
     widget = ImportView(
       viewModel,

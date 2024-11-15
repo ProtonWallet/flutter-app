@@ -7,6 +7,7 @@ import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
+import 'package:wallet/rust/api/api_service/settings_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_auth_store.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/proton_api/auth_credential.dart';
@@ -124,7 +125,11 @@ class ProtonApiServiceManager implements Manager {
     return getApiService().getWalletClient();
   }
 
-  ProtonSettingsClient getSettingsApiClient() {
+  ProtonSettingsClient getProtonSettingsApiClient() {
     return getApiService().getProtonSettingsClient();
+  }
+
+  SettingsClient getSettingsClient() {
+    return getApiService().getSettingsClient();
   }
 }

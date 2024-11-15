@@ -62,7 +62,6 @@ impl ProtonWallet {
 }
 
 impl ProtonWallet {
-
     pub fn get_backup_mnemonic(&self) -> BackupMnemonic {
         let proton_user_client = Arc::new(ProtonUsersClient::new(self.api.clone()));
         let wallet_client = Arc::new(WalletClient::new(self.api.clone()));
@@ -96,7 +95,7 @@ impl ProtonWallet {
             Arc::new(self.db.account_dao.clone()),
             self.wallet_mnemonic_store.clone(),
             wallet_client,
-            self.user_id.clone(),
+            // self.user_id.clone(),
         ));
 
         let wallet_mnemonic_provider = Arc::new(WalletMnemonicProviderImpl::new(
@@ -144,7 +143,6 @@ mod tests {
             wallet_key_store,
             wallet_mnemonic_store,
         );
-
     }
 
     #[tokio::test]

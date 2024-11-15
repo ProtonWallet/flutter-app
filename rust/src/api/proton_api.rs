@@ -1,11 +1,10 @@
 use andromeda_api::{
     bitcoin_address::ApiWalletBitcoinAddress,
-    settings::{FiatCurrencySymbol as FiatCurrency, UserSettings as ApiWalletUserSettings},
-    wallet::{ApiWallet, ApiWalletAccount, CreateWalletTransactionRequestBody},
+    settings::FiatCurrencySymbol as FiatCurrency,
+    wallet::{ApiWalletAccount, CreateWalletTransactionRequestBody},
     wallet_ext::WalletClientExt,
     ChildSession,
 };
-use andromeda_common::BitcoinUnit;
 use lazy_static::lazy_static;
 use log::info;
 use std::sync::{Arc, RwLock};
@@ -13,9 +12,8 @@ use std::sync::{Arc, RwLock};
 use crate::{
     api::api_service::proton_api_service::ProtonAPIService,
     proton_api::{
-        event_routes::ProtonEvent,
         exchange_rate::ProtonExchangeRate,
-        proton_address::{AllKeyAddressKey, ProtonAddress},
+        proton_address::ProtonAddress,
         wallet::{BitcoinAddress, EmailIntegrationBitcoinAddress, WalletTransaction},
     },
     BridgeError,
@@ -49,92 +47,6 @@ pub(crate) fn logout() -> Result<(), BridgeError> {
     Ok(())
 }
 
-// TODO:: slowly move to use api_service folder functions
-/// proton_api.updatewalletname
-pub async fn update_wallet_name(
-    wallet_id: String,
-    new_name: String,
-) -> Result<ApiWallet, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .update_wallet_name(wallet_id, new_name)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.deletewallet
-pub async fn delete_wallet(wallet_id: String) -> Result<(), BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .delete_wallet(wallet_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.updatewalletaccountlabel
-pub async fn update_wallet_account_label(
-    wallet_id: String,
-    wallet_account_id: String,
-    new_label: String,
-) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .update_wallet_account_label(wallet_id, wallet_account_id, new_label)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.deletewalletaccount
-pub async fn delete_wallet_account(
-    wallet_id: String,
-    wallet_account_id: String,
-) -> Result<(), BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .delete_wallet_account(wallet_id, wallet_account_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.bitcoinunit
-pub async fn bitcoin_unit(symbol: BitcoinUnit) -> Result<ApiWalletUserSettings, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .settings
-        .update_bitcoin_unit(symbol)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
 /// proton_api.getexchangerate
 pub async fn get_exchange_rate(
     fiat_currency: FiatCurrency,
@@ -146,39 +58,8 @@ pub async fn get_exchange_rate(
         .clients()
         .exchange_rate
         .get_exchange_rate(fiat_currency, time)
-        .await;
-
-    info!("get_exchange_rate: {:?}", result);
-
-    match result {
-        Ok(response) => Ok(response.into()),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.getlatesteventid
-pub async fn get_latest_event_id() -> Result<String, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api.inner.clients().event.get_latest_event_id().await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.collectevents
-pub async fn collect_events(latest_event_id: String) -> Result<Vec<ProtonEvent>, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .event
-        .collect_events(latest_event_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
-        Err(err) => Err(err.into()),
-    }
+        .await?;
+    Ok(result.into())
 }
 
 /// proton_api.getprotonaddress
@@ -189,11 +70,8 @@ pub async fn get_proton_address() -> Result<Vec<ProtonAddress>, BridgeError> {
         .clients()
         .proton_email_address
         .get_proton_email_addresses()
-        .await;
-    match result {
-        Ok(response) => Ok(response.into_iter().map(|x| x.into()).collect()),
-        Err(err) => Err(err.into()),
-    }
+        .await?;
+    Ok(result.into_iter().map(|x| x.into()).collect())
 }
 
 /// proton_api.addemailaddress
@@ -203,37 +81,12 @@ pub async fn add_email_address(
     address_id: String,
 ) -> Result<ApiWalletAccount, BridgeError> {
     let proton_api = retrieve_proton_api()?;
-
-    let result = proton_api
+    Ok(proton_api
         .inner
         .clients()
         .wallet
         .add_email_address(wallet_id, wallet_account_id, address_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.removeemailaddress
-pub async fn remove_email_address(
-    wallet_id: String,
-    wallet_account_id: String,
-    address_id: String,
-) -> Result<ApiWalletAccount, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .remove_email_address(wallet_id, wallet_account_id, address_id)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
+        .await?)
 }
 
 /// proton_api.updatebitcoinaddress
@@ -245,7 +98,7 @@ pub async fn update_bitcoin_address(
 ) -> Result<ApiWalletBitcoinAddress, BridgeError> {
     let proton_api = retrieve_proton_api()?;
 
-    let result = proton_api
+    Ok(proton_api
         .inner
         .clients()
         .bitcoin_address
@@ -255,11 +108,7 @@ pub async fn update_bitcoin_address(
             wallet_account_bitcoin_address_id,
             bitcoin_address.into(),
         )
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
+        .await?)
 }
 
 /// proton_api.addbitcoinaddresses
@@ -270,7 +119,7 @@ pub async fn add_bitcoin_addresses(
 ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
     let proton_api = retrieve_proton_api()?;
 
-    let result = proton_api
+    Ok(proton_api
         .inner
         .clients()
         .bitcoin_address
@@ -279,11 +128,7 @@ pub async fn add_bitcoin_addresses(
             wallet_account_id,
             bitcoin_addresses.into_iter().map(|v| v.into()).collect(),
         )
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
+        .await?)
 }
 
 /// proton_api.lookupbitcoinaddress
@@ -292,16 +137,13 @@ pub async fn lookup_bitcoin_address(
 ) -> Result<EmailIntegrationBitcoinAddress, BridgeError> {
     let proton_api = retrieve_proton_api()?;
 
-    let result = proton_api
+    let response = proton_api
         .inner
         .clients()
         .email_integration
         .lookup_bitcoin_address(email)
-        .await;
-    match result {
-        Ok(response) => Ok(response.into()),
-        Err(err) => Err(err.into()),
-    }
+        .await?;
+    Ok(response.into())
 }
 
 /// proton_api.getwalletbitcoinaddress
@@ -311,17 +153,12 @@ pub async fn get_wallet_bitcoin_address(
     only_request: Option<u8>,
 ) -> Result<Vec<ApiWalletBitcoinAddress>, BridgeError> {
     let proton_api = retrieve_proton_api()?;
-
-    let result = proton_api
+    Ok(proton_api
         .inner
         .clients()
         .bitcoin_address
         .get_bitcoin_addresses(wallet_id, wallet_account_id, only_request)
-        .await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
+        .await?)
 }
 
 /// proton_api.createwallettransactions
@@ -342,64 +179,19 @@ pub async fn create_wallet_transactions(
         ExchangeRateID: exchange_rate_id,
         TransactionTime: transaction_time,
     };
-    let result = proton_api
+    let response = proton_api
         .inner
         .clients()
         .wallet
         .create_wallet_transaction(wallet_id, wallet_account_id, payload)
-        .await;
-    match result {
-        Ok(response) => Ok(response.into()),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.updatewallettransactionlabel
-pub async fn update_wallet_transaction_label(
-    wallet_id: String,
-    wallet_account_id: String,
-    wallet_transaction_id: String,
-    label: String,
-) -> Result<WalletTransaction, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .wallet
-        .update_wallet_transaction_label(wallet_id, wallet_account_id, wallet_transaction_id, label)
-        .await;
-    match result {
-        Ok(response) => Ok(response.into()),
-        Err(err) => Err(err.into()),
-    }
-}
-
-/// proton_api.getallpublickeys
-pub async fn get_all_public_keys(
-    email: String,
-    internal_only: u8,
-) -> Result<Vec<AllKeyAddressKey>, BridgeError> {
-    let proton_api = retrieve_proton_api()?;
-    let result = proton_api
-        .inner
-        .clients()
-        .proton_email_address
-        .get_all_public_keys(email, Some(internal_only))
-        .await;
-    match result {
-        Ok(response) => Ok(response.into_iter().map(|v| v.into()).collect()),
-        Err(err) => Err(err.into()),
-    }
+        .await?;
+    Ok(response.into())
 }
 
 /// proton_api.fork
 pub async fn fork() -> Result<ChildSession, BridgeError> {
     let proton_api = retrieve_proton_api()?;
-    let result = proton_api.inner.fork().await;
-    match result {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.into()),
-    }
+    Ok(proton_api.inner.fork().await?)
 }
 
 #[cfg(test)]

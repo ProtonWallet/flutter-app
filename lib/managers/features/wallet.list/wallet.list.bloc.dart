@@ -23,8 +23,8 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/errors.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 
 /// Define the Bloc

@@ -1,10 +1,8 @@
 // this folder contains flutter rust bridge api
 pub mod init;
-pub mod quark_command;
 
 // bdk
 pub mod bdk_wallet;
-pub mod rust_api;
 
 // logger
 pub mod flutter_logger;
@@ -16,16 +14,6 @@ pub mod proton_api;
 // proton wallets
 pub mod proton_wallet;
 
-// crypto
-pub mod crypto;
-pub mod srp;
-
-// db
-pub mod db;
-
 // errors
-pub mod logger;
 pub mod errors;
-
-// provider
-// pub mod provider;
+pub mod logger;
