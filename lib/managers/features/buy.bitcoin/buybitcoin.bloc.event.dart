@@ -50,6 +50,14 @@ class SelectAmountEvent extends BuyBitcoinEvent {
   List<Object?> get props => [amount];
 }
 
+class UpdateAmountEvent extends BuyBitcoinEvent {
+  final String amount;
+  const UpdateAmountEvent(this.amount);
+
+  @override
+  List<Object?> get props => [amount];
+}
+
 class SelectProviderEvent extends BuyBitcoinEvent {
   final GatewayProvider provider;
   const SelectProviderEvent(this.provider);

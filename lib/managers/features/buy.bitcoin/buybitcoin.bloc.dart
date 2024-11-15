@@ -132,6 +132,18 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
       }
     });
 
+    /// Update amount
+    on<UpdateAmountEvent>((event, emit) async {
+      final String amount = event.amount;
+      final String numericAmountg = toNumberAmount(amount);
+      emit(state.copyWith(
+        selectedModel: state.selectedModel.copyWith(
+          amount: numericAmountg,
+        ),
+        error: "",
+      ));
+    });
+
     /// get quote event
     on<GetQuoteEvent>((event, emit) async {
       emit(state.copyWith(
