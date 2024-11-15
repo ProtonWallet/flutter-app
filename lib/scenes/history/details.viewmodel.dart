@@ -29,10 +29,9 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
-import 'package:wallet/rust/api/crypto/wallet_key.dart';
-import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
@@ -271,8 +270,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       final DateTime now = DateTime.now();
       try {
-        // TODO(fix): move this to provider
-        final walletTransaction = await proton_api.createWalletTransactions(
+        final walletTransaction = await walletClient.createWalletTransactions(
           walletId: walletID,
           walletAccountId: accountID,
           transactionId: transactionId,
@@ -505,7 +503,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
             plaintext: userLabel,
           );
           transactionModel!.label = utf8.encode(encryptedLabel);
-          await proton_api.updateWalletTransactionLabel(
+          await walletClient.updateWalletTransactionLabel(
             walletId: transactionModel!.serverWalletID,
             walletAccountId: transactionModel!.serverAccountID,
             walletTransactionId: transactionModel!.serverID,

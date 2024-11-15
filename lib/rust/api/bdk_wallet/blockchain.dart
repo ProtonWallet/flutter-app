@@ -30,6 +30,9 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
       Map<String, String>? recipients,
       int? isAnonymous});
 
+  static FrbBlockchainClient createEsploraBlockchain() => RustLib.instance.api
+      .crateApiBdkWalletBlockchainFrbBlockchainClientCreateEsploraBlockchain();
+
   Future<void> fullSync({required FrbAccount account, BigInt? stopGap});
 
   Future<Map<String, double>> getFeesEstimation();

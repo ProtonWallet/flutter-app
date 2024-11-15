@@ -5,7 +5,7 @@ import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
-import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 
 /// Define the Bloc
 class WalletNameBloc {

@@ -4,6 +4,7 @@ import 'package:sentry/sentry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
@@ -17,7 +18,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/event_routes.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
@@ -26,14 +26,13 @@ import 'package:wallet/rust/proton_api/wallet_settings.dart';
 
 typedef RecoveryCallback = Future<void> Function(List<LoadingTask> failedTask);
 
-// TODO(fix): handle user and settings event.
 class EventLoop extends Service implements Manager {
   final UserManager userManager;
   final WalletManager walletManager;
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
   final ConnectivityProvider connectivityProvider;
-
+  final ProtonApiServiceManager apiServiceManager;
   // workaround need to improve this
   final PreferencesManager shared;
   String latestEventId = "";
@@ -50,7 +49,8 @@ class EventLoop extends Service implements Manager {
     this.dataProviderManager,
     this.appStateManager,
     this.connectivityProvider,
-    this.shared, {
+    this.shared,
+    this.apiServiceManager, {
     required super.duration,
   });
 
@@ -152,8 +152,10 @@ class EventLoop extends Service implements Manager {
 
   Future<void> fetchEventID() async {
     try {
+      final eventClient = apiServiceManager.getApiService().getEventClient();
       final String? savedLatestEventId = await getLatestEventId();
-      latestEventId = savedLatestEventId ?? await proton_api.getLatestEventId();
+      latestEventId =
+          savedLatestEventId ?? await eventClient.getLatestEventId();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       logger.e("Event Loop error: $e stacktrace: $stacktrace");
@@ -167,9 +169,11 @@ class EventLoop extends Service implements Manager {
   Future<void> fetchEvents() async {
     logger.i("event loop runOnce()");
     try {
-      final events =
-          await proton_api.collectEvents(latestEventId: latestEventId);
-      for (ProtonEvent event in events) {
+      final eventClient = apiServiceManager.getApiService().getEventClient();
+      final events = await eventClient.collectEvents(
+        latestEventId: latestEventId,
+      );
+      for (final event in events) {
         // check wallet key events
         if (event.walletKeyEvents != null) {
           for (final walletKeyEvent in event.walletKeyEvents!) {
@@ -184,16 +188,15 @@ class EventLoop extends Service implements Manager {
         if (event.walletEvents != null) {
           for (WalletEvent walletEvent in event.walletEvents!) {
             if (walletEvent.action == 0) {
-              final String serverWalletID = walletEvent.id;
+              final serverWalletID = walletEvent.id;
+              // Will also delete account
               await dataProviderManager.walletDataProvider
-                  .deleteWalletByServerID(
-                serverWalletID,
-              ); // Will also delete account
+                  .deleteWalletByServerID(serverWalletID);
               continue;
             }
             final ApiWallet? walletData = walletEvent.wallet;
             if (walletData != null) {
-              final String walletID = walletData.id;
+              final walletID = walletData.id;
               const int status = WalletModel.statusActive;
               await dataProviderManager.walletDataProvider.insertOrUpdateWallet(
                 userID: userManager.userID,
@@ -218,7 +221,7 @@ class EventLoop extends Service implements Manager {
         if (event.walletAccountEvents != null) {
           for (final walletAccountEvent in event.walletAccountEvents!) {
             if (walletAccountEvent.action == 0) {
-              final String accountID = walletAccountEvent.id;
+              final accountID = walletAccountEvent.id;
               await dataProviderManager.walletDataProvider.deleteWalletAccount(
                 accountID: accountID,
               );
@@ -281,7 +284,7 @@ class EventLoop extends Service implements Manager {
           bool hasAction = false;
           for (final contactEvent in event.contactEmailEvents!) {
             if (contactEvent.action == 0) {
-              final String contactID = contactEvent.id;
+              final contactID = contactEvent.id;
               await dataProviderManager.contactsDataProvider.delete(contactID);
               hasAction = true;
               continue;
@@ -359,9 +362,10 @@ class EventLoop extends Service implements Manager {
   Future<void> handleBitcoinAddress() async {
     final userID = userManager.userInfo.userId;
     final walletModels = await DBHelper.walletDao!.findAllByUserID(userID);
-    for (WalletModel walletModel in walletModels) {
-      final accountModels =
-          await DBHelper.accountDao!.findAllByWalletID(walletModel.walletID);
+    for (final walletModel in walletModels) {
+      final accountModels = await DBHelper.accountDao!.findAllByWalletID(
+        walletModel.walletID,
+      );
       for (final accountModel in accountModels) {
         final FrbAccount? account = await walletManager.loadWalletWithID(
           walletModel.walletID,
@@ -413,12 +417,12 @@ class EventLoop extends Service implements Manager {
   }
 
   Future<void> setLatestEventId(String latestEventId) async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
     preferences.setString(PreferenceKeys.latestEventId, latestEventId);
   }
 
   Future<String?> getLatestEventId() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
     return preferences.getString(PreferenceKeys.latestEventId);
   }
 

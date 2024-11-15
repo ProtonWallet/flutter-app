@@ -143,6 +143,16 @@ class AddressKeyProvider extends DataProvider {
     return addresses;
   }
 
+  Future<List<AllKeyAddressKey>> getAllPublicKeys(
+    String email, {
+    required int internalOnly,
+  }) async {
+    return protonEmailAddressClient.getAllPublicKeys(
+      email: email,
+      internalOnly: internalOnly,
+    );
+  }
+
   @override
   Future<void> clear() async {
     addresses.clear();

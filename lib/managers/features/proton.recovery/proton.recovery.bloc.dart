@@ -13,7 +13,7 @@ import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
-import 'package:wallet/rust/api/srp/srp_client.dart';
+import 'package:wallet/rust/api/proton_wallet/srp/srp_client.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/rust/srp/proofs.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
@@ -103,16 +104,20 @@ class WalletSettingCoordinator extends Coordinator {
     final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
+    final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
 
     final viewModel = WalletSettingViewModelImpl(
       this,
-      walletManager,
-      appStateManager,
-      dataProviderManager,
       walletListBloc,
       walletBalanceBloc,
       walletNameBloc,
       walletMenuModel,
+      walletManager,
+      appStateManager,
+      dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.addressKeyProvider,
+      apiServiceManager.getSettingsClient(),
+      apiServiceManager.getWalletClient(),
     );
     widget = WalletSettingView(
       viewModel,

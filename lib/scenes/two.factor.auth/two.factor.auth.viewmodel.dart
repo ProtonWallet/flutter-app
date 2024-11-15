@@ -10,7 +10,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/srp/srp_client.dart';
+import 'package:wallet/rust/api/proton_wallet/srp/srp_client.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
