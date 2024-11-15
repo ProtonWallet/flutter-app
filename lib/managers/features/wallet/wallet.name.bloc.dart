@@ -48,9 +48,9 @@ class WalletNameBloc {
       walletID,
     );
 
-    final newLabel = FrbWalletKeyHelper.decrypt(
+    final newLabel = FrbWalletKeyHelper.encrypt(
       base64SecureKey: unlockedWalletKey.toBase64(),
-      encryptText: newName,
+      plaintext: newName,
     );
 
     final walletAccount = await walletClient.updateWalletAccountLabel(
