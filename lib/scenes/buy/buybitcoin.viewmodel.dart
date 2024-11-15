@@ -203,6 +203,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
     loadCountry();
     await initAddressForBuy();
     sinkAddSafe();
+
+    // Add a listener to handle text changes
+    controller.addListener(() {
+      final amount = bloc.state.selectedModel.amount;
+      final check = bloc.toNumberAmount(controller.text);
+      if (amount != check) {
+        bloc.add(UpdateAmountEvent(check));
+      }
+    });
   }
 
   Future<void> initAddressForBuy() async {
@@ -314,11 +323,8 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
 
   @override
   void keyboardDone() {
-    final amount = bloc.state.selectedModel.amount;
     final check = bloc.toNumberAmount(controller.text);
-    if (amount != check) {
-      selectAmount(check);
-    }
+    selectAmount(check);
   }
 
   Future<void> _requestPermissions() async {
