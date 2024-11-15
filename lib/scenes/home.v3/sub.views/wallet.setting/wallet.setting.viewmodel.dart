@@ -12,14 +12,15 @@ import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
-import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/address.keys.provider.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/rust/api/api_service/settings_client.dart';
+import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/rust/proton_api/wallet_account.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -41,9 +42,6 @@ class AccountSettingInfo {
 
 abstract class WalletSettingViewModel
     extends ViewModel<WalletSettingCoordinator> {
-  final WalletManager walletManager;
-  final AppStateManager appStateManager;
-  final DataProviderManager dataProviderManager;
   final WalletListBloc walletListBloc;
   final WalletBalanceBloc walletBalanceBloc;
   final WalletNameBloc walletNameBloc;
@@ -100,9 +98,6 @@ abstract class WalletSettingViewModel
 
   WalletSettingViewModel(
     super.coordinator,
-    this.walletManager,
-    this.appStateManager,
-    this.dataProviderManager,
     this.walletListBloc,
     this.walletBalanceBloc,
     this.walletNameBloc,
@@ -111,22 +106,35 @@ abstract class WalletSettingViewModel
 }
 
 class WalletSettingViewModelImpl extends WalletSettingViewModel {
+  final WalletManager walletManager;
+  final AppStateManager appStateManager;
+
+  final SettingsClient settingsClient;
+  final WalletClient walletClient;
+  final UserSettingsDataProvider userSettingsDataProvider;
+  final AddressKeyProvider addressKeyProvider;
+
   WalletSettingViewModelImpl(
     super.coordinator,
-    super.walletManager,
-    super.appStateManager,
-    super.dataProviderManager,
     super.walletListBloc,
     super.walletBalanceBloc,
     super.walletNameBloc,
     super.walletMenuModel,
+    this.walletManager,
+    this.appStateManager,
+    this.userSettingsDataProvider,
+    this.addressKeyProvider,
+    this.settingsClient,
+    this.walletClient,
   );
 
   @override
   Future<void> updateWalletName(String newName) async {
     try {
       await walletNameBloc.updateWalletName(
-          walletMenuModel.walletModel, newName);
+        walletMenuModel.walletModel,
+        newName,
+      );
       walletListBloc.updateWalletName(walletMenuModel.walletModel, newName);
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -143,7 +151,9 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   @override
   Future<void> updateAccountName(
-      AccountModel accountModel, String newName) async {
+    AccountModel accountModel,
+    String newName,
+  ) async {
     try {
       await walletNameBloc.updateAccountLabel(
         walletMenuModel.walletModel,
@@ -174,8 +184,11 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
     AccountModel accountModel,
     FiatCurrency newFiatCurrency,
   ) async {
-    walletListBloc.updateAccountFiat(walletMenuModel.walletModel, accountModel,
-        newFiatCurrency.name.toUpperCase());
+    walletListBloc.updateAccountFiat(
+      walletMenuModel.walletModel,
+      accountModel,
+      newFiatCurrency.name.toUpperCase(),
+    );
     walletBalanceBloc.handleTransactionUpdate();
   }
 
@@ -183,8 +196,9 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
   Future<void> loadData() async {
     /// init wallet controllers / notifiers / focusNodes
     scrollController = ScrollController();
-    walletNameController =
-        TextEditingController(text: walletMenuModel.walletName);
+    walletNameController = TextEditingController(
+      text: walletMenuModel.walletName,
+    );
     walletNameFocusNode = FocusNode();
 
     /// init account setting info
@@ -234,17 +248,17 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   Future<void> updateBitcoinUnit(BitcoinUnit symbol) async {
     if (appStateManager.isHomeInitialed) {
-      final userSettings = await proton_api.bitcoinUnit(symbol: symbol);
-      await dataProviderManager.userSettingsDataProvider
-          .insertUpdate(userSettings);
-      dataProviderManager.userSettingsDataProvider.updateBitcoinUnit(symbol);
+      final userSettings = await settingsClient.bitcoinUnit(symbol: symbol);
+      await userSettingsDataProvider.insertUpdate(
+        userSettings,
+      );
+      userSettingsDataProvider.updateBitcoinUnit(symbol);
       loadUserSettings();
     }
   }
 
   Future<void> loadUserSettings() async {
-    final settings =
-        await dataProviderManager.userSettingsDataProvider.getSettings();
+    final settings = await userSettingsDataProvider.getSettings();
     if (settings != null) {
       bitcoinUnitNotifier.value = settings.bitcoinUnit.toBitcoinUnit();
     }
@@ -253,8 +267,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses =
-          await dataProviderManager.addressKeyProvider.getAddresses();
+      userAddresses = await addressKeyProvider.getAddresses();
     } catch (e) {
       logger.e(e.toString());
     }
@@ -302,14 +315,13 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
     String serverAddressID,
   ) async {
     try {
-      final ApiWalletAccount walletAccount =
-          await proton_api.removeEmailAddress(
+      final walletAccount = await walletClient.removeEmailAddress(
         walletId: walletMenuModel.walletModel.walletID,
         walletAccountId: accountModel.accountID,
         addressId: serverAddressID,
       );
       bool deleted = true;
-      for (ApiEmailAddress emailAddress in walletAccount.addresses) {
+      for (final emailAddress in walletAccount.addresses) {
         if (emailAddress.id == serverAddressID) {
           deleted = false;
         }
@@ -317,7 +329,10 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       if (deleted) {
         await walletManager.deleteAddress(serverAddressID);
         walletListBloc.removeEmailIntegration(
-            walletMenuModel.walletModel, accountModel, serverAddressID);
+          walletMenuModel.walletModel,
+          accountModel,
+          serverAddressID,
+        );
       }
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -335,7 +350,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   @override
   ProtonAddress? getProtonAddressByID(String addressID) {
-    for (ProtonAddress protonAddress in userAddresses) {
+    for (final protonAddress in userAddresses) {
       if (protonAddress.id == addressID) {
         return protonAddress;
       }

@@ -42,7 +42,6 @@ impl RotatingFileWriter {
     fn open_log_file(file_path: &str) -> io::Result<File> {
         OpenOptions::new()
             .create(true)
-            .write(true)
             .truncate(false)
             .append(true)
             .open(file_path)

@@ -6,7 +6,7 @@ import 'package:wallet/managers/providers/models/wallet.key.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/wallet.keys.store.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
-import 'package:wallet/rust/api/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 

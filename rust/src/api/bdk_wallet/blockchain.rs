@@ -6,7 +6,10 @@ use log::info;
 use std::{collections::HashMap, ops::Deref, sync::Arc};
 
 use super::{account::FrbAccount, psbt::FrbPsbt};
-use crate::api::{api_service::proton_api_service::ProtonAPIService, errors::BridgeError};
+use crate::api::{
+    api_service::proton_api_service::ProtonAPIService, errors::BridgeError,
+    proton_api::retrieve_proton_api,
+};
 
 pub struct FrbBlockchainClient {
     pub(crate) inner: BlockchainClient,
@@ -18,6 +21,13 @@ impl From<BlockchainClient> for FrbBlockchainClient {
     }
 }
 impl FrbBlockchainClient {
+    #[frb(sync)]
+    pub fn create_esplora_blockchain() -> Result<FrbBlockchainClient, BridgeError> {
+        let proton_api = retrieve_proton_api()?;
+        let blockchain = FrbBlockchainClient::new(proton_api)?;
+        Ok(blockchain)
+    }
+
     #[frb(sync)]
     pub fn new(api_service: Arc<ProtonAPIService>) -> Result<FrbBlockchainClient, BridgeError> {
         let inner = BlockchainClient::new(api_service.inner.deref().clone());

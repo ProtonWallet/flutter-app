@@ -17,7 +17,7 @@ use proton_crypto_account::{
 };
 
 use crate::{
-    api::crypto::wallet_key::{FrbLockedWalletKey, FrbUnlockedWalletKey},
+    api::proton_wallet::crypto::wallet_key::{FrbLockedWalletKey, FrbUnlockedWalletKey},
     proton_address::ProtonAddressKey,
     proton_wallet::{
         crypto::{
@@ -392,7 +392,9 @@ impl FrbTransitionLayer {
 #[cfg(test)]
 mod tests {
     use crate::mocks::user_keys::tests::{
-        get_test_user_2_locked_proton_address_key, get_test_user_2_locked_proton_user_key,
+        get_test_user_1_locked_proton_user_key, get_test_user_1_locked_user_key,
+        get_test_user_1_locked_user_key_secret, get_test_user_2_locked_proton_address_key,
+        get_test_user_2_locked_proton_user_key, get_test_user_2_locked_user_key,
     };
 
     use super::FrbTransitionLayer;
@@ -450,5 +452,61 @@ mod tests {
         assert!(decrypted_message.to_list.is_empty());
         assert!(decrypted_message.sender.is_empty());
         assert!(decrypted_message.body.is_empty());
+    }
+
+    #[test]
+    fn test_encrypt_messages_with_keys() {
+        let private_keys = vec![
+            get_test_user_1_locked_user_key()
+                .0
+                .first()
+                .unwrap()
+                .private_key
+                .to_string(),
+            get_test_user_2_locked_user_key().private_key.to_string(),
+        ];
+
+        let message = "This is a test message!!!";
+
+        let encrypted_message =
+            FrbTransitionLayer::encrypt_messages_with_keys(private_keys, message.to_string())
+                .unwrap();
+        println!("{}", encrypted_message);
+        assert!(!encrypted_message.is_empty());
+
+        let user_keys = vec![get_test_user_2_locked_proton_user_key()];
+        let addr_keys = vec![];
+        let user_key_password = "password".to_string();
+        let enc_to_list = None;
+        let enc_sender = None;
+        let enc_body = Some(encrypted_message);
+        let out = FrbTransitionLayer::decrypt_messages(
+            user_keys,
+            addr_keys,
+            user_key_password,
+            enc_to_list.clone(),
+            enc_sender.clone(),
+            enc_body.clone(),
+        )
+        .unwrap();
+        println!("{}", out.body);
+        assert_eq!(out.body, message);
+
+        let user_keys = vec![get_test_user_1_locked_proton_user_key()];
+        let addr_keys = vec![];
+        let user_key_password =
+            String::from_utf8(get_test_user_1_locked_user_key_secret().as_bytes().to_vec())
+                .unwrap();
+        let out = FrbTransitionLayer::decrypt_messages(
+            user_keys,
+            addr_keys,
+            user_key_password,
+            enc_to_list,
+            enc_sender,
+            enc_body,
+        )
+        .unwrap();
+        println!("{}", out.body);
+        assert_eq!(out.body, message);
     }
 }

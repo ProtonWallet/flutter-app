@@ -42,21 +42,20 @@ import 'api/bdk_wallet/transaction_details_txin.dart';
 import 'api/bdk_wallet/transaction_details_txop.dart';
 import 'api/bdk_wallet/transactions.dart';
 import 'api/bdk_wallet/wallet.dart';
-import 'api/crypto/wallet_key.dart';
-import 'api/crypto/wallet_key_helper.dart';
-import 'api/db/app_database_helper.dart';
 import 'api/errors.dart';
 import 'api/flutter_logger.dart';
 import 'api/logger.dart';
 import 'api/proton_api.dart';
+import 'api/proton_wallet/crypto/wallet_key.dart';
+import 'api/proton_wallet/crypto/wallet_key_helper.dart';
+import 'api/proton_wallet/db/app_database_helper.dart';
 import 'api/proton_wallet/features/backup_mnemonic.dart';
 import 'api/proton_wallet/features/transition_layer.dart';
+import 'api/proton_wallet/srp/srp_client.dart';
 import 'api/proton_wallet/storage/user_key_store.dart';
 import 'api/proton_wallet/storage/wallet_key_store.dart';
 import 'api/proton_wallet/storage/wallet_mnemonic_store.dart';
 import 'api/proton_wallet/wallet.dart';
-import 'api/rust_api.dart';
-import 'api/srp/srp_client.dart';
 import 'common/address_info.dart';
 import 'common/broadcast_message.dart';
 import 'common/change_spend_policy.dart';
@@ -1144,9 +1143,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AllKeyAddressKey dco_decode_all_key_address_key(dynamic raw);
-
-  @protected
-  Api dco_decode_api(dynamic raw);
 
   @protected
   ApiContactEmails dco_decode_api_contact_emails(dynamic raw);
@@ -2772,9 +2768,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AllKeyAddressKey sse_decode_all_key_address_key(SseDeserializer deserializer);
-
-  @protected
-  Api sse_decode_api(SseDeserializer deserializer);
 
   @protected
   ApiContactEmails sse_decode_api_contact_emails(SseDeserializer deserializer);
@@ -4540,9 +4533,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_all_key_address_key(
       AllKeyAddressKey self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_api(Api self, SseSerializer serializer);
 
   @protected
   void sse_encode_api_contact_emails(

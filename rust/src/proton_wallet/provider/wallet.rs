@@ -21,7 +21,6 @@ pub struct WalletDataProviderImpl {
     pub(crate) account_dao: Arc<dyn AccountDao>,
     pub(crate) wallet_mnemonic_store: Arc<dyn WalletMnemonicStore>,
     pub(crate) wallet_client: Arc<dyn WalletClientExt + Send + Sync>,
-    pub(crate) user_id: String,
 }
 
 #[async_trait]
@@ -146,14 +145,12 @@ impl WalletDataProviderImpl {
         account_dao: Arc<dyn AccountDao>,
         wallet_mnemonic_store: Arc<dyn WalletMnemonicStore>,
         wallet_client: Arc<dyn WalletClientExt + Send + Sync>,
-        user_id: String,
     ) -> Self {
         WalletDataProviderImpl {
             wallet_dao,
             account_dao,
             wallet_mnemonic_store,
             wallet_client,
-            user_id,
         }
     }
 
@@ -286,7 +283,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             Arc::new(mock_wallet_client),
-            "user123".to_string(),
         );
 
         let wallet =
@@ -335,7 +331,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             mock_wallet_client,
-            "user123".to_string(),
         );
         // Test retrieving the wallet mnemonic.
         let mnemonic_result = wallet_provider
@@ -363,7 +358,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             mock_wallet_client,
-            "user123".to_string(),
         );
 
         let wallet =
@@ -400,7 +394,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             mock_wallet_client,
-            "user123".to_string(),
         );
         // Try to retrieve a wallet that doesn't exist.
         let wallet_result = wallet_provider.get("non_existing_wallet").await;
@@ -425,7 +418,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             mock_wallet_client,
-            "user123".to_string(),
         );
 
         let wallet =
@@ -486,7 +478,6 @@ mod tests {
             Arc::new(account_dao.clone()),
             Arc::new(mock_mnemonic_store),
             mock_wallet_client,
-            "user123".to_string(),
         );
 
         // Create wallet models for testing.
