@@ -123,6 +123,19 @@ class AddressKeyProvider extends DataProvider {
         .toList();
   }
 
+  Future<ProtonAddressKey?> getPrimaryAddressKey(String addressID) async {
+    final addresses = await getAddresses();
+    try {
+      final protonAddress =
+          addresses.firstWhere((element) => element.id == addressID);
+      return protonAddress.keys
+          ?.firstWhere((element) => (element.primary == 1));
+    } catch (e) {
+      // no element found
+    }
+    return null;
+  }
+
   Future<void> _fetchFromServer() async {
     addresses.clear();
     addresses = await protonEmailAddressClient.getProtonAddress();
