@@ -8,7 +8,7 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/srp/srp_client.dart';
+import 'package:wallet/rust/api/proton_wallet/srp/srp_client.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
 
 /// recovery steps

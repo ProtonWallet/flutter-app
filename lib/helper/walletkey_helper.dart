@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart' as crypto;
-import 'package:wallet/rust/api/crypto/wallet_key.dart';
-import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 
 class WalletKeyHelper {
   /// cryptographically secure pseudo-random number generation (CSPRNG)

@@ -3,8 +3,8 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../frb_generated.dart';
-import '../errors.dart';
+import '../../../frb_generated.dart';
+import '../../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'wallet_key.dart';
 
@@ -15,26 +15,26 @@ class FrbWalletKeyHelper {
   static String decrypt(
           {required String base64SecureKey, required String encryptText}) =>
       RustLib.instance.api
-          .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
+          .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
               base64SecureKey: base64SecureKey, encryptText: encryptText);
 
   /// Encrypts the plaintext using AES-GCM with 256-bit key.
   static String encrypt(
           {required String base64SecureKey, required String plaintext}) =>
       RustLib.instance.api
-          .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperEncrypt(
+          .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperEncrypt(
               base64SecureKey: base64SecureKey, plaintext: plaintext);
 
   static FrbUnlockedWalletKey generateSecretKey() => RustLib.instance.api
-      .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKey();
+      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKey();
 
   static String generateSecretKeyAsBase64() => RustLib.instance.api
-      .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKeyAsBase64();
+      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKeyAsBase64();
 
   /// Cryptographically secure pseudo-random number generation (CSPRNG).
   static Uint8List getSecureRandom({required BigInt length}) => RustLib
       .instance.api
-      .crateApiCryptoWalletKeyHelperFrbWalletKeyHelperGetSecureRandom(
+      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGetSecureRandom(
           length: length);
 
   @override

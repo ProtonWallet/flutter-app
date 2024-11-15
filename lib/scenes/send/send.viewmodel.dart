@@ -33,12 +33,10 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_builder.dart';
-import 'package:wallet/rust/api/crypto/wallet_key.dart';
-import 'package:wallet/rust/api/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
-import 'package:wallet/rust/api/rust_api.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -328,7 +326,7 @@ class SendViewModelImpl extends SendViewModel {
       amountFocusNode.addListener(splitAmountToRecipients);
 
       sinkAddSafe();
-      blockClient = await Api.createEsploraBlockchainWithApi();
+      blockClient = FrbBlockchainClient.createEsploraBlockchain();
       await updateFeeRate();
       contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
@@ -591,8 +589,8 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> loadBitcoinAddresses() async {
     showInvite = false;
     showInviteBvE = false;
-    for (ProtonRecipient protonRecipient in recipients) {
-      final String email = protonRecipient.email;
+    for (final protonRecipient in recipients) {
+      final email = protonRecipient.email;
       if (bitcoinAddresses.containsKey(email)) {
         continue;
       }
@@ -607,12 +605,13 @@ class SendViewModelImpl extends SendViewModel {
                 emailIntegrationBitcoinAddress =
                 await walletManager.lookupBitcoinAddress(email);
             if (emailIntegrationBitcoinAddress != null) {
-              final List<AllKeyAddressKey> recipientAddressKeys =
-                  await proton_api.getAllPublicKeys(
-                      email: email, internalOnly: 1);
+              final recipientAddressKeys =
+                  await addressKeyProvider.getAllPublicKeys(
+                email,
+                internalOnly: 1,
+              );
               bool verifySignature = false;
-              for (AllKeyAddressKey recipientAddressKey
-                  in recipientAddressKeys) {
+              for (final recipientAddressKey in recipientAddressKeys) {
                 verifySignature = FrbTransitionLayer.verifySignature(
                     privateKey: recipientAddressKey.publicKey,
                     message:
@@ -732,7 +731,7 @@ class SendViewModelImpl extends SendViewModel {
     }
     try {
       await loadBitcoinAddresses();
-      final String bitcoinAddress = bitcoinAddresses[email] ?? "";
+      final bitcoinAddress = bitcoinAddresses[email] ?? "";
       if (CommonHelper.isBitcoinAddress(bitcoinAddress)) {
         if (!selfBitcoinAddresses.contains(bitcoinAddress)) {
           if (bitcoinAddresses.values
@@ -740,9 +739,8 @@ class SendViewModelImpl extends SendViewModel {
                   .length <=
               1) {
             if (email.contains("@")) {
-              final List<AllKeyAddressKey> recipientAddressKeys =
-                  await proton_api.getAllPublicKeys(
-                      email: email, internalOnly: 0);
+              final recipientAddressKeys = await addressKeyProvider
+                  .getAllPublicKeys(email, internalOnly: 0);
               if (recipientAddressKeys.isNotEmpty) {
                 for (AllKeyAddressKey allKeyAddressKey
                     in recipientAddressKeys) {

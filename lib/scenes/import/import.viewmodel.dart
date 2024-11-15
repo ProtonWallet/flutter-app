@@ -18,11 +18,11 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
+import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/bdk_wallet/storage.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/common/network.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -69,6 +69,7 @@ class ImportViewModelImpl extends ImportViewModel {
   final String preInputWalletName;
   final ProtonApiService apiService;
   final WalletManager walletManager;
+  final ProtonEmailAddressClient protonEmailAddressClient;
 
   final CreateWalletBloc createWalletBloc;
 
@@ -79,6 +80,7 @@ class ImportViewModelImpl extends ImportViewModel {
     this.createWalletBloc,
     this.apiService,
     this.walletManager,
+    this.protonEmailAddressClient,
   );
 
   @override
@@ -97,7 +99,7 @@ class ImportViewModelImpl extends ImportViewModel {
       acceptTermsAndConditions = walletUserSettings.acceptTermsAndConditions;
     }
 
-    final List<ProtonAddress> addresses = await proton_api.getProtonAddress();
+    final addresses = await protonEmailAddressClient.getProtonAddress();
     protonAddresses =
         addresses.where((element) => element.status == 1).toList();
 

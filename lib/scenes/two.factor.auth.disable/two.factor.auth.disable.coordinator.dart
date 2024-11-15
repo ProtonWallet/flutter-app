@@ -20,7 +20,7 @@ class TwoFactorAuthDisableCoordinator extends Coordinator {
     final viewModel = TwoFactorAuthDisableViewModelImpl(
       this,
       apiServices.getProtonUsersApiClient(),
-      apiServices.getSettingsApiClient(),
+      apiServices.getProtonSettingsApiClient(),
       dataProvider.userDataProvider,
     );
     widget = TwoFactorAuthDisableView(

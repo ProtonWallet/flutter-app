@@ -3,9 +3,9 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../frb_generated.dart';
-import '../../srp/proofs.dart';
-import '../errors.dart';
+import '../../../frb_generated.dart';
+import '../../../srp/proofs.dart';
+import '../../errors.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 class FrbSrpClient {
@@ -13,8 +13,9 @@ class FrbSrpClient {
 
   static Future<String> computeKeyPassword(
           {required String password, required List<int> salt}) =>
-      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientComputeKeyPassword(
-          password: password, salt: salt);
+      RustLib.instance.api
+          .crateApiProtonWalletSrpSrpClientFrbSrpClientComputeKeyPassword(
+              password: password, salt: salt);
 
   static Future<SRPProofB64> generateProofs(
           {required String loginPassword,
@@ -22,22 +23,26 @@ class FrbSrpClient {
           required String salt,
           required String modulus,
           required String serverEphemeral}) =>
-      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientGenerateProofs(
-          loginPassword: loginPassword,
-          version: version,
-          salt: salt,
-          modulus: modulus,
-          serverEphemeral: serverEphemeral);
+      RustLib.instance.api
+          .crateApiProtonWalletSrpSrpClientFrbSrpClientGenerateProofs(
+              loginPassword: loginPassword,
+              version: version,
+              salt: salt,
+              modulus: modulus,
+              serverEphemeral: serverEphemeral);
 
   static Future<SRPVerifierB64> generateVerifer(
           {required String password,
           String? saltOpt,
           required String serverModulus}) =>
-      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientGenerateVerifer(
-          password: password, saltOpt: saltOpt, serverModulus: serverModulus);
+      RustLib.instance.api
+          .crateApiProtonWalletSrpSrpClientFrbSrpClientGenerateVerifer(
+              password: password,
+              saltOpt: saltOpt,
+              serverModulus: serverModulus);
 
   factory FrbSrpClient() =>
-      RustLib.instance.api.crateApiSrpSrpClientFrbSrpClientNew();
+      RustLib.instance.api.crateApiProtonWalletSrpSrpClientFrbSrpClientNew();
 
   @override
   int get hashCode => 0;
