@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
@@ -9,8 +10,10 @@ import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
+import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/proton.accounts/account.deletion.dart';
 import 'package:wallet/scenes/settings/settings.coordinator.dart';
 
 abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
@@ -36,6 +39,8 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   late ValueNotifier<int> stopgapValueNotifier;
 
   Future<void> clearLogs();
+
+  Future<void> deleteAccount();
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -124,5 +129,17 @@ class SettingsViewModelImpl extends SettingsViewModel {
     await LoggerService.clearLogs();
     logsFolderSize = await LoggerService.getLogsSize();
     sinkAddSafe();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    const clientChild = "web-account-lite";
+    final selector = await proton_api.forkSelector(clientChild: clientChild);
+    final checkoutUrl =
+        "https://account.proton.me/lite?action=delete-account#selector=$selector";
+    coordinator.showInBottomSheet(
+      AccountDeletionView(checkoutUrl: checkoutUrl),
+      enableDrag: false,
+    );
   }
 }
