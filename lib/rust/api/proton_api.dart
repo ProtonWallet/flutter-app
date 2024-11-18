@@ -93,4 +93,14 @@ Future<WalletTransaction> createWalletTransactions(
         transactionTime: transactionTime);
 
 /// proton_api.fork
-Future<ChildSession> fork() => RustLib.instance.api.crateApiProtonApiFork();
+Future<ChildSession> fork(
+        {required String appVersion,
+        required String userAgent,
+        required String clientChild}) =>
+    RustLib.instance.api.crateApiProtonApiFork(
+        appVersion: appVersion, userAgent: userAgent, clientChild: clientChild);
+
+/// proton_api.fork
+Future<String> forkSelector({required String clientChild}) =>
+    RustLib.instance.api
+        .crateApiProtonApiForkSelector(clientChild: clientChild);

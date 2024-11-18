@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sentry/sentry.dart';
@@ -108,10 +109,10 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : CupertinoSwitch(
-                    value: viewModel.receiveInviterNotification,
-                    activeColor: ProtonColors.protonBlue,
-                    onChanged: viewModel.updateReceiveInviterNotification,
-                  ),
+                          value: viewModel.receiveInviterNotification,
+                          activeColor: ProtonColors.protonBlue,
+                          onChanged: viewModel.updateReceiveInviterNotification,
+                        ),
                   onTap: () {},
                 ),
                 SettingsItem(
@@ -119,11 +120,11 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : CupertinoSwitch(
-                    value: viewModel.receiveEmailIntegrationNotification,
-                    activeColor: ProtonColors.protonBlue,
-                    onChanged: viewModel
-                        .updateReceiveEmailIntegrationNotification,
-                  ),
+                          value: viewModel.receiveEmailIntegrationNotification,
+                          activeColor: ProtonColors.protonBlue,
+                          onChanged: viewModel
+                              .updateReceiveEmailIntegrationNotification,
+                        ),
                   onTap: () {},
                 ),
                 SettingsItem(
@@ -131,20 +132,20 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
                       : Transform.translate(
-                    offset: const Offset(
-                      10,
-                      0,
-                    ),
-                    child: DropdownButtonV2(
-                      title: context.local.setting_custom_stopgap,
-                      width: 80,
-                      items: stopgapOptions,
-                      itemsText: stopgapOptions
-                          .map((v) => v.toString())
-                          .toList(),
-                      valueNotifier: viewModel.stopgapValueNotifier,
-                    ),
-                  ),
+                          offset: const Offset(
+                            10,
+                            0,
+                          ),
+                          child: DropdownButtonV2(
+                            title: context.local.setting_custom_stopgap,
+                            width: 80,
+                            items: stopgapOptions,
+                            itemsText: stopgapOptions
+                                .map((v) => v.toString())
+                                .toList(),
+                            valueNotifier: viewModel.stopgapValueNotifier,
+                          ),
+                        ),
                   onTap: () {},
                 ),
               ],
@@ -189,9 +190,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
               listener: (context, state) {
                 if (!state.isClearing && state.hasCache) {
                   CommonHelper.showSnackbar(
-                      context, S
-                      .of(context)
-                      .local_cache_clear);
+                      context, S.of(context).local_cache_clear);
                 }
               },
               child: BlocSelector<ClearCacheBloc, ClearCacheState, bool>(
@@ -288,7 +287,26 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
             /// Debug tools -- code will the Tree shaking in production
             if (kDebugMode) ...[
               buildDebugSection(viewModel),
-            ]
+            ],
+
+            /// account delete
+            if (defaultTargetPlatform == TargetPlatform.android ||
+                defaultTargetPlatform == TargetPlatform.iOS) ...[
+              SettingsGroup(
+                children: [
+                  SettingsItem(
+                    title: S.of(context).delete_account,
+                    color: ProtonColors.signalError,
+                    logo: Icon(
+                      Icons.delete_rounded,
+                      size: 20,
+                      color: ProtonColors.signalError,
+                    ),
+                    onTap: viewModel.deleteAccount,
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),
