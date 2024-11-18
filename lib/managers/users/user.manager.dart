@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
@@ -57,7 +58,12 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
   }
 
   Future<FlutterSession> getChildSession() async {
-    final childSession = await proton_api.fork();
+    final userAgent = UserAgent();
+    final childSession = await proton_api.fork(
+      appVersion: await userAgent.appVersion,
+      userAgent: await userAgent.ua,
+      clientChild: "flutter-wallet-lite",
+    );
     return FlutterSession(
         userId: userInfo.userId,
         userName: userInfo.userName,
