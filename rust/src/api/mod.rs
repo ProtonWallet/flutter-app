@@ -17,3 +17,4 @@ pub mod proton_wallet;
 // errors
 pub mod errors;
 pub mod logger;
+pub mod panic_hook;

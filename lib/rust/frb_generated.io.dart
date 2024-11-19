@@ -45,6 +45,7 @@ import 'api/bdk_wallet/wallet.dart';
 import 'api/errors.dart';
 import 'api/flutter_logger.dart';
 import 'api/logger.dart';
+import 'api/panic_hook.dart';
 import 'api/proton_api.dart';
 import 'api/proton_wallet/crypto/wallet_key.dart';
 import 'api/proton_wallet/crypto/wallet_key_helper.dart';
@@ -1131,6 +1132,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BdkTransaction
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           dynamic raw);
+
+  @protected
+  RustStreamSink<String> dco_decode_StreamSink_String_Sse(dynamic raw);
 
   @protected
   RustStreamSink<LogEntry> dco_decode_StreamSink_log_entry_Sse(dynamic raw);
@@ -2755,6 +2759,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BdkTransaction
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           SseDeserializer deserializer);
+
+  @protected
+  RustStreamSink<String> sse_decode_StreamSink_String_Sse(
+      SseDeserializer deserializer);
 
   @protected
   RustStreamSink<LogEntry> sse_decode_StreamSink_log_entry_Sse(
@@ -4519,6 +4527,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           BdkTransaction self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_StreamSink_String_Sse(
+      RustStreamSink<String> self, SseSerializer serializer);
 
   @protected
   void sse_encode_StreamSink_log_entry_Sse(
