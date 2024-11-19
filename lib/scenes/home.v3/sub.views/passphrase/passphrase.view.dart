@@ -57,7 +57,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
         Container(
             padding: const EdgeInsets.only(top: 20),
             margin:
-            const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
+                const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
             child: ButtonV6(
                 onPressed: () async {
                   final String passphrase =
@@ -69,6 +69,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
                   if (match) {
                     await viewModel.savePassphrase(passphrase);
                   }
+
                   /// reset passphrase text to empty
                   viewModel.walletRecoverPassphraseController.text = "";
                   if (context.mounted && match) {
@@ -79,8 +80,13 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
                 text: S.of(context).submit,
                 width: MediaQuery.of(context).size.width,
                 textStyle:
-                FontManager.body1Median(ProtonColors.backgroundSecondary),
+                    FontManager.body1Median(ProtonColors.backgroundSecondary),
                 height: 48)),
+
+        /// avoid softkeyboard overlay on page
+        SizedBox(
+          height: MediaQuery.of(context).viewInsets.bottom,
+        ),
       ]),
     );
   }
