@@ -19,6 +19,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
+import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/buy/buybitcoin.instruction.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -144,6 +145,14 @@ class HomeCoordinator extends Coordinator {
       },
     );
     showInBottomSheet(instructionView);
+  }
+
+  void showSetupBackup(String walletID) {
+    final view = SetupBackupCoordinator(walletID).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void showSecuritySetting() {
