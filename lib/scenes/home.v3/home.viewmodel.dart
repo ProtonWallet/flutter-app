@@ -719,6 +719,8 @@ class HomeViewModelImpl extends HomeViewModel {
           showWalletRecovery: showWalletRecovery,
           hadSetup2FA: hadSetup2FA,
         );
+      case NavID.setupBackup:
+        coordinator.showSetupBackup(selectedWallet?.walletID ?? "");
       default:
         break;
     }
