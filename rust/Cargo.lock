@@ -2687,7 +2687,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -2853,9 +2853,9 @@ dependencies = [
 
 [[package]]
 name = "muon"
-version = "0.11.0"
+version = "0.12.0"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "809c2d4d016eb3bd07a8c8c50e3f7084d02dd7b7c49e4b5b4c2c8f43cae82f45"
+checksum = "45139245ed80fdb795b8cab0254bf0260ee815304b046869dd4a95535088559b"
 dependencies = [
  "muon-impl",
  "muon-proc",
@@ -2863,9 +2863,9 @@ dependencies = [
 
 [[package]]
 name = "muon-impl"
-version = "0.9.1"
+version = "0.10.2"
 source = "sparse+https://rust.gitlab-pages.protontech.ch/shared/registry/index/"
-checksum = "9041aff34482264d57f0b57b714ad39e6261bc547af07229ed2ba67058a33918"
+checksum = "02275929925874d5df6343fcf3d0b4064bdba61c142158bc1122fd3d9b92cef2"
 dependencies = [
  "async-channel 2.3.1",
  "async-executor",
@@ -5090,7 +5090,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
