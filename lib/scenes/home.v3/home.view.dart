@@ -44,8 +44,6 @@ import 'package:wallet/scenes/home.v3/transaction.list.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
 import 'package:wallet/theme/theme.font.dart';
 
-const double drawerMaxWidth = 400;
-
 class HomeView extends ViewBase<HomeViewModel> {
   const HomeView(HomeViewModel viewModel, {super.locker})
       : super(viewModel, const Key("HomeView"));

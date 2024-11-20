@@ -24,6 +24,7 @@ const int driftDatabaseVersion = 4;
 
 // desktop
 const double maxDeskTopSheetWidth = 600.0;
+const double drawerMaxWidth = 400;
 
 const String latestAddressIndex = "bitcoinAddress.latest";
 const String hidedBalanceString = "****";

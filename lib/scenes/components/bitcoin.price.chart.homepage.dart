@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
@@ -113,60 +114,58 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
     return SizedBox(
       height: 40,
       child: Row(children: [
-        Expanded(
-          child: Column(children: [
-            Container(
-              width: Responsive.isDesktop(context)
-                  ? MediaQuery.of(context).size.width * 2 / 3 - 300
-                  : null,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              height: 40,
-              child: isLoading
-                  ? SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: ProtonColors.protonBlue,
-                        ),
-                      ),
-                    )
-                  : LineChart(
-                      LineChartData(
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: dataPoints,
-                            dotData: const FlDotData(
-                              show: false,
-                            ),
-                            color: widget.priceChange >= 0
-                                ? ProtonColors.signalSuccess
-                                : ProtonColors.signalError,
-                          ),
-                        ],
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        lineTouchData: const LineTouchData(
-                          enabled: false,
-                        ),
-                        gridData: const FlGridData(
-                          drawVerticalLine: false,
-                          drawHorizontalLine: false,
-                        ),
-                        titlesData: const FlTitlesData(
-                          leftTitles: AxisTitles(),
-                          bottomTitles: AxisTitles(),
-                          rightTitles: AxisTitles(),
-                          topTitles: AxisTitles(),
-                        ),
+        Column(children: [
+          Container(
+            width: Responsive.isDesktop(context)
+                ? MediaQuery.of(context).size.width - drawerMaxWidth - 240
+                : MediaQuery.of(context).size.width - 240,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            height: 40,
+            child: isLoading
+                ? SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: ProtonColors.protonBlue,
                       ),
                     ),
-            ),
-          ]),
-        ),
+                  )
+                : LineChart(
+                    LineChartData(
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: dataPoints,
+                          dotData: const FlDotData(
+                            show: false,
+                          ),
+                          color: widget.priceChange >= 0
+                              ? ProtonColors.signalSuccess
+                              : ProtonColors.signalError,
+                        ),
+                      ],
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      lineTouchData: const LineTouchData(
+                        enabled: false,
+                      ),
+                      gridData: const FlGridData(
+                        drawVerticalLine: false,
+                        drawHorizontalLine: false,
+                      ),
+                      titlesData: const FlTitlesData(
+                        leftTitles: AxisTitles(),
+                        bottomTitles: AxisTitles(),
+                        rightTitles: AxisTitles(),
+                        topTitles: AxisTitles(),
+                      ),
+                    ),
+                  ),
+          ),
+        ]),
         Icon(
           Icons.keyboard_arrow_up_rounded,
           size: 24,
