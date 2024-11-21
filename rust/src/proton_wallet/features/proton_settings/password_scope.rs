@@ -52,7 +52,7 @@ impl PasswordScope for PasswordScopeImpl {
 
         // Check if the server proofs are valid
         let is_valid = srp_proof.expected_server_proof == server_proofs;
-        log::info!("Password server proofs valid: {}", is_valid);
+        tracing::info!("Password server proofs valid: {}", is_valid);
         if !is_valid {
             return Err(FeaturesError::InvalidSrpServerProofs);
         }

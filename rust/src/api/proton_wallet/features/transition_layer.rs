@@ -3,7 +3,7 @@ use std::thread;
 
 use andromeda_api::{proton_users::ProtonUserKey, wallet::ApiWalletKey};
 use flutter_rust_bridge::frb;
-use log::info;
+use tracing::info;
 use proton_crypto::{
     crypto::{
         DataEncoding, PGPProvider, PGPProviderSync, Signer, SignerSync, UnixTimestamp, Verifier,

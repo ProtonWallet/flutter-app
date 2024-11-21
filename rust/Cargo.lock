@@ -1724,16 +1724,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "flutter_logger"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a3d407fd7ed76065e3d7ddbc574af50082d4301dcbf19000badc3c4367fdbd0"
-dependencies = [
- "log",
- "once_cell",
-]
-
-[[package]]
 name = "flutter_rust_bridge"
 version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2687,7 +2677,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -3670,14 +3660,12 @@ dependencies = [
  "base64 0.22.1",
  "chrono",
  "env_logger 0.11.5",
- "flutter_logger",
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
  "futures",
  "getrandom",
  "hyper",
  "lazy_static",
- "log",
  "mockall",
  "openssl",
  "proton-crypto",
@@ -3693,7 +3681,6 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-appender",
- "tracing-log",
  "tracing-subscriber",
  "zeroize",
 ]
@@ -5090,7 +5077,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

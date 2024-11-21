@@ -2,7 +2,7 @@ use andromeda_api::{
     proton_settings::{ProtonSettingsClientExt, SetTwoFaTOTPRequestBody, SetTwoFaTOTPResponseBody},
     proton_users::ProtonUserSettings,
 };
-use log::info;
+use tracing::info;
 use std::sync::Arc;
 
 use super::{password_scope::PasswordScope, Result};

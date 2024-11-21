@@ -5,7 +5,7 @@ pub mod init;
 pub mod bdk_wallet;
 
 // logger
-pub mod flutter_logger;
+// pub mod flutter_logger;
 
 // proton api
 pub mod api_service;

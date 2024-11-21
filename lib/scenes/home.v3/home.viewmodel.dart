@@ -401,6 +401,8 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> loadData() async {
+    setupLogger();
+
     /// init app state listener
     await initAppStateSubscription();
 
@@ -775,5 +777,19 @@ class HomeViewModelImpl extends HomeViewModel {
         .setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
+  }
+
+  Future<void> setupLogger() async {
+    try {
+      final unleash = dataProviderManager.unleashDataProvider;
+      await unleash.start();
+      if (unleash.isTraceLoggerEnabled()) {
+        await LoggerService.initDartLogger();
+        await LoggerService.initRustLogger();
+      }
+    } catch (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
+      logger.e("setupLogger error: $e stacktrace: $stacktrace");
+    }
   }
 }

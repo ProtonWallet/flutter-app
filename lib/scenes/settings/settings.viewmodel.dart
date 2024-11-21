@@ -6,6 +6,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/manager.factory.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 // import 'package:wallet/managers/proton.wallet.manager.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -41,12 +42,15 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   Future<void> clearLogs();
 
   Future<void> deleteAccount();
+
+  bool isTraceLoggerEnabled();
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
   final UserManager userManager;
   final NativeViewChannel nativeViewChannel;
   final UserSettingsDataProvider userSettingsDataProvider;
+  final UnleashDataProvider unleashDataProvider;
   final ManagerFactory serviceManager;
 
   SettingsViewModelImpl(
@@ -55,6 +59,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
     this.userManager,
     this.nativeViewChannel,
     this.userSettingsDataProvider,
+    this.unleashDataProvider,
     this.serviceManager,
   );
 
@@ -141,5 +146,10 @@ class SettingsViewModelImpl extends SettingsViewModel {
       AccountDeletionView(checkoutUrl: checkoutUrl),
       enableDrag: false,
     );
+  }
+
+  @override
+  bool isTraceLoggerEnabled() {
+    return unleashDataProvider.isTraceLoggerEnabled();
   }
 }

@@ -38,6 +38,7 @@ class SettingsCoordinator extends Coordinator {
       userManager,
       nativeChannel,
       dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.unleashDataProvider,
       serviceManager,
     );
     widget = SettingsView(
