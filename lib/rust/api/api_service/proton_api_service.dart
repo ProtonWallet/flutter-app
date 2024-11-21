@@ -26,6 +26,7 @@ import 'proton_settings_client.dart';
 import 'proton_users_client.dart';
 import 'settings_client.dart';
 import 'transaction_client.dart';
+import 'unleash_client.dart';
 import 'wallet_auth_store.dart';
 import 'wallet_client.dart';
 
@@ -66,6 +67,8 @@ abstract class ProtonApiService implements RustOpaqueInterface {
   SettingsClient getSettingsClient();
 
   TransactionClient getTransactionClient();
+
+  FrbUnleashClient getUnleashClient();
 
   WalletClient getWalletClient();
 

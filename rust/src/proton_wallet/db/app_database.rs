@@ -1,7 +1,7 @@
-use log::info;
 use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use tracing::info;
 
 use super::{
     dao::{

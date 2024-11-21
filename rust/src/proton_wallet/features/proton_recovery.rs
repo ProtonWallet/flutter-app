@@ -99,11 +99,11 @@ impl ProtonRecovery {
 
         // Send request to enable recovery
         let recovery_code = self.proton_settings_api.set_mnemonic_settings(req).await?;
-        log::info!("EnableRecovery response code: {}", recovery_code);
+        tracing::info!("EnableRecovery response code: {}", recovery_code);
 
         // Lock sensitive settings after enabling recovery
         let lock_code = self.proton_users_api.lock_sensitive_settings().await?;
-        log::info!("Lock sensitive settings response code: {}", lock_code);
+        tracing::info!("Lock sensitive settings response code: {}", lock_code);
 
         if lock_code != 1000 {
             return Err(FeaturesError::LockSensitiveSettings(lock_code));

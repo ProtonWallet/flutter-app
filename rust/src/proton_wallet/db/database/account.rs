@@ -1,7 +1,7 @@
-use log::error;
 use rusqlite::Connection;
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use tracing::error;
 
 use super::{database::BaseDatabase, table_names::TableName, Result};
 

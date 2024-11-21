@@ -2,7 +2,7 @@ use andromeda_bitcoin::{
     storage::{ChangeSet, WalletPersister, WalletPersisterConnector},
     Connection,
 };
-use log::info;
+use tracing::info;
 use rusqlite::Error;
 use std::sync::Arc;
 use tokio::sync::Mutex;
