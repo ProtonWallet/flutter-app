@@ -295,7 +295,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
               SettingsGroup(
                 children: [
                   SettingsItem(
-                    title: S.of(context).delete_account,
+                    title: S.of(context).delete_proton_account,
                     color: ProtonColors.signalError,
                     logo: Icon(
                       Icons.delete_rounded,
