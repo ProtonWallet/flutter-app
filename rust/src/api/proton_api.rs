@@ -6,8 +6,8 @@ use andromeda_api::{
     ChildSession,
 };
 use lazy_static::lazy_static;
-use log::info;
 use std::sync::{Arc, RwLock};
+use tracing::info;
 
 use crate::{
     api::api_service::proton_api_service::ProtonAPIService,

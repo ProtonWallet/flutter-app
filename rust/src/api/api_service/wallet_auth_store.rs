@@ -1,6 +1,6 @@
 use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
-use log::info;
+use tracing::info;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;

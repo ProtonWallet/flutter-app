@@ -4,7 +4,6 @@ import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/env.var.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/rust/api/flutter_logger.dart';
 import 'package:wallet/rust/api/panic_hook.dart';
 import 'package:wallet/rust/frb_generated.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';

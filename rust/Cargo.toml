@@ -33,7 +33,6 @@ async-trait = { version = "0.1.66" }
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tracing-log = "0.2"
 
 ## old
 thiserror = "1.0.61"
@@ -46,8 +45,8 @@ serde_json = "1.0.96"
 lazy_static = "1.4.0"
 chrono = "0.4.38"
 ## flutter rust logger
-flutter_logger = { version = "0.6.1", features = ["panic"] }
-log = "0.4.19"
+# flutter_logger = { version = "0.6.1", features = ["panic"] }
+# log = "0.4.19"
 ### proton dependencies
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin", features = [

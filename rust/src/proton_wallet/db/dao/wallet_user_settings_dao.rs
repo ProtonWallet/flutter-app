@@ -1,7 +1,7 @@
-use log::error;
 use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use tracing::error;
 
 use super::Result;
 use crate::proton_wallet::db::{

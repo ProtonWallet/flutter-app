@@ -1,5 +1,5 @@
 use flutter_rust_bridge::frb;
-use log::info;
+use tracing::info;
 
 use crate::{
     proton_wallet::db::{

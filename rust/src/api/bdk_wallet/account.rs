@@ -4,7 +4,7 @@ use andromeda_bitcoin::{
     account::Account, transactions::Pagination, utils::SortOrder, SignOptions,
 };
 use andromeda_common::{Network, ScriptType};
-use log::debug;
+use tracing::debug;
 
 use crate::{
     common::address_info::FrbAddressInfo,

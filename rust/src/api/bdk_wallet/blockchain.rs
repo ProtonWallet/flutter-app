@@ -2,7 +2,7 @@ use andromeda_api::transaction::{BroadcastMessage, ExchangeRateOrTransactionTime
 use andromeda_bitcoin::blockchain_client::BlockchainClient;
 use chrono::Utc;
 use flutter_rust_bridge::frb;
-use log::info;
+use tracing::info;
 use std::{collections::HashMap, ops::Deref, sync::Arc};
 
 use super::{account::FrbAccount, psbt::FrbPsbt};

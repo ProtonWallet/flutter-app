@@ -23,7 +23,7 @@ pub use andromeda_api::wallet::CreateWalletAccountRequestBody;
 #[cfg(target_os = "android")]
 use {
     andromeda_api::{jboolean, JClass, JNIEnv, JObject},
-    log::info,
+    tracing::info,
 };
 
 #[cfg(target_os = "android")]

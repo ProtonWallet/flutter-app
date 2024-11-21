@@ -15,5 +15,6 @@ pub mod proton_settings_client;
 pub mod proton_users_client;
 pub mod settings_client;
 pub mod transaction_client;
+pub mod unleash_client;
 pub mod wallet_auth_store;
 pub mod wallet_client;
