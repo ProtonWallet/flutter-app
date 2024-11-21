@@ -542,5 +542,5 @@
   "rbf_send": "Increase fee and resend",
   "help_center_clear_caches": "Clear local caches",
   "local_cache_clear": "Cleared local caches",
-  "delete_account": "Delete account"
+  "delete_proton_account": "Delete account"
 }
