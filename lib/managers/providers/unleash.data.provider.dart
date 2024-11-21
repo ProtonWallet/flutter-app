@@ -1,82 +1,101 @@
-// import 'dart:async';
-//
-// import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart';
-// import 'package:wallet/constants/env.dart';
-// import 'package:wallet/helper/logger.dart';
-// import 'package:wallet/managers/providers/data.provider.manager.dart';
-//
-// class UnleashDataProvider extends DataProvider {
-//   late UnleashClient unleashClient;
-//   final ApiEnv apiEnv;
-//   final String userAgent;
-//   final String appVersion;
-//   final String uid;
-//   final String accessToken;
-//
-//   UnleashDataProvider(
-//     this.apiEnv,
-//     this.appVersion,
-//     this.userAgent,
-//     this.uid,
-//     this.accessToken,
-//   ) {
-//     // live example: 'https://wallet.proton.me/api/feature/v2/frontend'
-//     final hostApiPath = apiEnv.apiPath;
-//     const appName = 'ProtonWallet';
-//     final duration = const Duration(minutes: 3).inSeconds;
-//     unleashClient = UnleashClient(
-//         url: Uri.parse('$hostApiPath/feature/v2/frontend'),
-//         clientKey: '-',
-//         appName: appName,
-//         refreshInterval: duration,
-//         disableRefresh: true,
-//         disableMetrics: true,
-//         customHeaders: {
-//           "User-Agent": userAgent,
-//           "X-Pm-Appversion": appVersion,
-//           "X-Pm-Uid": uid,
-//           "Authorization": accessToken,
-//         });
-//
-//     unleashClient.start();
-//     unleashClient.on('ready', (value) {
-//       if (unleashClient.isEnabled('WalletFirstFlag')) {
-//         logger.i('WalletFirstFlag is enabled');
-//       } else {
-//         logger.i('WalletFirstFlag is disabled');
-//       }
-//     });
-//
-//     unleashClient.on('error', (error) {
-//       logger.i('UnleashClient Error: $error');
-//     });
-//
-//     unleashClient.on('initialized', (value) {
-//       logger.i('UnleashClient initialized: $value');
-//     });
-//
-//     unleashClient.on('update', (value) {
-//       logger.i('UnleashClient update: $value');
-//     });
-//
-//     unleashClient.on('impression', (value) {
-//       logger.i('UnleashClient impression: $value');
-//     });
-//   }
-//
-//   Future<void> getTest() async {
-//     if (unleashClient.isEnabled('WalletFirstFlag')) {
-//       logger.i('proxy.demo is enabled');
-//     } else {
-//       logger.i('proxy.demo is disabled');
-//     }
-//   }
-//
-//   @override
-//   Future<void> clear() async {
-//     unleashClient.stop();
-//   }
-//
-//   @override
-//   Future<void> reload() async {}
-// }
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart';
+import 'package:wallet/constants/env.dart';
+import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/rust/api/api_service/unleash_client.dart';
+
+class UnleashDataProvider extends DataProvider {
+  late UnleashClient unleashClient;
+  final FrbUnleashClient frbUnleashClient;
+  final ApiEnv apiEnv;
+  final duration = const Duration(minutes: 2).inSeconds;
+
+  Timer? timer;
+  UnleashDataProvider(
+    this.apiEnv,
+    this.frbUnleashClient,
+  ) {
+    final hostApiPath = apiEnv.apiPath;
+    const appName = 'ProtonWallet';
+    unleashClient = UnleashClient(
+        url: Uri.parse('$hostApiPath/feature/v2/frontend'),
+        clientKey: '-',
+        appName: appName,
+        refreshInterval: duration,
+        disableMetrics: true,
+        disableRefresh: true,
+        fetcher: (http.Request request) async {
+          final response = await frbUnleashClient.fetchToggles();
+          return http.Response.bytes(
+            response.body.toList(),
+            response.statusCode,
+          );
+        });
+
+    unleashClient.on('ready', (value) {
+      if (unleashClient.isEnabled('WalletFirstFlag')) {
+        logger.i('WalletFirstFlag is enabled');
+      } else {
+        logger.i('WalletFirstFlag is disabled');
+      }
+    });
+
+    unleashClient.on('error', (error) {
+      logger.e('UnleashClient Error: $error');
+    });
+
+    unleashClient.on('initialized', (value) {
+      logger.i('UnleashClient initialized: $value');
+    });
+
+    unleashClient.on('update', (value) {
+      logger.i('UnleashClient update: $value');
+    });
+
+    unleashClient.on('impression', (value) {
+      logger.i('UnleashClient impression: $value');
+    });
+  }
+
+  Future<void> start() async {
+    await unleashClient.start();
+    if (timer == null || timer?.isActive == false) {
+      timer = Timer.periodic(Duration(seconds: duration), (timer) {
+        start();
+      });
+    }
+  }
+
+  Future<void> getTest() async {
+    if (unleashClient.isEnabled('WalletFirstFlag')) {
+      logger.i('proxy.demo is enabled');
+    } else {
+      logger.i('proxy.demo is disabled');
+    }
+  }
+
+  @override
+  Future<void> clear() async {
+    final Timer? timer = this.timer;
+    if (timer != null && timer.isActive) {
+      timer.cancel();
+      this.timer = null;
+    }
+    unleashClient.stop();
+  }
+
+  @override
+  Future<void> reload() async {}
+
+  bool isTraceLoggerEnabled() {
+    if (kDebugMode) {
+      return true;
+    }
+    final enableTrace = unleashClient.isEnabled('WalletFlutterLogInternal');
+    return enableTrace;
+  }
+}

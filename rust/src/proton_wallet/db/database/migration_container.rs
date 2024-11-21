@@ -1,5 +1,5 @@
-use log::{info, warn};
 use std::collections::BTreeMap;
+use tracing::{info, warn};
 
 use super::{
     migration::{Migration, SimpleMigration},

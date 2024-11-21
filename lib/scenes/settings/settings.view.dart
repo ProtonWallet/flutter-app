@@ -151,7 +151,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
               ],
             ),
 
-            if (kDebugMode) ...[
+            if (viewModel.isTraceLoggerEnabled()) ...[
               /// Section: Logs
               const SizedBox(height: 12),
               const SectionHeader(title: 'Logs'),

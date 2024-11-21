@@ -5,7 +5,7 @@ use andromeda_api::{
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flutter_rust_bridge::frb;
-use log::info;
+use tracing::info;
 use std::sync::Arc;
 
 use super::{
@@ -17,7 +17,8 @@ use super::{
     proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
     proton_settings_client::ProtonSettingsClient, proton_users_client::ProtonUsersClient,
     settings_client::SettingsClient, transaction_client::TransactionClient,
-    wallet_auth_store::ProtonWalletAuthStore, wallet_client::WalletClient,
+    unleash_client::FrbUnleashClient, wallet_auth_store::ProtonWalletAuthStore,
+    wallet_client::WalletClient,
 };
 use crate::{
     api::proton_api::{logout, set_proton_api},
@@ -229,6 +230,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_proton_settings_client(&self) -> ProtonSettingsClient {
         ProtonSettingsClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_unleash_client(&self) -> FrbUnleashClient {
+        FrbUnleashClient::new(&self)
     }
 }
 

@@ -20,6 +20,7 @@ import 'api/api_service/proton_settings_client.dart';
 import 'api/api_service/proton_users_client.dart';
 import 'api/api_service/settings_client.dart';
 import 'api/api_service/transaction_client.dart';
+import 'api/api_service/unleash_client.dart';
 import 'api/api_service/wallet_auth_store.dart';
 import 'api/api_service/wallet_client.dart';
 import 'api/bdk_wallet/account.dart';
@@ -43,7 +44,6 @@ import 'api/bdk_wallet/transaction_details_txop.dart';
 import 'api/bdk_wallet/transactions.dart';
 import 'api/bdk_wallet/wallet.dart';
 import 'api/errors.dart';
-import 'api/flutter_logger.dart';
 import 'api/logger.dart';
 import 'api/panic_hook.dart';
 import 'api/proton_api.dart';
@@ -83,6 +83,7 @@ import 'proton_api/payment_gateway.dart';
 import 'proton_api/price_graph.dart';
 import 'proton_api/proton_address.dart';
 import 'proton_api/proton_users.dart';
+import 'proton_api/unleash.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
 import 'proton_api/wallet_account.dart';
@@ -226,6 +227,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_FrbTxOutPtr => wire
       ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOutPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbUnleashClientPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClientPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_FrbUnlockedWalletKeyPtr => wire
@@ -460,6 +465,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbTxOut
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut(
+          dynamic raw);
+
+  @protected
+  FrbUnleashClient
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
           dynamic raw);
 
   @protected
@@ -740,6 +750,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbTxOut
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut(
+          dynamic raw);
+
+  @protected
+  FrbUnleashClient
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
           dynamic raw);
 
   @protected
@@ -1049,6 +1064,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
+  FrbUnleashClient
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          dynamic raw);
+
+  @protected
   FrbUnlockedWalletKey
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey(
           dynamic raw);
@@ -1135,9 +1155,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RustStreamSink<String> dco_decode_StreamSink_String_Sse(dynamic raw);
-
-  @protected
-  RustStreamSink<LogEntry> dco_decode_StreamSink_log_entry_Sse(dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -1444,9 +1461,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   KeychainKind dco_decode_keychain_kind(dynamic raw);
 
   @protected
-  Level dco_decode_level(dynamic raw);
-
-  @protected
   List<ApiTx>
       dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
           dynamic raw);
@@ -1624,9 +1638,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LockedWalletKey dco_decode_locked_wallet_key(dynamic raw);
-
-  @protected
-  LogEntry dco_decode_log_entry(dynamic raw);
 
   @protected
   MigratedWallet dco_decode_migrated_wallet(dynamic raw);
@@ -1915,6 +1926,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  UnleashResponse dco_decode_unleash_response(dynamic raw);
+
+  @protected
   UpdateMnemonicSettingsRequestBody
       dco_decode_update_mnemonic_settings_request_body(dynamic raw);
 
@@ -2119,6 +2133,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbTxOut
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbUnleashClient
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
           SseDeserializer deserializer);
 
   @protected
@@ -2402,6 +2421,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  FrbUnleashClient
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          SseDeserializer deserializer);
+
+  @protected
   FrbUnlockedWalletKey
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey(
           SseDeserializer deserializer);
@@ -2676,6 +2700,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  FrbUnleashClient
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          SseDeserializer deserializer);
+
+  @protected
   FrbUnlockedWalletKey
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey(
           SseDeserializer deserializer);
@@ -2762,10 +2791,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RustStreamSink<String> sse_decode_StreamSink_String_Sse(
-      SseDeserializer deserializer);
-
-  @protected
-  RustStreamSink<LogEntry> sse_decode_StreamSink_log_entry_Sse(
       SseDeserializer deserializer);
 
   @protected
@@ -3115,9 +3140,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   KeychainKind sse_decode_keychain_kind(SseDeserializer deserializer);
 
   @protected
-  Level sse_decode_level(SseDeserializer deserializer);
-
-  @protected
   List<ApiTx>
       sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
           SseDeserializer deserializer);
@@ -3323,9 +3345,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LockedWalletKey sse_decode_locked_wallet_key(SseDeserializer deserializer);
-
-  @protected
-  LogEntry sse_decode_log_entry(SseDeserializer deserializer);
 
   @protected
   MigratedWallet sse_decode_migrated_wallet(SseDeserializer deserializer);
@@ -3648,6 +3667,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
+  UnleashResponse sse_decode_unleash_response(SseDeserializer deserializer);
+
+  @protected
   UpdateMnemonicSettingsRequestBody
       sse_decode_update_mnemonic_settings_request_body(
           SseDeserializer deserializer);
@@ -3859,6 +3881,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut(
           FrbTxOut self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          FrbUnleashClient self, SseSerializer serializer);
 
   @protected
   void
@@ -4139,6 +4166,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut(
           FrbTxOut self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          FrbUnleashClient self, SseSerializer serializer);
 
   @protected
   void
@@ -4445,6 +4477,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+          FrbUnleashClient self, SseSerializer serializer);
+
+  @protected
+  void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnlockedWalletKey(
           FrbUnlockedWalletKey self, SseSerializer serializer);
 
@@ -4531,10 +4568,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_StreamSink_String_Sse(
       RustStreamSink<String> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_StreamSink_log_entry_Sse(
-      RustStreamSink<LogEntry> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -4898,9 +4931,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_keychain_kind(KeychainKind self, SseSerializer serializer);
 
   @protected
-  void sse_encode_level(Level self, SseSerializer serializer);
-
-  @protected
   void
       sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiTx(
           List<ApiTx> self, SseSerializer serializer);
@@ -5111,9 +5141,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_locked_wallet_key(
       LockedWalletKey self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_log_entry(LogEntry self, SseSerializer serializer);
 
   @protected
   void sse_encode_migrated_wallet(
@@ -5442,6 +5469,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_unleash_response(
+      UnleashResponse self, SseSerializer serializer);
 
   @protected
   void sse_encode_update_mnemonic_settings_request_body(
@@ -6556,6 +6587,38 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOut =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTxOutPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClientPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClientPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClient =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbUnleashClientPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

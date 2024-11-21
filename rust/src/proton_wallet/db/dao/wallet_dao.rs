@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use log::error;
+use tracing::error;
 use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
