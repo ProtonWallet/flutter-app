@@ -139,10 +139,10 @@ mod test {
         },
         bdk_wallet::{blockchain::FrbBlockchainClient, storage::WalletMobileConnectorFactory},
     };
+    use crate::mocks::constant::tests::{TEST_MNEMONIC_1, TEST_MNEMONIC_2};
     use andromeda_common::{Network, ScriptType};
     use std::time::Instant;
     use std::{env, sync::Arc};
-
     #[tokio::test]
     #[ignore]
     async fn test_wallet_import_sync() {
@@ -151,13 +151,7 @@ mod test {
 
         let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
         let network = Network::Testnet;
-        let bip39_mnemonic =
-                // "deputy hollow damp frozen caught embark ostrich heart verify warrior blame enough"
-                // "certain sense kiss guide crumble hint transfer crime much stereo warm coral"
-                // "category law logic swear involve banner pink room diesel fragile sunset remove whale lounge captain code hobby lesson material current moment funny vast fade"
-                // "elbow guide topple state museum project goat split afraid rebuild hour destroy"
-                "elbow guide topple state museum project goat split afraid rebuild hour destroy"
-                .to_string();
+        let bip39_mnemonic = TEST_MNEMONIC_1.to_string();
 
         let mut frb_wallet = FrbWallet::new(network, bip39_mnemonic, None).unwrap();
 
@@ -263,8 +257,7 @@ mod test {
 
         let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
         let network = Network::Bitcoin;
-        let bip39_mnemonic =
-            "shoe foot noise erode merit good gesture wolf boring build trim zero".to_string();
+        let bip39_mnemonic = TEST_MNEMONIC_2.to_string();
 
         let mut frb_wallet = FrbWallet::new(network, bip39_mnemonic, None).unwrap();
 
