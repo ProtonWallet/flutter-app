@@ -114,6 +114,18 @@ class FrbTransitionLayer {
               encSender: encSender,
               encBody: encBody);
 
+  static String decryptTransactionId(
+          {required List<ProtonUserKey> userKeys,
+          required List<ProtonAddressKey> addrKeys,
+          required String userKeyPassword,
+          required String encTransactionId}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerDecryptTransactionId(
+              userKeys: userKeys,
+              addrKeys: addrKeys,
+              userKeyPassword: userKeyPassword,
+              encTransactionId: encTransactionId);
+
   static List<FrbTLTransactionID> decryptTransactionIds(
           {required List<ProtonUserKey> userKeys,
           required List<ProtonAddressKey> addrKeys,
