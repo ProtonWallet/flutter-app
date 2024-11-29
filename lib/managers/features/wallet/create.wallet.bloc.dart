@@ -60,13 +60,6 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
   ) async {
     /// Generate a wallet secret key
     final unlockedWalletKey = FrbWalletKeyHelper.generateSecretKey();
-    // final Uint8List entropy = Uint8List.fromList(unlockedWalletKey.toEntropy());
-
-    // /// get first user key (primary user key)
-    // final primaryUserKey = await userManager.getPrimaryKey();
-    // final String userPrivateKey = primaryUserKey.privateKey;
-    // final String userKeyID = primaryUserKey.keyID;
-    // final String passphrase = primaryUserKey.passphrase;
 
     /// encrypt mnemonic with wallet key
     final encryptedMnemonic = FrbWalletKeyHelper.encrypt(

@@ -3,7 +3,6 @@ use std::thread;
 
 use andromeda_api::{proton_users::ProtonUserKey, wallet::ApiWalletKey};
 use flutter_rust_bridge::frb;
-use tracing::info;
 use proton_crypto::{
     crypto::{
         DataEncoding, PGPProvider, PGPProviderSync, Signer, SignerSync, UnixTimestamp, Verifier,
@@ -15,6 +14,7 @@ use proton_crypto_account::{
     keys::{AddressKeys, ArmoredPrivateKey, UserKeys},
     salts::KeySecret,
 };
+use tracing::info;
 
 use crate::{
     api::proton_wallet::crypto::wallet_key::{FrbLockedWalletKey, FrbUnlockedWalletKey},
@@ -96,6 +96,38 @@ impl FrbTransitionLayer {
                 })
                 .collect();
             Ok(transaction_ids)
+        });
+        // Wait for the thread to finish and return its result
+        handle
+            .join()
+            .unwrap_or_else(|e| Err(BridgeError::Generic(format!("Thread error: {:?}", e))))
+    }
+
+    #[frb(sync)]
+    pub fn decrypt_transaction_id(
+        user_keys: Vec<ProtonUserKey>,
+        addr_keys: Vec<ProtonAddressKey>,
+        user_key_password: String,
+        enc_transaction_id: String,
+    ) -> Result<String, BridgeError> {
+        let handle = thread::spawn(move || {
+            let provider = new_pgp_provider();
+            let user_key_secret = KeySecret::new(user_key_password.into_bytes());
+
+            let crypto_user_keys = UserKeysWrap::new(user_keys).into();
+            let crypto_addr_keys = AddressKeysWrap::new(addr_keys.into()).into();
+            let locked_private_keys =
+                LockedPrivateKeys::from_keys(crypto_user_keys, crypto_addr_keys);
+            let unlocked_private_keys =
+                locked_private_keys.unlock_with(&provider, &user_key_secret);
+
+            let decrypted_id = EncryptedWalletTransactionID::from(enc_transaction_id)
+                .decrypt_with(&provider, &unlocked_private_keys)
+                .unwrap_or(WalletTransactionID::default())
+                .as_utf8_string()
+                .unwrap_or_default();
+
+            Ok(decrypted_id)
         });
         // Wait for the thread to finish and return its result
         handle
