@@ -1055,8 +1055,9 @@ class SendViewModelImpl extends SendViewModel {
       if (!isAnonymous) {
         emailAddressID = userAddressValueNotifier.value.id;
       } else {
-        // TODO(fix): check if we need default one
-        emailAddressID = addressKeys.firstOrNull?.id;
+        /// select default address (first address for anonymous sender)
+        final addresses = await addressKeyProvider.getAddresses();
+        emailAddressID = addresses.firstOrNull?.id;
       }
       String? encryptedLabel;
       final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
