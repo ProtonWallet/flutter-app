@@ -86,28 +86,22 @@ class TransactionHistoryItem extends StatelessWidget {
                     ]),
                 if (content.isNotEmpty || memo != null)
                   GestureDetector(
-                      onLongPress: () {
-                        Clipboard.setData(ClipboardData(
-                                text:
-                                    content.isNotEmpty ? content : memo ?? ""))
-                            .then((_) {
-                          if (context.mounted) {
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).copied);
-                          }
-                        });
-                      },
-                      child: Row(children: [
-                        Expanded(
-                            child: Text(
-                                content.isNotEmpty ? content : memo ?? "",
-                                style: FontManager.body2Median(
-                                    contentColor != null
-                                        ? contentColor!
-                                        : ProtonColors.textNorm),
-                                softWrap: true)),
-                        const SizedBox(width: 2),
-                      ])),
+                    onLongPress: () {
+                      Clipboard.setData(ClipboardData(
+                              text: content.isNotEmpty ? content : memo ?? ""))
+                          .then((_) {
+                        if (context.mounted) {
+                          CommonHelper.showSnackbar(
+                              context, S.of(context).copied);
+                        }
+                      });
+                    },
+                    child: Text(content.isNotEmpty ? content : memo ?? "",
+                        style: FontManager.body2Median(contentColor != null
+                            ? contentColor!
+                            : ProtonColors.textNorm),
+                        softWrap: true),
+                  ),
                 if (memo != null && content.isNotEmpty)
                   GestureDetector(
                       onLongPress: () {

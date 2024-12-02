@@ -185,4 +185,14 @@ impl FrbAccount {
 
         Ok(tx_builder)
     }
+
+    pub async fn bump_transactions_fees(
+        &self,
+        txid: String,
+        fees: u64,
+        network: Network,
+    ) -> Result<FrbPsbt, BridgeError> {
+        let psbt = self.inner.bump_transactions_fees(txid, fees).await?;
+        FrbPsbt::from_psbt(&psbt.into(), network)
+    }
 }

@@ -535,12 +535,19 @@
   "help_center_knowledge_base": "Help center & knowledge base",
   "now_login": "Logging in",
   "rbf_title": "Boost transaction priority",
-  "rbf_desc": "By increasing the fee, you can prioritize your transaction, helping it get confirmed faster during busy network times.",
+  "rbf_desc": "By increasing the network fee, you can prioritize your transaction's speed, helping it get processed and confirmed faster.",
   "rbf_current_fee": "Current network fee",
   "rbf_new_fee": "New network fee",
   "rbf_confirm_speed_desc": "Confirmation speed: Normal",
-  "rbf_send": "Increase fee and resend",
+  "rbf_confirm_speed": "Confirmation speed: {speed}",
+  "rbf_confirm_speed_fast": "Fast",
+  "rbf_confirm_speed_normal": "Normal",
+  "rbf_confirm_speed_low": "Low",
+  "rbf_confirm_speed_in_minutes": "~{minutes} minutes",
+  "rbf_send": "Boost transaction",
+  "rbf_send_success": "Boost transaction successfully",
   "help_center_clear_caches": "Clear local caches",
   "local_cache_clear": "Cleared local caches",
-  "delete_proton_account": "Delete account"
+  "delete_proton_account": "Delete account",
+  "boost_priority": "Boost priority"
 }

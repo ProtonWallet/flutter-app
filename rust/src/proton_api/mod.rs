@@ -8,6 +8,7 @@ pub mod payment_gateway;
 pub mod price_graph;
 pub mod proton_address;
 pub mod proton_users;
+pub mod transaction;
 pub mod unleash;
 pub mod user_settings;
 pub mod wallet;

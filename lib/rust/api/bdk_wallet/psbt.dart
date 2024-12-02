@@ -14,6 +14,8 @@ import 'transactions.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbPsbt>>
 abstract class FrbPsbt implements RustOpaqueInterface {
+  BigInt get computeTxVbytes;
+
   FrbTransaction extractTx();
 
   FrbAmount fee();

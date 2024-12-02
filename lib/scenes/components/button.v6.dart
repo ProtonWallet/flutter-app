@@ -16,6 +16,7 @@ class ButtonV6 extends StatefulWidget {
   final bool enable;
   final bool? isLoading;
   final Size? maximumSize;
+  final Alignment alignment;
 
   const ButtonV6({
     required this.text,
@@ -35,6 +36,7 @@ class ButtonV6 extends StatefulWidget {
     this.enable = true,
     this.isLoading,
     this.maximumSize = Size.infinite,
+    this.alignment = Alignment.center,
   });
 
   @override
@@ -67,56 +69,57 @@ class ButtonV6State extends State<ButtonV6>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Align(
+        alignment: widget.alignment,
         child: Stack(alignment: Alignment.center, children: [
-      ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          maximumSize: widget.maximumSize,
-          fixedSize: Size(widget.width, widget.height),
-          backgroundColor: widget.backgroundColor,
-          // foreground
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(widget.radius),
-            side: BorderSide(color: widget.borderColor),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              maximumSize: widget.maximumSize,
+              fixedSize: Size(widget.width, widget.height),
+              backgroundColor: widget.backgroundColor,
+              // foreground
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(widget.radius),
+                side: BorderSide(color: widget.borderColor),
+              ),
+              elevation: 0.0,
+            ),
+            onPressed: widget.enable
+                ? () async {
+                    setState(() {
+                      isLoading = true;
+                      enable = false;
+                    });
+                    await widget.onPressed?.call();
+                    setState(() {
+                      isLoading = false;
+                      enable = widget.enable;
+                    });
+                  }
+                : () {},
+            child: Text(
+              widget.text,
+              style: widget.textStyle,
+            ),
           ),
-          elevation: 0.0,
-        ),
-        onPressed: widget.enable
-            ? () async {
-                setState(() {
-                  isLoading = true;
-                  enable = false;
-                });
-                await widget.onPressed?.call();
-                setState(() {
-                  isLoading = false;
-                  enable = widget.enable;
-                });
-              }
-            : () {},
-        child: Text(
-          widget.text,
-          style: widget.textStyle,
-        ),
-      ),
-      if (isLoading)
-        Positioned(
-            right: 20,
-            top: widget.height / 2 - 10,
-            child: CustomLoading(
-              color: ProtonColors.white,
-              durationInMilliSeconds: 1400,
-              size: 20,
-            )),
-      if (!enable)
-        Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(widget.radius),
-          ),
-        ),
-    ]));
+          if (isLoading)
+            Positioned(
+                right: 20,
+                top: widget.height / 2 - 10,
+                child: CustomLoading(
+                  color: ProtonColors.white,
+                  durationInMilliSeconds: 1400,
+                  size: 20,
+                )),
+          if (!enable)
+            Container(
+              width: widget.width,
+              height: widget.height,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(widget.radius),
+              ),
+            ),
+        ]));
   }
 }
