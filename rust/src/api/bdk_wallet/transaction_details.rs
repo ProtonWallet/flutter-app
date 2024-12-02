@@ -22,6 +22,10 @@ pub struct FrbTransactionDetails {
     /// with an Electrum Server backend, but it could be `None` with a
     /// Bitcoin RPC node without txindex that receive funds while offline.
     pub(crate) fees: Option<u64>,
+    /// Transaction size in vbytes.
+    /// Can be used to compute feerate for transaction given an absolute fee
+    /// amount
+    pub(crate) vbytes_size: u64,
     /// If the transaction is confirmed, contains height and Unix timestamp of
     /// the block containing the transaction, unconfirmed transaction
     /// contains `None`.
@@ -56,6 +60,11 @@ impl FrbTransactionDetails {
     }
 
     #[frb(getter, sync)]
+    pub fn vbytes_size(&self) -> u64 {
+        self.vbytes_size
+    }
+
+    #[frb(getter, sync)]
     pub fn time(&self) -> TransactionTime {
         self.time
     }
@@ -83,6 +92,7 @@ impl From<TransactionDetails> for FrbTransactionDetails {
             received: transaction_details.received,
             sent: transaction_details.sent,
             fees: transaction_details.fees,
+            vbytes_size: transaction_details.vbytes_size,
             time: transaction_details.time,
             inputs: transaction_details
                 .inputs

@@ -28,6 +28,9 @@ import 'wallet.dart';
 abstract class FrbAccount implements RustOpaqueInterface {
   Future<FrbTxBuilder> buildTx();
 
+  Future<FrbPsbt> bumpTransactionsFees(
+      {required String txid, required BigInt fees, required Network network});
+
   Future<FrbAddressInfo> getAddress({int? index});
 
   Future<FrbBalance> getBalance();

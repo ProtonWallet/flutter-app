@@ -63,6 +63,9 @@ enum NavID {
   // Feeds
   discover,
 
+  // RBF
+  rbf,
+
   // Settings
   settings,
   logs,

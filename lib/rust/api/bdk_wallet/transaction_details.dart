@@ -29,4 +29,6 @@ abstract class FrbTransactionDetails implements RustOpaqueInterface {
   TransactionTime get time;
 
   String get txid;
+
+  BigInt get vbytesSize;
 }

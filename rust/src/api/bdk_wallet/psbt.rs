@@ -55,6 +55,11 @@ impl FrbPsbt {
     }
 
     #[frb(getter, sync)]
+    pub fn compute_tx_vbytes(&self) -> Result<u64, BridgeError> {
+        Ok(self.inner.compute_tx_vbytes()?)
+    }
+
+    #[frb(getter, sync)]
     pub fn recipients(&self) -> Vec<FrbPsbtRecipient> {
         self.recipients.clone()
     }

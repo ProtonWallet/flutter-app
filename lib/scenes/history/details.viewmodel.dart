@@ -87,6 +87,7 @@ abstract class HistoryDetailViewModel
 
   // contact data provider
   final ContactsDataProvider contactsDataProvider;
+  String senderAddressID = "";
   late ScrollController scrollController;
 
   void editMemo();
@@ -454,7 +455,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         time: transactionModel?.transactionTime != null
             ? int.parse(transactionModel?.transactionTime ?? "0")
             : null);
-
+    if (isSend) {
+      await loadSenderAddressID();
+    }
     sinkAddSafe();
 
     if (errorMessage.isNotEmpty) {
@@ -529,13 +532,36 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   }
 
   @override
-  Future<void> move(NavID to) async {}
+  Future<void> move(NavID to) async {
+    switch (to) {
+      case NavID.rbf:
+        coordinator.showRBF(
+          exchangeRate!,
+          transactionModel!,
+          senderAddressID,
+          recipients,
+        );
+      default:
+        break;
+    }
+  }
 
   @override
   void editMemo() {
     isEditing = true;
     memoFocusNode.requestFocus();
     sinkAddSafe();
+  }
+
+  Future<void> loadSenderAddressID() async {
+    final protonAddresses = await addressKeyProvider.getAddresses();
+    for (final address in protonAddresses) {
+      if (address.email == fromEmail) {
+        senderAddressID = address.id;
+        break;
+      }
+    }
+    senderAddressID = protonAddresses.first.id;
   }
 
   @override

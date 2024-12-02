@@ -83,6 +83,7 @@ import 'proton_api/payment_gateway.dart';
 import 'proton_api/price_graph.dart';
 import 'proton_api/proton_address.dart';
 import 'proton_api/proton_users.dart';
+import 'proton_api/transaction.dart';
 import 'proton_api/unleash.dart';
 import 'proton_api/user_settings.dart';
 import 'proton_api/wallet.dart';
@@ -1394,6 +1395,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   EmailSettings dco_decode_email_settings(dynamic raw);
 
   @protected
+  double dco_decode_f_32(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
 
   @protected
@@ -1638,6 +1642,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LockedWalletKey dco_decode_locked_wallet_key(dynamic raw);
+
+  @protected
+  MempoolInfo dco_decode_mempool_info(dynamic raw);
 
   @protected
   MigratedWallet dco_decode_migrated_wallet(dynamic raw);
@@ -3065,6 +3072,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   EmailSettings sse_decode_email_settings(SseDeserializer deserializer);
 
   @protected
+  double sse_decode_f_32(SseDeserializer deserializer);
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer);
 
   @protected
@@ -3345,6 +3355,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   LockedWalletKey sse_decode_locked_wallet_key(SseDeserializer deserializer);
+
+  @protected
+  MempoolInfo sse_decode_mempool_info(SseDeserializer deserializer);
 
   @protected
   MigratedWallet sse_decode_migrated_wallet(SseDeserializer deserializer);
@@ -4853,6 +4866,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_email_settings(EmailSettings self, SseSerializer serializer);
 
   @protected
+  void sse_encode_f_32(double self, SseSerializer serializer);
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
 
   @protected
@@ -5141,6 +5157,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_locked_wallet_key(
       LockedWalletKey self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_mempool_info(MempoolInfo self, SseSerializer serializer);
 
   @protected
   void sse_encode_migrated_wallet(

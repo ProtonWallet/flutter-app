@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 
 class CustomSliderV1 extends StatefulWidget {
-  final double value;
+  final int value;
+  final int minValue;
+  final int maxValue;
+  final TextEditingController controller;
 
   const CustomSliderV1({
     required this.value,
+    required this.minValue,
+    required this.maxValue,
+    required this.controller,
     super.key,
   });
 
@@ -15,10 +21,11 @@ class CustomSliderV1 extends StatefulWidget {
 
 class CustomSliderV1State extends State<CustomSliderV1> {
   bool isDisposed = false;
-  double value = 0.0;
-    @override
+  int value = 0;
+
+  @override
   void initState() {
-      value = widget.value;
+    value = widget.value;
     super.initState();
   }
 
@@ -34,19 +41,21 @@ class CustomSliderV1State extends State<CustomSliderV1> {
       data: SliderThemeData(
         showValueIndicator: ShowValueIndicator.always,
         thumbShape: CustomSliderV1ThumbShape(),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
         trackHeight: 8.0,
       ),
       child: Slider(
-        value: value,
-        max: 50,
-        min: 10,
+        value: value.toDouble(),
+        max: widget.maxValue.toDouble(),
+        min: widget.minValue.toDouble(),
         activeColor: ProtonColors.interactionNormMinor1,
         inactiveColor: ProtonColors.textDisabled,
         thumbColor: ProtonColors.white,
-        label: value.toStringAsFixed(2),
+        label: value.toString(),
         onChanged: (double value) {
           setState(() {
-            this.value = value;
+            this.value = value.toInt();
+            widget.controller.text = this.value.toString();
           });
         },
       ),
@@ -62,19 +71,19 @@ class CustomSliderV1ThumbShape extends SliderComponentShape {
 
   @override
   void paint(
-      PaintingContext context,
-      Offset center, {
-        required Animation<double> activationAnimation,
-        required Animation<double> enableAnimation,
-        required bool isDiscrete,
-        required TextPainter labelPainter,
-        required RenderBox parentBox,
-        required SliderThemeData sliderTheme,
-        required TextDirection textDirection,
-        required double value,
-        required double textScaleFactor,
-        required Size sizeWithOverflow,
-      }) {
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
     final Canvas canvas = context.canvas;
 
     const double radius = 16.0;
@@ -89,6 +98,7 @@ class CustomSliderV1ThumbShape extends SliderComponentShape {
 
     // Draw the border
     canvas.drawCircle(center, radius, borderPaint);
-    canvas.drawCircle(center, radius - 1, paint); // Adjust radius for inner circle
+    canvas.drawCircle(
+        center, radius - 1, paint); // Adjust radius for inner circle
   }
 }

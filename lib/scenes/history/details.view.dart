@@ -15,12 +15,14 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.dart';
 import 'package:wallet/scenes/components/transaction.history.send.item.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/bottom.sheet/edit.sender.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
 import 'package:wallet/theme/theme.font.dart';
@@ -179,19 +181,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                         thickness: 0.2,
                         height: 1,
                       ),
-                      TransactionHistoryItem(
-                        title: S.of(context).trans_status,
-                        content: viewModel.transactionTime != null
-                            ? S.of(context).completed
-                            : viewModel.isSend
-                                ? S.of(context).in_progress_broadcasted
-                                : S.of(context).in_progress_waiting_for_confirm,
-                        contentColor: viewModel.transactionTime != null
-                            ? ProtonColors.signalSuccess
-                            : ProtonColors.signalError,
-                        backgroundColor: ProtonColors.white,
-                        isLoading: !viewModel.initialized,
-                      ),
+                      buildTransactionStatusWithBoost(context),
                       const Divider(
                         thickness: 0.2,
                         height: 1,
@@ -431,6 +421,47 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
 
   String getHidedBitcoinAmountString() {
     return "$hidedBalanceString ${viewModel.userSettingsDataProvider.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.userSettingsDataProvider.bitcoinUnit.name.toUpperCase() : "mBTC"}";
+  }
+
+  Widget buildTransactionStatusWithBoost(BuildContext context) {
+    if (viewModel.initialized &&
+        viewModel.isSend &&
+        viewModel.transactionTime == null) {
+      return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        buildTransactionStatus(context),
+        Expanded(
+          child: ButtonV6(
+            onPressed: () async {
+              viewModel.move(NavID.rbf);
+            },
+            text: S.of(context).boost_priority,
+            width: 160,
+            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            backgroundColor: ProtonColors.textWeakPressed,
+            borderColor: ProtonColors.textWeakPressed,
+            height: 48,
+            alignment: Alignment.centerRight,
+          ),
+        ),
+      ]);
+    }
+    return buildTransactionStatus(context);
+  }
+
+  Widget buildTransactionStatus(BuildContext context) {
+    return TransactionHistoryItem(
+      title: S.of(context).trans_status,
+      content: viewModel.transactionTime != null
+          ? S.of(context).completed
+          : viewModel.isSend
+              ? S.of(context).in_progress_broadcasted
+              : S.of(context).in_progress_waiting_for_confirm,
+      contentColor: viewModel.transactionTime != null
+          ? ProtonColors.signalSuccess
+          : ProtonColors.signalError,
+      backgroundColor: ProtonColors.white,
+      isLoading: !viewModel.initialized,
+    );
   }
 
   Widget buildSendInfo(BuildContext context) {

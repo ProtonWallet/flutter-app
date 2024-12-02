@@ -1,4 +1,4 @@
-use andromeda_api::core::ApiClient;
+use andromeda_api::{core::ApiClient, transaction::MempoolInfo};
 pub use andromeda_bitcoin::Transaction as bdkTransaction;
 use std::sync::Arc;
 
@@ -20,5 +20,9 @@ impl TransactionClient {
 
     pub async fn get_raw_transaction(&self, txid: String) -> Result<bdkTransaction, BridgeError> {
         Ok(self.inner.get_raw_transaction(txid).await?)
+    }
+
+    pub async fn get_mempool_info(&self) -> Result<MempoolInfo, BridgeError> {
+        Ok(self.inner.get_mempool_info().await?)
     }
 }
