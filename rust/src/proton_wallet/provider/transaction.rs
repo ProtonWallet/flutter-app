@@ -68,6 +68,9 @@ mod tests {
             tolist: Some("recipient@example.com".to_string()),
             subject: Some("Transaction Subject".to_string()),
             body: Some("Transaction Body".to_string()),
+            is_suspicious: 0,
+            is_private: 0,
+            is_anonymous: Some(1),
         };
 
         let mut transaction2 = transaction1.clone();

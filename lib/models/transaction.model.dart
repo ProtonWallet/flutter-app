@@ -21,6 +21,9 @@ class TransactionModel {
   String? tolist;
   String? subject;
   String? body;
+  int isSuspicious;
+  int isPrivate;
+  int? isAnonymous;
 
   TransactionModel({
     required this.id,
@@ -41,6 +44,9 @@ class TransactionModel {
     required this.tolist,
     required this.subject,
     required this.body,
+    required this.isSuspicious,
+    required this.isPrivate,
+    required this.isAnonymous,
   });
 
   Map<String, dynamic> toMap() {
@@ -63,6 +69,9 @@ class TransactionModel {
       'tolist': tolist,
       'subject': subject,
       'body': body,
+      'isSuspicious': isSuspicious,
+      'isPrivate': isPrivate,
+      'isAnonymous': isAnonymous,
     };
   }
 
@@ -86,6 +95,9 @@ class TransactionModel {
       tolist: map['tolist'],
       subject: map['subject'],
       body: map['body'],
+      isSuspicious: map['isSuspicious'],
+      isPrivate: map['isPrivate'],
+      isAnonymous: map['isAnonymous'],
     );
   }
 }

@@ -1,7 +1,7 @@
-use tracing::error;
 use rusqlite::{params, Connection};
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use tracing::error;
 
 use super::Result;
 use crate::proton_wallet::db::{
@@ -36,40 +36,8 @@ impl TransactionDao {
     pub async fn insert(&self, item: &TransactionModel) -> Result<u32> {
         let conn = self.conn.lock().await;
         let result: std::result::Result<usize, rusqlite::Error> = conn.execute(
-            "INSERT INTO transaction_table (type, label, external_transaction_id, create_time, modify_time, hashed_transaction_id, transaction_id, transaction_time, exchange_rate_id, server_wallet_id, server_account_id, server_id, sender, tolist, subject, body) 
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
-            params![
-                item.type_,
-                item.label,
-                item.external_transaction_id,
-                item.create_time,
-                item.modify_time,
-                item.hashed_transaction_id,
-                item.transaction_id,
-                item.transaction_time,
-                item.exchange_rate_id,
-                item.server_wallet_id,
-                item.server_account_id,
-                item.server_id,
-                item.sender,
-                item.tolist,
-                item.subject,
-                item.body
-            ]
-        );
-        match result {
-            Ok(_) => Ok(conn.last_insert_rowid() as u32),
-            Err(e) => {
-                error!("Something went wrong: {}", e);
-                Err(e.into())
-            }
-        }
-    }
-
-    pub async fn update(&self, item: &TransactionModel) -> Result<Option<TransactionModel>> {
-        let conn = self.conn.lock().await;
-        let rows_affected = conn.execute(
-            "UPDATE transaction_table SET type = ?1, label = ?2, external_transaction_id = ?3, create_time = ?4, modify_time = ?5, hashed_transaction_id = ?6, transaction_id = ?7, transaction_time = ?8, exchange_rate_id = ?9, server_wallet_id = ?10, server_account_id = ?11, server_id = ?12, sender = ?13, tolist = ?14, subject = ?15, body = ?16 WHERE id = ?17",
+            "INSERT INTO transaction_table (type, label, external_transaction_id, create_time, modify_time, hashed_transaction_id, transaction_id, transaction_time, exchange_rate_id, server_wallet_id, server_account_id, server_id, sender, tolist, subject, body, is_suspicious, is_private, is_anonymous) 
+            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19)",
             params![
                 item.type_,
                 item.label,
@@ -87,6 +55,44 @@ impl TransactionDao {
                 item.tolist,
                 item.subject,
                 item.body,
+                item.is_suspicious,
+                item.is_private,
+                item.is_anonymous,
+            ]
+        );
+        match result {
+            Ok(_) => Ok(conn.last_insert_rowid() as u32),
+            Err(e) => {
+                error!("Something went wrong: {}", e);
+                Err(e.into())
+            }
+        }
+    }
+
+    pub async fn update(&self, item: &TransactionModel) -> Result<Option<TransactionModel>> {
+        let conn = self.conn.lock().await;
+        let rows_affected = conn.execute(
+            "UPDATE transaction_table SET type = ?1, label = ?2, external_transaction_id = ?3, create_time = ?4, modify_time = ?5, hashed_transaction_id = ?6, transaction_id = ?7, transaction_time = ?8, exchange_rate_id = ?9, server_wallet_id = ?10, server_account_id = ?11, server_id = ?12, sender = ?13, tolist = ?14, subject = ?15, body = ?16 , is_suspicious = ?17, is_private = ?18, is_anonymous = ?19 WHERE id = ?20",
+            params![
+                item.type_,
+                item.label,
+                item.external_transaction_id,
+                item.create_time,
+                item.modify_time,
+                item.hashed_transaction_id,
+                item.transaction_id,
+                item.transaction_time,
+                item.exchange_rate_id,
+                item.server_wallet_id,
+                item.server_account_id,
+                item.server_id,
+                item.sender,
+                item.tolist,
+                item.subject,
+                item.body,
+                item.is_suspicious,
+                item.is_private,
+                item.is_anonymous,
                 item.id
             ]
         )?;
@@ -158,7 +164,10 @@ mod tests {
                     sender TEXT,
                     tolist TEXT,
                     subject TEXT,
-                    body TEXT
+                    body TEXT,
+                    is_suspicious INTEGER NOT NULL,
+                    is_private INTEGER NOT NULL,
+                    is_anonymous INTEGER NOT NULL
                 )
                 "#,
                 [],
@@ -186,6 +195,9 @@ mod tests {
             tolist: Some("recipient@example.com".to_string()),
             subject: Some("Transaction Subject".to_string()),
             body: Some("Transaction Body".to_string()),
+            is_suspicious: 0,
+            is_private: 0,
+            is_anonymous: Some(1),
         };
 
         let mut transaction2 = transaction.clone();

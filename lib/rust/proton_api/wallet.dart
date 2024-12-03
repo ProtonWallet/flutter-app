@@ -429,6 +429,7 @@ class WalletTransaction {
   final String transactionTime;
   final int isSuspicious;
   final int isPrivate;
+  final int? isAnonymous;
   final ProtonExchangeRate? exchangeRate;
   final String? hashedTransactionId;
   final String? subject;
@@ -446,6 +447,7 @@ class WalletTransaction {
     required this.transactionTime,
     required this.isSuspicious,
     required this.isPrivate,
+    this.isAnonymous,
     this.exchangeRate,
     this.hashedTransactionId,
     this.subject,
@@ -465,6 +467,7 @@ class WalletTransaction {
       transactionTime.hashCode ^
       isSuspicious.hashCode ^
       isPrivate.hashCode ^
+      isAnonymous.hashCode ^
       exchangeRate.hashCode ^
       hashedTransactionId.hashCode ^
       subject.hashCode ^
@@ -486,6 +489,7 @@ class WalletTransaction {
           transactionTime == other.transactionTime &&
           isSuspicious == other.isSuspicious &&
           isPrivate == other.isPrivate &&
+          isAnonymous == other.isAnonymous &&
           exchangeRate == other.exchangeRate &&
           hashedTransactionId == other.hashedTransactionId &&
           subject == other.subject &&

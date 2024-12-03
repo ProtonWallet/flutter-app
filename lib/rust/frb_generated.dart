@@ -16049,8 +16049,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WalletTransaction dco_decode_wallet_transaction(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 15)
-      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
+    if (arr.length != 16)
+      throw Exception('unexpected arr length: expect 16 but see ${arr.length}');
     return WalletTransaction(
       id: dco_decode_String(arr[0]),
       type: dco_decode_opt_box_autoadd_transaction_type(arr[1]),
@@ -16061,12 +16061,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       transactionTime: dco_decode_String(arr[6]),
       isSuspicious: dco_decode_u_8(arr[7]),
       isPrivate: dco_decode_u_8(arr[8]),
-      exchangeRate: dco_decode_opt_box_autoadd_proton_exchange_rate(arr[9]),
-      hashedTransactionId: dco_decode_opt_String(arr[10]),
-      subject: dco_decode_opt_String(arr[11]),
-      body: dco_decode_opt_String(arr[12]),
-      sender: dco_decode_opt_String(arr[13]),
-      tolist: dco_decode_opt_String(arr[14]),
+      isAnonymous: dco_decode_opt_box_autoadd_u_8(arr[9]),
+      exchangeRate: dco_decode_opt_box_autoadd_proton_exchange_rate(arr[10]),
+      hashedTransactionId: dco_decode_opt_String(arr[11]),
+      subject: dco_decode_opt_String(arr[12]),
+      body: dco_decode_opt_String(arr[13]),
+      sender: dco_decode_opt_String(arr[14]),
+      tolist: dco_decode_opt_String(arr[15]),
     );
   }
 
@@ -20571,6 +20572,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_transactionTime = sse_decode_String(deserializer);
     var var_isSuspicious = sse_decode_u_8(deserializer);
     var var_isPrivate = sse_decode_u_8(deserializer);
+    var var_isAnonymous = sse_decode_opt_box_autoadd_u_8(deserializer);
     var var_exchangeRate =
         sse_decode_opt_box_autoadd_proton_exchange_rate(deserializer);
     var var_hashedTransactionId = sse_decode_opt_String(deserializer);
@@ -20588,6 +20590,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         transactionTime: var_transactionTime,
         isSuspicious: var_isSuspicious,
         isPrivate: var_isPrivate,
+        isAnonymous: var_isAnonymous,
         exchangeRate: var_exchangeRate,
         hashedTransactionId: var_hashedTransactionId,
         subject: var_subject,
@@ -24721,6 +24724,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.transactionTime, serializer);
     sse_encode_u_8(self.isSuspicious, serializer);
     sse_encode_u_8(self.isPrivate, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.isAnonymous, serializer);
     sse_encode_opt_box_autoadd_proton_exchange_rate(
         self.exchangeRate, serializer);
     sse_encode_opt_String(self.hashedTransactionId, serializer);

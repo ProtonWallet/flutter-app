@@ -40,4 +40,10 @@ class TransactionDatabase extends BaseDatabase {
   Future<void> migration_4() async {
     await addColumn('type', 'INTEGER');
   }
+
+  Future<void> migration_5() async {
+    await addColumn('isSuspicious', 'INTEGER');
+    await addColumn('isPrivate', 'INTEGER');
+    await addColumn('isAnonymous', 'INTEGER NULL');
+  }
 }

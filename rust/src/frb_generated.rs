@@ -16664,6 +16664,7 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
         let mut var_transactionTime = <String>::sse_decode(deserializer);
         let mut var_isSuspicious = <u8>::sse_decode(deserializer);
         let mut var_isPrivate = <u8>::sse_decode(deserializer);
+        let mut var_isAnonymous = <Option<u8>>::sse_decode(deserializer);
         let mut var_exchangeRate =
             <Option<crate::proton_api::exchange_rate::ProtonExchangeRate>>::sse_decode(
                 deserializer,
@@ -16683,6 +16684,7 @@ impl SseDecode for crate::proton_api::wallet::WalletTransaction {
             transaction_time: var_transactionTime,
             is_suspicious: var_isSuspicious,
             is_private: var_isPrivate,
+            is_anonymous: var_isAnonymous,
             exchange_rate: var_exchangeRate,
             hashed_transaction_id: var_hashedTransactionId,
             subject: var_subject,
@@ -20424,6 +20426,7 @@ impl flutter_rust_bridge::IntoDart for crate::proton_api::wallet::WalletTransact
             self.transaction_time.into_into_dart().into_dart(),
             self.is_suspicious.into_into_dart().into_dart(),
             self.is_private.into_into_dart().into_dart(),
+            self.is_anonymous.into_into_dart().into_dart(),
             self.exchange_rate.into_into_dart().into_dart(),
             self.hashed_transaction_id.into_into_dart().into_dart(),
             self.subject.into_into_dart().into_dart(),
@@ -24067,6 +24070,7 @@ impl SseEncode for crate::proton_api::wallet::WalletTransaction {
         <String>::sse_encode(self.transaction_time, serializer);
         <u8>::sse_encode(self.is_suspicious, serializer);
         <u8>::sse_encode(self.is_private, serializer);
+        <Option<u8>>::sse_encode(self.is_anonymous, serializer);
         <Option<crate::proton_api::exchange_rate::ProtonExchangeRate>>::sse_encode(
             self.exchange_rate,
             serializer,

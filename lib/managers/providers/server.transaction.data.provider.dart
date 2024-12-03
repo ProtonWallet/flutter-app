@@ -168,27 +168,30 @@ class ServerTransactionDataProvider extends DataProvider {
     }
 
     final TransactionModel transactionModel = TransactionModel(
-        id: -1,
-        type:
-            walletTransaction.type?.index ?? TransactionType.unsupported.index,
-        label: utf8.encode(walletTransaction.label ?? ""),
-        externalTransactionID: utf8.encode(""),
+      id: -1,
+      type: walletTransaction.type?.index ?? TransactionType.unsupported.index,
+      label: utf8.encode(walletTransaction.label ?? ""),
+      externalTransactionID: utf8.encode(""),
 
-        /// deprecated
-        createTime: now.millisecondsSinceEpoch ~/ 1000,
-        modifyTime: now.millisecondsSinceEpoch ~/ 1000,
-        hashedTransactionID:
-            utf8.encode(walletTransaction.hashedTransactionId ?? ""),
-        transactionID: walletTransaction.transactionId,
-        serverID: walletTransaction.id,
-        transactionTime: walletTransaction.transactionTime,
-        exchangeRateID: exchangeRateID,
-        serverWalletID: walletTransaction.walletId,
-        serverAccountID: walletTransaction.walletAccountId!,
-        sender: walletTransaction.sender,
-        tolist: walletTransaction.tolist,
-        subject: walletTransaction.subject,
-        body: walletTransaction.body);
+      /// deprecated
+      createTime: now.millisecondsSinceEpoch ~/ 1000,
+      modifyTime: now.millisecondsSinceEpoch ~/ 1000,
+      hashedTransactionID:
+          utf8.encode(walletTransaction.hashedTransactionId ?? ""),
+      transactionID: walletTransaction.transactionId,
+      serverID: walletTransaction.id,
+      transactionTime: walletTransaction.transactionTime,
+      exchangeRateID: exchangeRateID,
+      serverWalletID: walletTransaction.walletId,
+      serverAccountID: walletTransaction.walletAccountId!,
+      sender: walletTransaction.sender,
+      tolist: walletTransaction.tolist,
+      subject: walletTransaction.subject,
+      body: walletTransaction.body,
+      isSuspicious: walletTransaction.isSuspicious,
+      isPrivate: walletTransaction.isPrivate,
+      isAnonymous: walletTransaction.isAnonymous,
+    );
     await insertOrUpdate(
       transactionModel,
       notifyDataUpdate: notifyDataUpdate,
