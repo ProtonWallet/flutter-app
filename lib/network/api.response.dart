@@ -3,8 +3,9 @@ class ApiResponse {
   final int statusCode;
   final String errorMessage;
 
-  ApiResponse(
-      {required this.response,
-      required this.statusCode,
-      required this.errorMessage});
+  ApiResponse({
+    required this.response,
+    required this.statusCode,
+    required this.errorMessage,
+  });
 }

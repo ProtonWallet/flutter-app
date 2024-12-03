@@ -50,11 +50,6 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                 textController: viewModel.newAccountNameController,
                 myFocusNode: viewModel.newAccountNameFocusNode,
                 validation: (String newAccountName) {
-                  // bool accountNameExists = false;
-                  // TODO(fix): check if accountName already used
-                  // if (accountNameExists) {
-                  //   return S.of(context).account_name_already_used;
-                  // }
                   return "";
                 },
               ),
@@ -149,13 +144,6 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       ],
                       myFocusNode: viewModel.newAccountIndexFocusNode,
                       validation: (String newAccountName) {
-                        // bool accountNameExists = false;
-                        // TODO(fix): check if accountName already used
-                        // if (accountNameExists) {
-                        //   return S
-                        //       .of(context)
-                        //       .account_name_already_used;
-                        // }
                         return "";
                       },
                     ),
@@ -186,11 +174,10 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                           } catch (e) {
                             // parse newAccountIndex failed, use default one
                           }
-                          const bool accountNameExists = false;
+                          const accountNameExists = false;
                           if (context.mounted) {
-                            // TODO(fix): check if accountName already used
                             if (!accountNameExists) {
-                              final bool isSuccess =
+                              final isSuccess =
                                   await viewModel.addWalletAccount(
                                 viewModel
                                     .newAccountScriptTypeValueNotifier.value,

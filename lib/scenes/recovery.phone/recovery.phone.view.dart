@@ -52,13 +52,11 @@ class RecoveryPhoneView extends ViewBase<RecoveryPhoneViewModel> {
               return Column(
                 children: [
                   const SizedBox(height: defaultPadding),
-
                   if (state.error.isNotEmpty)
                     Text(
                       state.error,
                       style: FontManager.body2Regular(ProtonColors.signalError),
                     ),
-
                   RecoverySection(
                     title: 'Recovery phrase',
                     description:
@@ -74,9 +72,7 @@ class RecoveryPhoneView extends ViewBase<RecoveryPhoneViewModel> {
                       }
                     },
                   ),
-
                   const SizedBox(height: 8),
-                  // TODO(fix): check if we need to put `Wallet recovery` here
                   RecoverySection(
                     title: 'Wallet recovery seed',
                     description:

@@ -196,15 +196,15 @@ class AppDatabase {
     db = database;
   }
 
-  // TODO(fix): fix me. the oldversion somehow is not correct. we should try to use the version from the database `user_version`.
-  // TODO(fix): future we also need to check the db schema is correct or not. then decide to rebuild it or not.
-  Future<void> buildDatabase(
-      {bool isTesting = false, int oldVersion = 1}) async {
+  Future<void> buildDatabase({
+    bool isTesting = false,
+    int oldVersion = 1,
+  }) async {
     final List<Migration>? upgradeMigrations =
         migrationContainer.findMigrationPath(oldVersion, version);
     logger.i("Migration appDatabase from Ver.$oldVersion to Ver.$version");
     if (upgradeMigrations != null) {
-      for (Migration migration in upgradeMigrations) {
+      for (final migration in upgradeMigrations) {
         await migration.migrate();
       }
     } else {
@@ -224,7 +224,7 @@ class AppDatabase {
   // not inused for future use
   Future<void> checkAndUpdateVersion() async {
     // Get the current version from the database
-    final int currentVersion =
+    final currentVersion =
         (await db.rawQuery('PRAGMA user_version')).first.values.first! as int;
     if (currentVersion < version) {
       // If current version is less than the required version

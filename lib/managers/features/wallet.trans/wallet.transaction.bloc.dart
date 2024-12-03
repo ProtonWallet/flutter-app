@@ -353,12 +353,13 @@ class WalletTransactionBloc
       }
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
 
-      // TODO(fix): get filter and keyWord from home VM
       const String filter = "";
       const String keyWord = "";
-      final List<HistoryTransaction> historyTransaction =
-          applyHistoryTransactionFilterAndKeyword(
-              filter, keyWord, newHistoryTransactions);
+      final historyTransaction = applyHistoryTransactionFilterAndKeyword(
+        filter,
+        keyWord,
+        newHistoryTransactions,
+      );
       if (currentAccountModel != null ||
           currentWalletModel!.walletID != walletModel.walletID) {
         /// skip process if user change to other wallet or wallet account
@@ -429,9 +430,10 @@ class WalletTransactionBloc
       currentAccountModel = event.accountMenuModel.accountModel;
       lastEvent = event;
 
-      final WalletModel walletModel = event.walletMenuModel.walletModel;
-      final unlockedWalletKey =
-          await getUnlockedWalletKey(event.walletMenuModel.walletModel);
+      final walletModel = event.walletMenuModel.walletModel;
+      final unlockedWalletKey = await getUnlockedWalletKey(
+        event.walletMenuModel.walletModel,
+      );
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
@@ -445,12 +447,13 @@ class WalletTransactionBloc
 
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
 
-      // TODO(fix): get filter and keyWord from home VM
       const String filter = "";
       const String keyWord = "";
-      final List<HistoryTransaction> historyTransaction =
-          applyHistoryTransactionFilterAndKeyword(
-              filter, keyWord, newHistoryTransactions);
+      final historyTransaction = applyHistoryTransactionFilterAndKeyword(
+        filter,
+        keyWord,
+        newHistoryTransactions,
+      );
 
       if (currentAccountModel != null) {
         if (currentAccountModel!.accountID !=
@@ -823,7 +826,6 @@ class WalletTransactionBloc
       }
     }
 
-    // TODO(fix): replace with exchangeRateProvider
     exchangeRate ??= await ExchangeRateService.getExchangeRate(
       userSettingsDataProvider.exchangeRate.fiatCurrency,
       // ignore `time` params here to avoid new api call for getting unknown exchange rate at specific time

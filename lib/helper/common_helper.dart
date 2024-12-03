@@ -88,7 +88,6 @@ class CommonHelper {
   }
 
   static bool isBitcoinAddress(String bitcoinAddress) {
-    // TODO(fix): improve me
     if (appConfig.coinType == bitcoin) {
       return (bitcoinAddress.toLowerCase().startsWith("bc") ||
               bitcoinAddress.toLowerCase().startsWith("1") ||

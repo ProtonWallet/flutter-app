@@ -81,7 +81,6 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   Future<void> viewSeed(String loginPassword, String twofa) async {
-    // TODO(migrate): use Rust function
     try {
       final authInfo =
           this.authInfo ?? await protonUsersApi.getAuthInfo(intent: "Proton");

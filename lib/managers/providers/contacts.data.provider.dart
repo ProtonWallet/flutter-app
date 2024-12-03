@@ -39,7 +39,7 @@ class ContactsDataProvider extends DataProvider {
     final contacts = (await contactsDao.findAll()).cast<ContactsModel>();
     // if found cache.
     if (contacts.isNotEmpty) {
-      // TODO(fix): temp fix. the contactID should be unique
+      // TODO(Note): Temp fix. the contactID should be unique
       final Map<String, ContactsModel> uniqueContacts = {};
       for (var contact in contacts) {
         if (uniqueContacts.containsKey(contact.serverContactID)) {

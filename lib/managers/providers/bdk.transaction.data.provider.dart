@@ -65,7 +65,6 @@ class BDKCacheCleared extends DataUpdated<String> {
 }
 
 class BDKTransactionDataProvider extends DataProvider {
-  // TODO(fix): shouldnt be here. sync shouldnt be in this class
   final WalletManager walletManager;
   final AccountDao accountDao;
   FrbBlockchainClient? blockchain;

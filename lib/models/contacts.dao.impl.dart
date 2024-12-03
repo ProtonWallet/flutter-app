@@ -97,7 +97,6 @@ class ContactsDaoImpl extends ContactsDao {
 
   @override
   Future findByServerID(String serverID) {
-    // TODO(fix): implement findByServerID
     throw UnimplementedError();
   }
 }

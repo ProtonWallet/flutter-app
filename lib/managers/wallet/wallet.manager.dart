@@ -215,7 +215,7 @@ class WalletManager implements Manager {
     await DBHelper.addressDao!.deleteByServerID(addressID);
   }
 
-  // TODO(fix): this function logic looks strange
+  // TODO(Note): this function logic looks strange
   Future<void> autoBindEmailAddresses(String userID) async {
     final int walletCounts = await DBHelper.walletDao!.counts(userID);
     if (walletCounts > 1) {
@@ -266,9 +266,8 @@ class WalletManager implements Manager {
   Future<EmailIntegrationBitcoinAddress?> lookupBitcoinAddress(
     String email,
   ) async {
-    final EmailIntegrationBitcoinAddress emailIntegrationBitcoinAddress =
+    final emailIntegrationBitcoinAddress =
         await proton_api.lookupBitcoinAddress(email: email);
-    // TODO(fix): check signature!
     return emailIntegrationBitcoinAddress;
   }
 
@@ -303,8 +302,8 @@ class WalletManager implements Manager {
     WalletModel walletModel,
     String passphrase,
   ) async {
-    final String strMnemonic = await getMnemonicWithID(walletModel.walletID);
-    final String fingerprint = await getFingerPrintFromMnemonic(
+    final strMnemonic = await getMnemonicWithID(walletModel.walletID);
+    final fingerprint = await getFingerPrintFromMnemonic(
       strMnemonic,
       passphrase: passphrase,
     );
@@ -317,18 +316,16 @@ class WalletManager implements Manager {
     String serverWalletID,
     String serverAccountID,
   ) async {
-    final List<ApiWalletBitcoinAddress> walletBitcoinAddresses =
-        await proton_api.getWalletBitcoinAddress(
-            walletId: serverWalletID,
-            walletAccountId: serverAccountID,
-            onlyRequest: 1);
+    final walletBitcoinAddresses = await proton_api.getWalletBitcoinAddress(
+        walletId: serverWalletID,
+        walletAccountId: serverAccountID,
+        onlyRequest: 1);
     final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(serverAccountID);
     if (accountModel != null) {
       await ensureReceivedAddressInitialized(account, accountModel);
     }
-    for (ApiWalletBitcoinAddress walletBitcoinAddress
-        in walletBitcoinAddresses) {
+    for (final walletBitcoinAddress in walletBitcoinAddresses) {
       if (accountModel == null) {
         logger.e("handleBitcoinAddressRequests: accountModel is null");
         continue;
@@ -346,7 +343,7 @@ class WalletManager implements Manager {
           gpgContextWalletBitcoinAddress,
         );
         logger.i(signature);
-        final BitcoinAddress bitcoinAddress = BitcoinAddress(
+        final bitcoinAddress = BitcoinAddress(
             bitcoinAddress: address,
             bitcoinAddressSignature: signature,
             bitcoinAddressIndex: BigInt.from(addressInfo.index));
@@ -386,7 +383,7 @@ class WalletManager implements Manager {
         address,
         gpgContextWalletBitcoinAddress,
       );
-      final BitcoinAddress bitcoinAddress = BitcoinAddress(
+      final bitcoinAddress = BitcoinAddress(
           bitcoinAddress: address,
           bitcoinAddressSignature: signature,
           bitcoinAddressIndex: BigInt.from(addressInfo.index));
@@ -502,11 +499,6 @@ class WalletManager implements Manager {
               message: walletBitcoinAddress.bitcoinAddress!,
               signature: walletBitcoinAddress.bitcoinAddressSignature!,
               context: gpgContextWalletBitcoinAddress);
-          // isValidSignature = await verifySignature(
-          //     armoredPublicKey,
-          //     walletBitcoinAddress.bitcoinAddress!,
-          //     walletBitcoinAddress.bitcoinAddressSignature!,
-          //     gpgContextWalletBitcoinAddress);
           if (isValidSignature) {
             break;
           }

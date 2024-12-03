@@ -193,13 +193,11 @@ class TransactionInfoDaoImpl extends TransactionInfoDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 
   @override
   Future findByServerID(String serverID) {
-    // TODO(fix): implement findByServerID
     throw UnimplementedError();
   }
 }

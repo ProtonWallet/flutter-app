@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'api.response.dart';
 import 'api.service.dart';
 
-// TODO(fix): Use Rust to replace code here
 class HttpApiService implements ApiService {
   final String baseUrl;
 
@@ -11,10 +10,14 @@ class HttpApiService implements ApiService {
 
   @override
   Future<ApiResponse> get(
-      String endpoint, Map<String, String> customHeaders) async {
+    String endpoint,
+    Map<String, String> customHeaders,
+  ) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/$endpoint'),
-          headers: customHeaders);
+      final response = await http.get(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: customHeaders,
+      );
 
       return ApiResponse(
         response: response.body,
@@ -31,8 +34,11 @@ class HttpApiService implements ApiService {
   }
 
   @override
-  Future<ApiResponse> post(String endpoint, String payload,
-      Map<String, String> customHeaders) async {
+  Future<ApiResponse> post(
+    String endpoint,
+    String payload,
+    Map<String, String> customHeaders,
+  ) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/$endpoint'),
@@ -56,10 +62,14 @@ class HttpApiService implements ApiService {
 
   @override
   Future<ApiResponse> delete(
-      String endpoint, Map<String, String> customHeaders) async {
+    String endpoint,
+    Map<String, String> customHeaders,
+  ) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/$endpoint'),
-          headers: customHeaders);
+      final response = await http.delete(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: customHeaders,
+      );
 
       return ApiResponse(
         response: response.body,
@@ -76,11 +86,17 @@ class HttpApiService implements ApiService {
   }
 
   @override
-  Future<ApiResponse> put(String endpoint, String payload,
-      Map<String, String> customHeaders) async {
+  Future<ApiResponse> put(
+    String endpoint,
+    String payload,
+    Map<String, String> customHeaders,
+  ) async {
     try {
-      final response = await http.put(Uri.parse('$baseUrl/$endpoint'),
-          headers: customHeaders, body: payload);
+      final response = await http.put(
+        Uri.parse('$baseUrl/$endpoint'),
+        headers: customHeaders,
+        body: payload,
+      );
 
       return ApiResponse(
         response: response.body,

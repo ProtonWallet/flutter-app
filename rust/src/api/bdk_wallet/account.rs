@@ -193,6 +193,6 @@ impl FrbAccount {
         network: Network,
     ) -> Result<FrbPsbt, BridgeError> {
         let psbt = self.inner.bump_transactions_fees(txid, fees).await?;
-        FrbPsbt::from_psbt(&psbt.into(), network)
+        FrbPsbt::from_psbt(&psbt, network)
     }
 }

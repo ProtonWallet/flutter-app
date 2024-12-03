@@ -50,7 +50,6 @@ class ButtonV6State extends State<ButtonV6>
 
   @override
   void initState() {
-    // TODO(fix): implement initState
     super.initState();
     isLoading = widget.isLoading ?? false;
     enable = widget.enable;
