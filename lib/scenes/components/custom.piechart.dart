@@ -66,23 +66,20 @@ class CustomPieChartState extends State<CustomPieChart> {
                     centerSpaceRadius: 40,
                   ),
                   swapAnimationDuration: const Duration(milliseconds: 60))),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (int i = 0; i < min(5, widget.data.length); i++)
-                Row(children: [
-                  Indicator(
-                    color: CustomPieChart.colors[i],
-                    text: widget.data[i].name,
-                    isSquare: true,
-                    textColor: ProtonColors.textWeak,
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  )
-                ]),
-            ],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            for (int i = 0; i < min(5, widget.data.length); i++)
+              Row(children: [
+                Indicator(
+                  color: CustomPieChart.colors[i],
+                  text: widget.data[i].name,
+                  isSquare: true,
+                  textColor: ProtonColors.textWeak,
+                ),
+                const SizedBox(
+                  width: 12,
+                )
+              ]),
+          ]),
         ]));
   }
 

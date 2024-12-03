@@ -60,7 +60,6 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       loginTwoFaTotp += textEditingController.text;
     }
 
-    // TODO(move): move this to rust
     try {
       final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 

@@ -513,8 +513,6 @@ class HomeView extends ViewBase<HomeViewModel> {
             const SizedBox(
               width: 30,
             ),
-
-            // TODO(fix): need to have error for each account
             if (walletTransactionState.syncedWithError &&
                 walletTransactionState.errorMessage.isNotEmpty)
               GestureDetector(
@@ -584,8 +582,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                         viewModel.currentExchangeRate,
                         walletBalanceState.balanceInSatoshi,
                       ),
-
-                      // TODO(fix): use actual balance
                       fractionDigits: defaultDisplayDigits,
                       textStyle: FontManager.balanceInFiatCurrency(
                           ProtonColors.textNorm))
@@ -735,7 +731,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                   height: 40,
                 ),
                 onPressed: () {
-                  // TODO(fix): wallet settings could be a new View/view model. move to wallet settings.
                   /// temperay
                   final context = Coordinator.rootNavigatorKey.currentContext;
                   if (context != null) {
@@ -807,7 +802,6 @@ class HomeView extends ViewBase<HomeViewModel> {
 }
 
 Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
-  // TODO(fix): fixme
   return BlocBuilder<WalletListBloc, WalletListState>(
       bloc: viewModel.walletListBloc,
       builder: (context, state) {
@@ -926,9 +920,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
 
                               /// home more settings
                               HomeMoreSettings(
-                                onUpgrade: () {
-                                  // TODO(fix): add onUpgrade callback when we set hidePayment = false;
-                                },
+                                onUpgrade: () {},
                                 onDiscover: () {
                                   viewModel.move(NavID.discover);
                                 },
@@ -997,7 +989,6 @@ Widget showUpdateWalletPassphraseDialog(
                 walletModel.walletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
           } on BridgeError catch (e, stacktrace) {
-            // TODO(fix): fix me
             viewModel.errorMessage = parseSampleDisplayError(e);
             logger.e("importWallet error: $e, stacktrace: $stacktrace");
           } catch (e) {

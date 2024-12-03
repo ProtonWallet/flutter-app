@@ -620,9 +620,10 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await walletManager.cleanSharedPreference();
       await DBHelper.reset();
+      //fix await for DBHelper.reset();
       await Future.delayed(
         const Duration(seconds: 3),
-      ); // TODO(fix): fix await for DBHelper.reset();
+      );
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
@@ -663,7 +664,6 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
 
-    // TODO(fix): pass wallet server id and wallet account server id
     switch (to) {
       case NavID.send:
         coordinator.showSend(

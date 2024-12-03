@@ -53,11 +53,7 @@ class TransactionList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onLongPress: () {
-                              // TODO(fix): add address list after rust migrate
-                              // viewModel.updateBodyListStatus(
-                              //     BodyListStatus.bitcoinAddressList);
-                            },
+                            onLongPress: () {},
                             child: Row(children: [
                               Text(
                                 S.of(context).transactions,

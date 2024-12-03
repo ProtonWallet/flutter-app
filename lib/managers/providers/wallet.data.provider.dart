@@ -320,7 +320,6 @@ class WalletsDataProvider extends DataProvider {
       newFiatCurrency: fiatCurrency,
     );
 
-    // TODO(fix): fix me
     final wallet = await getWallet(walletID);
     await _processApiWalletAccountData(wallet!.wallet.walletID, walletAccount);
 
@@ -334,7 +333,6 @@ class WalletsDataProvider extends DataProvider {
     await walletDao.update(wallet);
 
     /// update cache,
-    // TODO(fix): improve performance here
     walletsData = await _getFromDB();
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
@@ -343,7 +341,6 @@ class WalletsDataProvider extends DataProvider {
     await accountDao.update(accountModel);
 
     /// update cache,
-    // TODO(fix): improve performance here
     walletsData = await _getFromDB();
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
@@ -376,7 +373,6 @@ class WalletsDataProvider extends DataProvider {
     }
 
     /// update cache,
-    // TODO(fix): improve performance here
     walletsData = await _getFromDB();
     dataUpdateController.add(DataUpdated("some data Updated"));
   }
@@ -392,7 +388,6 @@ class WalletsDataProvider extends DataProvider {
     }
     if (addToStream) {
       /// update cache,
-      // TODO(fix): improve performance here
       walletsData = await _getFromDB();
       dataUpdateController.add(DataUpdated("some data Updated"));
     }
@@ -591,7 +586,6 @@ class WalletsDataProvider extends DataProvider {
 
     if (!initialize) {
       /// update cache,
-      // TODO(fix): improve performance here
       walletsData = await _getFromDB();
       dataUpdateController.add(DataUpdated("some data Updated"));
     }

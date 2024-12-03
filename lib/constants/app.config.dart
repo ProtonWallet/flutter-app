@@ -11,7 +11,6 @@ class AppConfig {
   ApiEnv apiEnv;
   String esploraWebpageUrl;
   String esploraApiUrl;
-  // TODO(fix): use this flag to enable / disable test output
   bool testMode;
   int stopGap;
 
@@ -26,7 +25,6 @@ class AppConfig {
     required this.stopGap,
   });
 
-  // TODO(fix): conver this to enum
   static void initAppEnv() {
     const environment = String.fromEnvironment('appEnv', defaultValue: 'prod');
     logger.i('App environment: $environment');

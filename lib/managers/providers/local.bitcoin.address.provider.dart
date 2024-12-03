@@ -61,7 +61,6 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   final AccountDao accountDao;
   final BitcoinAddressDao bitcoinAddressDao;
   final String userID;
-  // TODO(fix): shouldnt be here. sync shouldnt be in this class
   final WalletManager walletManager;
   LocalBitcoinAddressDataProvider(
     this.walletDao,
@@ -195,11 +194,12 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     AccountModel? accountModel,
   ) async {
     if (walletModel != null && accountModel != null) {
-      // TODO(fix): improve performance
-      final LocalBitcoinAddressData localBitcoinAddressData =
-          await getDataByWalletAccount(walletModel, accountModel);
+      final localBitcoinAddressData = await getDataByWalletAccount(
+        walletModel,
+        accountModel,
+      );
       int highestUsedIndex = -1;
-      for (BitcoinAddressDetail bitcoinAddressDetail
+      for (final bitcoinAddressDetail
           in localBitcoinAddressData.bitcoinAddresses) {
         if (bitcoinAddressDetail.bitcoinAddressModel.used == 1) {
           highestUsedIndex = max(highestUsedIndex,
@@ -215,10 +215,8 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     WalletModel walletModel,
     AccountModel accountModel,
   ) async {
-    final List<LocalBitcoinAddressData> localBitcoinAddressDataList =
-        await _getFromDB();
-    for (LocalBitcoinAddressData localBitcoinAddressData
-        in localBitcoinAddressDataList) {
+    final localBitcoinAddressDataList = await _getFromDB();
+    for (final localBitcoinAddressData in localBitcoinAddressDataList) {
       if (localBitcoinAddressData.accountModel.accountID ==
           accountModel.accountID) {
         return localBitcoinAddressData;
@@ -243,7 +241,9 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
   }
 
   Future<BitcoinAddressModel?> findBitcoinAddressInAccount(
-      String bitcoinAddress, String serverAccountID) async {
+    String bitcoinAddress,
+    String serverAccountID,
+  ) async {
     final BitcoinAddressModel? bitcoinAddressModel = await bitcoinAddressDao
         .findBitcoinAddressInAccount(bitcoinAddress, serverAccountID);
     return bitcoinAddressModel;

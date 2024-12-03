@@ -16,7 +16,7 @@ class AccountModel {
   String derivationPath;
   // encrypted label
   Uint8List label;
-  // TODO(fix): map to script type object
+  // script type
   int scriptType;
   int createTime;
   int modifyTime;
@@ -25,9 +25,7 @@ class AccountModel {
   int lastUsedIndex;
   int poolSize;
 
-  // TODO(fix): move to other place
   String labelDecrypt = "Default Account";
-  // TODO(fix): move to other place
   double balance = 0;
 
   AccountModel({

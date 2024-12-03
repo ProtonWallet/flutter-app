@@ -159,7 +159,6 @@ class ServerTransactionDataProvider extends DataProvider {
         fiatCurrency:
             walletTransaction.exchangeRate!.fiatCurrency.name.toUpperCase(),
         sign: "",
-        // TODO(fix): add sign once apiClient update for it
         exchangeRateTime: walletTransaction.exchangeRate!.exchangeRateTime,
         exchangeRate: walletTransaction.exchangeRate!.exchangeRate.toInt(),
         cents: walletTransaction.exchangeRate!.cents.toInt(),
@@ -212,7 +211,6 @@ class ServerTransactionDataProvider extends DataProvider {
     await transactionDao.insertOrUpdate(transactionModel);
 
     /// refresh cache
-    // TODO(fix): improve performance
     if (!isInitializeProcess) {
       /// only need to update cached serverTransactionDataList after initialized
       serverTransactionDataList = await _getFromDB();

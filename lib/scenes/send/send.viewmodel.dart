@@ -25,7 +25,6 @@ import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
-import 'package:wallet/models/bitcoin.address.model.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/invite_client.dart';
@@ -131,7 +130,7 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   bool hasEmailIntegrationRecipient = false;
   bool showInvite = false;
   bool showInviteBvE = false;
-  bool isBitcoinBase = false; // TODO(fix): add bitcoin base logic
+  bool isBitcoinBase = false;
   WalletModel? walletModel;
   AccountModel? accountModel;
   BuildContext? context;
@@ -496,13 +495,11 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> updateWallet() async {
     selfBitcoinAddresses.clear();
-    final List<BitcoinAddressModel> localBitcoinAddresses = await DBHelper
-        .bitcoinAddressDao!
+    final localBitcoinAddresses = await DBHelper.bitcoinAddressDao!
         .findByWalletAccount(walletModel!.walletID, accountModel!.accountID);
     selfBitcoinAddresses = localBitcoinAddresses.map((bitcoinAddressModel) {
       return bitcoinAddressModel.bitcoinAddress;
     }).toList();
-    // TODO(fix): fix me
     _frbAccount = await walletManager.loadWalletWithID(
       walletID,
       accountModel?.accountID ?? "",
@@ -645,7 +642,6 @@ class SendViewModelImpl extends SendViewModel {
               showInvite = true;
             }
           }
-          // TODO(fix): handle banned bitcoin address alert here
         } on BridgeError catch (e, stacktrace) {
           appStateManager.updateStateFrom(e);
           final err = parseResponseError(e);
@@ -727,7 +723,7 @@ class SendViewModelImpl extends SendViewModel {
         focusNode: focusNode,
         isValid: false,
         name: await contactsDataProvider.getContactName(email),
-      )); // TODO(fix): every recipient has own amountTextController
+      ));
     }
     try {
       await loadBitcoinAddresses();

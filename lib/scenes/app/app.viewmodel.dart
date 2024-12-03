@@ -126,7 +126,7 @@ class AppViewModelImpl extends AppViewModel {
     // walletManager.init();
     serviceManager.register(walletManager);
 
-    // TODO(fix): this is bad.
+    // TODO(fix): decouple.
     dataProviderManager.walletManager = walletManager;
 
     final dbPath = await getDatabaseFolderPath();

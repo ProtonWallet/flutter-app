@@ -89,25 +89,6 @@ class EditSenderSheet {
                       }
                     }),
               ]),
-              //
-              //
-              // TextFieldTextV2(
-              //   labelText: S.of(context).sender_name,
-              //   hintText: S.of(context).sender_name_hint,
-              //   alwaysShowHint: true,
-              //   maxLength: maxWalletNameSize,
-              //   textController: nameController,
-              //   myFocusNode: nameFocusNode,
-              //   validation: (String newAccountName) {
-              //     // bool accountNameExists = false;
-              //
-              // TODO(fix): check if accountName already used
-              //     // if (accountNameExists) {
-              //     //   return S.of(context).account_name_already_used;
-              //     // }
-              //     return "";
-              //   },
-              // ),
             ),
             const SizedBox(height: 10),
             Padding(
@@ -120,12 +101,6 @@ class EditSenderSheet {
                 textController: emailController,
                 myFocusNode: emailFocusNode,
                 validation: (String newAccountName) {
-                  // bool accountNameExists = false;
-
-                  // TODO(fix): check if accountName already used
-                  // if (accountNameExists) {
-                  //   return S.of(context).account_name_already_used;
-                  // }
                   return "";
                 },
               ),

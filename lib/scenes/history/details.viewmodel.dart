@@ -269,7 +269,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       final transactionId = FrbTransitionLayer.encryptMessagesWithUserkey(
           userKey: primaryUserKey, message: txID);
 
-      final DateTime now = DateTime.now();
+      final now = DateTime.now();
       try {
         final walletTransaction = await walletClient.createWalletTransactions(
           walletId: walletID,
@@ -277,8 +277,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           transactionId: transactionId,
           hashedTransactionId: hashedTransactionID,
           label: encryptedLabel,
-          exchangeRateId: userSettingsDataProvider
-              .exchangeRate.id, // TODO(fix): fix it after finalize logic
+          exchangeRateId: userSettingsDataProvider.exchangeRate.id,
         );
 
         String exchangeRateID = userSettingsDataProvider.exchangeRate.id;

@@ -232,7 +232,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<SelectWallet>((event, emit) async {
       final walletID = event.walletID;
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         walletModel.isSelected = walletModel.walletModel.walletID == walletID;
         bool isSelectedWallet = false;
         if (walletModel.isSelected) {
@@ -240,7 +240,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           isSelectedWallet = true;
         }
         bool hasUpdateUserSetting = false;
-        for (AccountMenuModel account in walletModel.accounts) {
+        for (final account in walletModel.accounts) {
           account.isSelected = false;
           if (isSelectedWallet && !hasUpdateUserSetting) {
             userSettingsDataProvider.updateFiatCurrency(
@@ -257,10 +257,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       final walletID = event.walletID;
       final accountID = event.accountID;
 
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         walletModel.isSelected = false;
         if (walletModel.walletModel.walletID == walletID) {
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             account.isSelected = account.accountModel.accountID == accountID;
             if (account.isSelected) {
               userSettingsDataProvider.updateFiatCurrency(
@@ -269,7 +269,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
             }
           }
         } else {
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             account.isSelected = false;
           }
         }
@@ -278,11 +278,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<UpdateWalletName>((event, emit) async {
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           walletModel.walletName = event.newName;
-
-          // TODO(fix): infomr data provider to update name? but this is WalletMenuModel only, data provider need walletMdoel
           break;
         }
       }
@@ -298,7 +296,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
       );
 
       /// update cached data
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
           if (walletModel.isSelected) {
             /// wallet view, check if the update fiat is the default account
@@ -313,10 +311,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               }
             }
           }
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
-              // TODO(fix): handle wallet account view change here
               if (account.isSelected) {
                 userSettingsDataProvider.updateFiatCurrency(
                   event.fiatName.toFiatCurrency(),
@@ -358,9 +355,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<UpdateAccountName>((event, emit) async {
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
               account.label = event.newName;
@@ -374,9 +371,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<AddEmailIntegration>((event, emit) async {
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
               if (!account.emailIds.contains(event.emailID)) {
@@ -392,9 +389,9 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     });
 
     on<RemoveEmailIntegration>((event, emit) async {
-      for (WalletMenuModel walletModel in state.walletsModel) {
+      for (final walletModel in state.walletsModel) {
         if (walletModel.walletModel.walletID == event.walletModel.walletID) {
-          for (AccountMenuModel account in walletModel.accounts) {
+          for (final account in walletModel.accounts) {
             if (account.accountModel.accountID ==
                 event.accountModel.accountID) {
               account.emailIds.remove(event.emailID);
@@ -409,8 +406,8 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
 
     on<UpdateBalance>((event, emit) async {
       final wallets = state.walletsModel;
-      for (WalletMenuModel walletModel in wallets) {
-        for (AccountMenuModel account in walletModel.accounts) {
+      for (final walletModel in wallets) {
+        for (final account in walletModel.accounts) {
           final balance = await walletManager.getWalletAccountBalance(
             walletModel.walletModel.walletID,
             account.accountModel.accountID,
@@ -464,22 +461,34 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   }
 
   void updateAccountName(
-      WalletModel wallet, AccountModel acct, String newName) {
+    WalletModel wallet,
+    AccountModel acct,
+    String newName,
+  ) {
     add(UpdateAccountName(wallet, acct, newName));
   }
 
   void addEmailIntegration(
-      WalletModel wallet, AccountModel acct, String emailID) {
+    WalletModel wallet,
+    AccountModel acct,
+    String emailID,
+  ) {
     add(AddEmailIntegration(wallet, acct, emailID));
   }
 
   void removeEmailIntegration(
-      WalletModel wallet, AccountModel acct, String emailID) {
+    WalletModel wallet,
+    AccountModel acct,
+    String emailID,
+  ) {
     add(RemoveEmailIntegration(wallet, acct, emailID));
   }
 
   void updateAccountFiat(
-      WalletModel wallet, AccountModel acct, String fiatName) {
+    WalletModel wallet,
+    AccountModel acct,
+    String fiatName,
+  ) {
     add(UpdateAccountFiat(wallet, acct, fiatName));
   }
 

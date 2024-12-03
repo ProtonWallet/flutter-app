@@ -133,7 +133,6 @@ class TransactionDaoImpl extends TransactionDao {
 
   @override
   Future<void> deleteByServerID(String id) {
-    // TODO(fix): implement deleteByServerID
     throw UnimplementedError();
   }
 }

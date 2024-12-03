@@ -59,7 +59,8 @@ class ProtonFeedItem {
 
   // TODO(fix): this shouldnt be here.
   static Future<List<ProtonFeedItem>> loadFromApi(
-      DiscoveryContentClient apiClient) async {
+    DiscoveryContentClient apiClient,
+  ) async {
     final List<ProtonFeedItem> items = [];
     try {
       final List<Content> contents = await apiClient.getDiscoveryContents();

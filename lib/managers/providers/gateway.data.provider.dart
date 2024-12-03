@@ -162,18 +162,6 @@ class GatewayDataProvider extends DataProvider {
     if (quotes == null) {
       return null;
     }
-    // TODO(fix): get the quote for the selected payment method and amount
-    // final doubleAmount = double.parse(amount);
-    // final quote = await onRampGatewayClient.getQuotes(
-    //   amount: doubleAmount,
-    //   fiatCurrency: fiatCurrency,
-    //   provider: provider,
-    // );
-    // if (quote.isNotEmpty) {
-    //   for (var entry in quote.entries) {
-    //     quoted[entry.key] = entry.value;
-    //   }
-    // }
     return quotes;
   }
 

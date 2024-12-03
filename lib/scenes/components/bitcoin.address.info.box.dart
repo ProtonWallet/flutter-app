@@ -110,20 +110,6 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               ),
             ],
           ),
-
-          // TODO(fix): add btc amount of address
-          // Row(
-          //   children: [
-          //     Text(
-          //       "BTC Amount",
-          //       style: FontManager.body2Regular(ProtonColors.textWeak),
-          //     ),
-          //     Text(
-          //       bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddressIndex.toString(),
-          //       style: FontManager.body2Regular(ProtonColors.textWeak),
-          //     ),
-          //   ],
-          // ),
           Row(
             children: [
               SizedBox(

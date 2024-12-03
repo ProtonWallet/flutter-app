@@ -116,7 +116,6 @@ class WalletKeysProvider extends DataProvider {
   Future<void> saveApiWalletKeys(List<ApiWalletKey> items) async {
     final keys = WalletKey.fromApiWalletKeys(items);
     saveWalletKeys(keys);
-    // TODO(fix): add notification to update the wallet keys
   }
 
   @override
