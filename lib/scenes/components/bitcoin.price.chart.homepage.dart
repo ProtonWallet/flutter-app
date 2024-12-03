@@ -117,8 +117,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
         Column(children: [
           Container(
             width: Responsive.isDesktop(context)
-                ? MediaQuery.of(context).size.width - drawerMaxWidth - 240
-                : MediaQuery.of(context).size.width - 240,
+                ? MediaQuery.of(context).size.width - drawerMaxWidth - 256
+                : MediaQuery.of(context).size.width - 256,
             padding: const EdgeInsets.symmetric(
               horizontal: 10,
             ),

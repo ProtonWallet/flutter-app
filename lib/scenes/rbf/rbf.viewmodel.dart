@@ -199,13 +199,16 @@ class RbfViewModelImpl extends RbfViewModel {
         addressId: addressID,
         body: transactionModel.body,
         recipients: apiRecipientsMap.isNotEmpty ? apiRecipientsMap : null,
-        isAnonymous: 0,
+        isAnonymous: transactionModel.isAnonymous,
       );
       rbfSuccess = true;
     } on BridgeError catch (e, _) {
       final err = parseResponseError(e);
       if (err != null) {
         if (err.code == 2001 && err.error == "Recipients list is not valid") {
+          /// this is a hotfix for BvE address already been wipe out from BE
+          /// so will return recipients list is not valid error
+          /// we disable BvE to avoid the error
           try {
             await blockchainClient.broadcastPsbt(
               psbt: frbPsbt,
@@ -214,7 +217,7 @@ class RbfViewModelImpl extends RbfViewModel {
               label: utf8.decode(transactionModel.label),
               exchangeRateId: exchangeRate.id,
               addressId: addressID,
-              isAnonymous: 0,
+              isAnonymous: transactionModel.isAnonymous,
             );
             rbfSuccess = true;
           } on BridgeError catch (e, _) {

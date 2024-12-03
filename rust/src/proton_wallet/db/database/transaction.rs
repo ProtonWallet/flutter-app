@@ -51,7 +51,10 @@ impl TransactionDatabase {
                 sender TEXT,
                 tolist TEXT,
                 subject TEXT,
-                body TEXT
+                body TEXT,
+                is_suspicious INTEGER NOT NULL,
+                is_private INTEGER NOT NULL,
+                is_anonymous INTEGER NOT NULL
             )
             "#,
                 self.table_name().as_str()
@@ -100,5 +103,8 @@ mod tests {
         assert!(db.column_exists("tolist").await.unwrap());
         assert!(db.column_exists("subject").await.unwrap());
         assert!(db.column_exists("body").await.unwrap());
+        assert!(db.column_exists("is_suspicious").await.unwrap());
+        assert!(db.column_exists("is_private").await.unwrap());
+        assert!(db.column_exists("is_anonymous").await.unwrap());
     }
 }

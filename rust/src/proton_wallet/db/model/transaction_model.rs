@@ -24,6 +24,9 @@ pub struct TransactionModel {
     pub tolist: Option<String>,
     pub subject: Option<String>,
     pub body: Option<String>,
+    pub is_suspicious: u8,
+    pub is_private: u8,
+    pub is_anonymous: Option<u8>,
 }
 
 impl ModelBase for TransactionModel {

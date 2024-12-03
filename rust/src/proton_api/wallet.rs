@@ -36,6 +36,7 @@ pub struct WalletTransaction {
     pub transaction_time: String,
     pub is_suspicious: u8,
     pub is_private: u8,
+    pub is_anonymous: Option<u8>,
     pub exchange_rate: Option<ProtonExchangeRate>,
     pub hashed_transaction_id: Option<String>,
     pub subject: Option<String>,
@@ -55,6 +56,7 @@ impl From<ApiWalletTransaction> for WalletTransaction {
             transaction_time: wallet_transaction.TransactionTime,
             is_suspicious: wallet_transaction.IsSuspicious,
             is_private: wallet_transaction.IsPrivate,
+            is_anonymous: wallet_transaction.IsAnonymous,
             exchange_rate: wallet_transaction.ExchangeRate.map(|v| v.into()),
             hashed_transaction_id: wallet_transaction.HashedTransactionID,
             subject: wallet_transaction.Subject,
@@ -286,6 +288,7 @@ mod tests {
             TransactionTime: "2024-10-22T12:00:00Z".to_string(),
             IsSuspicious: 0,
             IsPrivate: 1,
+            IsAnonymous: Some(1),
             ExchangeRate: None, // Simplified for this test
             HashedTransactionID: Some("hashed_txid_123".to_string()),
             Subject: Some("Test Subject".to_string()),
