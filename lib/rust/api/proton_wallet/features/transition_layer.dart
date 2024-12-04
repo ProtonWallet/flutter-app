@@ -187,6 +187,13 @@ class FrbTransitionLayer {
               userKey: userKey,
               userKeyPassphrase: userKeyPassphrase);
 
+  static String getHmacHashedString(
+          {required FrbUnlockedWalletKey walletKey,
+          required String transactionId}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerGetHmacHashedString(
+              walletKey: walletKey, transactionId: transactionId);
+
   static String sign(
           {required List<ProtonUserKey> userKeys,
           required ProtonAddressKey addrKeys,

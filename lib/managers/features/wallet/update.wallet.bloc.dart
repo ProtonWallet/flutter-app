@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -190,9 +189,9 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
                       userKey: primaryUserKey, message: txid);
 
               /// hash transaction id
-              final hashedTransID = await WalletKeyHelper.getHmacHashedString(
-                unlockedWalletKey,
-                txid,
+              final hashedTransID = FrbTransitionLayer.getHmacHashedString(
+                walletKey: unlockedWalletKey,
+                transactionId: txid,
               );
 
               /// pack migrated data

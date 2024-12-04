@@ -37,6 +37,11 @@ class FrbWalletKeyHelper {
       .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGetSecureRandom(
           length: length);
 
+  static FrbUnlockedWalletKey restore({required String base64SecureKey}) =>
+      RustLib.instance.api
+          .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperRestore(
+              base64SecureKey: base64SecureKey);
+
   @override
   int get hashCode => 0;
 

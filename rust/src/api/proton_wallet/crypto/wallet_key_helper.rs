@@ -20,6 +20,13 @@ impl FrbWalletKeyHelper {
     }
 
     #[frb(sync)]
+    pub fn restore(base64_secure_key: &str) -> Result<FrbUnlockedWalletKey, BridgeError> {
+        Ok(FrbUnlockedWalletKey::new(
+            WalletKeyProvider::restore_base64(&base64_secure_key)?,
+        ))
+    }
+
+    #[frb(sync)]
     pub fn generate_secret_key_as_base64() -> String {
         WalletKeyProvider::generate().to_base64()
     }
