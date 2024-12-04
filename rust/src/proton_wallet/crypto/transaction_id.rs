@@ -1,10 +1,12 @@
 use base64::{prelude::BASE64_STANDARD, Engine};
 use core::str;
+use hmac::{Hmac, Mac};
 use proton_crypto_account::proton_crypto::crypto::{
     DataEncoding, Decryptor, DecryptorSync, Encryptor, EncryptorSync, PGPProviderSync, VerifiedData,
 };
+use sha2::Sha256;
 
-use super::{private_key::UnlockedPrivateKeys, Result};
+use super::{private_key::UnlockedPrivateKeys, wallet_key::UnlockedWalletKey, Result};
 
 /// This ID can be converted to/from strings and it is clear text
 #[derive(Debug)]
@@ -53,6 +55,24 @@ impl WalletTransactionID {
             .with_encryption_key(&unlocked_keys.as_self_encryption_public_key()?)
             .encrypt_raw(&self.0, DataEncoding::Armor)?;
         Ok(EncryptedWalletTransactionID::new(encrypted))
+    }
+
+    /// Computes an HMAC-SHA256 hash of the message
+    ///
+    /// * `key` - A reference to an `UnlockedWalletKey` containing the entropy used as the HMAC key.
+    ///
+    /// A `Result` containing the base64-encoded HMAC hash string on success,
+    /// or an error if any step in the hashing process fails.
+    pub fn hmac_hash_with(&self, key: &UnlockedWalletKey) -> Result<String> {
+        // Create HMAC-SHA256 instance with the key
+        let mut hmac = Hmac::<Sha256>::new_from_slice(&key.to_entropy())?;
+        // Input the message into HMAC
+        hmac.update(self.0.as_slice());
+        // Finalize the HMAC computation and resulting hash bytes
+        let result = hmac.finalize();
+        let hashed_bytes = result.into_bytes();
+        // Encode the hash bytes into a base64 string
+        Ok(BASE64_STANDARD.encode(hashed_bytes))
     }
 }
 
@@ -107,7 +127,10 @@ mod tests {
             get_test_user_2_locked_address_key, get_test_user_2_locked_user_key_secret,
             get_test_user_2_locked_user_keys,
         },
-        proton_wallet::crypto::private_key::LockedPrivateKeys,
+        proton_wallet::crypto::{
+            private_key::LockedPrivateKeys,
+            wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
+        },
     };
 
     use super::*;
@@ -233,5 +256,17 @@ mod tests {
         let unencrypted_tx_id = encrypted_tx_id.decrypt_with(&provider, &unlocked_user_key);
         assert!(unencrypted_tx_id.is_err());
         println!("{}", unencrypted_tx_id.unwrap_err());
+    }
+
+    #[test]
+    fn test_hash_hmac_transaction_id() {
+        let unlocked_wallet_key =
+            WalletKeyProvider::restore_base64("MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=")
+                .unwrap();
+        let transaction_id = WalletTransactionID::new_from_str(
+            "6bbfc06ef911e4b2fffe1150fa8f3729b3ee52c78ef21093b5ae45544ff690fa",
+        );
+        let hashed_txid = transaction_id.hmac_hash_with(&unlocked_wallet_key).unwrap();
+        assert_eq!(hashed_txid, "O4f/ePTaBh8tNsiDaJRqQfBov6/+UU2FenCKcK14MGM=");
     }
 }

@@ -10,7 +10,6 @@ import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -254,9 +253,9 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
     logger.i("transactionModel == null ? ${transactionModel == null}");
     if (transactionModel == null && unlockedWalletKey != null) {
-      final hashedTransactionID = await WalletKeyHelper.getHmacHashedString(
-        unlockedWalletKey!,
-        txID,
+      final hashedTransactionID = FrbTransitionLayer.getHmacHashedString(
+        walletKey: unlockedWalletKey!,
+        transactionId: txID,
       );
 
       /// default label

@@ -1,6 +1,7 @@
 use aes_gcm::Error as AesGcmError;
 use proton_crypto::crypto::VerificationError;
 use proton_crypto_account::{errors::AccountCryptoError, proton_crypto::CryptoError};
+use sha2::digest::InvalidLength;
 
 #[derive(Debug, thiserror::Error)]
 pub enum WalletCryptoError {
@@ -42,6 +43,9 @@ pub enum WalletCryptoError {
 
     #[error("Relock private key mismatched: {0}")]
     RelockKeyCountMismatch(String),
+
+    #[error("Invalid hmac Sha256 length: {0}")]
+    HmacInvalidLength(#[from] InvalidLength),
 }
 
 // map aes_gcm::Error to WalletCryptoError

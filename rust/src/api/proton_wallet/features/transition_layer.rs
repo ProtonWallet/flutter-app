@@ -419,14 +419,26 @@ impl FrbTransitionLayer {
             .join()
             .unwrap_or_else(|e| Err(BridgeError::Generic(format!("Thread error: {:?}", e))))
     }
+
+    #[frb(sync)]
+    pub fn get_hmac_hashed_string(
+        wallet_key: FrbUnlockedWalletKey,
+        transaction_id: &str,
+    ) -> Result<String, BridgeError> {
+        let transaction_id = WalletTransactionID::new_from_str(transaction_id);
+        Ok(transaction_id.hmac_hash_with(&wallet_key.0)?)
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::mocks::user_keys::tests::{
-        get_test_user_1_locked_proton_user_key, get_test_user_1_locked_user_key,
-        get_test_user_1_locked_user_key_secret, get_test_user_2_locked_proton_address_key,
-        get_test_user_2_locked_proton_user_key, get_test_user_2_locked_user_key,
+    use crate::{
+        api::proton_wallet::crypto::wallet_key_helper::FrbWalletKeyHelper,
+        mocks::user_keys::tests::{
+            get_test_user_1_locked_proton_user_key, get_test_user_1_locked_user_key,
+            get_test_user_1_locked_user_key_secret, get_test_user_2_locked_proton_address_key,
+            get_test_user_2_locked_proton_user_key, get_test_user_2_locked_user_key,
+        },
     };
 
     use super::FrbTransitionLayer;
@@ -540,5 +552,17 @@ mod tests {
         .unwrap();
         println!("{}", out.body);
         assert_eq!(out.body, message);
+    }
+
+    #[test]
+    fn test_hash_hmac() {
+        let wallet_key =
+            FrbWalletKeyHelper::restore("MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=").unwrap();
+        let hashed_txid = FrbTransitionLayer::get_hmac_hashed_string(
+            wallet_key,
+            "6bbfc06ef911e4b2fffe1150fa8f3729b3ee52c78ef21093b5ae45544ff690fa",
+        )
+        .unwrap();
+        assert_eq!(hashed_txid, "O4f/ePTaBh8tNsiDaJRqQfBov6/+UU2FenCKcK14MGM=");
     }
 }

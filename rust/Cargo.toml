@@ -37,6 +37,8 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 ## old
 thiserror = "1.0.61"
 rand = "0.8"
+hmac = "0.12"
+sha2 = "0.10"
 base64 = "0.22.0"
 tokio = { version = "1.28.0", features = ["full"] }
 flutter_rust_bridge = { version = "=2.6.0" }
