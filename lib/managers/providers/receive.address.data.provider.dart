@@ -90,6 +90,7 @@ class ReceiveAddressDataProvider extends DataProvider {
     FrbAccount account,
     AccountModel accountModel,
   ) async {
+    /// needs to handle lastUsedIndex and highestPoolIndex to prevent address reuse
     await handleLastUsedIndex(account, accountModel);
     await handlePoolIndex(account, accountModel);
     if (!id2AddressInfo.containsKey(accountModel.accountID)) {
@@ -112,6 +113,10 @@ class ReceiveAddressDataProvider extends DataProvider {
     FrbAccount account,
     AccountModel accountModel,
   ) async {
+    /// needs to handle lastUsedIndex and highestPoolIndex to prevent address reuse
+    await handleLastUsedIndex(account, accountModel);
+    await handlePoolIndex(account, accountModel);
+
     final FrbAddressInfo newAddress = await account.getNextReceiveAddress();
     id2AddressInfo[accountModel.accountID] = newAddress;
 
