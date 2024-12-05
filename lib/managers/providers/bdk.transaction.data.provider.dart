@@ -229,6 +229,7 @@ class BDKTransactionDataProvider extends DataProvider {
               account: account,
               stopGap: BigInt.from(customStopgap + accountModel.poolSize),
             );
+            await blockchain!.partialSync(account: account);
             await shared.write(syncCheckID, true);
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync end time: $timeEnd");
