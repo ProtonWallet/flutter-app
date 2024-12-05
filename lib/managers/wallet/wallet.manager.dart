@@ -70,11 +70,14 @@ class WalletManager implements Manager {
     );
     // frbWallets[walletModel.walletID] = frbWallet;
 
-    final String? derivationPath = await getDerivationPathWithID(accountID);
-    if (derivationPath == null) {
-      logger.e("can not load derivationPath");
+    final AccountModel? accountModel =
+        await DBHelper.accountDao!.findByServerID(accountID);
+    if (accountModel == null) {
+      logger.e("can not load account");
       return null;
     }
+    final derivationPath = accountModel.derivationPath;
+
     final found = frbWallet.getAccount(derivationPath: derivationPath);
     if (found != null) {
       return found;
@@ -107,6 +110,16 @@ class WalletManager implements Manager {
           derivationPath: derivationPath,
           connectorFactory: storage);
 
+      /// fix the supper big index casued missing transactions during partial sync.
+      /// Notes:
+      /// * because of bdk bug when caching the FrbAccount, we can't read the transaction from second account.
+      /// *  so we dont cache FrbAccount in memory and always load it from cache
+      ///
+      /// * lastUsedIndex is in memory not in cache so we need to reset it right after load account
+      account.markReceiveAddressesUsedTo(
+        from: 0,
+        to: accountModel.lastUsedIndex,
+      );
       return account;
     }
     return null;
