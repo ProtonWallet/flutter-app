@@ -7,7 +7,10 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 
 class WalletNameProvider extends DataProvider {
+  /// external data provider
   final WalletKeysProvider walletKeysProvider;
+
+  /// db dao
   final AccountDao accountDao;
   final WalletDao walletDao;
 

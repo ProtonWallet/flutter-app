@@ -30,7 +30,6 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
     this.userDataProvider,
   );
 
-  ///
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
   final UserDataProvider userDataProvider;
@@ -60,12 +59,12 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
         twoFactorCode: loginTwoFaTotp,
       );
       final response = await protonSettingsApi.disable2FaTotp(req: proofs);
-      logger.i("enable2FaTotp response code: $response");
+      logger.i("disable2FaTotp response code: $response");
       userDataProvider.enabled2FA(false);
       return true;
-    } on BridgeError catch (exception, stracktrace) {
+    } on BridgeError catch (exception, stacktrace) {
       error = parseSampleDisplayError(exception);
-      Sentry.captureException(exception, stackTrace: stracktrace);
+      Sentry.captureException(exception, stackTrace: stacktrace);
       logger.e(exception.toString());
       return false;
     } catch (e) {

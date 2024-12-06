@@ -398,7 +398,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             ButtonV5(
                                 onPressed: () {
                                   launchUrl(Uri.parse(
-                                      "${appConfig.esploraWebpageUrl}search?q=${viewModel.txID}"));
+                                      "${appConfig.esploraWebpageUrl}search?q=${viewModel.frbTransactionDetails.txid}"));
                                 },
                                 text: S.of(context).view_on_blockstream,
                                 width: MediaQuery.of(context).size.width,
@@ -480,7 +480,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 bitcoinAddress: viewModel.toEmail.isNotEmpty
                     ? WalletManager.getBitcoinAddressFromWalletTransaction(
                         viewModel.toEmail)
-                    : viewModel.addresses.firstOrNull ?? "",
+                    : "",
                 multiRecipient: false,
               )
             : Column(children: [
@@ -497,13 +497,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             ? TransactionHistoryItem(
                 title: S.of(context).trans_from,
                 content: "$yourEmail (You)",
-                memo: "${viewModel.strWallet} - ${viewModel.strAccount}",
+                memo: "${viewModel.walletName} - ${viewModel.accountName}",
                 backgroundColor: ProtonColors.white,
                 isLoading: !viewModel.initialized,
               )
             : TransactionHistoryItem(
                 title: S.of(context).trans_from,
-                content: "${viewModel.strWallet} - ${viewModel.strAccount}",
+                content: "${viewModel.walletName} - ${viewModel.accountName}",
                 backgroundColor: ProtonColors.white,
                 isLoading: !viewModel.initialized,
               ),
@@ -577,8 +577,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
         TransactionHistorySendItem(
           content: viewModel.toEmail.isNotEmpty
               ? "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)"
-              : "${viewModel.strWallet} - ${viewModel.strAccount}",
-          walletAccountName: "${viewModel.strWallet} - ${viewModel.strAccount}",
+              : "${viewModel.walletName} - ${viewModel.accountName}",
+          walletAccountName:
+              "${viewModel.walletName} - ${viewModel.accountName}",
           bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
           isLoading: !viewModel.initialized,
           displayBalance: viewModel.displayBalance,

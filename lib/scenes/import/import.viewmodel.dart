@@ -100,14 +100,15 @@ class ImportViewModelImpl extends ImportViewModel {
     }
 
     final addresses = await protonEmailAddressClient.getProtonAddress();
+
+    /// filter active address
     protonAddresses =
         addresses.where((element) => element.status == 1).toList();
 
     final List<WalletData>? wallets =
         await dataProviderManager.walletDataProvider.getWallets();
-    if (wallets == null) {
-      isFirstWallet = true;
-    } else if (wallets.isEmpty) {
+    if (wallets == null || wallets.isEmpty) {
+      /// set flag for first wallet, we will need to show T&C page for first wallet import
       isFirstWallet = true;
     }
     sinkAddSafe();
@@ -182,7 +183,7 @@ class ImportViewModelImpl extends ImportViewModel {
           scriptTypeInfo,
           "Primary Account",
           fiatCurrencyNotifier.value,
-          0, // default wallet account index
+          0,
         );
         final String walletID = apiWallet.wallet.id;
         final String accountID = apiWalletAccount.id;
@@ -255,6 +256,7 @@ class ImportViewModelImpl extends ImportViewModel {
     AccountModel accountModel,
     String serverAddressID,
   ) async {
+    /// enable BvE for given account with given addressID
     try {
       await walletManager.addEmailAddress(
         serverWalletID,

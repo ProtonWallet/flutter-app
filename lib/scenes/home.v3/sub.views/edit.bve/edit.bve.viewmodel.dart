@@ -95,11 +95,14 @@ class EditBvEViewModelImpl extends EditBvEViewModel {
     }
 
     try {
+      /// update db tables
       await walletManager.addEmailAddress(
         walletModel.walletID,
         accountModel.accountID,
         selectedEmailID!,
       );
+
+      /// update memory caches
       walletListBloc.addEmailIntegration(
         walletModel,
         accountModel,

@@ -670,37 +670,6 @@ class WalletManager implements Manager {
     }
   }
 
-  static Future<TransactionDetailFromBlockChain?>
-      getTransactionDetailsFromBlockStream(String txid) async {
-    final String baseUrl = "${appConfig.esploraApiUrl}api";
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/tx/$txid'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final transactionDetailFromBlockChain = TransactionDetailFromBlockChain(
-            txid: txid,
-            feeInSATS: data['fee'],
-            blockHeight: data['status']['block_height'] ?? 0,
-            timestamp: data['status']['block_time'] ?? 0);
-        final recipientMapList = data['vout']
-            .map((output) => {
-                  'address': output['scriptpubkey_address'],
-                  'value': output['value']
-                })
-            .toList();
-        for (final recipientMap in recipientMapList) {
-          transactionDetailFromBlockChain.addRecipient(Recipient(
-              bitcoinAddress: recipientMap["address"],
-              amountInSATS: recipientMap["value"]));
-        }
-        return transactionDetailFromBlockChain;
-      }
-    } catch (e) {
-      logger.e(e.toString());
-    }
-    return null;
-  }
-
   Future<bool> isMineBitcoinAddress(
     FrbAccount account,
     String bitcoinAddress,

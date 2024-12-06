@@ -52,20 +52,30 @@ class DisplayBalanceUpdated extends DataState {
 }
 
 class UserSettingsDataProvider extends DataProvider {
+  /// user id
   final String userID;
-  final SettingsClient settingsClient;
-  final PreferencesManager shared;
-  bool initializedExchangeRate = false;
 
-  //
+  /// api client
+  final SettingsClient settingsClient;
+
+  /// shared preference
+  final PreferencesManager shared;
+
+  /// provider boolean flags
+  bool initializedExchangeRate = false;
+  bool displayBalance = true;
+
+  /// drift queries
   final WalletUserSettingsQueries settingsQueries;
 
-  final defaultTwoFactorAmountThreshold = 1000;
+  /// memory caches
+  int customStopgap = appConfig.stopGap;
+  ProtonExchangeRate exchangeRate = defaultExchangeRate;
+  BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
+  FiatCurrency fiatCurrency = FiatCurrency.usd;
 
-  // need to monitor the db changes apply to this cache
+  /// need to monitor the db changes apply to this cache
   WalletUserSettings? settingsData;
-  bool displayBalance = true;
-  int customStopgap = 50;
 
   UserSettingsDataProvider(
     this.userID,
@@ -74,22 +84,15 @@ class UserSettingsDataProvider extends DataProvider {
     this.shared,
   );
 
-  ProtonExchangeRate exchangeRate = defaultExchangeRate;
-  BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
-  FiatCurrency fiatCurrency = FiatCurrency.usd;
-
+  /// streams
   StreamController<UserSettingDataUpdated> dataUpdateController =
       StreamController<UserSettingDataUpdated>();
-
   StreamController<ExchangeRateDataUpdated> exchangeRateUpdateController =
       StreamController<ExchangeRateDataUpdated>();
-
   StreamController<FiatCurrencyDataUpdated> fiatCurrencyUpdateController =
       StreamController<FiatCurrencyDataUpdated>();
-
   StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
       StreamController<BitcoinUnitDataUpdated>();
-
   StreamController<DisplayBalanceUpdated> displayBalanceUpdateController =
       StreamController<DisplayBalanceUpdated>();
 
@@ -109,18 +112,21 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   Future<WalletUserSettings?> getSettings() async {
+    /// use memory cache data if exists
     if (settingsData != null) {
       return settingsData;
     }
 
+    /// update memory cache from db
     settingsData = await _getFromDB();
     if (settingsData != null) {
       return settingsData;
     }
 
-    // try to fetch from server:
+    /// try to fetch from server if no data found on db
     await loadFromServer();
 
+    /// update memory cache from db
     settingsData = await _getFromDB();
     if (settingsData != null) {
       return settingsData;
@@ -137,8 +143,9 @@ class UserSettingsDataProvider extends DataProvider {
   Future<int> getCustomStopgap() async {
     customStopgap =
         await shared.read(PreferenceKeys.customStopgapKey) ?? appConfig.stopGap;
-    /// cap customStopgap in valid range (10, 100)
-    customStopgap = min(max(customStopgap, 10), 100);
+
+    /// cap customStopgap in valid range (10, 200) to avoid abuse
+    customStopgap = min(max(customStopgap, 10), 200);
     return customStopgap;
   }
 
@@ -221,9 +228,6 @@ class UserSettingsDataProvider extends DataProvider {
 
   void updateExchangeRate(ProtonExchangeRate exchangeRate) {
     this.exchangeRate = exchangeRate;
-    logger.d(
-      "Updating exchangeRate in new user setting provider (${exchangeRate.fiatCurrency.name}) = ${exchangeRate.exchangeRate}",
-    );
     exchangeRateUpdateController.add(ExchangeRateDataUpdated());
   }
 
@@ -260,7 +264,6 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   Future<void> preLoad() async {
-    // this is to preload the contacts
     await getSettings();
   }
 

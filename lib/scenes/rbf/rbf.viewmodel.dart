@@ -106,6 +106,7 @@ class RbfViewModelImpl extends RbfViewModel {
   String errorMessage = "";
 
   void onFeeChange() {
+    /// callback when user change the new feeRate
     final newFee = int.parse(newFeeController.text);
     estimatedBlock = findQuickestBlock(newFee, estimatedFees);
     rbfSpeed = getRBFSpeedByBlock(estimatedBlock);
@@ -118,6 +119,8 @@ class RbfViewModelImpl extends RbfViewModel {
     if (accountModel == null) {
       throw Exception("Account not found in rbf view");
     }
+
+    /// load bdk wallet
     _frbAccount = await walletManager.loadWalletWithID(
       walletID,
       accountID,
@@ -128,6 +131,7 @@ class RbfViewModelImpl extends RbfViewModel {
       throw Exception("FrbAccount not found in rbf view");
     }
 
+    /// init fiat currency info for UI to display
     fiatCurrencyName = userSettingsDataProvider.getFiatCurrencyName();
     fiatCurrencySign = userSettingsDataProvider.getFiatCurrencySign();
     fiatCurrencyName = userSettingsDataProvider.getFiatCurrencyName(
@@ -137,6 +141,7 @@ class RbfViewModelImpl extends RbfViewModel {
     displayDigits = (log(exchangeRate.cents.toInt()) / log(10)).round();
     currentFee = frbTransactionDetails.fees?.toInt() ?? 0;
 
+    /// get mempoolinfo from blockchain with api client
     final MempoolInfo mempoolInfo = await transactionClient.getMempoolInfo();
     final minimumIncrementalFee =
         max(mempoolInfo.mempoolMinFee, mempoolInfo.incrementalRelayFee) *
@@ -144,6 +149,8 @@ class RbfViewModelImpl extends RbfViewModel {
     blockchainClient = FrbBlockchainClient.createEsploraBlockchain();
     estimatedFees = await blockchainClient.getFeesEstimation();
     final nextBlockFee = estimatedFees["1"] ?? 1.0;
+
+    /// calculate min/max new fee based on next blocks' feeRate
     minNewFee = currentFee +
         (minimumIncrementalFee * frbTransactionDetails.vbytesSize.toInt())
             .ceil();
@@ -153,6 +160,7 @@ class RbfViewModelImpl extends RbfViewModel {
         ) +
         (minimumIncrementalFee * frbTransactionDetails.vbytesSize.toInt())
             .ceil();
+
     initialNewFee = (minNewFee + (maxNewFee - minNewFee) / 3).ceil();
     newFeeController = TextEditingController(text: initialNewFee.toString());
     newFeeController.addListener(onFeeChange);
@@ -169,11 +177,14 @@ class RbfViewModelImpl extends RbfViewModel {
     final newFee = int.parse(newFeeController.text);
     bool rbfSuccess = false;
 
+    /// bump fee
     FrbPsbt frbPsbt = await _frbAccount!.bumpTransactionsFees(
       txid: frbTransactionDetails.txid,
       fees: BigInt.from(newFee),
       network: network,
     );
+
+    /// sign  the PSBT so we can broadcast
     frbPsbt = await _frbAccount!.sign(
       psbt: frbPsbt,
       network: network,
@@ -190,6 +201,8 @@ class RbfViewModelImpl extends RbfViewModel {
         }
         apiRecipientsMap[bitcoinAddress] = email;
       }
+
+      /// broadcast to blockchain
       await blockchainClient.broadcastPsbt(
         psbt: frbPsbt,
         walletId: walletID,
@@ -259,6 +272,7 @@ class RbfViewModelImpl extends RbfViewModel {
 
   @override
   int findQuickestBlock(int fee, Map<String, double> estimatedFees) {
+    /// find the nearest block, return `N` as how many block to be confirm
     final feeRate = fee / frbTransactionDetails.vbytesSize.toInt();
     final sortedKeys = estimatedFees.keys.toList()
       ..sort((a, b) => int.parse(a).compareTo(int.parse(b)));

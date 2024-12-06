@@ -9,12 +9,21 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/unleash_client.dart';
 
 class UnleashDataProvider extends DataProvider {
+  /// unleash client
   late UnleashClient unleashClient;
+
+  /// api client
   final FrbUnleashClient frbUnleashClient;
+
+  /// api env
   final ApiEnv apiEnv;
+
+  /// refresh interval
   final duration = const Duration(minutes: 2).inSeconds;
 
+  /// timer for job guardian
   Timer? timer;
+
   UnleashDataProvider(
     this.apiEnv,
     this.frbUnleashClient,

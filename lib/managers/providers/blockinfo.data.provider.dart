@@ -4,7 +4,10 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/block_client.dart';
 
 class BlockInfoDataProvider extends DataProvider {
+  /// api client
   final BlockClient blockClient;
+
+  /// memory cache
   int blockHeight = 0;
 
   BlockInfoDataProvider(

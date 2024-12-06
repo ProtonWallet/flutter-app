@@ -167,57 +167,63 @@ class DataProviderManager extends Manager {
 
   @override
   Future<void> login(String userID) async {
-    //
+    /// user data
     userDataProvider = UserDataProvider(
       apiServiceManager.getApiService().getProtonUserClient(),
       UserQueries(dbConnection),
       UserKeysQueries(dbConnection),
     );
-    //
+
+    /// wallet passphrase
     walletPassphraseProvider = WalletPassphraseProvider(storage);
-    // wallets and accounts
+
+    /// wallets and accounts
     walletDataProvider = WalletsDataProvider(
       storage,
       DBHelper.walletDao!,
       DBHelper.accountDao!,
       DBHelper.addressDao!,
       apiServiceManager.getApiService().getWalletClient(),
-      // TODO(fix): put selected wallet server id here
       "",
-      // TODO(fix): put selected wallet account server id here
       "",
       userID,
     );
-    //
+
+    /// wallet keys
     walletKeysProvider = WalletKeysProvider(
       userManager,
       WalletKeyStore(storage),
       apiServiceManager.getApiService().getWalletClient(),
     );
-    //
+
+    /// contacts
     contactsDataProvider = ContactsDataProvider(
       apiServiceManager.getApiService().getProtonContactsClient(),
       DBHelper.contactsDao!,
       userID,
     );
-    //
+
+    /// user settings
     userSettingsDataProvider = UserSettingsDataProvider(
       userID,
       WalletUserSettingsQueries(dbConnection),
       apiServiceManager.getApiService().getSettingsClient(),
       shared,
     );
-    // on ramp gateway
+
+    /// on ramp gateway
     gatewayDataProvider = GatewayDataProvider(
       apiServiceManager.getApiService().getOnRampGatewayClient(),
     );
 
+    /// address key
     addressKeyProvider = AddressKeyProvider(
       userManager,
       apiServiceManager.getApiService().getProtonEmailAddrClient(),
       storage,
     );
 
+    /// server transactions
     serverTransactionDataProvider = ServerTransactionDataProvider(
         apiServiceManager.getApiService().getWalletClient(),
         DBHelper.walletDao!,
@@ -226,6 +232,7 @@ class DataProviderManager extends Manager {
         DBHelper.transactionDao!,
         userManager.userID);
 
+    /// bdk transactions
     bdkTransactionDataProvider = BDKTransactionDataProvider(
       DBHelper.accountDao!,
       apiServiceManager.getApiService(),
@@ -234,6 +241,7 @@ class DataProviderManager extends Manager {
       userSettingsDataProvider,
     );
 
+    /// local bitcoin address
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(
       DBHelper.walletDao!,
       DBHelper.accountDao!,
@@ -242,46 +250,51 @@ class DataProviderManager extends Manager {
       walletManager,
     );
 
-    // balanceDataProvider = BalanceDataProvider(
-    //   DBHelper.accountDao!,
-    // );
-
+    /// proton address
     protonAddressProvider = ProtonAddressProvider(
       DBHelper.addressDao!,
     );
 
+    /// block info
     blockInfoDataProvider = BlockInfoDataProvider(
       apiServiceManager.getApiService().getBlockClient(),
     );
 
+    /// exclusive invite
     exclusiveInviteDataProvider = ExclusiveInviteDataProvider(
       apiServiceManager.getApiService().getInviteClient(),
     );
 
+    /// connectivity
     connectivityProvider = ConnectivityProvider();
 
+    /// price graph
     priceGraphDataProvider = PriceGraphDataProvider(
       apiServiceManager.getApiService().getPriceGraphClient(),
     );
 
+    /// receive address
     receiveAddressDataProvider = ReceiveAddressDataProvider(
       apiServiceManager.getApiService().getBitcoinAddrClient(),
       apiServiceManager.getApiService().getWalletClient(),
       walletDataProvider,
     );
 
+    /// wallet mnemonic
     walletMnemonicProvider = WalletMnemonicProvider(
       walletKeysProvider,
       walletDataProvider,
       userManager,
     );
 
+    /// wallet name
     walletNameProvider = WalletNameProvider(
       walletKeysProvider,
       DBHelper.accountDao!,
       DBHelper.walletDao!,
     );
 
+    /// unleash
     unleashDataProvider = UnleashDataProvider(
       apiEnv,
       apiServiceManager.getUnleashClient(),

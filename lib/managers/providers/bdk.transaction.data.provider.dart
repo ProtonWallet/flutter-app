@@ -1,4 +1,3 @@
-// bdk.transaction.data.provider.dart
 import 'dart:async';
 import 'dart:math';
 
@@ -65,12 +64,20 @@ class BDKCacheCleared extends DataUpdated<String> {
 }
 
 class BDKTransactionDataProvider extends DataProvider {
+  /// manager
   final WalletManager walletManager;
+
+  /// db dao
   final AccountDao accountDao;
   FrbBlockchainClient? blockchain;
+
+  /// api services
   final ProtonApiService apiService;
 
+  /// shared preference
   final PreferencesManager shared;
+
+  /// external data providers
   final UserSettingsDataProvider userSettingsDataProvider;
 
   BDKTransactionDataProvider(
@@ -81,6 +88,7 @@ class BDKTransactionDataProvider extends DataProvider {
     this.userSettingsDataProvider,
   );
 
+  /// memeory caches
   Map<String, bool> isWalletSyncing = {};
   Map<String, int> lastSyncedTime = {};
 

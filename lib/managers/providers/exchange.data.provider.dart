@@ -6,8 +6,11 @@ import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class ExchangeDataProvider extends DataProvider {
-  Map<String, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
+  /// api client
   final ExchangeRateClient exchangeRateClient;
+
+  /// memory caches
+  Map<String, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
 
   ExchangeDataProvider({required this.exchangeRateClient});
 
@@ -16,6 +19,8 @@ class ExchangeDataProvider extends DataProvider {
 
   Future<void> runOnce(FiatCurrency fiatCurrency, {int? time}) async {
     final String key = getKey(fiatCurrency, time: time);
+
+    /// fetch from server and update the cache
     fiatCurrency2exchangeRate[key] = await exchangeRateClient.getExchangeRate(
       fiatCurrency: fiatCurrency,
       time: time == null ? null : BigInt.from(time),
@@ -25,7 +30,10 @@ class ExchangeDataProvider extends DataProvider {
   Future<ProtonExchangeRate> getExchangeRate(FiatCurrency fiatCurrency,
       {int? time}) async {
     final String key = getKey(fiatCurrency, time: time);
+
+    /// check if we can found in cache
     if (!fiatCurrency2exchangeRate.containsKey(key)) {
+      /// fetch from server and update the cache
       await runOnce(fiatCurrency, time: time);
     }
     return fiatCurrency2exchangeRate[key]!;

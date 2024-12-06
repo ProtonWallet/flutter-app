@@ -68,6 +68,7 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
         TextEditingController(text: accountIndex.toString());
 
     newAccountScriptTypeValueNotifier.addListener(() async {
+      /// get lowest unused account index when user change script type
       final int accountIndex =
           await walletDataProvider.getNewDerivationAccountIndex(
         walletID,
@@ -112,6 +113,7 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
       if (errorMessage.toLowerCase() ==
           "You have reached the creation limit for this type of wallet account"
               .toLowerCase()) {
+        /// reach maximum wallet account limit, needs to show upgrade page
         errorMessage = "";
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;

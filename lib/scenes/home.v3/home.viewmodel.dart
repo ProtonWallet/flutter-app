@@ -1,4 +1,3 @@
-// home.viewmodel.dart
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -115,7 +114,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     ));
   }
 
-  // ApiUserSettings? userSettings;
   late TextEditingController hideEmptyUsedAddressesController;
   late TextEditingController twoFactorAmountThresholdController;
 
@@ -179,7 +177,6 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateAddressListFilterBy(String filterBy);
 
-  //
   final WalletNameBloc walletNameBloc;
   final WalletListBloc walletListBloc;
   final WalletTransactionBloc walletTransactionBloc;
@@ -191,7 +188,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   ProtonExchangeRate currentExchangeRate = defaultExchangeRate;
 
   /// app version
-  String appVersion = "Proton Wallet";
+  String appVersion = "";
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -234,7 +231,8 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   void dispose() {
     selectedSectionChangedController.close();
-    //clean up wallet ....
+
+    ///clean up wallet ....
     _appStateSubscription?.cancel();
     _userDataSubscription?.cancel();
     _subscription?.cancel();
@@ -249,7 +247,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   /// capture errors
   Future<void> initAppStateSubscription() async {
-    // app state
+    /// app state
     _appStateSubscription = appStateManager.stream.listen((state) {
       if (state is AppSessionFailed) {
         showLogoutErrorDialog(errorMessage, logout);
@@ -281,7 +279,8 @@ class HomeViewModelImpl extends HomeViewModel {
         });
       }
     });
-    // user data
+
+    /// user data
     _userDataSubscription =
         dataProviderManager.userDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
@@ -296,7 +295,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     });
 
-    // exclusive invite
+    /// exclusive invite
     _exclusiveInviteDataSubscription =
         dataProviderManager.exclusiveInviteDataProvider.stream.listen((state) {
       if (state is AvailableUpdated) {
@@ -364,7 +363,7 @@ class HomeViewModelImpl extends HomeViewModel {
     try {
       final cachedEligible = await appStateManager.getEligible();
       if (cachedEligible != 1) {
-        // Check if user is eligible
+        /// Check if user is eligible from API
         final int eligible = await retry(
           () => apiServiceManager
               .getApiService()
@@ -529,9 +528,11 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> loadDiscoverContents() async {
-    protonFeedItems = await ProtonFeedItem.loadFromApi(
-      apiServiceManager.getApiService().getDiscoveryContentClient(),
-    );
+    final contents = await apiServiceManager
+        .getApiService()
+        .getDiscoveryContentClient()
+        .getDiscoveryContents();
+    protonFeedItems = await ProtonFeedItem.loadsFromContents(contents);
   }
 
   @override
@@ -620,10 +621,6 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await walletManager.cleanSharedPreference();
       await DBHelper.reset();
-      //fix await for DBHelper.reset();
-      await Future.delayed(
-        const Duration(seconds: 3),
-      );
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       errorMessage = parseSampleDisplayError(e);
@@ -649,14 +646,14 @@ class HomeViewModelImpl extends HomeViewModel {
     bool isWalletView = false;
     for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
-        // walletView
+        /// walletView
         selectedWallet = walletMenuModel.walletModel;
         selectedAccount = null;
         isWalletView = true;
       }
       for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
         if (accountMenuModel.isSelected) {
-          // wallet account view
+          /// wallet account view
           selectedWallet = walletMenuModel.walletModel;
           selectedAccount = accountMenuModel.accountModel;
           isWalletView = false;

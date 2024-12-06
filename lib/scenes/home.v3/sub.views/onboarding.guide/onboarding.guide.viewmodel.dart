@@ -100,7 +100,7 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
 
     /// init controllers and focusNodes
     nameTextController =
-        TextEditingController(text: firstWallet ? "My Wallet" : "");
+        TextEditingController(text: firstWallet ? defaultWalletName : "");
     passphraseTextController = TextEditingController(text: "");
     passphraseConfirmTextController = TextEditingController(text: "");
     walletNameFocusNode = FocusNode();
@@ -146,23 +146,23 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
         strPassphrase,
       );
 
-      // default Primary Account (without BvE)
+      /// default Primary Account (without BvE)
       final apiWalletAccount = await createWalletBloc.createWalletAccount(
         apiWallet.wallet.id,
         appConfig.scriptTypeInfo,
         "Primary Account",
         fiatCurrencyNotifier.value,
-        0, // default wallet account index
+        0,
       );
 
-      // Auto create Bitcoin via Email account at 84'/0'/1'
+      /// Auto create Bitcoin via Email account at 84'/0'/1'
       if (firstWallet) {
         final apiWalletAccountBvE = await createWalletBloc.createWalletAccount(
           apiWallet.wallet.id,
           appConfig.scriptTypeInfo,
           "Bitcoin via Email",
           fiatCurrencyNotifier.value,
-          1, // default wallet account index
+          1,
         );
         final String walletID = apiWallet.wallet.id;
         walletModel = await DBHelper.walletDao!.findByServerID(walletID);
@@ -200,6 +200,7 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
       if (msg.toLowerCase() ==
           "You have reached the creation limit for this type of wallet"
               .toLowerCase()) {
+        /// reach maximum wallet limit, needs to show upgrade page
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
@@ -229,11 +230,14 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
     String serverAddressID,
   ) async {
     try {
+      /// update db tables
       await walletManager.addEmailAddress(
         serverWalletID,
         accountModel.accountID,
         serverAddressID,
       );
+
+      /// update memory caches
       walletListBloc.addEmailIntegration(
         walletModel,
         accountModel,

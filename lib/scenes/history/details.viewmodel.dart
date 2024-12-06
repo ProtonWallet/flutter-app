@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -27,6 +28,7 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/address.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
@@ -42,11 +44,14 @@ import 'package:wallet/scenes/history/details.coordinator.dart';
 
 abstract class HistoryDetailViewModel
     extends ViewModel<HistoryDetailCoordinator> {
+  /// required data for this viewModel
   String walletID;
   String accountID;
   FrbTransactionDetails frbTransactionDetails;
-  String txID = "";
-  String userLabel = "";
+
+  /// external data providers
+  final UserSettingsDataProvider userSettingsDataProvider;
+  final ContactsDataProvider contactsDataProvider;
 
   HistoryDetailViewModel(
     super.coordinator,
@@ -57,37 +62,45 @@ abstract class HistoryDetailViewModel
     this.contactsDataProvider,
   );
 
-  String strWallet = "";
-  String strAccount = "";
-  List<String> addresses = [];
-  List<ContactsModel> contactsEmails = [];
-  List<TransactionInfoModel> recipients = [];
+  /// integer attributes
   int? transactionTime;
+  int lastExchangeRateTime = 0;
+
+  /// double attributes
   double amount = 0.0;
   double fee = 0.0;
+
+  /// string attributes
+  String userLabel = "";
+  String walletName = "";
+  String accountName = "";
+  String fromEmail = "";
+  String toEmail = "";
+  String body = "";
+  String errorMessage = "";
+  String? selfBitcoinAddress;
+  String senderAddressID = "";
+
+  /// boolean attributes
   bool isInternalTransaction = false;
   bool isSend = false;
   bool initialized = false;
   bool isEditing = false;
   bool displayBalance = true;
-  late TextEditingController memoController;
-  late FocusNode memoFocusNode;
-  late TransactionModel? transactionModel;
-  String fromEmail = "";
-  String toEmail = "";
-  String body = "";
-  Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
-  int lastExchangeRateTime = 0;
-  ProtonExchangeRate? exchangeRate;
-  String errorMessage = "";
-  bool isRecipientsFromBlockChain = false;
-  String? selfBitcoinAddress;
-  final UserSettingsDataProvider userSettingsDataProvider;
 
-  // contact data provider
-  final ContactsDataProvider contactsDataProvider;
-  String senderAddressID = "";
+  /// other struct attributes
+  ProtonExchangeRate? exchangeRate;
+  TransactionModel? transactionModel;
+  List<ContactsModel> contactsEmails = [];
+  List<TransactionInfoModel> recipients = [];
+  Map<FiatCurrency, ProtonExchangeRate> fiatCurrency2exchangeRate = {};
+
+  /// UI controllers
   late ScrollController scrollController;
+  late TextEditingController memoController;
+
+  /// UI focusNode
+  late FocusNode memoFocusNode;
 
   void editMemo();
 
@@ -110,152 +123,136 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     this.walletKeysProvider,
     super.userSettingsDataProvider,
     super.contactsDataProvider,
-    this.walletNameService,
+    this.walletNameProvider,
     this.addressKeyProvider,
   );
 
-  late FrbAccount _frbAccount;
-
+  /// required data for this viewModel, and we don't need to expose for UI
   final UserManager userManager;
   final WalletManager walletManager;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final WalletClient walletClient;
   final WalletKeysProvider walletKeysProvider;
-  final WalletNameProvider walletNameService;
+  final WalletNameProvider walletNameProvider;
   final AddressKeyProvider addressKeyProvider;
 
+  /// attributes that we don't need to expose for UI
   Uint8List? entropy;
   FrbUnlockedWalletKey? unlockedWalletKey;
   List<ProtonAddressKey> addressKeys = [];
 
-  @override
-  Future<void> loadData() async {
-    txID = frbTransactionDetails.txid;
+  void initUIComponents() {
     memoController = TextEditingController();
     memoFocusNode = FocusNode();
     memoFocusNode.addListener(userFinishMemo);
     scrollController = ScrollController();
+  }
+
+  @override
+  Future<void> loadData() async {
+    initUIComponents();
+
+    /// check if we need to display balance
     displayBalance = await userSettingsDataProvider.getDisplayBalance();
 
+    /// load contacts
     contactsEmails = await contactsDataProvider.getContacts() ?? [];
 
-    if (addressKeys.isEmpty) {
-      addressKeys = await addressKeyProvider.getAddressKeysForTL();
-    }
+    /// load addressKeys
+    addressKeys = await addressKeyProvider.getAddressKeysForTL();
 
+    /// load walletKey
+    unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
+      walletID,
+    );
+
+    /// load server wallet transactions
     var serverTrans = await serverTransactionDataProvider.getTransByAccountID(
       walletID,
       accountID,
     );
 
-    unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
-      walletID,
-    );
-
+    /// find wallet transaction with txID
     transactionModel = await findServerTransactionByTxID(
       serverTrans,
-      txID,
+      frbTransactionDetails.txid,
     );
 
     if (transactionModel != null) {
+      /// set isInternalTransaction so UI can know what content to display when we don't have sender information
       isInternalTransaction =
           (transactionModel!.type == TransactionType.protonToProtonSend.index ||
               transactionModel!.type ==
                   TransactionType.protonToProtonReceive.index);
     }
 
-    sinkAddSafe();
-    _frbAccount = (await walletManager.loadWalletWithID(
-      walletID,
-      accountID,
-    ))!;
-    strWallet = await walletNameService.getNameWithID(walletID);
-    strAccount = await walletNameService.getAccountLabelWithID(accountID);
+    /// load walletName
+    walletName = await walletNameProvider.getNameWithID(walletID);
 
-    try {
-      recipients = await DBHelper.transactionInfoDao!.findAllRecipients(
-        utf8.encode(txID),
-        walletID,
-        accountID,
-      );
-    } catch (e, stacktrace) {
-      logger.e(
-        "details.viewmodel error: $e stacktrace: $stacktrace",
-      );
-    }
-    final transaction = frbTransactionDetails;
-    amount = transaction.received.toDouble() - transaction.sent.toDouble();
-    fee = transaction.fees!.toDouble();
+    /// load accountName
+    accountName = await walletNameProvider.getAccountLabelWithID(accountID);
+
+    /// load amount of this transaction
+    amount = frbTransactionDetails.received.toDouble() -
+        frbTransactionDetails.sent.toDouble();
+
+    /// load fee of this transaction
+    fee = frbTransactionDetails.fees!.toDouble();
+
+    /// mark if it's send
     isSend = amount < 0;
-    // bdk sent include fee, so need add back to make display send amount without fee
+
+    /// bdk sent include fee, so need add back to make displayed send amount is without fee
     if (isSend) {
-      amount += (transaction.fees ?? BigInt.zero).toDouble();
+      amount += (frbTransactionDetails.fees ?? BigInt.zero).toDouble();
     }
 
-    transaction.time.when(
+    frbTransactionDetails.time.when(
       confirmed: (confirmationTime) {
-        logger.d('Confirmed transaction time: $confirmationTime');
         transactionTime = confirmationTime.toInt();
       },
       unconfirmed: (lastSeen) {
-        logger.d('Unconfirmed transaction last seen: $lastSeen');
-        // needs to show in progress if it's not confirmed
-        // transactionTime = lastSeen;
+        /// mark transactionTime = null so UI will show it's inprogress
+        transactionTime = null;
       },
     );
-    if (isSend) {
-      if (recipients.isEmpty) {
-        final TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-            await WalletManager.getTransactionDetailsFromBlockStream(txID);
-        if (transactionDetailFromBlockChain != null) {
-          isRecipientsFromBlockChain = true;
-          bool hasFindMineBitcoinAddress = false;
-          for (Recipient recipient
-              in transactionDetailFromBlockChain.recipients) {
-            if (!hasFindMineBitcoinAddress) {
-              if (await walletManager.isMineBitcoinAddress(
-                  _frbAccount, recipient.bitcoinAddress)) {
-                hasFindMineBitcoinAddress = true;
-                continue;
-              }
-            }
-            recipients.add(TransactionInfoModel(
-                id: null,
-                externalTransactionID: Uint8List(0),
-                amountInSATS: recipient.amountInSATS.abs(),
-                feeInSATS: fee.abs().toInt(),
-                isSend: 1,
-                transactionTime: 0,
-                feeMode: 0,
-                serverWalletID: walletID,
-                serverAccountID: accountID,
-                toEmail: "",
-                toBitcoinAddress: recipient.bitcoinAddress));
-          }
-        }
+
+    for (final txOut in frbTransactionDetails.outputs) {
+      final String? bitcoinAddress = txOut.address;
+      if (bitcoinAddress == null) {
+        continue;
       }
-    } else {
-      addresses.add(txID);
-      final TransactionDetailFromBlockChain? transactionDetailFromBlockChain =
-          await WalletManager.getTransactionDetailsFromBlockStream(txID);
-      if (transactionDetailFromBlockChain != null) {
-        for (Recipient recipient
-            in transactionDetailFromBlockChain.recipients) {
-          if (await walletManager.isMineBitcoinAddress(
-              _frbAccount, recipient.bitcoinAddress)) {
-            selfBitcoinAddress = recipient.bitcoinAddress;
-            break;
-          }
+      if (isSend) {
+        /// add to recipient list if it's not self address
+        if (!txOut.isMine) {
+          recipients.add(TransactionInfoModel(
+              id: null,
+              externalTransactionID: Uint8List(0),
+              amountInSATS: txOut.value.toInt(),
+              feeInSATS: fee.abs().toInt(),
+              isSend: 1,
+              transactionTime: 0,
+              feeMode: 0,
+              serverWalletID: walletID,
+              serverAccountID: accountID,
+              toEmail: "",
+              toBitcoinAddress: bitcoinAddress));
+        }
+      } else {
+        /// if it's receive
+        if (txOut.isMine) {
+          /// set selfBitcoinAddress for display, and we can exit the iteration since we already find self address
+          selfBitcoinAddress = bitcoinAddress;
+          break;
         }
       }
     }
-    sinkAddSafe();
 
-    logger.i("transactionModel == null ? ${transactionModel == null}");
+    /// no server walletTransaction found, create one, encrypted it and send to server
     if (transactionModel == null && unlockedWalletKey != null) {
       final hashedTransactionID = FrbTransitionLayer.getHmacHashedString(
         walletKey: unlockedWalletKey!,
-        transactionId: txID,
+        transactionId: frbTransactionDetails.txid,
       );
 
       /// default label
@@ -266,10 +263,11 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       final primaryUserKey = await userManager.getPrimaryKeyForTL();
       final transactionId = FrbTransitionLayer.encryptMessagesWithUserkey(
-          userKey: primaryUserKey, message: txID);
+          userKey: primaryUserKey, message: frbTransactionDetails.txid);
 
       final now = DateTime.now();
       try {
+        /// create wallet transaction
         final walletTransaction = await walletClient.createWalletTransactions(
           walletId: walletID,
           walletAccountId: accountID,
@@ -289,7 +287,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               ? TransactionType.externalSend.index
               : TransactionType.externalReceive.index,
           label: utf8.encode(walletTransaction.label ?? ""),
-          externalTransactionID: utf8.encode(txID),
+          externalTransactionID: utf8.encode(frbTransactionDetails.txid),
           createTime: now.millisecondsSinceEpoch ~/ 1000,
           modifyTime: now.millisecondsSinceEpoch ~/ 1000,
           hashedTransactionID:
@@ -308,17 +306,20 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           isPrivate: walletTransaction.isPrivate,
           isAnonymous: walletTransaction.isAnonymous,
         );
+
+        /// save to db
         await DBHelper.transactionDao!.insertOrUpdate(transactionModel!);
       } on BridgeError catch (e, stacktrace) {
         logger.e(
           "details.viewmodel error: $e stacktrace: $stacktrace",
         );
-        // parse the server error code
+
+        /// parse the server error code
         final responseError = parseResponseError(e);
         if (responseError != null) {
           if (responseError.code == 2011) {
             if (transactionModel == null) {
-              /// this will only happend when user open web app and mobile app in same time (race condition)
+              /// this will only happened when user open web app and mobile app in same time (race condition)
               /// need to reload wallet transactions from server
               /// throw exceptions if it's still happening
               await serverTransactionDataProvider.reloadAccountTransactions(
@@ -332,7 +333,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
               );
               transactionModel = await findServerTransactionByTxID(
                 serverTrans,
-                txID,
+                frbTransactionDetails.txid,
               );
               if (transactionModel == null) {
                 /// show hashedTXID has been used error
@@ -348,6 +349,8 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       }
     }
+
+    /// try decrypt wallet label
     if (unlockedWalletKey != null) {
       if (transactionModel!.label.isNotEmpty) {
         userLabel = FrbWalletKeyHelper.decrypt(
@@ -355,19 +358,13 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
           encryptText: utf8.decode(transactionModel!.label),
         );
       }
-      final walletModel = await DBHelper.walletDao!.findByServerID(walletID);
-      try {
-        strWallet = FrbWalletKeyHelper.decrypt(
-          base64SecureKey: unlockedWalletKey!.toBase64(),
-          encryptText: walletModel.name,
-        );
-      } catch (e) {
-        strWallet = walletModel.name;
-      }
     }
+
+    /// update UI controller with decrypted label
     memoController.text = userLabel;
 
-    final decryptedBoday = FrbTransitionLayer.decryptMessages(
+    /// decrypt BvE message
+    final decryptedBody = FrbTransitionLayer.decryptMessages(
       userKeys: await userManager.getUserKeysForTL(),
       addrKeys: addressKeys.isEmpty
           ? addressKeys
@@ -377,21 +374,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       encToList: transactionModel?.tolist,
       encSender: transactionModel?.sender,
     );
-    toEmail = decryptedBoday.toList;
-    fromEmail = decryptedBoday.sender;
-    body = decryptedBoday.body;
+    toEmail = decryptedBody.toList;
+    fromEmail = decryptedBody.sender;
+    body = decryptedBody.body;
 
-    if (toEmail == "null") {
-      toEmail = "";
-    }
-    if (fromEmail == "null") {
-      fromEmail = "";
-    }
-
-    if (recipients.isNotEmpty && isRecipientsFromBlockChain) {
-      // TODO(fix): clean logic here and make sure toEmail structure in backend,
-      // TODO(fix): abstract this logic and if toEmail is "" we can skip this logic
-      // It can be [{}, {}], or {"key": "value", "key2": "value2"}...
+    if (recipients.isNotEmpty) {
+      /// It can be [{}, {}], or {"key": "value", "key2": "value2"}...
       try {
         final jsonList = jsonDecode(toEmail) as Map<String, dynamic>;
         for (String bitcoinAddress in jsonList.keys) {
@@ -428,6 +416,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
 
     if ((transactionModel?.exchangeRateID ?? "").isNotEmpty) {
+      /// try load exchange rate from db
       final ExchangeRateModel? exchangeRateModel = await DBHelper
           .exchangeRateDao!
           .findByServerID(transactionModel!.exchangeRateID);
@@ -452,24 +441,30 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         );
       }
     }
+
+    /// load exchange rate if we cannot find it in db
     exchangeRate ??= await ExchangeRateService.getExchangeRate(
         userSettingsDataProvider.fiatCurrency,
         time: transactionModel?.transactionTime != null
             ? int.parse(transactionModel?.transactionTime ?? "0")
             : null);
+
+    /// load sender address ID, used for RBF feature
     if (isSend) {
       await loadSenderAddressID();
     }
-    sinkAddSafe();
 
     if (errorMessage.isNotEmpty) {
       CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
-    sinkAddSafe();
+
+    /// mark viewModel as initialized and notify UI to refresh
     initialized = true;
+    sinkAddSafe();
   }
 
+  /// find transaction from given transaction lists with specific txID
   Future<TransactionModel?> findServerTransactionByTxID(
     List<TransactionModel> transactions,
     String lookupTxID,
@@ -496,24 +491,32 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     return null;
   }
 
+  /// callback when user finish memo
   Future<void> userFinishMemo() async {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
-      final WalletModel _ = await DBHelper.walletDao!.findByServerID(walletID);
       if (!memoFocusNode.hasFocus) {
+        /// only need to do actions when user has update the content
         if (userLabel != memoController.text && unlockedWalletKey != null) {
+          /// update cached user label
           userLabel = memoController.text;
+
+          /// encrypt label
           final encryptedLabel = FrbWalletKeyHelper.encrypt(
             base64SecureKey: unlockedWalletKey!.toBase64(),
             plaintext: userLabel,
           );
-          transactionModel!.label = utf8.encode(encryptedLabel);
+
+          /// send api request
           await walletClient.updateWalletTransactionLabel(
             walletId: transactionModel!.serverWalletID,
             walletAccountId: transactionModel!.serverAccountID,
             walletTransactionId: transactionModel!.serverID,
             label: encryptedLabel,
           );
+
+          /// update db record
+          transactionModel!.label = utf8.encode(encryptedLabel);
           await serverTransactionDataProvider.insertOrUpdate(transactionModel!,
               notifyDataUpdate: true);
         }
@@ -548,6 +551,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
   }
 
+  /// callback when user click edit button
   @override
   void editMemo() {
     isEditing = true;
@@ -563,9 +567,12 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         break;
       }
     }
+
+    /// use default address if we cannot find from wallet transaction's fromList
     senderAddressID = protonAddresses.first.id;
   }
 
+  /// user can modify non-BvE sender by themselves
   @override
   Future<void> updateSender(
     String senderName,
@@ -577,19 +584,23 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       "email": senderEmail,
     };
     final String jsonString = jsonEncode(jsonMap);
+
+    /// encrypt the sender with userKey
     final encryptedName = FrbTransitionLayer.encryptMessagesWithUserkey(
       userKey: primaryUserkey,
       message: jsonString,
     );
 
-    transactionModel!.sender = encryptedName;
-    final WalletTransaction _ =
-        await walletClient.updateExternalWalletTransactionSender(
+    /// send request to api to update wallet transaction sender
+    await walletClient.updateExternalWalletTransactionSender(
       walletId: transactionModel!.serverWalletID,
       walletAccountId: transactionModel!.serverAccountID,
       walletTransactionId: transactionModel!.serverID,
       sender: encryptedName,
     );
+
+    /// update db record
+    transactionModel!.sender = encryptedName;
     await serverTransactionDataProvider.insertOrUpdate(
       transactionModel!,
       notifyDataUpdate: true,

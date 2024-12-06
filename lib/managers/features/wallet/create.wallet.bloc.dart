@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -68,7 +69,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     /// encrypt wallet name with wallet key
-    final clearWalletName = walletName.isNotEmpty ? walletName : "My Wallet";
+    final clearWalletName = walletName.isNotEmpty ? walletName : defaultWalletName;
     final encryptedWalletName = FrbWalletKeyHelper.encrypt(
       base64SecureKey: unlockedWalletKey.toBase64(),
       plaintext: clearWalletName,
