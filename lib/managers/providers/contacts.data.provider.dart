@@ -16,13 +16,16 @@ class ContactsData {
 }
 
 class ContactsDataProvider extends DataProvider {
+  /// api client
   final ContactsClient contactClient;
 
-  //
+  /// db dao
   final ContactsDao contactsDao;
+
+  /// user id
   final String userID;
 
-  // need to monitor the db changes apply to this cache
+  /// need to monitor the db changes apply to this cache
   List<ContactsModel>? contactsData;
 
   ContactsDataProvider(
@@ -35,9 +38,10 @@ class ContactsDataProvider extends DataProvider {
       StreamController<DataUpdated>();
 
   Future<List<ContactsModel>?> _getFromDB() async {
-    // try to find it fro cache
+    /// try to find it fro cache
     final contacts = (await contactsDao.findAll()).cast<ContactsModel>();
-    // if found cache.
+
+    /// if found cache.
     if (contacts.isNotEmpty) {
       // TODO(Note): Temp fix. the contactID should be unique
       final Map<String, ContactsModel> uniqueContacts = {};
@@ -56,10 +60,10 @@ class ContactsDataProvider extends DataProvider {
   }
 
   Future<void> fetchFromServer() async {
-    // try to fetch from server:
+    /// try to fetch from server:
     final apiContacts = await contactClient.getContacts();
     for (ApiContactEmails apiContactEmail in apiContacts) {
-      // update and insert contact
+      /// update and insert contact
       await insertUpdate(apiContactEmail);
     }
     contactsData = await _getFromDB();
@@ -114,7 +118,6 @@ class ContactsDataProvider extends DataProvider {
   }
 
   Future<void> preLoad() async {
-    // this is to preload the contacts
     getContacts();
   }
 

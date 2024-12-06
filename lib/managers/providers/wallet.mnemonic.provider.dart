@@ -7,8 +7,11 @@ import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 
 class WalletMnemonicProvider extends DataProvider {
+  /// external data provider
   final WalletKeysProvider walletKeysProvider;
   final WalletsDataProvider walletDataProvider;
+
+  /// manager
   final UserManager userManager;
 
   WalletMnemonicProvider(

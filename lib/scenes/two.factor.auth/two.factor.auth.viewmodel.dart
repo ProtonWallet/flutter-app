@@ -47,8 +47,6 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
   final UserManager userManager;
   final ProtonUsersClient protonUsersApi;
   final ProtonSettingsClient protonSettingsApi;
-
-  // final
   final UserDataProvider userDataProvider;
 
   @override
@@ -91,14 +89,15 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       );
       final response = await protonSettingsApi.enable2FaTotp(req: req);
       logger.i("enable2FaTotp response code: $response");
-      // final lockCode = await protonUsersApi.lockSensitiveSettings();
-      // logger.i("enable2FaTotp lockSensitiveSettings: $lockCode");
+
       backupPhrases = response.twoFactorRecoveryCodes;
+
+      /// only enable 2FA in cache if no error from server response
       userDataProvider.enabled2FA(response.code == 1000);
       return true;
-    } on BridgeError catch (exception, stracktrace) {
+    } on BridgeError catch (exception, stacktrace) {
       error = parseSampleDisplayError(exception);
-      Sentry.captureException(exception, stackTrace: stracktrace);
+      Sentry.captureException(exception, stackTrace: stacktrace);
       logger.e(exception.toString());
       return false;
     } catch (e) {
@@ -121,6 +120,8 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     passphraseFocusNode = FocusNode();
     secret = TwoFactorAuthHelper.generateSecret();
     final userEmail = userManager.userInfo.userMail;
+
+    /// format otp auth string for QRCode
     otpAuthString =
         "otpauth://totp/$userEmail?secret=$secret&issuer=Proton&algorithm=SHA1&digits=6&period=30";
     sinkAddSafe();

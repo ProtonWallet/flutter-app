@@ -57,13 +57,10 @@ class ProtonFeedItem {
     return fromJsonList(decodedJsonList);
   }
 
-  // TODO(fix): this shouldnt be here.
-  static Future<List<ProtonFeedItem>> loadFromApi(
-    DiscoveryContentClient apiClient,
-  ) async {
+  static Future<List<ProtonFeedItem>> loadsFromContents(
+      List<Content> contents) async {
     final List<ProtonFeedItem> items = [];
     try {
-      final List<Content> contents = await apiClient.getDiscoveryContents();
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       for (Content content in contents) {
         String localeTime = "";

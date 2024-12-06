@@ -7,10 +7,10 @@ import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class GatewayDataProvider extends DataProvider {
-  // api client
+  /// api client
   final OnRampGatewayClient onRampGatewayClient;
 
-  // memory cache
+  /// memory cache
   Map<GatewayProvider, List<ApiCountry>> countries = {};
   Map<GatewayProvider, List<ApiSimpleFiatCurrency>> fiatCurrencies = {};
   Map<GatewayProvider, List<PaymentMethod>> paymentMethods = {};
@@ -78,7 +78,7 @@ class GatewayDataProvider extends DataProvider {
     if (fiatCurrencies.isEmpty) {
       fiatCurrencies = await onRampGatewayClient.getFiatCurrencies();
     }
-    //set default country
+    /// set default country
     final Set<String> uniqueCodesSet = {};
     final providerCountries = countries[provider];
     if (providerCountries != null) {

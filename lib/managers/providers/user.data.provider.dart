@@ -21,6 +21,8 @@ class ShowWalletRecoveryUpdated extends DataUpdated<bool> {
   ShowWalletRecoveryUpdated({required bool updatedData}) : super(updatedData);
 }
 
+/// define proton wallet user to include user settings and
+/// manage 2FA and recovery status
 class ProtonWalletUser {
   ProtonUser? protonUser;
   ProtonUserSettings? protonUserSettings;
@@ -34,11 +36,19 @@ class ProtonWalletUser {
 }
 
 class UserDataProvider extends DataProvider {
+  /// proton wallet user
   late ProtonWalletUser user;
 
+  /// api client
   final ProtonUsersClient protonUsersClient;
+
+  /// drift queries
   final UserQueries userQueries;
   final UserKeysQueries userKeysQueries;
+
+  /// stream
+  final StreamController<DataUpdated> dataUpdateController =
+      StreamController<DataUpdated>();
 
   UserDataProvider(
     this.protonUsersClient,
@@ -59,16 +69,18 @@ class UserDataProvider extends DataProvider {
   Future<void> syncProtonUser() async {
     user.protonUser = await protonUsersClient.getUserInfo();
     final status = user.protonUser?.mnemonicStatus;
-    // 0 - Mnemonic is disabled
-    // 1 - Mnemonic is enabled but not set
-    // 2 - Mnemonic is enabled but needs to be re-activated
-    // 3 - Mnemonic is enabled and set
+
+    /// status codes:
+    /// 0 - Mnemonic is disabled
+    /// 1 - Mnemonic is enabled but not set
+    /// 2 - Mnemonic is enabled but needs to be re-activated
+    /// 3 - Mnemonic is enabled and set
     bool enabledRecovery = false;
     if (status == 3) {
       enabledRecovery = true;
     }
     if (!enabledRecovery) {
-      // check if user has enable device recovery
+      /// check if user has enable device recovery, which is consider as other recovery method
       if (user.protonUserSettings != null) {
         if (user.protonUserSettings!.deviceRecovery == 1) {
           enabledRecovery = true;
@@ -81,6 +93,7 @@ class UserDataProvider extends DataProvider {
   }
 
   Future<void> syncProtonUserSettings() async {
+    /// fetch user settings from server and update cache
     user.protonUserSettings = await protonUsersClient.getUserSettings();
     bool enabled2FA = false;
     if (user.protonUserSettings != null) {
@@ -92,9 +105,6 @@ class UserDataProvider extends DataProvider {
       this.enabled2FA(enabled2FA);
     }
   }
-
-  final StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>();
 
   void enabled2FA(enable) {
     user.enabled2FA = enable;

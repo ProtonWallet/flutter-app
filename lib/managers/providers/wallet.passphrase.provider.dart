@@ -6,15 +6,18 @@ import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 
 class WalletPassphraseProvider extends DataProvider {
+  /// secure storage
   final SecureStorageManager storage;
   final String key = "proton_wallet_p_provider_key";
 
+  /// memory caches
   List<WalletPassphrase>? walletPassphrases;
 
-  WalletPassphraseProvider(this.storage);
-
+  /// stream
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
+
+  WalletPassphraseProvider(this.storage);
 
   Future<String?> getPassphrase(String walletID) async {
     final passphrases = await _getWalletPassphrases();
@@ -25,6 +28,7 @@ class WalletPassphraseProvider extends DataProvider {
     return pwd?.passphrase;
   }
 
+  /// save passphrase to secure storage
   Future<void> saveWalletPassphrase(WalletPassphrase walletPassphrase) async {
     final String? passphrase = await getPassphrase(walletPassphrase.walletID);
     if (passphrase == null) {
@@ -38,6 +42,7 @@ class WalletPassphraseProvider extends DataProvider {
     }
   }
 
+  /// get passphrase from secure storage
   Future<List<WalletPassphrase>> _getFromSecureStorage() async {
     List<WalletPassphrase> passphrases = [];
     final json = await storage.get(key);
@@ -48,9 +53,12 @@ class WalletPassphraseProvider extends DataProvider {
   }
 
   Future<List<WalletPassphrase>> _getWalletPassphrases() async {
+    /// return directly if cache exists
     if (walletPassphrases != null) {
       return walletPassphrases!;
     }
+
+    /// update cache from secure storage
     walletPassphrases = await _getFromSecureStorage();
     return walletPassphrases ?? [];
   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:sentry/sentry.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
@@ -35,11 +36,11 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   String serverWalletID;
   String serverAccountID;
 
-  bool isWalletView;
-
   String errorMessage = "";
-  var selectedWallet = 1;
   int localLastUsedIndex = -1;
+
+  /// flags for UI
+  bool isWalletView;
   bool initialized = false;
   bool loadingAddress = false;
   bool tooManyUnusedAddress = false;
@@ -49,6 +50,8 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   WalletModel? walletModel;
   AccountModel? accountModel;
   late ValueNotifier accountValueNotifier;
+
+  /// the address belongs to selected account, and will be displayed to user
   FrbAddressInfo? currentAddress;
 
   void getAddress();
@@ -103,7 +106,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       }
       accountModel ??= walletData?.accounts.firstOrNull;
       if (walletModel == null || accountModel == null) {
-        errorMessage = "[Error-404] Can not load wallet or walletAccount";
+        errorMessage = "Can not load wallet or walletAccount";
       } else {
         accountValueNotifier = ValueNotifier(accountModel);
         accountValueNotifier.addListener(() {
@@ -127,11 +130,15 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> generateNewAddress() async {
+    /// We will need to avoid user create too many unused address,
+    /// or user may encounter the transaction is out of syncing stopGap issue.
     if (accountModel != null) {
       if (localLastUsedIndex + accountModel!.poolSize + 10 >=
           accountModel!.lastUsedIndex) {
+        /// if the bitcoin address index still in safe range, allow user to generate new address
         if (localLastUsedIndex + accountModel!.poolSize + 5 <=
             accountModel!.lastUsedIndex) {
+          /// shows warning when the address gap is near the stopGap
           warnUnusedAddress = true;
         }
         currentAddress = await receiveAddressDataProvider
@@ -150,6 +157,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           logger.e(e.toString());
         }
       } else {
+        /// avoid to generate new address which will cause transaction is out of syncing stopGap issue.
         warnUnusedAddress = false;
         tooManyUnusedAddress = true;
       }
@@ -158,15 +166,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   @override
-  Future<void> getAddress({bool init = false}) async {
+  Future<void> getAddress() async {
     if (walletModel != null && accountModel != null) {
-      if (init) {
-        _frbAccount = (await walletManager.loadWalletWithID(
-          walletModel!.walletID,
-          accountModel!.accountID,
-          serverScriptType: accountModel!.scriptType,
-        ))!;
-      }
       currentAddress = await receiveAddressDataProvider.getReceiveAddress(
           _frbAccount, accountModel!);
       try {
@@ -187,7 +188,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   Future<String> decryptAccountName(String encryptedName) async {
-    String decryptedName = "Default Wallet Account";
+    String decryptedName = defaultWalletAccountName;
     try {
       final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
         serverWalletID,
@@ -229,7 +230,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
           _frbAccount, accountModel!, localLastUsedIndex);
       currentAddress = null;
-      await getAddress(init: true);
+      await getAddress();
     } catch (e) {
       logger.e(e.toString());
     }

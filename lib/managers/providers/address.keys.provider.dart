@@ -87,20 +87,27 @@ extension ProtonAddressListJson on List<ProtonAddress> {
 }
 
 class AddressKeyProvider extends DataProvider {
+  /// secure storage
   final SecureStorageManager storage;
   final String key = "proton_wallet_address_provider_key";
+
+  /// streams
   final dataUpdateController = StreamController<DataUpdated>.broadcast();
 
+  /// api client
   final ProtonEmailAddressClient protonEmailAddressClient;
+
+  /// manager
   final UserManager userManager;
+
+  /// memory caches
+  List<ProtonAddress> addresses = [];
 
   AddressKeyProvider(
     this.userManager,
     this.protonEmailAddressClient,
     this.storage,
   );
-
-  List<ProtonAddress> addresses = [];
 
   Future<List<ProtonAddress>> _getFromSecureStorage() async {
     List<ProtonAddress> addresses_ = [];
@@ -131,9 +138,9 @@ class AddressKeyProvider extends DataProvider {
       return protonAddress.keys
           ?.firstWhere((element) => (element.primary == 1));
     } catch (e) {
-      // no element found
+      /// no element found, skip the error and return null
+      return null;
     }
-    return null;
   }
 
   Future<void> _fetchFromServer() async {

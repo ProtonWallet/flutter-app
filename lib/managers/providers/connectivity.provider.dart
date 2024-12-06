@@ -7,6 +7,7 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 class ConnectivityUpdated extends DataState {
   final int timestemp;
   final List<ConnectivityResult> connectivityResult;
+
   ConnectivityUpdated(this.timestemp, this.connectivityResult);
 
   @override
@@ -14,7 +15,6 @@ class ConnectivityUpdated extends DataState {
 }
 
 class ConnectivityProvider extends DataProvider {
-  ///
   final Connectivity connectivity = Connectivity();
   List<ConnectivityResult> connectivityResult = [ConnectivityResult.none];
 
@@ -22,7 +22,6 @@ class ConnectivityProvider extends DataProvider {
     initConnectivity();
   }
 
-  ///
   Future<void> initConnectivity() async {
     final result = await connectivity.checkConnectivity();
     _updateConnectivityStatus(result);

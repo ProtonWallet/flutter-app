@@ -12,6 +12,7 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 
+/// define class for server walletTransaction in wallet account level
 class ServerTransactionData {
   final AccountModel accountModel;
   List<TransactionModel> transactions = [];
@@ -23,15 +24,20 @@ class ServerTransactionData {
 }
 
 class ServerTransactionDataProvider extends DataProvider {
+  /// stream
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
 
-  ///
+  /// api client
   final WalletClient walletClient;
+
+  /// db dao
   final WalletDao walletDao;
   final AccountDao accountDao;
   final ExchangeRateDao exchangeRateDao;
   final TransactionDao transactionDao;
+
+  /// user id
   final String userID;
 
   ServerTransactionDataProvider(
@@ -43,18 +49,24 @@ class ServerTransactionDataProvider extends DataProvider {
     this.userID,
   );
 
-  ///
+  /// memory caches
   List<ServerTransactionData> serverTransactionDataList = [];
+
+  /// provider status flag
   bool initialized = false;
 
   Future<List<ServerTransactionData>> _getFromDB() async {
     final List<ServerTransactionData> transactionDataList = [];
+
+    /// get wallets from db
     final wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
+        /// get accounts from db for given wallet
         final accounts =
             await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
+          /// get walletTransactions from db for given account
           final transactions = await transactionDao.findAllByServerAccountID(
             accountModel.accountID,
           );
@@ -62,6 +74,8 @@ class ServerTransactionDataProvider extends DataProvider {
             accountModel: accountModel,
             transactions: transactions,
           );
+
+          /// update the cache
           transactionDataList.add(serverTransactionData);
         }
       }
@@ -87,17 +101,21 @@ class ServerTransactionDataProvider extends DataProvider {
     String walletID,
     String accountID,
   ) async {
+    /// load from caches
     List<TransactionModel> transactions =
         await transactionDao.findAllByServerAccountID(
       accountID,
     );
+
+    /// fetch from server when no local cache
     if (transactions.isEmpty) {
-      /// fetch from server when no local cache
       await fetchTransactions(
         walletID,
         accountID,
         isInitializeProcess: true,
       );
+
+      /// load from caches
       transactions = await transactionDao.findAllByServerAccountID(
         accountID,
       );
@@ -109,7 +127,8 @@ class ServerTransactionDataProvider extends DataProvider {
     if (initialized) {
       return serverTransactionDataList;
     }
-    // fetch from server
+
+    /// fetch from server
     final wallets = await walletDao.findAllByUserID(userID);
     for (WalletModel walletModel in wallets) {
       await fetchTransactions(
@@ -128,11 +147,13 @@ class ServerTransactionDataProvider extends DataProvider {
     String? accountID, {
     bool isInitializeProcess = false,
   }) async {
+    /// fetch from server
     final walletTransactions = await walletClient.getWalletTransactions(
       walletId: walletID,
       walletAccountId: accountID,
     );
 
+    /// insert or update data in db
     for (WalletTransaction walletTransaction in walletTransactions) {
       await handleWalletTransaction(
         walletTransaction,
@@ -153,7 +174,7 @@ class ServerTransactionDataProvider extends DataProvider {
       exchangeRateID = walletTransaction.exchangeRate!.id;
       final ExchangeRateModel exchangeRateModel = ExchangeRateModel(
         id: null,
-        serverID: walletTransaction.exchangeRate!.id,
+        serverID: exchangeRateID,
         bitcoinUnit:
             walletTransaction.exchangeRate!.bitcoinUnit.name.toUpperCase(),
         fiatCurrency:
@@ -171,8 +192,6 @@ class ServerTransactionDataProvider extends DataProvider {
       type: walletTransaction.type?.index ?? TransactionType.unsupported.index,
       label: utf8.encode(walletTransaction.label ?? ""),
       externalTransactionID: utf8.encode(""),
-
-      /// deprecated
       createTime: now.millisecondsSinceEpoch ~/ 1000,
       modifyTime: now.millisecondsSinceEpoch ~/ 1000,
       hashedTransactionID:
@@ -208,8 +227,8 @@ class ServerTransactionDataProvider extends DataProvider {
         await transactionDao.findByServerID(transactionModel.serverID);
     final bool transactionModelExists = transactionModelInDB != null;
     if (transactionModelInDB != null) {
-      transactionModel.id = transactionModelInDB
-          .id; // need to update id since the update function is based on auto increase id
+      /// need to update id since the update function is based on auto increase id
+      transactionModel.id = transactionModelInDB.id;
     }
     await transactionDao.insertOrUpdate(transactionModel);
 
@@ -235,7 +254,7 @@ class ServerTransactionDataProvider extends DataProvider {
     String walletID,
     String accountID,
   ) async {
-    // fetch from server
+    /// fetch from server
     await fetchTransactions(
       walletID,
       accountID,

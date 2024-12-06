@@ -11,20 +11,7 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/common/address_info.dart';
 
-class LocalBitcoinAddress2TransactionData {
-  List<String> txids;
-
-  LocalBitcoinAddress2TransactionData({
-    this.txids = const [],
-  });
-
-  void addTXID(String txid) {
-    if (!txids.contains(txid)) {
-      txids.add(txid);
-    }
-  }
-}
-
+/// define class for bitcoin address detail, linked account and TXIDs
 class BitcoinAddressDetail {
   BitcoinAddressModel bitcoinAddressModel;
   String accountID;
@@ -37,6 +24,7 @@ class BitcoinAddressDetail {
   });
 }
 
+/// define class for bitcoin address data in wallet account level
 class LocalBitcoinAddressData {
   final AccountModel accountModel;
   List<BitcoinAddressDetail> bitcoinAddresses = [];
@@ -48,6 +36,9 @@ class LocalBitcoinAddressData {
 }
 
 class AccountBitcoinAddressesInfo {
+  /// key: bitcoin address in plainText
+  /// value: frbAddressInfo
+  /// we use this to lookup frbAddressInfo from bitcoin address
   Map<String, FrbAddressInfo> bitcoinAddressInfos = {};
   int highestIndex = -1;
 
@@ -57,11 +48,20 @@ class AccountBitcoinAddressesInfo {
 }
 
 class LocalBitcoinAddressDataProvider extends DataProvider {
+  /// db dao
   final WalletDao walletDao;
   final AccountDao accountDao;
   final BitcoinAddressDao bitcoinAddressDao;
+
+  /// user id
   final String userID;
+
+  /// manager
   final WalletManager walletManager;
+
+  /// memory caches
+  Map<String, AccountBitcoinAddressesInfo> accountID2AddressesInfo = {};
+
   LocalBitcoinAddressDataProvider(
     this.walletDao,
     this.accountDao,
@@ -70,16 +70,18 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
     this.walletManager,
   );
 
-  Map<String, AccountBitcoinAddressesInfo> accountID2AddressesInfo = {};
-
   Future<List<LocalBitcoinAddressData>> _getFromDB() async {
     final List<LocalBitcoinAddressData> bitcoinAddressDataList = [];
+
+    /// get all wallets from db
     final wallets = await walletDao.findAllByUserID(userID);
     if (wallets.isNotEmpty) {
       for (WalletModel walletModel in wallets) {
+        /// get all accounts from db for given wallet
         final accounts =
             await accountDao.findAllByWalletID(walletModel.walletID);
         for (AccountModel accountModel in accounts) {
+          /// get all local bitcoin address for given account
           final List<BitcoinAddressModel> bitcoinAddresses =
               await bitcoinAddressDao.findByWalletAccount(
                   walletModel.walletID, accountModel.accountID);
@@ -94,7 +96,8 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             accountModel.accountID,
           ));
           if (frbAccountOrNull == null) {
-            /// in-case that passphrase wallet is not unlocked
+            /// we cannot load frb account when it has passphrase and is not unlocked yet
+            /// return with empty addresses
             final LocalBitcoinAddressData localBitcoinAddressData =
                 LocalBitcoinAddressData(
               accountModel: accountModel,
@@ -113,13 +116,13 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
             if (!addressIndex2bitcoinAddressModel.containsKey(addressIndex)) {
               final addressInfo =
                   await frbAccount.getAddress(index: addressIndex);
+
+              /// `walletID` and `accountID` are deprecated, default to 0
               addressIndex2bitcoinAddressModel[addressIndex] =
                   BitcoinAddressModel(
                 id: null,
                 walletID: 0,
-                // deprecated
                 accountID: 0,
-                // deprecated
                 serverWalletID: walletModel.walletID,
                 serverAccountID: accountModel.accountID,
                 bitcoinAddress: addressInfo.address,
@@ -222,7 +225,8 @@ class LocalBitcoinAddressDataProvider extends DataProvider {
         return localBitcoinAddressData;
       }
     }
-    // no local transaction found for this account, return empty transactions array
+
+    /// no local transaction found for this account, return empty transactions array
     return LocalBitcoinAddressData(
       accountModel: accountModel,
       bitcoinAddresses: [],

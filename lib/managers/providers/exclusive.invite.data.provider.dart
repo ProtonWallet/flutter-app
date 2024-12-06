@@ -11,8 +11,11 @@ class AvailableUpdated extends DataUpdated<RemainingMonthlyInvitations> {
 }
 
 class ExclusiveInviteDataProvider extends DataProvider {
-  RemainingMonthlyInvitations? _remainingMonthlyInvitations;
+  /// api client
   final InviteClient inviteClient;
+
+  /// memory caches
+  RemainingMonthlyInvitations? _remainingMonthlyInvitations;
 
   ExclusiveInviteDataProvider(
     this.inviteClient,

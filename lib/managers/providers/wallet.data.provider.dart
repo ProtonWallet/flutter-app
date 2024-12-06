@@ -20,6 +20,7 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
 
+/// Defines class for wallet data, which contains a wallet and its associated accounts.
 class WalletData {
   final WalletModel wallet;
   final List<AccountModel> accounts;
@@ -28,28 +29,33 @@ class WalletData {
 }
 
 class WalletsDataProvider extends DataProvider {
+  /// secure storage
   final SecureStorageManager storage;
   final key = "proton_wallet_mn_provider_key";
+
+  /// streams
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>.broadcast();
-
   StreamController<SelectedWalletUpdated> selectedWalletUpdateController =
       StreamController<SelectedWalletUpdated>.broadcast();
 
+  /// api client
   final WalletClient walletClient;
 
-  //
+  /// db dao
   final WalletDao walletDao;
   final AccountDao accountDao;
   final AddressDao addressDao;
+
+  /// memory caches
   String selectedServerWalletID;
   String selectedServerWalletAccountID;
 
-  /// current user id
-  final String userID;
-
-  // need to monitor the db changes apply to this cache
+  /// need to monitor the db changes apply to this cache
   List<WalletData>? walletsData;
+
+  /// user id
+  final String userID;
 
   WalletsDataProvider(
     this.storage,
@@ -73,10 +79,12 @@ class WalletsDataProvider extends DataProvider {
 
   Future<List<WalletData>?> _getFromDB() async {
     final List<WalletData> retWallet = [];
-    // try to find it fro cache
+
+    /// try to find wallets from db
     final wallets = await walletDao.findAllByUserID(userID);
-    // if found wallet cache.
+
     if (wallets.isNotEmpty) {
+      /// return in List<WalletData> if we can find wallets from db
       for (WalletModel walletModel in wallets) {
         retWallet.add(WalletData(
           wallet: walletModel,
@@ -96,7 +104,7 @@ class WalletsDataProvider extends DataProvider {
       return found;
     }
 
-    // fetch from server
+    /// fetch from server
     await _fetchFromServer();
 
     found = await _searchFromKeychain(walletID);
@@ -135,14 +143,15 @@ class WalletsDataProvider extends DataProvider {
 
   Future<void> saveWalletMnemonics(List<WalletMnemonic> values) async {
     if (values.isEmpty) {
-      logger.e("walle mnemonic is empty");
+      logger.e("wallet mnemonic is empty");
       return;
     }
 
     var walletMnemonics = await _getWalletMnemonics();
 
     final Map<String, WalletMnemonic> mergedMap = {};
-    // Insert items from list1 first
+
+    /// Insert items from list1 first
     for (final key in walletMnemonics ?? []) {
       mergedMap[key.walletID] = key;
     }
@@ -157,17 +166,21 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<List<WalletData>?> getWallets() async {
+    /// return memory cache directly if exitst
     if (walletsData != null) {
       return walletsData;
     }
 
+    /// try get wallets data from db
     walletsData = await _getFromDB();
     if (walletsData != null) {
       return walletsData;
     }
 
+    /// try fetch wallets from server if we cannot find any record in db
     await _fetchFromServer();
 
+    /// update memory cache
     walletsData = await _getFromDB();
     if (walletsData != null) {
       return walletsData;
@@ -176,16 +189,17 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<void> _fetchFromServer() async {
-    // try to fetch from server:
+    /// try to fetch from server:
     final List<ApiWalletData> apiWallets = await walletClient.getWallets();
     for (ApiWalletData apiWalletData in apiWallets.reversed) {
-      // update and insert wallet
+      /// update and insert wallet
       final String serverWalletID = apiWalletData.wallet.id;
       await _processApiWalletData(apiWalletData);
       final apiWalletAccts = await walletClient.getWalletAccounts(
         walletId: apiWalletData.wallet.id,
       );
-      // this id is serverWalletID
+
+      /// this id is serverWalletID
       for (ApiWalletAccount apiWalletAcct in apiWalletAccts) {
         final String serverAccountID = apiWalletAcct.id;
         await _processApiWalletAccountData(serverWalletID, apiWalletAcct);
@@ -218,7 +232,7 @@ class WalletsDataProvider extends DataProvider {
   }
 
   Future<ApiWalletData> createWallet(CreateWalletReq request) async {
-    // api calls if failed throw error
+    /// execute createWallet api calls, if failed it will throw error
     final ApiWalletData walletData =
         await walletClient.createWallet(walletReq: request);
 
@@ -242,6 +256,7 @@ class WalletsDataProvider extends DataProvider {
       throw Exception("Wallet not found");
     }
     while (true) {
+      /// return when the derivation path is not used
       derivationPath = formatDerivationPath(
         scriptType,
         coinType,
@@ -448,6 +463,7 @@ class WalletsDataProvider extends DataProvider {
     );
   }
 
+  /// fetch BvE info for given account from backend, then update db and memory cache
   Future<void> syncEmailAddresses(
     String serverWalletID,
     String serverAccountID,
@@ -478,6 +494,7 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
+  /// send api request to remove BvE from backend
   Future<void> removeEmailAddressOnWalletAccount(
     String serverAccountID,
   ) async {

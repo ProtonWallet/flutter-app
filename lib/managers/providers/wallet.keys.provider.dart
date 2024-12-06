@@ -11,19 +11,25 @@ import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 
 class WalletKeysProvider extends DataProvider {
+  /// manager
   final UserManager userManager;
-  final WalletKeyStore walletKeyStroe;
+
+  /// key store
+  final WalletKeyStore walletKeyStore;
+
+  /// api client
   final WalletClient walletClient;
 
+  /// memory caches
   List<WalletKey>? walletKeys;
 
   WalletKeysProvider(
     this.userManager,
-    this.walletKeyStroe,
+    this.walletKeyStore,
     this.walletClient,
   );
 
-  /// trying to get wallet key from secrue store and decrypt it use userkey
+  /// trying to get wallet key from secure store and decrypt it use userKey
   Future<FrbUnlockedWalletKey> getWalletSecretKey(String serverWalletID) async {
     final walletKey = await getWalletKey(serverWalletID);
     if (walletKey == null) {
@@ -42,24 +48,27 @@ class WalletKeysProvider extends DataProvider {
   }
 
   Future<WalletKey?> getWalletKey(String walletID) async {
+    /// try find from cache
     var walletKey = _findFromMemory(walletID);
     if (walletKey != null) {
       return walletKey;
     }
 
+    /// reload from wallet store (secure storage) and update cache
     walletKeys = await _getWalletKeys();
     walletKey = _findFromMemory(walletID);
     if (walletKey != null) {
       return walletKey;
     }
 
+    /// fetch from server if we cannot find in cache and secure storage
     await _fetchFromServer();
 
     walletKeys = await _getWalletKeys();
     return _findFromMemory(walletID);
   }
 
-  ///
+  /// find from memory cache
   WalletKey? _findFromMemory(String walletID) {
     if (walletKeys != null) {
       final key = walletKeys
@@ -83,7 +92,7 @@ class WalletKeysProvider extends DataProvider {
     if (walletKeys != null) {
       return walletKeys!;
     }
-    walletKeys = await walletKeyStroe.getWalletKeys();
+    walletKeys = await walletKeyStore.getWalletKeys();
     if (walletKeys != null) {
       return walletKeys!;
     }
@@ -99,7 +108,7 @@ class WalletKeysProvider extends DataProvider {
 
     final Map<String, WalletKey> mergedMap = {};
     if (walletKeys != null) {
-      // Insert items from list1 first
+      /// Insert items from list1 first
       for (var key in walletKeys ?? []) {
         mergedMap[key.walletId] = key;
       }
@@ -110,9 +119,10 @@ class WalletKeysProvider extends DataProvider {
     }
 
     walletKeys = mergedMap.values.toList();
-    await walletKeyStroe.saveWalletKeys(keys);
+    await walletKeyStore.saveWalletKeys(keys);
   }
 
+  /// save data to walletKey store (secure storage)
   Future<void> saveApiWalletKeys(List<ApiWalletKey> items) async {
     final keys = WalletKey.fromApiWalletKeys(items);
     saveWalletKeys(keys);

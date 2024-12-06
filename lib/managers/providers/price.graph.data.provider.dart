@@ -6,6 +6,7 @@ import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class PriceGraphDataProvider extends DataProvider {
+  /// api client
   final PriceGraphClient? priceClient;
 
   PriceGraphDataProvider(

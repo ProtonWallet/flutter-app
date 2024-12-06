@@ -91,8 +91,10 @@ class PassphraseViewModelImpl extends PassphraseViewModel {
       errorMessage = "";
     } else {
       /// no error when saving passphrase, update status
-      walletMenuModel.hasValidPassword =
-          true; // pass walletMenuModel by reference, so we will also update the hasValidPassword status for wallet list item in homepage
+      /// since we pass walletMenuModel by reference, this operation
+      /// will also update the hasValidPassword status for wallet list item in homepage
+      walletMenuModel.hasValidPassword = true;
+
       for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
         dataProviderManager.bdkTransactionDataProvider.syncWallet(
           walletMenuModel.walletModel,

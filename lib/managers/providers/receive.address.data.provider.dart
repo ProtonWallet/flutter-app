@@ -15,10 +15,14 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/common/address_info.dart';
 
 class ReceiveAddressDataProvider extends DataProvider {
+  /// api clients
   final BitcoinAddressClient bitcoinAddressClient;
   final WalletClient walletClient;
+
+  /// memory caches
   final Map<String, FrbAddressInfo> id2AddressInfo = {};
 
+  /// external data providers
   final WalletsDataProvider walletDataProvider;
 
   ReceiveAddressDataProvider(
@@ -27,9 +31,13 @@ class ReceiveAddressDataProvider extends DataProvider {
     this.walletDataProvider,
   );
 
+  /// stream
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 
+  /// we need to consider last used index on blockchain
+  /// so we will not reuse the address when the cached one
+  /// is already been used (i.e. someone send btc on this address)
   Future<void> handleLastUsedIndexOnNetwork(
     FrbAccount account,
     AccountModel accountModel,
@@ -43,7 +51,7 @@ class ReceiveAddressDataProvider extends DataProvider {
       accountModel,
     );
     if (lastUsedIndexOnNetwork >= oldAddress.index) {
-      /// need to generate new recieve address when the cached one had been used on blockchain
+      /// need to generate new receive address when the cached one had been used on blockchain
       await generateNewReceiveAddress(
         account,
         accountModel,
@@ -51,6 +59,8 @@ class ReceiveAddressDataProvider extends DataProvider {
     }
   }
 
+  /// we need to consider bitcoin addresses in server pool
+  /// to prevent reuse for receive page
   Future<void> handlePoolIndex(
     FrbAccount account,
     AccountModel accountModel,
@@ -61,6 +71,8 @@ class ReceiveAddressDataProvider extends DataProvider {
       /// don't need to check pool index since user didn't enable BvE
       return;
     }
+
+    /// needs to check the highest pool index and mark them as used to avoid reuse bitcoin address
     try {
       final BigInt highestPoolIndex =
           await bitcoinAddressClient.getBitcoinAddressLatestIndex(
@@ -76,6 +88,8 @@ class ReceiveAddressDataProvider extends DataProvider {
     }
   }
 
+  /// we need to consider last usde index of current wallet account
+  /// so we can show same receive address cross platform
   Future<void> handleLastUsedIndex(
     FrbAccount account,
     AccountModel accountModel,
@@ -90,9 +104,11 @@ class ReceiveAddressDataProvider extends DataProvider {
     FrbAccount account,
     AccountModel accountModel,
   ) async {
-    /// needs to handle lastUsedIndex and highestPoolIndex to prevent address reuse
+    /// we need to mark the addresses under lastUsedIndex from walletAccount as used in bdk,
+    /// and mark the pool address as used in bdk as well before we generate index
     await handleLastUsedIndex(account, accountModel);
     await handlePoolIndex(account, accountModel);
+
     if (!id2AddressInfo.containsKey(accountModel.accountID)) {
       id2AddressInfo[accountModel.accountID] =
           await account.getAddress(index: accountModel.lastUsedIndex);
@@ -103,6 +119,7 @@ class ReceiveAddressDataProvider extends DataProvider {
     FrbAccount account,
     AccountModel accountModel,
   ) async {
+    /// we use cached index to avoid generate bitcoin address again when reopen receive page
     if (!id2AddressInfo.containsKey(accountModel.accountID)) {
       await initReceiveAddressForAccount(account, accountModel);
     }
@@ -117,6 +134,9 @@ class ReceiveAddressDataProvider extends DataProvider {
     await handleLastUsedIndex(account, accountModel);
     await handlePoolIndex(account, accountModel);
 
+    /// get next receive address from bdk
+    /// it will skip those addresses that we marked as used,
+    /// and return the bitcoin address with smallest unused index
     final FrbAddressInfo newAddress = await account.getNextReceiveAddress();
     id2AddressInfo[accountModel.accountID] = newAddress;
 
@@ -127,12 +147,14 @@ class ReceiveAddressDataProvider extends DataProvider {
   }
 
   Future<void> updateLastUsedIndex(AccountModel accountModel) async {
-    /// don't need await this
+    /// put lastUsedIndex to backend, so we can get same receive address cross platform
     walletClient.updateWalletAccountLastUsedIndex(
       walletId: accountModel.walletID,
       walletAccountId: accountModel.accountID,
       lastUsedIndex: accountModel.lastUsedIndex,
     );
+
+    /// update local record
     await walletDataProvider.insertOrUpdateAccount(
       accountModel.walletID,
       accountModel.label.base64encode(),

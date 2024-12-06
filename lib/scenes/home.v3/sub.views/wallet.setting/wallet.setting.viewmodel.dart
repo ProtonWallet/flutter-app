@@ -155,11 +155,14 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
     String newName,
   ) async {
     try {
+      /// update the account name with API, and update db tables
       await walletNameBloc.updateAccountLabel(
         walletMenuModel.walletModel,
         accountModel,
         newName,
       );
+
+      /// update the account name in cache
       walletListBloc.updateAccountName(
         walletMenuModel.walletModel,
         accountModel,
@@ -315,19 +318,25 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
     String serverAddressID,
   ) async {
     try {
+      /// remove BvE setting from server with API
       final walletAccount = await walletClient.removeEmailAddress(
         walletId: walletMenuModel.walletModel.walletID,
         walletAccountId: accountModel.accountID,
         addressId: serverAddressID,
       );
       bool deleted = true;
+
+      /// check if server deleted BvE address successfully
       for (final emailAddress in walletAccount.addresses) {
         if (emailAddress.id == serverAddressID) {
           deleted = false;
         }
       }
       if (deleted) {
+        /// update db tables
         await walletManager.deleteAddress(serverAddressID);
+
+        /// update caches
         walletListBloc.removeEmailIntegration(
           walletMenuModel.walletModel,
           accountModel,
