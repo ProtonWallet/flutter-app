@@ -13,6 +13,16 @@ class ApiEnv {
   ApiEnv.atlas(this.custom) : type = ApiEnvType.atlas;
 
   @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ApiEnv && other.type == type && other.custom == custom;
+  }
+
+  @override
+  int get hashCode => Object.hash(type, custom);
+
+  @override
   String toString() {
     switch (type) {
       case ApiEnvType.prod:

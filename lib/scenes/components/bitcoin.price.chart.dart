@@ -145,7 +145,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                         ),
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
-                              tooltipBgColor: ProtonColors.white,
+                              getTooltipColor: (_) => ProtonColors.white,
                               tooltipBorder: BorderSide(
                                 color: ProtonColors.textWeak,
                               )),

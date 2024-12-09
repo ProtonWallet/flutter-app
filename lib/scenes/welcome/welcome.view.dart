@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/core/responsive.dart';
@@ -11,7 +14,6 @@ import 'package:wallet/scenes/welcome/login.signup.button.dart';
 import 'package:wallet/scenes/welcome/welcom.backgroud.dart';
 import 'package:wallet/scenes/welcome/welcome.image.dart';
 import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class WelcomeView extends ViewBase<WelcomeViewModel> {
   const WelcomeView(WelcomeViewModel viewModel)
@@ -27,66 +29,56 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
         child: SingleChildScrollView(
       child: SafeArea(
         child: Responsive(
-          desktop: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: max(
-                          (MediaQuery.of(context).size.height - 600) / 2, 0),
-                    ),
-                    const WelcomeImage(),
-                  ],
+          desktop: Row(children: [
+            Expanded(
+              child: Column(children: [
+                SizedBox(
+                  height: max((context.height - 600) / 2, 0),
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: max(
-                          (MediaQuery.of(context).size.height - 300) / 2, 0),
-                    ),
-                    viewModel.isLoginToHomepage
-                        ? nowLogin(context)
-                        : SizedBox(
-                            height: 120,
-                            width: 450,
-                            child: LoginAndSignupBtn(
-                              signupPressed: () {
-                                viewModel.move(NavID.nativeSignup);
-                              },
-                              signinPressed: () {
-                                viewModel.move(NavID.nativeSignin);
-                              },
-                            ),
-                          ),
-                  ],
+                const WelcomeImage(),
+              ]),
+            ),
+            Expanded(
+              child: Column(children: [
+                SizedBox(
+                  height: max((context.height - 300) / 2, 0),
                 ),
-              ),
-            ],
-          ),
-          mobile: Column(
-            children: [
-              SizedBox(
-                height: max((MediaQuery.of(context).size.height - 900) / 2, 0),
-              ),
-              const WelcomeImage(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: viewModel.isLoginToHomepage
+                viewModel.isLoginToHomepage
                     ? nowLogin(context)
-                    : LoginAndSignupBtn(
-                        signupPressed: () {
-                          viewModel.move(NavID.nativeSignup);
-                        },
-                        signinPressed: () {
-                          viewModel.move(NavID.nativeSignin);
-                        },
+                    : SizedBox(
+                        height: 120,
+                        width: 450,
+                        child: LoginAndSignupBtn(
+                          signupPressed: () {
+                            viewModel.move(NavID.nativeSignup);
+                          },
+                          signinPressed: () {
+                            viewModel.move(NavID.nativeSignin);
+                          },
+                        ),
                       ),
-              ),
-            ],
-          ),
+              ]),
+            ),
+          ]),
+          mobile: Column(children: [
+            SizedBox(
+              height: max((context.height - 900) / 2, 0),
+            ),
+            const WelcomeImage(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: viewModel.isLoginToHomepage
+                  ? nowLogin(context)
+                  : LoginAndSignupBtn(
+                      signupPressed: () {
+                        viewModel.move(NavID.nativeSignup);
+                      },
+                      signinPressed: () {
+                        viewModel.move(NavID.nativeSignin);
+                      },
+                    ),
+            ),
+          ]),
         ),
       ),
     ));
@@ -96,11 +88,11 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
     return Column(children: [
       Text(
         S.of(context).now_login,
-        style: FontManager.body1Median(ProtonColors.textNorm),
+        style: ProtonStyles.body1Medium(
+          color: ProtonColors.textNorm,
+        ),
       ),
-      const SizedBox(
-        height: 8,
-      ),
+      SizedBoxes.box8,
       const CustomLoading(
         size: 26,
       ),

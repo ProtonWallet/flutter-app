@@ -4,8 +4,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/colors.gen.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/signin/signin.viewmodel.dart';
 
@@ -21,16 +23,22 @@ class SigninView extends ViewBase<SigninViewModel> {
   Widget buildWelcome(BuildContext context) {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
+
+    /// This is the workaround to show the error message
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (viewModel.errorMessage.isNotEmpty) {
         LocalToast.showErrorToast(context, viewModel.errorMessage);
         viewModel.errorMessage = "";
       }
     });
+
     return AlertDialog(
-      title: buildHeader(),
+      title: SignInHeader(),
       backgroundColor: ColorName.light10,
-      content: buildContentForm(usernameController, passwordController),
+      content: SigninContentForm(
+        usernameController: usernameController,
+        passwordController: passwordController,
+      ),
       actions: [
         TextButton(
           onPressed: () {
@@ -38,8 +46,11 @@ class SigninView extends ViewBase<SigninViewModel> {
             Navigator.of(context).pop();
           },
           child: Text(
+            // cancel
             context.local.cancel,
-            style: const TextStyle(color: Colors.grey),
+            style: ProtonStyles.body2Regular(
+              color: Colors.grey,
+            ),
           ),
         ),
         TextButton(
@@ -53,7 +64,9 @@ class SigninView extends ViewBase<SigninViewModel> {
             EasyLoading.dismiss();
           },
           child: Text(
+            // login
             context.local.login,
+            style: ProtonStyles.body2Regular(),
           ),
         ),
       ],
@@ -62,30 +75,36 @@ class SigninView extends ViewBase<SigninViewModel> {
       ),
     );
   }
+}
 
-  Container buildContentForm(
-    TextEditingController usernameController,
-    TextEditingController passwordController,
-  ) {
+class SigninContentForm extends StatelessWidget {
+  const SigninContentForm({
+    required this.usernameController,
+    required this.passwordController,
+    super.key,
+  });
+
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minWidth: 300),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
         children: [
-          const Text(
-            "Username or email",
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: ColorName.weakLight),
+          Text(
+            S.of(context).sign_in_username_or_email,
+            style: ProtonStyles.body2Medium(color: ColorName.weakLight),
             textAlign: TextAlign.left,
           ),
           SizedBoxes.box8,
           CupertinoTextField.borderless(
             keyboardType: TextInputType.emailAddress,
             controller: usernameController,
-            style: const TextStyle(fontSize: 16),
+            style: ProtonStyles.body1Regular(),
             decoration: BoxDecoration(
               color: CupertinoColors.white,
               borderRadius: BorderRadius.circular(14.0),
@@ -96,13 +115,9 @@ class SigninView extends ViewBase<SigninViewModel> {
             ),
           ),
           SizedBoxes.box16,
-          const Text(
+          Text(
             "Password",
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: ColorName.weakLight,
-            ),
+            style: ProtonStyles.body2Medium(color: ColorName.weakLight),
             textAlign: TextAlign.left,
           ),
           SizedBoxes.box8,
@@ -110,7 +125,7 @@ class SigninView extends ViewBase<SigninViewModel> {
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
             controller: passwordController,
-            style: const TextStyle(fontSize: 16),
+            style: ProtonStyles.body1Regular(),
             decoration: BoxDecoration(
               color: CupertinoColors.white,
               borderRadius: BorderRadius.circular(14.0),
@@ -124,22 +139,29 @@ class SigninView extends ViewBase<SigninViewModel> {
       ),
     );
   }
+}
 
-  Container buildHeader() {
+class SignInHeader extends StatelessWidget {
+  const SignInHeader({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minWidth: 340),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         SizedBoxes.box24,
         Assets.images.logos.protonPLogo.svg(),
         SizedBoxes.box20,
-        const Text(
-          'Sign in to Proton',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
+        Text(
+          S.of(context).sign_in_to_proton_title,
+          style: ProtonStyles.hero(),
         ),
-        const SizedBox(height: 8),
-        const Text(
-          "Enter your Proton Account details.",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+        SizedBoxes.box8,
+        Text(
+          S.of(context).sign_in_to_proton_subtitle,
+          style: ProtonStyles.body1Regular(),
         )
       ]),
     );

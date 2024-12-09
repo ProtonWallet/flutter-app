@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/theme/theme.font.dart';
 
@@ -48,75 +49,73 @@ class AlertCustomState extends State<AlertCustom> {
         : GestureDetector(
             onTap: widget.onTap,
             child: Container(
-                width: widget.width ?? MediaQuery.of(context).size.width,
+                width: widget.width ?? context.width,
                 margin: widget.margin,
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ??
                         ProtonColors.alertWaningBackground,
                     borderRadius: BorderRadius.circular(10.0),
                     border: widget.border ??
-                        Border.all(
-                          color: ProtonColors.alertWaning,
-                        )),
-                child: Stack(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16, bottom: 16, right: 20, left: 20),
-                        child: Row(
+                        Border.all(color: ProtonColors.alertWaning)),
+                child: Stack(children: [
+                  Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        bottom: 16,
+                        right: 20,
+                        left: 20,
+                      ),
+                      child: Row(children: [
+                        if (widget.leadingWidget != null)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: 8,
+                            ),
+                            child: widget.leadingWidget!,
+                          ),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (widget.leadingWidget != null)
+                            widget.onTap != null
+                                ? Underline(
+                                    color: widget.color ??
+                                        ProtonColors.alertWaning,
+                                    child: Text(widget.content,
+                                        style: FontManager.body2Regular(
+                                            widget.color ??
+                                                ProtonColors.alertWaning)))
+                                : Text(widget.content,
+                                    style: FontManager.body2Regular(
+                                        widget.color ??
+                                            ProtonColors.alertWaning)),
+                            if (widget.learnMore != null)
                               Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 8,
-                                  ),
-                                  child: widget.leadingWidget!),
-                            Expanded(
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                  widget.onTap != null
-                                      ? Underline(
-                                          color: widget.color ??
-                                              ProtonColors.alertWaning,
-                                          child: Text(widget.content,
-                                              style: FontManager.body2Regular(
-                                                  widget.color ??
-                                                      ProtonColors
-                                                          .alertWaning)))
-                                      : Text(widget.content,
-                                          style: FontManager.body2Regular(
-                                              widget.color ??
-                                                  ProtonColors.alertWaning)),
-                                  if (widget.learnMore != null)
-                                    Padding(
-                                        padding: const EdgeInsets.only(top: 4),
-                                        child: widget.learnMore!),
-                                ])),
-                            if (widget.canClose ?? true)
-                              Transform.translate(
-                                offset: const Offset(8, 0),
-                                child: SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isClose = true;
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.close_rounded,
-                                      size: 16,
-                                      color: ProtonColors.textNorm,
-                                    ),
-                                  ),
-                                ),
-                              )
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: widget.learnMore!),
                           ],
                         )),
-                  ],
-                )));
+                        if (widget.canClose ?? true)
+                          Transform.translate(
+                            offset: const Offset(8, 0),
+                            child: SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isClose = true;
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close_rounded,
+                                  size: 16,
+                                  color: ProtonColors.textNorm,
+                                ),
+                              ),
+                            ),
+                          )
+                      ])),
+                ])));
   }
 }

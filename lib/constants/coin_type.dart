@@ -6,6 +6,21 @@ class CoinType {
   Network network;
 
   CoinType({required this.name, required this.type, required this.network});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is CoinType &&
+        other.name == name &&
+        other.type == type &&
+        other.network == network;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, type, network);
+
+  @override
+  String toString() => 'CoinType(name: $name, type: $type, network: $network)';
 }
 
 final CoinType bitcoin =

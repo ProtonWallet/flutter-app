@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+@Deprecated(
+    " 'FontManager' is deprecated and shouldn't be used anymore. try to use '[ProtonStyles]' instead.")
 class FontManager {
   static const String primaryFontFamily = 'Inter'; // font name
 

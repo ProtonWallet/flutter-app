@@ -157,7 +157,7 @@ class ReceiveAddressDataProvider extends DataProvider {
     /// update local record
     await walletDataProvider.insertOrUpdateAccount(
       accountModel.walletID,
-      accountModel.label.base64encode(),
+      accountModel.label.toBase64(),
       accountModel.scriptType,
       accountModel.derivationPath,
       accountModel.accountID,

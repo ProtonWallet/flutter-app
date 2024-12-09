@@ -51,7 +51,7 @@ dependencies:
   intl: ^0.19.0
   provider: ^6.1.1
   flutter_svg: ^2.0.9
-  animated_size_and_fade: ^4.0.0
+  animated_size_and_fade: ^5.0.0
   flutter_tags_x: ^1.1.0
   flutter_screen_lock: ^9.0.1
   sqflite: ^2.3.3+1
@@ -60,15 +60,15 @@ dependencies:
   # easy_sidemenu: ^0.5.0 # might use later
   qr_flutter: ^4.1.0
   share_plus: ^10.0.0
-  flutter_local_notifications: ^17.2.2
+  flutter_local_notifications: ^18.0.1
   sqflite_common_ffi: ^2.3.1
   web_socket_channel: ^3.0.1 # might use later
   introduction_screen: ^3.1.12
-  confetti: ^0.7.0
+  # confetti: ^0.8.0
   local_auth: ^2.1.7
   fluttertoast: ^8.2.4
   path_provider: ^2.1.1
-  fl_chart: ^0.66.0
+  fl_chart: ^0.69.2
   url_launcher: ^6.2.2
   #Simple, fast generation of RFC4122 UUIDs.
   uuid: ^4.2.2
@@ -103,7 +103,7 @@ dependencies:
   #
   synchronized: ^3.1.0+1
   dart_style: ^2.3.6
-  envied: ^0.5.4+1
+  envied: ^1.0.0
   webview_flutter: ^4.8.0
   #
   country_picker: ^2.0.26
@@ -111,7 +111,7 @@ dependencies:
   card_loading: ^0.3.2
 
   # this is for app version and user agent
-  device_info_plus: ^10.1.0
+  device_info_plus: ^11.1.1
   package_info_plus: ^8.0.0
 
   # keyboard visibility check. for toolbar on top of ios device
@@ -143,9 +143,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   intl_translation: ^0.20.0
-  ffigen: ^13.0.0
+  ffigen: ^16.0.0
   build_runner: ^2.4.12
   analyzer: ^6.7.0
   #auto gen assets to const
@@ -155,18 +155,19 @@ dev_dependencies:
   flutter_gen: ^5.6.0
 
   # auto config app icons
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.1
   # json serializable
   json_serializable: ^6.8.0
 
   ## dev tools
   # meta: ^1.14.0
   drift_dev: ^2.19.1
-  envied_generator: ^0.5.4+1
+  envied_generator: ^1.0.0
 
   # for ui tests
   golden_toolkit: ^0.15.0
   mockito: ^5.4.4
+  alchemist: ^0.11.0 # golden_toolkit replacement
 
 #flutter launcher icons configs
 flutter_launcher_icons:
