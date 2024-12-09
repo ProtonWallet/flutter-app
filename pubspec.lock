@@ -1106,6 +1106,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  no_screenshot:
+    dependency: "direct main"
+    description:
+      name: no_screenshot
+      sha256: ec3d86d7ee89a09c3a3939c1003012536ba4b3fcb4f8cbd23d87ada595c99258
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   node_preamble:
     dependency: transitive
     description:
@@ -1827,10 +1835,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
+      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.5"
+    version: "14.2.4"
   watcher:
     dependency: transitive
     description:
