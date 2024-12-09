@@ -40,8 +40,8 @@ impl SrpClient {
     }
 
     /// Computes the mailbox password hash based on the provided password and salt.
-    pub fn compute_key_password(password: String, salt: Vec<u8>) -> Result<String> {
-        let hashed_password = mailbox_password_hash(&password, &salt)?;
+    pub fn compute_key_password(password: &str, salt: Vec<u8>) -> Result<String> {
+        let hashed_password = mailbox_password_hash(password, &salt)?;
         let password_raw: Vec<u8> = hashed_password.as_bytes().to_vec();
         let suffix_len = 31;
 
@@ -54,7 +54,7 @@ impl SrpClient {
         Ok(mailboxpwd.to_string())
     }
 
-    pub fn compute_key_password_as_secret(password: String, salt: Vec<u8>) -> Result<KeySecret> {
+    pub fn compute_key_password_as_secret(password: &str, salt: Vec<u8>) -> Result<KeySecret> {
         Ok(KeySecret::new(
             Self::compute_key_password(password, salt)?
                 .as_bytes()
@@ -133,7 +133,7 @@ mod tests {
     #[test]
     fn test_compute_key_password_success() {
         let salt_bytes: [u8; 16] = generate_secure_random_bytes();
-        let result = SrpClient::compute_key_password("password".to_string(), salt_bytes.to_vec());
+        let result = SrpClient::compute_key_password("password", salt_bytes.to_vec());
         println!("{:?}", result);
         assert!(result.is_ok());
         let mailboxpwd = result.unwrap();
@@ -143,8 +143,7 @@ mod tests {
     #[test]
     fn test_compute_key_password_too_short() {
         let salt_bytes: [u8; 2] = generate_secure_random_bytes();
-        let result =
-            SrpClient::compute_key_password("shortpassword".to_string(), salt_bytes.to_vec());
+        let result = SrpClient::compute_key_password("shortpassword", salt_bytes.to_vec());
         assert_eq!(
             result.err().unwrap().to_string(),
             WalletCryptoError::MailboxHash(MailboxHashError::InvalidSalt).to_string()

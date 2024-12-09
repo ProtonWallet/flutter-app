@@ -87,9 +87,6 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
                       ButtonV5(
                           onPressed: () async {
                             Navigator.of(context).pop();
-                            // EasyLoading.show(maskType: EasyLoadingMaskType.black);
-                            // onPressed?.call();
-                            // EasyLoading.dismiss();
                             ExternalUrl.shared.launchWalletHomepage();
                           },
                           text: S.of(context).upgrade_now,

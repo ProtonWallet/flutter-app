@@ -27,8 +27,6 @@ class ExternalUrl {
       "https://proton.me/support/wallet-bitcoin-via-email";
   final String bveInAcitvedLink =
       "https://proton.me/support/wallet-bitcoin-via-email#how-to-enable-bitcoin-via-email";
-
-  // final String inviteFriendLink = "https://proton.me/support/wallet-how-to-invite-people";
   final String optionalPassphraseLink =
       "https://proton.me/support/wallet-protection#optional-passphrase";
   final String addressTypeLink =
@@ -114,7 +112,7 @@ class ExternalUrl {
     launchString(accountIndexLink);
   }
 
-  void launchWalletHomepage(){
+  void launchWalletHomepage() {
     launchString(walletHomepage);
   }
 

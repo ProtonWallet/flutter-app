@@ -109,7 +109,6 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
     on<SelectCurrencyEvent>((event, emit) async {
       final fiatCurrency = event.fiatCurrency;
       final selectedProvider = state.selectedModel.provider;
-      // var selectedCountry = state.selectedModel.country;
       final apiCountry = gatewayDataProvider.getApiCountryFiatCurrency(
           selectedProvider, fiatCurrency);
       emit(state.copyWith(

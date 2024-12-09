@@ -38,10 +38,5 @@ class HomeNavigationCoordinator extends Coordinator {
   @override
   List<ViewBase<ViewModel>> starts() {
     return pageViews;
-
-    // HistoryCoordinator().start(),
-    // BuyBitcoinCoordinator().start(),
-    // TransferCoordinator().start(),
-    // SettingsCoordinator().start()
   }
 }

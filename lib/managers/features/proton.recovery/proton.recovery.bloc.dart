@@ -1,214 +1,86 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/helper/exceptions.dart';
-import 'package:wallet/helper/extension/data.dart';
-import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/walletkey_helper.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
-import 'package:wallet/managers/users/user.manager.dart';
-import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
-import 'package:wallet/rust/api/api_service/proton_users_client.dart';
-import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
-import 'package:wallet/rust/api/proton_wallet/srp/srp_client.dart';
-import 'package:wallet/rust/proton_api/proton_users.dart';
-import 'package:wallet/rust/srp/proofs.dart';
+import 'package:wallet/rust/api/proton_wallet/features/proton_recovery.dart';
 
 /// Define the Bloc
 class ProtonRecoveryBloc
     extends Bloc<ProtonRecoveryEvent, ProtonRecoveryState> {
-  final UserManager userManager;
-  final ProtonUsersClient protonUsersApi;
-  final ProtonSettingsClient protonSettingsApi;
   final UserDataProvider userDataProvider;
+
+  /// rust features
+  final FrbProtonRecovery frbProtonRecovery;
 
   /// app state
   final AppStateManager appStateManager;
 
   /// initialize the bloc with the initial state
   ProtonRecoveryBloc(
-    this.userManager,
-    this.protonUsersApi,
     this.userDataProvider,
-    this.protonSettingsApi,
     this.appStateManager,
+    this.frbProtonRecovery,
   ) : super(const ProtonRecoveryState()) {
     on<LoadingRecovery>((event, emit) async {
       emit(state.copyWith(
-          isLoading: true,
-          error: "",
-          isRecoveryEnabled: false,
-          mnemonic: "",
-          requireAuthModel: const RequireAuthModel()));
+        isLoading: true,
+        error: "",
+        isRecoveryEnabled: false,
+        mnemonic: "",
+        requireAuthModel: const RequireAuthModel(),
+      ));
+      final frbStatus = await frbProtonRecovery.recoveryStatus();
+      final status = frbStatus == 3;
 
-      final userInfo = await protonUsersApi.getUserInfo();
-      final status = userInfo.mnemonicStatus == 3;
-
-      emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
+      emit(state.copyWith(
+        isLoading: false,
+        isRecoveryEnabled: status,
+      ));
     });
 
     on<TestRecovery>((event, emit) async {
       emit(state.copyWith(
-          isLoading: true,
-          error: "",
-          isRecoveryEnabled: false,
-          mnemonic:
-              "banner tag desk cart mirror horse name minimum hen sport sadness evidence",
-          requireAuthModel: const RequireAuthModel()));
-
-      final userInfo = await protonUsersApi.getUserInfo();
-      final status = userInfo.mnemonicStatus == 3;
-
+        isLoading: true,
+        error: "",
+        isRecoveryEnabled: false,
+        mnemonic:
+            "banner tag desk cart mirror horse name minimum hen sport sadness evidence",
+        requireAuthModel: const RequireAuthModel(),
+      ));
+      final frbStatus = await frbProtonRecovery.recoveryStatus();
+      final status = frbStatus == 3;
       emit(state.copyWith(isLoading: false, isRecoveryEnabled: status));
     });
 
     on<EnableRecovery>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: ""));
-      // get user info
-      final userInfo = await protonUsersApi.getUserInfo();
-      final status = userInfo.mnemonicStatus;
+      final status = await frbProtonRecovery.recoveryStatus();
       // 0 - Mnemonic is disabled
       // 1 - Mnemonic is enabled but not set
       // 2 - Mnemonic is enabled but needs to be re-activated
       // 3 - Mnemonic is enabled and set
       if (status == 0 || status == 1) {
-        /// set new flow
-        /// get auth info
-
+        // enable recovery flow
         if (event.step == RecoverySteps.start) {
-          // var status = userInfo.mnemonicStatus;
           // check if the status is disabled already skip the process
-          /// get auth info
-          final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
-
           /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
-          final twoFaEnable = authInfo.twoFa.enabled;
-          final authSetp =
-              RequireAuthModel(requireAuth: true, twofaStatus: twoFaEnable);
-          emit(state.copyWith(requireAuthModel: authSetp, authInfo: authInfo));
+          final twoFaEnable = await frbProtonRecovery.twoFaStatus();
+          final authSetp = RequireAuthModel(
+            requireAuth: true,
+            twofaStatus: twoFaEnable,
+          );
+          emit(state.copyWith(requireAuthModel: authSetp));
         } else if (event.step == RecoverySteps.auth) {
           final loginPassword = event.password;
           final loginTwoFa = event.twofa;
-          final authInfo = state.authInfo ??
-              await protonUsersApi.getAuthInfo(intent: "Proton");
-
-          /// build srp client proof
-          final clientProofs = await FrbSrpClient.generateProofs(
-              loginPassword: loginPassword,
-              version: authInfo.version,
-              salt: authInfo.salt,
-              modulus: authInfo.modulus,
-              serverEphemeral: authInfo.serverEphemeral);
-
-          /// password scop unlock password change  ---  add 2fa code if needed
-          final proofs = authInfo.twoFa.enabled != 0
-              ? ProtonSrpClientProofs(
-                  clientEphemeral: clientProofs.clientEphemeral,
-                  clientProof: clientProofs.clientProof,
-                  srpSession: authInfo.srpSession,
-                  twoFactorCode: loginTwoFa)
-              : ProtonSrpClientProofs(
-                  clientEphemeral: clientProofs.clientEphemeral,
-                  clientProof: clientProofs.clientProof,
-                  srpSession: authInfo.srpSession);
-
           try {
-            final serverProofs = await protonUsersApi.unlockPasswordChange(
-              proofs: proofs,
+            final mnemonicWords = await frbProtonRecovery.enableRecovery(
+              loginPassword: loginPassword,
+              twofa: loginTwoFa,
             );
-
-            /// check if the server proofs are valid
-            final check = clientProofs.expectedServerProof == serverProofs;
-            logger.i("EnableRecovery password server proofs: $check");
-            if (!check) {
-              return Future.error('Invalid server proofs');
-            }
-
-            /// generate new entropy and mnemonic
-            final salt = WalletKeyHelper.getSecureRandom(BigInt.from(16));
-            final randomEntropy = WalletKeyHelper.getSecureRandom(
-              BigInt.from(16),
-            );
-
-            final FrbMnemonic mnemonic =
-                FrbMnemonic.newWith(entropy: randomEntropy);
-            final mnemonicWords = mnemonic.asWords();
-            final recoveryPassword = randomEntropy.base64encode();
-
-            final hashedPassword = await FrbSrpClient.computeKeyPassword(
-              password: recoveryPassword,
-              salt: salt,
-            );
-
-            final userFirstKey = await userManager.getPrimaryKey();
-            final userKeys = userInfo.keys;
-            if (userKeys == null) {
-              return Future.error('User keys not found');
-            }
-            // if (userKeys.length != 1) {
-            //   return Future.error('More then one key is not supported yet');
-            // }
-
-            final oldPassphrase = userFirstKey.passphrase;
-
-            final List<MnemonicUserKey> mnUserKeys = [];
-
-            /// reencrypt password for now only support one
-            for (ProtonUserKey key in userKeys) {
-              final newKey = FrbTransitionLayer.changePassword(
-                  userKey: key,
-                  passphrase: oldPassphrase,
-                  newPassphrase: hashedPassword);
-              mnUserKeys.add(MnemonicUserKey(id: key.id, privateKey: newKey));
-            }
-
-            /// get srp module
-            final serverModule = await protonUsersApi.getAuthModule();
-
-            final SRPVerifierB64 verifier = await FrbSrpClient.generateVerifer(
-              password: recoveryPassword,
-              serverModulus: serverModule.modulus,
-            );
-
-            final auth = MnemonicAuth(
-              modulusId: serverModule.modulusId,
-              salt: verifier.salt,
-              version: verifier.version,
-              verifier: verifier.verifier,
-            );
-
-            final req = UpdateMnemonicSettingsRequestBody(
-              mnemonicUserKeys: mnUserKeys,
-              mnemonicSalt: salt.base64encode(),
-              mnemonicAuth: auth,
-            );
-            final recoveryCode = await protonSettingsApi.setMnemonicSettings(
-              req: req,
-            );
-            logger.i("EnableRecovery response code: $recoveryCode");
-            final lockCode = await protonUsersApi.lockSensitiveSettings();
-            if (recoveryCode != 1000) {
-              emit(state.copyWith(
-                isLoading: false,
-                requireAuthModel: const RequireAuthModel(),
-                error:
-                    "Eanble recovery failed, please try again. code: $recoveryCode",
-              ));
-              return;
-            }
-            logger.i("EnableRecovery lockSensitiveSettings: $lockCode");
-            if (lockCode != 1000) {
-              emit(state.copyWith(
-                isLoading: false,
-                requireAuthModel: const RequireAuthModel(),
-                error:
-                    "Eanble recovery failed, please try again. code: $lockCode",
-              ));
-              return;
-            }
             userDataProvider.enabledRecovery(true);
             emit(state.copyWith(
                 isLoading: false,
@@ -230,238 +102,110 @@ class ProtonRecoveryBloc
                 error: e.toString()));
           }
         }
-
-        /// set mnemonic
       } else if (status == 2 || status == 4) {
         /// reactive flow
-        /// generate new entropy and mnemonic
-        final salt = WalletKeyHelper.getSecureRandom(BigInt.from(16));
-        final randomEntropy = WalletKeyHelper.getSecureRandom(
-          BigInt.from(16),
-        );
-
-        final FrbMnemonic mnemonic =
-            FrbMnemonic.newWith(entropy: randomEntropy);
-        final mnemonicWords = mnemonic.asWords();
-        final recoveryPassword = randomEntropy.base64encode();
-
-        final hashedPassword = await FrbSrpClient.computeKeyPassword(
-          password: recoveryPassword,
-          salt: salt,
-        );
-
-        final userFirstKey = await userManager.getPrimaryKey();
-        final userKeys = userInfo.keys;
-        if (userKeys == null) {
-          return Future.error('User keys not found');
-        }
-        // if (userKeys.length != 1) {
-        //   return Future.error('More then one key is not supported yet');
-        // }
-
-        final oldPassphrase = userFirstKey.passphrase;
-
-        final List<MnemonicUserKey> mnUserKeys = [];
-
-        /// reencrypt password for now only support one
-        for (ProtonUserKey key in userKeys) {
-          final newKey = FrbTransitionLayer.changePassword(
-              userKey: key,
-              passphrase: oldPassphrase,
-              newPassphrase: hashedPassword);
-          mnUserKeys.add(MnemonicUserKey(id: key.id, privateKey: newKey));
-        }
-
         try {
-          if (event.step == RecoverySteps.auth) {
-            final loginPassword = event.password;
-            final loginTwoFa = event.twofa;
-            final authInfo = state.authInfo ??
-                await protonUsersApi.getAuthInfo(intent: "Proton");
-
-            /// build srp client proof
-            final clientProofs = await FrbSrpClient.generateProofs(
-                loginPassword: loginPassword,
-                version: authInfo.version,
-                salt: authInfo.salt,
-                modulus: authInfo.modulus,
-                serverEphemeral: authInfo.serverEphemeral);
-
-            /// password scop unlock password change  ---  add 2fa code if needed
-            final proofs = authInfo.twoFa.enabled != 0
-                ? ProtonSrpClientProofs(
-                    clientEphemeral: clientProofs.clientEphemeral,
-                    clientProof: clientProofs.clientProof,
-                    srpSession: authInfo.srpSession,
-                    twoFactorCode: loginTwoFa)
-                : ProtonSrpClientProofs(
-                    clientEphemeral: clientProofs.clientEphemeral,
-                    clientProof: clientProofs.clientProof,
-                    srpSession: authInfo.srpSession);
-
-            final serverProofs = await protonUsersApi.unlockPasswordChange(
-              proofs: proofs,
-            );
-
-            /// check if the server proofs are valid
-            final check = clientProofs.expectedServerProof == serverProofs;
-            logger.i("EnableRecovery password server proofs: $check");
-            if (!check) {
-              return Future.error('Invalid server proofs');
-            }
-          }
-
-          /// get srp module
-          final serverModule = await protonUsersApi.getAuthModule();
-
-          final SRPVerifierB64 verifier = await FrbSrpClient.generateVerifer(
-            password: recoveryPassword,
-            serverModulus: serverModule.modulus,
-          );
-
-          final auth = MnemonicAuth(
-            modulusId: serverModule.modulusId,
-            salt: verifier.salt,
-            version: verifier.version,
-            verifier: verifier.verifier,
-          );
-
-          final req = UpdateMnemonicSettingsRequestBody(
-            mnemonicUserKeys: mnUserKeys,
-            mnemonicSalt: salt.base64encode(),
-            mnemonicAuth: auth,
-          );
           try {
-            final code = await protonSettingsApi.reactiveMnemonicSettings(
-              req: req,
-            );
-            logger.i("EnableRecovery response code: $code");
-            if (code != 1000) {
-              emit(state.copyWith(
-                isLoading: false,
-                requireAuthModel: const RequireAuthModel(),
-                error: "Eanble recovery failed, please try again. code: $code",
-              ));
-              return;
+            List<String> mnemonicWords;
+            if (event.step == RecoverySteps.auth) {
+              final loginPassword = event.password;
+              final loginTwoFa = event.twofa;
+              mnemonicWords = await frbProtonRecovery.reactiveRecovery(
+                loginPassword: loginPassword,
+                twofa: loginTwoFa,
+              );
+            } else {
+              mnemonicWords = await frbProtonRecovery.reactiveRecovery(
+                twofa: "",
+              );
             }
+            userDataProvider.enabledRecovery(true);
+            emit(state.copyWith(
+              isLoading: false,
+              error: "",
+              isRecoveryEnabled: true,
+              requireAuthModel: const RequireAuthModel(),
+              mnemonic: mnemonicWords.join(" "),
+            ));
           } on BridgeError catch (e) {
             final apiError = parseResponseError(e);
             if (apiError != null &&
                 apiError.isMissingLockedScope() &&
                 event.step != RecoverySteps.auth) {
-              final authInfo =
-                  await protonUsersApi.getAuthInfo(intent: "Proton");
-
               /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
-              final twoFaEnable = authInfo.twoFa.enabled;
-              final authSetp =
-                  RequireAuthModel(requireAuth: true, twofaStatus: twoFaEnable);
+              final twoFaEnable = await frbProtonRecovery.twoFaStatus();
               emit(state.copyWith(
-                  requireAuthModel: authSetp, authInfo: authInfo));
+                requireAuthModel: RequireAuthModel(
+                  requireAuth: true,
+                  twofaStatus: twoFaEnable,
+                ),
+              ));
               return;
             }
-
             rethrow;
           } catch (e) {
             rethrow;
           }
-
-          userDataProvider.enabledRecovery(true);
-          emit(state.copyWith(
-              isLoading: false,
-              error: "",
-              isRecoveryEnabled: true,
-              requireAuthModel: const RequireAuthModel(),
-              mnemonic: mnemonicWords.join(" ")));
         } on BridgeError catch (e) {
           appStateManager.updateStateFrom(e);
           final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
-              isLoading: false,
-              requireAuthModel: const RequireAuthModel(),
-              error: errorMessage));
+            isLoading: false,
+            requireAuthModel: const RequireAuthModel(),
+            error: errorMessage,
+          ));
         } catch (e) {
           emit(state.copyWith(
-              isLoading: false,
-              requireAuthModel: const RequireAuthModel(),
-              error: e.toString()));
+            isLoading: false,
+            requireAuthModel: const RequireAuthModel(),
+            error: e.toString(),
+          ));
         }
       }
-
-      /// build random srp verifier.
     });
 
     on<DisableRecovery>((event, emit) async {
       emit(state.copyWith(isLoading: true, error: ""));
-
       if (event.step == RecoverySteps.start) {
-        // var status = userInfo.mnemonicStatus;
         // check if the status is disabled already skip the process
-        /// get auth info
-        final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
-
         /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
-        final twoFaEnable = authInfo.twoFa.enabled;
+        final twoFaEnable = await frbProtonRecovery.twoFaStatus();
         final authSetp = RequireAuthModel(
-            requireAuth: true, twofaStatus: twoFaEnable, isDisable: true);
-        emit(state.copyWith(requireAuthModel: authSetp, authInfo: authInfo));
+          requireAuth: true,
+          twofaStatus: twoFaEnable,
+          isDisable: true,
+        );
+        emit(state.copyWith(requireAuthModel: authSetp));
       } else if (event.step == RecoverySteps.auth) {
         final loginPassword = event.password;
         final loginTwoFa = event.twofa;
-        final authInfo = state.authInfo ??
-            await protonUsersApi.getAuthInfo(intent: "Proton");
-
-        /// build srp client proof
-        final clientProofs = await FrbSrpClient.generateProofs(
-            loginPassword: loginPassword,
-            version: authInfo.version,
-            salt: authInfo.salt,
-            modulus: authInfo.modulus,
-            serverEphemeral: authInfo.serverEphemeral);
-
-        final proofs = authInfo.twoFa.enabled != 0
-            ? ProtonSrpClientProofs(
-                clientEphemeral: clientProofs.clientEphemeral,
-                clientProof: clientProofs.clientProof,
-                srpSession: authInfo.srpSession,
-                twoFactorCode: loginTwoFa)
-            : ProtonSrpClientProofs(
-                clientEphemeral: clientProofs.clientEphemeral,
-                clientProof: clientProofs.clientProof,
-                srpSession: authInfo.srpSession);
-
         try {
-          /// build request
-          final serverProofs = await protonSettingsApi.disableMnemonicSettings(
-            proofs: proofs,
+          await frbProtonRecovery.disableRecovery(
+            loginPassword: loginPassword,
+            twofa: loginTwoFa,
           );
-
-          /// check if the server proofs are valid
-          final check = clientProofs.expectedServerProof == serverProofs;
-          logger.i("DisableRecovery server proofs: $check");
           userDataProvider.enabledRecovery(false);
           emit(state.copyWith(
-              isLoading: false,
-              isRecoveryEnabled: false,
-              requireAuthModel: const RequireAuthModel()));
+            isLoading: false,
+            isRecoveryEnabled: false,
+            requireAuthModel: const RequireAuthModel(),
+          ));
         } on BridgeError catch (e) {
           appStateManager.updateStateFrom(e);
           final errorMessage = parseSampleDisplayError(e);
           emit(state.copyWith(
-              isLoading: false,
-              requireAuthModel: const RequireAuthModel(),
-              error: errorMessage));
+            isLoading: false,
+            requireAuthModel: const RequireAuthModel(),
+            error: errorMessage,
+          ));
         } catch (e) {
           emit(state.copyWith(
-              isLoading: false,
-              requireAuthModel: const RequireAuthModel(),
-              error: e.toString()));
+            isLoading: false,
+            requireAuthModel: const RequireAuthModel(),
+            error: e.toString(),
+          ));
         }
-      } else {}
+      }
     });
   }
-
-  Future<void> enableRecovery() async {}
-
-  Future<void> disableRecovery() async {}
 }

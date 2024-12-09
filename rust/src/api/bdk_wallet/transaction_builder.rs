@@ -165,24 +165,11 @@ impl FrbTxBuilder {
         }
     }
 
-    /**
-     * Locktime
-     */
-
-    // pub fn add_locktime(&self, locktime: LockTime) -> Self {
-    //     let inner = self.inner.add_locktime(locktime.into());
-    //     Self { inner }
-    // }
-
     #[frb(sync)]
     pub fn remove_locktime(&self) -> Self {
         let inner = self.inner.remove_locktime();
         Self { inner }
     }
-
-    // pub fn get_locktime(&self) -> Option<LockTime> {
-    //     self.inner.locktime.map(|l| l.into())
-    // }
 
     /**
      * Final

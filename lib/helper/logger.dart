@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:wallet/rust/api/flutter_logger.dart' as frb_logger;
 import 'package:wallet/rust/api/logger.dart' as rust_logger;
 
 var logger = Logger(
@@ -61,23 +60,6 @@ class LoggerService {
       fileName: 'app_rust_logs.log',
     );
   }
-
-  // static Future<void> setupFrbLogger() async {
-  //   frb_logger.infoLogger().listen((msg) {
-  //     switch (msg.logLevel) {
-  //       case frb_logger.Level.error:
-  //         logger.e("${msg.lbl.padRight(8)}: ${msg.msg}");
-  //       case frb_logger.Level.warn:
-  //         logger.w("${msg.lbl.padRight(8)}: ${msg.msg}");
-  //       case frb_logger.Level.info:
-  //         logger.i("${msg.lbl.padRight(8)}: ${msg.msg}");
-  //       case frb_logger.Level.debug:
-  //         logger.d("${msg.lbl.padRight(8)}: ${msg.msg}");
-  //       case frb_logger.Level.trace:
-  //         logger.t("${msg.lbl.padRight(8)}: ${msg.msg}");
-  //     }
-  //   });
-  // }
 
   static Future<String> getLogsSize() async {
     int totalSize = 0;

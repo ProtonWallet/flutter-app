@@ -158,18 +158,33 @@ class FrbTransitionLayer {
               userKeys: userKeys,
               userKeyPassword: userKeyPassword);
 
-  static String encryptMessages(
-          {required List<ProtonAddressKey> addrKeys,
-          required String message}) =>
+  static Future<String> encryptMessages(
+          {required List<ProtonAddressKey> encryptorAddrKeys,
+          required String message,
+          List<ProtonUserKey>? userKeys,
+          List<ProtonAddressKey>? addrKeys,
+          String? userKeyPassword}) =>
       RustLib.instance.api
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessages(
-              addrKeys: addrKeys, message: message);
+              encryptorAddrKeys: encryptorAddrKeys,
+              message: message,
+              userKeys: userKeys,
+              addrKeys: addrKeys,
+              userKeyPassword: userKeyPassword);
 
   static String encryptMessagesWithKeys(
-          {required List<String> privateKeys, required String message}) =>
+          {required List<String> privateKeys,
+          required String message,
+          List<ProtonUserKey>? userKeys,
+          List<ProtonAddressKey>? addrKeys,
+          String? userKeyPassword}) =>
       RustLib.instance.api
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithKeys(
-              privateKeys: privateKeys, message: message);
+              privateKeys: privateKeys,
+              message: message,
+              userKeys: userKeys,
+              addrKeys: addrKeys,
+              userKeyPassword: userKeyPassword);
 
   static String encryptMessagesWithUserkey(
           {required ProtonUserKey userKey, required String message}) =>
@@ -209,13 +224,13 @@ class FrbTransitionLayer {
               context: context);
 
   static bool verifySignature(
-          {required String privateKey,
+          {required List<String> verifier,
           required String message,
           required String signature,
           required String context}) =>
       RustLib.instance.api
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerVerifySignature(
-              privateKey: privateKey,
+              verifier: verifier,
               message: message,
               signature: signature,
               context: context);

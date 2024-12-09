@@ -1,6 +1,3 @@
-// import 'package:mockito/annotations.dart';
-
-// @GenerateMocks([SecureStorageInterface])
 abstract class SecureStorageInterface {
   Future<void> write(String key, String value);
   Future<String> read(String key);

@@ -102,7 +102,6 @@ pub mod mock {
         pub UserKeySecureStore {}
         #[async_trait]
         impl UserKeyStore for UserKeySecureStore {
-            // async fn get_user_keys(&self, user_id: String) -> Result<UserKeys>;
             async fn get_default_user_key(&self, user_id: String) -> Result<LockedKey>;
             async fn get_user_key_passphrase(&self, user_id: String) -> Result<KeySecret>;
         }

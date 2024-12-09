@@ -1,5 +1,6 @@
 use super::{
     binary::{Binary, EncryptedBinary},
+    private_key::UnlockedPrivateKeys,
     public_key::PublicKeys,
     Result,
 };
@@ -28,15 +29,19 @@ pub trait Message: Binary {
         &self,
         provider: &Provider,
         pub_keys: &PublicKeys<Provider>,
+        signing_keys: Option<&UnlockedPrivateKeys<Provider>>,
     ) -> Result<EncryptedMessage<Self>>
     where
         Self: Sized,
     {
+        let mut encryptor = provider
+            .new_encryptor()
+            .with_encryption_keys(pub_keys.as_public_keys());
+        if let Some(signing_keys) = signing_keys {
+            encryptor = encryptor.with_signing_key_refs(signing_keys.addr_keys.as_ref());
+        }
         Ok(EncryptedMessage::new(
-            provider
-                .new_encryptor()
-                .with_encryption_keys(pub_keys.as_public_keys())
-                .encrypt_raw(self.as_bytes(), DataEncoding::Armor)?,
+            encryptor.encrypt_raw(self.as_bytes(), DataEncoding::Armor)?,
         ))
     }
 }

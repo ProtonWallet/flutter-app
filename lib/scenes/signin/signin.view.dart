@@ -45,7 +45,6 @@ class SigninView extends ViewBase<SigninViewModel> {
         TextButton(
           onPressed: () async {
             // Logic for logging in goes here
-            // Navigator.of(context).pop(); // Closes the dialog
             EasyLoading.show(maskType: EasyLoadingMaskType.black);
             await viewModel.signIn(
               usernameController.text,

@@ -464,10 +464,7 @@ class WalletManager implements Manager {
       /// probably due to web disable BvE
       return;
     }
-    List<ProtonAddressKey> addressKeys = await getAddressKeysForTL();
-    addressKeys = addressKeys
-        .where((addressKey) => addressIDs.contains(addressKey.id))
-        .toList();
+    final addressKeys = await getAddressKeysForTLAddressID(addressIDs);
     for (var walletBitcoinAddress in walletBitcoinAddresses) {
       try {
         final String bitcoinAddress = walletBitcoinAddress.bitcoinAddress ?? "";
@@ -506,16 +503,13 @@ class WalletManager implements Manager {
       bool isValidSignature = false;
       if (walletBitcoinAddress.bitcoinAddress != null &&
           walletBitcoinAddress.bitcoinAddressSignature != null) {
-        for (final addressKey in addressKeys) {
-          isValidSignature = FrbTransitionLayer.verifySignature(
-              privateKey: addressKey.privateKey!,
-              message: walletBitcoinAddress.bitcoinAddress!,
-              signature: walletBitcoinAddress.bitcoinAddressSignature!,
-              context: gpgContextWalletBitcoinAddress);
-          if (isValidSignature) {
-            break;
-          }
-        }
+        final addressPubKeys =
+            addressKeys.map((key) => key.privateKey!).toList();
+        isValidSignature = FrbTransitionLayer.verifySignature(
+            verifier: addressPubKeys,
+            message: walletBitcoinAddress.bitcoinAddress!,
+            signature: walletBitcoinAddress.bitcoinAddressSignature!,
+            context: gpgContextWalletBitcoinAddress);
       }
       logger.i("bitcoinAddressSignature valid is $isValidSignature");
     }
@@ -697,4 +691,9 @@ class WalletManager implements Manager {
 
   @override
   Future<void> reload() async {}
+
+  @override
+  Priority getPriority() {
+    return Priority.level4;
+  }
 }

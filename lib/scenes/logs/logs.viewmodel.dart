@@ -32,7 +32,6 @@ class LogsViewModelImpl extends LogsViewModel {
 
   @override
   Future<void> loadData() async {
-    // await loadLogs();
     await _loadFiles();
 
     sinkAddSafe();

@@ -6,13 +6,12 @@ pub mod api;
 pub mod proton_bdk;
 
 pub mod common;
-// pub mod ldk;
 pub mod proton_api;
 pub mod proton_wallet;
 pub mod srp;
 
-pub mod mocks;
 pub mod ldk;
+pub mod mocks;
 
 pub use crate::api::errors::BridgeError;
 pub use crate::proton_api::*;

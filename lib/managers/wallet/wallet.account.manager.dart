@@ -15,4 +15,9 @@ class WalletAccountManager implements Manager {
   Future<void> login(String userID) async {}
   @override
   Future<void> reload() async {}
+
+  @override
+  Priority getPriority() {
+    return Priority.level5;
+  }
 }

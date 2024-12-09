@@ -183,8 +183,6 @@ mod tests {
             });
 
         // Mock wallet mnemonic
-        // let encrypt_mnemonic_text = "-----BEGIN PGP MESSAGE-----\n\nwV4DcsIsGT18EWcSAQdAyIU6Snomx8M0mU/+QZmEdn7J2/zINdiVT6L1heMd2jgw\nRMRWvJhGciID2JTvSljSEkr8bcfmiZbIVKR0saWttDZnOFi9s4o4yf/KzrXe151/\n0m0Bs57laz4xJYeDWT7wt7mQhe/P9SriL36hFzbEDdKfc4IauAXMw7EfFp4O/if2\nZ7qBP3BrVHish5xPky9Nr6DN1WjRrp1tvC5eUrR+Yt8hp7LnHzJPpdSDUdeX/Zkd\nWObN5odksX9MrfFrxLdF\n=4j6+\n-----END PGP MESSAGE-----\n";
-
         let encrypted_mnemonic_text = "wV4DcsIsGT18EWcSAQdA321rKV0JcVozf2mtMHJg1CqGWYPMhSRemfAmNi7IMzUwLhXaP//ie09spnkwFSTrajBEm64yt+pvZ0w1vVEVF1hQ+hs/beMeIVUdfdfKpJqu0l4BBggwx7/DQD1F5RScfa7MdHld4+knt4mlY0wtZpi+fiwPaN7dNZ5L+dMGi1c1Ve9MYGk9QDs8czd/6Epo5cXKOWp55pSfG8wdFnMWFCSeKh8HcQ/wd3hsxyFk7+Bu";
         mock_data_provider
             .expect_get_wallet_mnemonic()

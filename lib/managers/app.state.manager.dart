@@ -68,14 +68,6 @@ class AppForceUpgradeState extends AppState {
   List<Object?> get props => [message];
 }
 
-// class AppUnlockLogoutState extends AppState {
-//   final String message;
-//   AppUnlockLogoutState({required this.message});
-
-//   @override
-//   List<Object?> get props => [message];
-// }
-
 class AppStateManager extends DataProvider implements Manager {
   final bool appInBetaState = true;
   bool isHomeInitialed = false;
@@ -270,6 +262,11 @@ class AppStateManager extends DataProvider implements Manager {
   Future<void> logout() async {}
   @override
   Future<void> reload() async {}
+
+  @override
+  Priority getPriority() {
+    return Priority.level2;
+  }
 }
 
 //final backoff = ExponentialBackoff(base: 1000, randomInterval: 500);

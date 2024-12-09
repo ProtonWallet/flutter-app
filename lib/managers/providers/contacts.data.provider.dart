@@ -43,7 +43,6 @@ class ContactsDataProvider extends DataProvider {
 
     /// if found cache.
     if (contacts.isNotEmpty) {
-      // TODO(Note): Temp fix. the contactID should be unique
       final Map<String, ContactsModel> uniqueContacts = {};
       for (var contact in contacts) {
         if (uniqueContacts.containsKey(contact.serverContactID)) {

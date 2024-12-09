@@ -10,6 +10,7 @@ pub mod srp;
 pub mod transaction_id;
 pub mod transaction_label;
 pub mod wallet_account_label;
+pub mod wallet_bitcoin_address;
 pub mod wallet_key;
 pub mod wallet_key_provider;
 pub mod wallet_message;

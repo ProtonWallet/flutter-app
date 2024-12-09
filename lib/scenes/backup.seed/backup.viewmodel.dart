@@ -130,8 +130,6 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       if (!check) {
         throw Exception("Invalid server proofs");
       }
-      // final lockCode = await protonUsersApi.lockSensitiveSettings();
-      // logger.i("Delete wallet password lockSensitiveSettings: $lockCode");
       flowState = SetupBackupState.done;
     } on BridgeError catch (e, stacktrace) {
       error = parseSampleDisplayError(e);

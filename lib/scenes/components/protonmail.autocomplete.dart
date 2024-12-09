@@ -104,13 +104,6 @@ class ProtonMailAutoComplete extends StatelessWidget {
                                     title: Text(option.name),
                                   ),
                                 ),
-                          // const Padding(
-                          //     padding: EdgeInsets.symmetric(
-                          //         horizontal: defaultPadding),
-                          //     child: Divider(
-                          //       thickness: 0.2,
-                          //       height: 1,
-                          //     )),
                         ]),
                       );
                     }).toList(),
@@ -167,7 +160,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
                         : null,
                     labelText: labelText,
                     labelStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textWeak).copyWith(fontSize: 15),
+                        FontManager.textFieldLabelStyle(ProtonColors.textWeak)
+                            .copyWith(fontSize: 15),
                     hintText: hintText,
                     hintStyle:
                         FontManager.textFieldLabelStyle(ProtonColors.textHint),

@@ -11,8 +11,6 @@ import 'package:wallet/rust/common/script_type.dart';
 import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/frb_generated.dart';
 
-// final BdkLibrary lib = BdkLibrary(coinType: appConfig.coinType);
-
 FrbAccount prepareWallet(
   String strMnemonic,
   String strDerivationPath,

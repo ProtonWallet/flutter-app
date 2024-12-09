@@ -135,11 +135,16 @@ class ProtonApiServiceManager implements Manager {
     return getApiService().getSettingsClient();
   }
 
-  TransactionClient getTransactionClient(){
+  TransactionClient getTransactionClient() {
     return getApiService().getTransactionClient();
   }
 
   FrbUnleashClient getUnleashClient() {
     return getApiService().getUnleashClient();
+  }
+
+  @override
+  Priority getPriority() {
+    return Priority.level2;
   }
 }

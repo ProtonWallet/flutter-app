@@ -18,7 +18,6 @@ class WalletMenuModel {
 }
 
 class AccountMenuModel {
-  // String icon = "";
   bool loading = true;
   String label = "Default Account";
   String currencyBalance = "";

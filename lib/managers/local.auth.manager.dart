@@ -74,4 +74,9 @@ class LocalAuthManager implements Manager {
 
   @override
   Future<void> reload() async {}
+
+  @override
+  Priority getPriority() {
+    return Priority.level1;
+  }
 }

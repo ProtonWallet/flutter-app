@@ -308,4 +308,9 @@ class UserManager extends Bloc<UserManagerEvent, UserManagerState>
       UserKeysQueries(dbConnection),
     );
   }
+
+  @override
+  Priority getPriority() {
+    return Priority.level3;
+  }
 }
