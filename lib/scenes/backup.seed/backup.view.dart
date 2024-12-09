@@ -62,6 +62,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
       viewModel.flowState = SetupBackupState.authShown;
     } else if (viewModel.flowState == SetupBackupState.done) {
       viewModel.setIntroduce(introduce: false);
+      viewModel.disableScreenShot();
     }
 
     if (viewModel.error.isNotEmpty) {

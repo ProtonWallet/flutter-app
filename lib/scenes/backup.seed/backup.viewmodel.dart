@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
@@ -51,6 +53,10 @@ abstract class SetupBackupViewModel extends ViewModel<SetupBackupCoordinator> {
   void reset();
 
   void setIntroduce({required bool introduce});
+
+  void disableScreenShot();
+
+  void enableScreenShot();
 }
 
 class SetupBackupViewModelImpl extends SetupBackupViewModel {
@@ -188,11 +194,31 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
   }
 
   @override
+  void dispose() {
+    enableScreenShot();
+    super.dispose();
+  }
+
+  @override
   Future<void> move(NavID to) async {}
 
   @override
   void setIntroduce({required bool introduce}) {
     inIntroduce = introduce;
     sinkAddSafe();
+  }
+
+  @override
+  Future<void> disableScreenShot() async {
+    final noScreenshot = NoScreenshot.instance;
+    final result = await noScreenshot.screenshotOff();
+    logger.i("Screenshot Off: $result");
+  }
+
+  @override
+  Future<void> enableScreenShot() async {
+    final noScreenshot = NoScreenshot.instance;
+    final result = await noScreenshot.screenshotOn();
+    logger.i("Screenshot On: $result");
   }
 }

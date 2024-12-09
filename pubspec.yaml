@@ -135,6 +135,7 @@ dependencies:
   #   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
   #   intl: 0.19.0
   # dio: ^4.0.6
+  no_screenshot: ^0.3.1
 
 dev_dependencies:
   flutter_test:
