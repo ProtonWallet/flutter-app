@@ -214,7 +214,7 @@ impl FrbTransitionLayer {
             {
                 let user_key_secret = KeySecret::new(user_key_password.into_bytes());
                 let crypto_user_keys = UserKeysWrap::new(user_keys).into();
-                let crypto_addr_keys = AddressKeysWrap::new(addr_keys.into()).into();
+                let crypto_addr_keys = AddressKeysWrap::new(addr_keys).into();
                 let locked_private_keys =
                     LockedPrivateKeys::from_keys(crypto_user_keys, crypto_addr_keys);
                 let unlocked_private_keys =

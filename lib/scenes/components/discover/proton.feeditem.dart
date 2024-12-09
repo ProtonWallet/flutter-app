@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/rust/api/api_service/discovery_content_client.dart';
 import 'package:wallet/rust/proton_api/discovery_content.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 

@@ -7,22 +7,22 @@ import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 class BroadcastMessage {
-  final String encrypted;
-  final Map<String, String> asymmetric;
+  final String dataPacket;
+  final Map<String, String> keyPackets;
 
   const BroadcastMessage({
-    required this.encrypted,
-    required this.asymmetric,
+    required this.dataPacket,
+    required this.keyPackets,
   });
 
   @override
-  int get hashCode => encrypted.hashCode ^ asymmetric.hashCode;
+  int get hashCode => dataPacket.hashCode ^ keyPackets.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BroadcastMessage &&
           runtimeType == other.runtimeType &&
-          encrypted == other.encrypted &&
-          asymmetric == other.asymmetric;
+          dataPacket == other.dataPacket &&
+          keyPackets == other.keyPackets;
 }

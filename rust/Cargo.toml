@@ -6,7 +6,7 @@ edition = "2021"
 [dev-dependencies]
 assert_matches = "1.5"
 env_logger = "0.11.0"
-mockall = "0.12.1"
+mockall = "0.13.0"
 hyper = "1.1.0"
 
 [build-dependencies]

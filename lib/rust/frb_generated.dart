@@ -14615,8 +14615,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
     return BroadcastMessage(
-      encrypted: dco_decode_String(arr[0]),
-      asymmetric: dco_decode_Map_String_String(arr[1]),
+      dataPacket: dco_decode_String(arr[0]),
+      keyPackets: dco_decode_Map_String_String(arr[1]),
     );
   }
 
@@ -18648,10 +18648,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   BroadcastMessage sse_decode_broadcast_message(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_encrypted = sse_decode_String(deserializer);
-    var var_asymmetric = sse_decode_Map_String_String(deserializer);
+    var var_dataPacket = sse_decode_String(deserializer);
+    var var_keyPackets = sse_decode_Map_String_String(deserializer);
     return BroadcastMessage(
-        encrypted: var_encrypted, asymmetric: var_asymmetric);
+        dataPacket: var_dataPacket, keyPackets: var_keyPackets);
   }
 
   @protected
@@ -23303,8 +23303,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_broadcast_message(
       BroadcastMessage self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.encrypted, serializer);
-    sse_encode_Map_String_String(self.asymmetric, serializer);
+    sse_encode_String(self.dataPacket, serializer);
+    sse_encode_Map_String_String(self.keyPackets, serializer);
   }
 
   @protected
