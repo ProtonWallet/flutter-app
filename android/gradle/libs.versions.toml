@@ -27,7 +27,7 @@ androidx-compose-bom = "2024.02.01"
 androidx-compose-compiler = "1.5.10"
 
 # Proton Core
-core = "26.0.1"
+core = "27.1.0"
 
 # Dagger
 dagger = "2.49"
