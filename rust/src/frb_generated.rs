@@ -11811,8 +11811,8 @@ const _: fn() = || {
     }
     {
         let BroadcastMessage = None::<crate::common::broadcast_message::BroadcastMessage>.unwrap();
-        let _: String = BroadcastMessage.Encrypted;
-        let _: std::collections::HashMap<String, String> = BroadcastMessage.Asymmetric;
+        let _: String = BroadcastMessage.DataPacket;
+        let _: std::collections::HashMap<String, String> = BroadcastMessage.KeyPackets;
     }
     {
         let ChildSession = None::<crate::proton_api::auth_credential::ChildSession>.unwrap();
@@ -14089,12 +14089,12 @@ impl SseDecode for crate::api::errors::BridgeError {
 impl SseDecode for crate::common::broadcast_message::BroadcastMessage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_encrypted = <String>::sse_decode(deserializer);
-        let mut var_asymmetric =
+        let mut var_dataPacket = <String>::sse_decode(deserializer);
+        let mut var_keyPackets =
             <std::collections::HashMap<String, String>>::sse_decode(deserializer);
         return crate::common::broadcast_message::BroadcastMessage {
-            Encrypted: var_encrypted,
-            Asymmetric: var_asymmetric,
+            DataPacket: var_dataPacket,
+            KeyPackets: var_keyPackets,
         };
     }
 }
@@ -18647,8 +18647,8 @@ impl flutter_rust_bridge::IntoDart
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.0.Encrypted.into_into_dart().into_dart(),
-            self.0.Asymmetric.into_into_dart().into_dart(),
+            self.0.DataPacket.into_into_dart().into_dart(),
+            self.0.KeyPackets.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -22123,8 +22123,8 @@ impl SseEncode for crate::api::errors::BridgeError {
 impl SseEncode for crate::common::broadcast_message::BroadcastMessage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.Encrypted, serializer);
-        <std::collections::HashMap<String, String>>::sse_encode(self.Asymmetric, serializer);
+        <String>::sse_encode(self.DataPacket, serializer);
+        <std::collections::HashMap<String, String>>::sse_encode(self.KeyPackets, serializer);
     }
 }
 

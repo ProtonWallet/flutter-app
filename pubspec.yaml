@@ -68,10 +68,7 @@ dependencies:
   local_auth: ^2.1.7
   fluttertoast: ^8.2.4
   path_provider: ^2.1.1
-  cryptography: ^2.7.0
-  cryptography_flutter: ^2.3.2
   fl_chart: ^0.66.0
-  crypto: ^3.0.3
   url_launcher: ^6.2.2
   #Simple, fast generation of RFC4122 UUIDs.
   uuid: ^4.2.2

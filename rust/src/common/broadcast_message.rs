@@ -5,6 +5,6 @@ use std::collections::HashMap;
 #[frb(mirror(BroadcastMessage))]
 #[allow(non_snake_case)]
 pub struct _BroadcastMessage {
-    pub Encrypted: String,
-    pub Asymmetric: HashMap<String, String>,
+    pub DataPacket: String,
+    pub KeyPackets: HashMap<String, String>,
 }

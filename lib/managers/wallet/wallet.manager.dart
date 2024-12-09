@@ -2,13 +2,10 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:http/http.dart' as http;
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/constants/transaction.detail.from.blockchain.dart';
 import 'package:wallet/helper/bdk/bdk.library.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/logger.dart';
