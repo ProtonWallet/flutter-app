@@ -5,8 +5,8 @@ use andromeda_api::{
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flutter_rust_bridge::frb;
-use tracing::info;
 use std::sync::Arc;
+use tracing::info;
 
 use super::{
     address_client::AddressClient, bitcoin_address_client::BitcoinAddressClient,
@@ -65,7 +65,11 @@ impl ProtonAPIService {
 
     #[frb(sync)]
     pub fn get_arc(&self) -> Arc<ProtonAPIService> {
-        return Arc::new(self.clone());
+        Arc::new(self.clone())
+    }
+
+    pub(crate) fn get_inner(&self) -> Arc<andromeda_api::ProtonWalletApiClient> {
+        self.inner.clone()
     }
 
     pub async fn login(
@@ -91,7 +95,7 @@ impl ProtonAPIService {
             .unwrap();
 
         let raw_salt = BASE64_STANDARD.decode(encoded_salt).unwrap();
-        let mailboxpwd = SrpClient::compute_key_password(password.clone(), raw_salt)?;
+        let mailboxpwd = SrpClient::compute_key_password(&password, raw_salt)?;
         let auth = self.store.inner.auth.lock().unwrap().clone();
         let session_id = auth.uid().unwrap().to_string();
         let acc_token = auth.tokens().unwrap().acc_tok().unwrap().to_string();

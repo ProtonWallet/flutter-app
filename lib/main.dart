@@ -61,6 +61,11 @@ void main() async {
     // inital the rust panic handling
     initializePanicHandling();
 
+    if (kDebugMode) {
+      await LoggerService.initDartLogger();
+      await LoggerService.initRustLogger();
+    }
+
     // await LoggerService.initRustLogger();
     final app = AppCoordinator();
     runApp(app.start());

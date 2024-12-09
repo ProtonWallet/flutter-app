@@ -7,7 +7,6 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/proton_api/auth_credential.dart';
 
-// TODO(feat): use this later
 class MultipleUsersManager {
   final SecureStorageManager storage;
   final PreferencesManager shared;
@@ -23,17 +22,9 @@ class MultipleUsersManager {
     this.apiServiceManager,
   );
 
-  Future<void> login(String userId, AuthCredential auth) async {
-    // final userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
-    // await userManager.flutterLogin(auth);
-    // _userManagers[userId] = userManager;
-  }
+  Future<void> login(String userId, AuthCredential auth) async {}
 
-  Future<void> nativeLogin(UserInfo userInfo) async {
-    // final userManager = UserManager(storage, shared, apiEnv, apiServiceManager);
-    // await userManager.nativeLogin(userInfo);
-    // _userManagers[userInfo.userId] = userManager;
-  }
+  Future<void> nativeLogin(UserInfo userInfo) async {}
 
   Future<void> logout(String userId) async {
     final userManager = _userManagers[userId];

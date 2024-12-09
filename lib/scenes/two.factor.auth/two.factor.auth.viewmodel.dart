@@ -89,7 +89,6 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       );
       final response = await protonSettingsApi.enable2FaTotp(req: req);
       logger.i("enable2FaTotp response code: $response");
-
       backupPhrases = response.twoFactorRecoveryCodes;
 
       /// only enable 2FA in cache if no error from server response

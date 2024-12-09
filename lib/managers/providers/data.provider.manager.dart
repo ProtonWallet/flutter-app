@@ -354,4 +354,9 @@ class DataProviderManager extends Manager {
     await walletMnemonicProvider.reload();
     await walletNameProvider.reload();
   }
+
+  @override
+  Priority getPriority() {
+    return Priority.level4;
+  }
 }

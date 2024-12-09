@@ -158,4 +158,9 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> reload() async {}
+
+  @override
+  Priority getPriority() {
+    return Priority.level1;
+  }
 }

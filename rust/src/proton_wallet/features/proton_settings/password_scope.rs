@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use std::sync::Arc;
+use tracing::info;
 
 use super::Result;
 use crate::proton_wallet::{
@@ -52,7 +53,7 @@ impl PasswordScope for PasswordScopeImpl {
 
         // Check if the server proofs are valid
         let is_valid = srp_proof.expected_server_proof == server_proofs;
-        tracing::info!("Password server proofs valid: {}", is_valid);
+        info!("Password server proofs valid: {}", is_valid);
         if !is_valid {
             return Err(FeaturesError::InvalidSrpServerProofs);
         }

@@ -20,27 +20,13 @@ class MockSharedPreferences extends Mock implements SharedPreferences {}
 void main() {
   late MockSecureStorageInterface mockStorage;
   late MockSharedPreferences mockPrefs;
-  // late MockBuyBitcoinCoordinator mockBuyBitcoinCoordinator;
 
   setUp(() {
     RustLib.init();
     mockStorage = MockSecureStorageInterface();
     mockPrefs = MockSharedPreferences();
-    // mockBuyBitcoinCoordinator = MockBuyBitcoinCoordinator();
     when(mockStorage.read('sessionId')).thenAnswer((_) async => "");
     when(mockPrefs.getString("")).thenReturn("");
     SharedPreferences.setMockInitialValues({}); // Important for initialization
   });
-
-  // testGoldens('AppCoordinator Golden Test', (WidgetTester tester) async {
-  //   await testAcrossAllDevices(
-  //       tester, () => AppCoordinator().start(), 'app_coordinator');
-  // });
-
-  // testGoldens('BuyBitcoinCoordinator Golden Test', (WidgetTester tester) async {
-  //   // Assuming start() returns a Widget, directly testing it
-  //   // var widget = BuyBitcoinCoordinator().start(); // This needs to return a Widget
-  //   // //todo: mock properly BuyBitcoinCoordinator to show the screen with some realistic data
-  //   // await testAcrossAllDevices(tester, () => widget, 'buy_bitcoin_coordinator');
-  // });
 }

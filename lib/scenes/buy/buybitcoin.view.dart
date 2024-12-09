@@ -632,17 +632,6 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               ),
               SizedBoxes.box8,
 
-              /// buttom description
-              // SizedBox(
-              //   width: 400,
-              //   child: Text(
-              //     S.of(context).buy_flow_bottom_desc,
-              //     textAlign: TextAlign.center,
-              //     style: FontManager.body2Regular(const Color(0xFF9294A3)),
-              //     maxLines: 5,
-              //     overflow: TextOverflow.ellipsis,
-              //   ),
-              // ),
               SizedBoxes.box24,
             ],
           ),

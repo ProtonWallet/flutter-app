@@ -7,7 +7,6 @@ import 'package:wallet/managers/channels/native.view.channel.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/managers/providers/unleash.data.provider.dart';
-// import 'package:wallet/managers/proton.wallet.manager.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';

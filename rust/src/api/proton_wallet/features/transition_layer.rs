@@ -4,17 +4,13 @@ use std::thread;
 use andromeda_api::{proton_users::ProtonUserKey, wallet::ApiWalletKey};
 use flutter_rust_bridge::frb;
 use proton_crypto::{
-    crypto::{
-        DataEncoding, PGPProvider, PGPProviderSync, Signer, SignerSync, UnixTimestamp, Verifier,
-        VerifierSync,
-    },
+    crypto::{DataEncoding, PGPProvider, PGPProviderSync, Signer, SignerSync},
     new_pgp_provider,
 };
 use proton_crypto_account::{
     keys::{AddressKeys, ArmoredPrivateKey, UserKeys},
     salts::KeySecret,
 };
-use tracing::info;
 
 use crate::{
     api::proton_wallet::crypto::wallet_key::{FrbLockedWalletKey, FrbUnlockedWalletKey},
@@ -27,6 +23,7 @@ use crate::{
             private_key::LockedPrivateKeys,
             public_key::PublicKeys,
             transaction_id::{EncryptedWalletTransactionID, WalletTransactionID},
+            wallet_bitcoin_address::WalletBTCAddress,
             wallet_key::LockedWalletKey,
             wallet_message::WalletMessage,
         },
@@ -144,7 +141,6 @@ impl FrbTransitionLayer {
         enc_sender: Option<String>,
         enc_body: Option<String>,
     ) -> Result<FrbSenderBody, BridgeError> {
-        info!("step 0");
         // Spawn a new thread to run the decryption logic
         let handle = thread::spawn(move || {
             let provider = new_pgp_provider();
@@ -197,18 +193,38 @@ impl FrbTransitionLayer {
             .unwrap_or_else(|e| Err(BridgeError::Generic(format!("Thread error: {:?}", e))))
     }
 
-    #[frb(sync)]
+    // #[frb(sync)]
     pub fn encrypt_messages(
-        addr_keys: Vec<ProtonAddressKey>,
+        encryptor_addr_keys: Vec<ProtonAddressKey>,
         message: String,
+        user_keys: Option<Vec<ProtonUserKey>>,
+        addr_keys: Option<Vec<ProtonAddressKey>>,
+        user_key_password: Option<String>,
     ) -> Result<String, BridgeError> {
         let handle = thread::spawn(move || {
             let message = WalletMessage::new_from_str(&message);
             let provider = new_pgp_provider();
             let mut encryptor_keys = PublicKeys::default();
-            let locked_address_keys = AddressKeys(AddressKeysWrap::new(addr_keys).into());
-            encryptor_keys.add_address_keys(&provider, &locked_address_keys)?;
-            let encrypted_label = message.encrypt_with(&provider, &encryptor_keys)?;
+            let encryptor_address_keys =
+                AddressKeys(AddressKeysWrap::new(encryptor_addr_keys).into());
+            encryptor_keys.add_address_keys(&provider, &encryptor_address_keys)?;
+
+            let signer = if let (Some(user_keys), Some(addr_keys), Some(user_key_password)) =
+                (user_keys, addr_keys, user_key_password)
+            {
+                let user_key_secret = KeySecret::new(user_key_password.into_bytes());
+                let crypto_user_keys = UserKeysWrap::new(user_keys).into();
+                let crypto_addr_keys = AddressKeysWrap::new(addr_keys.into()).into();
+                let locked_private_keys =
+                    LockedPrivateKeys::from_keys(crypto_user_keys, crypto_addr_keys);
+                let unlocked_private_keys =
+                    locked_private_keys.unlock_with(&provider, &user_key_secret);
+                Some(unlocked_private_keys)
+            } else {
+                None
+            };
+            let encrypted_label =
+                message.encrypt_with(&provider, &encryptor_keys, signer.as_ref())?;
             Ok(encrypted_label.as_armored()?)
         });
         handle
@@ -220,6 +236,9 @@ impl FrbTransitionLayer {
     pub fn encrypt_messages_with_keys(
         private_keys: Vec<String>,
         message: String,
+        user_keys: Option<Vec<ProtonUserKey>>,
+        addr_keys: Option<Vec<ProtonAddressKey>>,
+        user_key_password: Option<String>,
     ) -> Result<String, BridgeError> {
         let handle = thread::spawn(move || {
             let message = WalletMessage::new_from_str(&message);
@@ -228,7 +247,22 @@ impl FrbTransitionLayer {
             for private_key in private_keys {
                 encryptor_keys.add_armored_key(&provider, &ArmoredPrivateKey(private_key))?
             }
-            let encrypted_label = message.encrypt_with(&provider, &encryptor_keys)?;
+            let signer = if let (Some(user_keys), Some(addr_keys), Some(user_key_password)) =
+                (user_keys, addr_keys, user_key_password)
+            {
+                let user_key_secret = KeySecret::new(user_key_password.into_bytes());
+                let crypto_user_keys = UserKeysWrap::new(user_keys).into();
+                let crypto_addr_keys = AddressKeysWrap::new(addr_keys.into()).into();
+                let locked_private_keys =
+                    LockedPrivateKeys::from_keys(crypto_user_keys, crypto_addr_keys);
+                let unlocked_private_keys =
+                    locked_private_keys.unlock_with(&provider, &user_key_secret);
+                Some(unlocked_private_keys)
+            } else {
+                None
+            };
+            let encrypted_label =
+                message.encrypt_with(&provider, &encryptor_keys, signer.as_ref())?;
             Ok(encrypted_label.as_armored()?)
         });
         handle
@@ -247,7 +281,7 @@ impl FrbTransitionLayer {
             let mut encryptor_keys = PublicKeys::default();
             let locked_address_keys = AddressKeys(UserKeysWrap::new(vec![user_key]).into());
             encryptor_keys.add_address_keys(&provider, &locked_address_keys)?;
-            let encrypted_label = message.encrypt_with(&provider, &encryptor_keys)?;
+            let encrypted_label = message.encrypt_with(&provider, &encryptor_keys, None)?;
             Ok(encrypted_label.as_armored()?)
         });
         handle
@@ -266,7 +300,6 @@ impl FrbTransitionLayer {
             let user_key_secret = KeySecret::new(user_key_passphrase.into_bytes());
             let provider = new_pgp_provider();
             let unlocked_user_keys = locked_keys.unlock_with(&provider, &user_key_secret);
-            assert!(!unlocked_user_keys.user_keys.is_empty());
             let locked_wallet_key = LockedWalletKey::from(wallet_key);
             let unlocked =
                 locked_wallet_key.unlock_with(&provider, &unlocked_user_keys.user_keys)?;
@@ -331,24 +364,22 @@ impl FrbTransitionLayer {
 
     #[frb(sync)]
     pub fn verify_signature(
-        private_key: String,
+        // verifier. This is the public key of the signer.
+        //  when pass in the private key it will auto parse public key from it.
+        verifier: Vec<String>,
         message: String,
         signature: String,
         context: String,
     ) -> Result<bool, BridgeError> {
         let handle = thread::spawn(move || {
             let provider = new_pgp_provider();
-            let public_key =
-                provider.public_key_import(private_key.as_bytes(), DataEncoding::Armor)?;
-            let verification_context =
-                provider.new_verification_context(context.to_owned(), true, UnixTimestamp::zero());
-            let verification_result = provider
-                .new_verifier()
-                .with_verification_key(&public_key)
-                .with_verification_context(&verification_context)
-                .verify_detached(message, signature, DataEncoding::Armor);
-            assert!(verification_result.is_ok());
-            Ok(true)
+            let bitcoin_addr = WalletBTCAddress::new_from_str(&message);
+            let mut pub_keys = PublicKeys::default();
+            let armored_keys: Vec<ArmoredPrivateKey> =
+                verifier.into_iter().map(ArmoredPrivateKey::from).collect();
+            pub_keys.add_armored_keys(&provider, &armored_keys)?;
+
+            Ok(bitcoin_addr.verify(&provider, &pub_keys, &signature, &context)?)
         });
         handle
             .join()
@@ -449,10 +480,8 @@ mod tests {
         let addr_key = get_test_user_2_locked_proton_address_key();
         let user_key_password = "password".to_string();
 
-        // let private_key = TEST_PRIVATE_SIGN_VERIFY.to_string();
         let message = "你好世界！This is a plaintext message!".to_string();
         let context = "wallet.bitcoin-address".to_string();
-        // let passphrase = "hellopgp".to_string();
 
         let signature = FrbTransitionLayer::sign(
             user_keys,
@@ -463,8 +492,10 @@ mod tests {
         )
         .unwrap();
 
+        println!("{}", signature);
+
         let is_ok = FrbTransitionLayer::verify_signature(
-            addr_key.private_key.unwrap(),
+            vec![addr_key.private_key.unwrap()],
             message,
             signature,
             context,
@@ -512,9 +543,14 @@ mod tests {
 
         let message = "This is a test message!!!";
 
-        let encrypted_message =
-            FrbTransitionLayer::encrypt_messages_with_keys(private_keys, message.to_string())
-                .unwrap();
+        let encrypted_message = FrbTransitionLayer::encrypt_messages_with_keys(
+            private_keys,
+            message.to_string(),
+            None,
+            None,
+            None,
+        )
+        .unwrap();
         println!("{}", encrypted_message);
         assert!(!encrypted_message.is_empty());
 

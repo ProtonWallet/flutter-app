@@ -22,7 +22,3 @@ abstract class Env {
   )
   static const String sentryApiKey = _Env.sentryApiKey;
 }
-
-// class _Env {
-//   static String get rampApiKey => Platform.environment['RAMP_API_KEY'] ?? "";
-// }

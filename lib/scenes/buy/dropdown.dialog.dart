@@ -7,13 +7,14 @@ class AccountDropdown extends StatelessWidget {
   final List<Widget> widgets;
 
   const AccountDropdown({
-    required this.widgets, required this.title, super.key,
+    required this.widgets,
+    required this.title,
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      // insetPadding: const EdgeInsets.symmetric(horizontal: 100),
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(

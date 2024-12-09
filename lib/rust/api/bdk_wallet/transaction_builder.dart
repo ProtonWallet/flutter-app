@@ -51,8 +51,6 @@ abstract class FrbTxBuilder implements RustOpaqueInterface {
   factory FrbTxBuilder() =>
       RustLib.instance.api.crateApiBdkWalletTransactionBuilderFrbTxBuilderNew();
 
-  ///     * Locktime
-  ///
   FrbTxBuilder removeLocktime();
 
   FrbTxBuilder removeRecipient({required BigInt index});

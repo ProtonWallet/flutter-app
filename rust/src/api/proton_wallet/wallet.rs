@@ -1,15 +1,18 @@
+use flutter_rust_bridge::frb;
 use std::sync::Arc;
+use tracing::debug;
 
 use super::{
-    features::backup_mnemonic::FrbBackupMnemonic,
+    features::{backup_mnemonic::FrbBackupMnemonic, proton_recovery::FrbProtonRecovery},
     storage::{
         user_key_store::FrbUserKeyStore, wallet_key_store::FrbWalletKeyStore,
         wallet_mnemonic_store::FrbWalletMnemonicStore,
     },
 };
 use crate::{
-    api::api_service::proton_api_service::ProtonAPIService,
+    api::proton_api::retrieve_proton_api,
     proton_wallet::{db::app_database::AppDatabase, wallet::ProtonWallet},
+    BridgeError,
 };
 
 pub struct FrbProtonWallet {
@@ -18,31 +21,44 @@ pub struct FrbProtonWallet {
 
 impl FrbProtonWallet {
     pub async fn new(
-        api: Arc<ProtonAPIService>,
         db_path: String,
         user_key_tore: FrbUserKeyStore,
         wallet_key_store: FrbWalletKeyStore,
         wallet_mnemonic_store: FrbWalletMnemonicStore,
-    ) -> FrbProtonWallet {
-        let mut db = AppDatabase::new(&db_path);
+    ) -> Result<FrbProtonWallet, BridgeError> {
+        debug!("FrbProtonWallet: AppDatabase::new");
+        let mut db: AppDatabase = AppDatabase::new(&db_path);
+        debug!("FrbProtonWallet: db.init().await.unwrap();");
         db.init().await.unwrap();
+        debug!("FrbProtonWallet: db.build_database(1).await.unwrap();");
         db.build_database(1).await.unwrap();
-        FrbProtonWallet {
+        debug!("FrbProtonWallet: db.build_database(1).await.unwrap();");
+        debug!("FrbProtonWallet: FrbProtonWallet::new");
+        Ok(FrbProtonWallet {
             inner: ProtonWallet::new(
-                api.inner.clone(),
                 Arc::new(db),
                 Arc::new(user_key_tore.inner),
                 Arc::new(wallet_key_store.inner),
                 Arc::new(wallet_mnemonic_store.inner),
             ),
-        }
+        })
     }
 }
 
 impl FrbProtonWallet {
-    pub fn get_backup_mnemonic_feature(&self) -> FrbBackupMnemonic {
-        FrbBackupMnemonic {
-            inner: self.inner.get_backup_mnemonic(),
-        }
+    #[frb(sync)]
+    pub fn get_backup_mnemonic_feature(&self) -> Result<FrbBackupMnemonic, BridgeError> {
+        let proton_api = retrieve_proton_api()?;
+        Ok(FrbBackupMnemonic {
+            inner: self.inner.get_backup_mnemonic(proton_api.get_inner()),
+        })
+    }
+
+    #[frb(sync)]
+    pub fn get_proton_recovery_feature(&self) -> Result<FrbProtonRecovery, BridgeError> {
+        let proton_api = retrieve_proton_api()?;
+        Ok(FrbProtonRecovery {
+            inner: self.inner.get_proton_recovery(proton_api.get_inner()),
+        })
     }
 }

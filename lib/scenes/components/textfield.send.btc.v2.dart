@@ -157,8 +157,6 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                     ),
                     prefixIconConstraints: const BoxConstraints(),
                     hintStyle: FontManager.sendAmount(ProtonColors.textHint),
-                    // contentPadding: const EdgeInsets.only(
-                    //     left: 10, right: 10, top: 4, bottom: 16),
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     border: InputBorder.none,

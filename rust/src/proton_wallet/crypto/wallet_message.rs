@@ -90,8 +90,10 @@ mod tests {
             .add_armored_key(&provider, &bad_key.private_key)
             .unwrap();
 
-        let encrypted_label = message.encrypt_with(&provider, &encryptor_keys).unwrap();
-        assert!(!encrypted_label.as_armored().unwrap().is_empty());
+        let encrypted_message = message
+            .encrypt_with(&provider, &encryptor_keys, None)
+            .unwrap();
+        assert!(!encrypted_message.as_armored().unwrap().is_empty());
 
         let user_keys = get_test_user_2_locked_user_keys();
         let user_keys_passphase = get_test_user_2_locked_user_key_secret();
@@ -103,7 +105,7 @@ mod tests {
         };
 
         let unlocked_keys = locked_keys.unlock_with(&provider, &user_keys_passphase);
-        let clear = encrypted_label
+        let clear = encrypted_message
             .decrypt_with(&provider, &unlocked_keys.addr_keys)
             .unwrap();
         assert_eq!(

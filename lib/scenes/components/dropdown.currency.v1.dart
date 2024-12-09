@@ -91,10 +91,13 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
             width: widget.width,
             padding: widget.padding ??
                 const EdgeInsets.only(
-                    left: defaultPadding, right: 8, top: 4, bottom: 4),
+                  left: defaultPadding,
+                  right: 8,
+                  top: 4,
+                  bottom: 4,
+                ),
             decoration: BoxDecoration(
               color: widget.backgroundColor ?? ProtonColors.white,
-              // border: Border.all(color: Colors.black, width: 1.0),
               borderRadius: BorderRadius.circular(18.0),
             ),
             child: TextField(

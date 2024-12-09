@@ -343,12 +343,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                             bottom: 20, top: 10),
                                         child: Column(children: [
                                           TransactionList(viewModel: viewModel),
-                                          // viewModel.bodyListStatus ==
-                                          //         BodyListStatus.transactionList
-                                          //     ? TransactionList(
-                                          //         viewModel: viewModel)
-                                          //     : BitcoinAddressList(
-                                          //         viewModel: viewModel),
                                         ])),
                                     if (walletTransactionState
                                             .historyTransaction.isEmpty &&

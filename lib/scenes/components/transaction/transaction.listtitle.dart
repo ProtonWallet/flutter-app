@@ -40,13 +40,6 @@ class TransactionListTitle extends StatelessWidget {
             right: 26,
           ),
           padding: const EdgeInsets.symmetric(vertical: 12.0),
-          // decoration: BoxDecoration(
-          //   border: Border(
-          //       bottom: BorderSide(
-          //     color: ProtonColors.wMajor1,
-          //     width: 0.5,
-          //   )),
-          // ),
           child: Row(children: [
             isSend
                 ? Assets.images.icon.send.svg(
@@ -83,8 +76,6 @@ class TransactionListTitle extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ))
                             : Row(children: [
-                                // const CustomLoading(),
-                                // const SizedBox(width: 6),
                                 Text(
                                     isSend
                                         ? S.of(context).in_progress_broadcasted

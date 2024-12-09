@@ -54,37 +54,3 @@ class MigrationContainer {
     return result;
   }
 }
-// TODO(improve): not sure if this is better of not
-// List<Migration>? findMigrationPath(int startVersion, int endVersion) {
-//   final List<Migration> result = [];
-  
-//   while (startVersion < endVersion) {
-//     final Map<int, Migration>? targetMap = migrations[startVersion];
-    
-//     if (targetMap == null) {
-//       return null; // No migration path from the current startVersion
-//     }
-    
-//     // Get a sorted list of target versions
-//     final List<int> sortedKeys = targetMap.keys.toList()..sort();
-//     bool migrationFound = false;
-    
-//     for (int targetVersion in sortedKeys) {
-//       // Check if the target version is within the desired range
-//       final bool shouldAddToPath = targetVersion <= endVersion && targetVersion > startVersion;
-      
-//       if (shouldAddToPath) {
-//         result.add(targetMap[targetVersion]!);
-//         startVersion = targetVersion; // Move to the next version
-//         migrationFound = true;
-//         break; // Stop searching once a valid migration is found for this version
-//       }
-//     }
-    
-//     if (!migrationFound) {
-//       return null; // No valid migration found, return null
-//     }
-//   }
-  
-//   return result;
-// }

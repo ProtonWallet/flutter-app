@@ -630,20 +630,15 @@ class SendViewModelImpl extends SendViewModel {
                 internalOnly: 1,
               );
               bool verifySignature = false;
-              for (final recipientAddressKey in recipientAddressKeys) {
-                verifySignature = FrbTransitionLayer.verifySignature(
-                    privateKey: recipientAddressKey.publicKey,
-                    message:
-                        emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
-                    signature: emailIntegrationBitcoinAddress
-                            .bitcoinAddressSignature ??
-                        "",
-                    context: gpgContextWalletBitcoinAddress);
-
-                if (verifySignature) {
-                  break;
-                }
-              }
+              final recipientAddressPubKeys =
+                  recipientAddressKeys.map((key) => key.publicKey).toList();
+              verifySignature = FrbTransitionLayer.verifySignature(
+                  message: emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
+                  signature:
+                      emailIntegrationBitcoinAddress.bitcoinAddressSignature ??
+                          "",
+                  context: gpgContextWalletBitcoinAddress,
+                  verifier: recipientAddressPubKeys);
               if (verifySignature) {
                 bitcoinAddress = emailIntegrationBitcoinAddress.bitcoinAddress;
                 protonRecipient.isValid = true;
@@ -1104,10 +1099,21 @@ class SendViewModelImpl extends SendViewModel {
         if (addressKey != null && addressKey.privateKey != null) {
           addressPublicKeys.add(addressKey.privateKey!);
         }
-        encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
-          privateKeys: addressPublicKeys,
-          message: emailBodyController.text,
-        );
+
+        if (!isAnonymous && addressKey != null) {
+          encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
+            privateKeys: addressPublicKeys,
+            message: emailBodyController.text,
+            userKeys: await userManager.getUserKeysForTL(),
+            addrKeys: [addressKey],
+            userKeyPassword: userManager.getUserKeyPassphrase(),
+          );
+        } else {
+          encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
+            privateKeys: addressPublicKeys,
+            message: emailBodyController.text,
+          );
+        }
       }
 
       if (_frbAccount == null) {

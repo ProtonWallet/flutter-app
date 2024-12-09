@@ -58,6 +58,18 @@ impl<Provider: PGPProviderSync> PublicKeys<Provider> {
         self.import_and_add_key(provider, armored_key.as_ref())
     }
 
+    /// Adds a public key from an individual `ArmoredPrivateKey` to the collection.
+    pub fn add_armored_keys(
+        &mut self,
+        provider: &Provider,
+        armored_key: &[ArmoredPrivateKey],
+    ) -> Result<()> {
+        for key in armored_key {
+            self.add_armored_key(provider, key)?;
+        }
+        Ok(())
+    }
+
     /// Helper method to import a public key from a private key and add it to the collection.
     fn import_and_add_key(&mut self, provider: &Provider, private_key: &str) -> Result<()> {
         // Add the public key to the internal collection

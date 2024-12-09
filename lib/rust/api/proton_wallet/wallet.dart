@@ -4,8 +4,9 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
-import '../bdk_wallet/blockchain.dart';
+import '../errors.dart';
 import 'features/backup_mnemonic.dart';
+import 'features/proton_recovery.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'storage/user_key_store.dart';
 import 'storage/wallet_key_store.dart';
@@ -13,17 +14,17 @@ import 'storage/wallet_mnemonic_store.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbProtonWallet>>
 abstract class FrbProtonWallet implements RustOpaqueInterface {
-  Future<FrbBackupMnemonic> getBackupMnemonicFeature();
+  FrbBackupMnemonic getBackupMnemonicFeature();
+
+  FrbProtonRecovery getProtonRecoveryFeature();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<FrbProtonWallet> newInstance(
-          {required ArcProtonApiService api,
-          required String dbPath,
+          {required String dbPath,
           required FrbUserKeyStore userKeyTore,
           required FrbWalletKeyStore walletKeyStore,
           required FrbWalletMnemonicStore walletMnemonicStore}) =>
       RustLib.instance.api.crateApiProtonWalletWalletFrbProtonWalletNew(
-          api: api,
           dbPath: dbPath,
           userKeyTore: userKeyTore,
           walletKeyStore: walletKeyStore,

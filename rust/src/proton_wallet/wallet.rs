@@ -1,13 +1,15 @@
 use std::sync::Arc;
 
 use andromeda_api::{
-    core::ApiClient, wallet::WalletClient, ProtonUsersClient, ProtonWalletApiClient,
+    core::ApiClient, proton_settings::ProtonSettingsClient, wallet::WalletClient,
+    ProtonUsersClient, ProtonWalletApiClient,
 };
 
 use super::{
     db::app_database::AppDatabase,
     features::{
-        backup_mnemonic::BackupMnemonic, proton_settings::password_scope::PasswordScopeImpl,
+        backup_mnemonic::BackupMnemonic, proton_recovery::ProtonRecovery,
+        proton_settings::password_scope::PasswordScopeImpl,
     },
     provider::{
         proton_auth::ProtonAuthProviderImpl, proton_user::ProtonUserDataProviderImpl,
@@ -24,7 +26,6 @@ use super::{
 // this is the main object that will be used to interact with the wallet and eatch proton account will only have one Proton Wallet object
 // per app could have multiple Proton Wallet objects because we will support multiple users
 pub(crate) struct ProtonWallet {
-    api: Arc<ProtonWalletApiClient>,
     db: Arc<AppDatabase>,
     user_id: String,
 
@@ -44,14 +45,12 @@ impl ProtonWallet {
     /// @param network
     /// etc ...
     pub fn new(
-        api: Arc<ProtonWalletApiClient>,
         db: Arc<AppDatabase>,
         user_key_store: Arc<UserKeySecureStore>,
         wallet_key_store: Arc<WalletKeySecureStore>,
         wallet_mnemonic_store: Arc<WalletMnemonicSecureStore>,
     ) -> ProtonWallet {
         ProtonWallet {
-            api,
             db,
             user_id: "".to_string(),
             user_key_store,
@@ -62,12 +61,12 @@ impl ProtonWallet {
 }
 
 impl ProtonWallet {
-    pub fn get_backup_mnemonic(&self) -> BackupMnemonic {
-        let proton_user_client = Arc::new(ProtonUsersClient::new(self.api.clone()));
-        let wallet_client = Arc::new(WalletClient::new(self.api.clone()));
+    pub fn get_backup_mnemonic(&self, api: Arc<ProtonWalletApiClient>) -> BackupMnemonic {
+        let proton_user_client = Arc::new(ProtonUsersClient::new(api.clone()));
+        let wallet_client = Arc::new(WalletClient::new(api.clone()));
 
         let auth_provider = Arc::new(ProtonAuthProviderImpl {
-            proton_user_client: Arc::new(ProtonUsersClient::new(self.api.clone())),
+            proton_user_client: Arc::new(ProtonUsersClient::new(api.clone())),
         });
 
         let proton_users_provider = Arc::new(ProtonUserDataProviderImpl::new(
@@ -121,6 +120,41 @@ impl ProtonWallet {
             unlock_password,
         }
     }
+
+    pub fn get_proton_recovery(&self, api: Arc<ProtonWalletApiClient>) -> ProtonRecovery {
+        let proton_users_client = Arc::new(ProtonUsersClient::new(api.clone()));
+        let proton_settings_client = Arc::new(ProtonSettingsClient::new(api.clone()));
+
+        let auth_provider = Arc::new(ProtonAuthProviderImpl {
+            proton_user_client: Arc::new(ProtonUsersClient::new(api.clone())),
+        });
+
+        let proton_users_provider = Arc::new(ProtonUserDataProviderImpl::new(
+            self.db.proton_user_dao.clone(),
+            proton_users_client.clone(),
+        ));
+
+        let password_scope_feature = Arc::new(PasswordScopeImpl::new(
+            auth_provider.clone(),
+            proton_users_provider,
+        ));
+
+        // user keys provider
+        let proton_user_keys_provider = Arc::new(UserKeysProviderImpl::new(
+            self.user_id.clone(),
+            self.user_key_store.clone(),
+            Arc::new(self.db.proton_user_key_dao.clone()),
+            proton_users_client.clone(),
+        ));
+
+        ProtonRecovery {
+            auth_provider,
+            proton_user_keys_provider,
+            proton_settings_client,
+            proton_users_client,
+            password_scope_feature,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -130,14 +164,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_wallet_creation() {
-        let api = Arc::new(ProtonWalletApiClient::default());
         let db = Arc::new(AppDatabase::default());
         let user_key_store = Arc::new(UserKeySecureStore::default());
         let wallet_key_store = Arc::new(WalletKeySecureStore::default());
         let wallet_mnemonic_store = Arc::new(WalletMnemonicSecureStore::default());
 
         let _ = ProtonWallet::new(
-            api.clone(),
             db.clone(),
             user_key_store,
             wallet_key_store,
@@ -154,12 +186,11 @@ mod tests {
         let wallet_mnemonic_store = Arc::new(WalletMnemonicSecureStore::default());
 
         let proton_wallet = ProtonWallet::new(
-            api.clone(),
             db.clone(),
             user_key_store,
             wallet_key_store,
             wallet_mnemonic_store,
         );
-        proton_wallet.get_backup_mnemonic();
+        proton_wallet.get_backup_mnemonic(api.clone());
     }
 }

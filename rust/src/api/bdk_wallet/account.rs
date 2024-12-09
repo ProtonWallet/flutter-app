@@ -94,19 +94,6 @@ impl FrbAccount {
         Ok(address.into())
     }
 
-    // pub async fn get_bitcoin_uri(
-    //     &mut self,
-    //     amount: Option<u64>,
-    //     label: Option<String>,
-    //     message: Option<String>,
-    // ) -> Result<FrbPaymentLink, BridgeError> {
-    //     let mut account_inner = self.get_inner_ref();
-    //     let payment_link = account_inner
-    //         .get_bitcoin_uri(amount, label, message)
-    //         .await?;
-    //     Ok(payment_link.into())
-    // }
-
     pub async fn is_mine(&self, address: &FrbAddress) -> Result<bool, BridgeError> {
         let owns = self.get_inner().owns(&address.clone_inner()).await;
         Ok(owns)

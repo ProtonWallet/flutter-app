@@ -53,10 +53,8 @@ class FiatCurrencyHelper {
   }
 
   static String getDisplayName(FiatCurrency apiFiatCurrency) {
-    // String sign = "";
     String symbol = "";
     if (fiatCurrency2Info.containsKey(apiFiatCurrency)) {
-      // sign = fiatCurrency2Info[apiFiatCurrency]!.sign;
       symbol = fiatCurrency2Info[apiFiatCurrency]!.symbol.toUpperCase();
     }
     return symbol;
@@ -136,7 +134,7 @@ List<FiatCurrencyWrapper> fiatCurrenciesWithBitcoin =
     [bitcoinCurrencyWrapper, satoshiCurrencyWrapper] +
         fiatCurrencies
             .map((v) => FiatCurrencyWrapper(
-          cents: fiatCurrency2Info[v]?.cents ?? 1,
+                  cents: fiatCurrency2Info[v]?.cents ?? 1,
                   fiatCurrency: v,
                 ))
             .toList();

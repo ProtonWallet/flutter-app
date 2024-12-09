@@ -1,8 +1,8 @@
 use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
-use tracing::info;
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use tracing::info;
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
 
 use crate::proton_wallet::common::callbacks::DartFnFuture;
@@ -92,10 +92,8 @@ impl ProtonWalletAuthStore {
 
     fn refresh_auth_credential(&self, auth: Auth) {
         info!("refresh_auth_credential- start:");
-        // let rt = self.rt.clone();
         tokio::spawn(async move {
             // Assuming `self` is accessible here
-            // rt.block_on(async move {
             info!("refresh_auth_credential run block on");
             let cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
             if let Some(callback) = cb.as_ref() {
@@ -109,7 +107,6 @@ impl ProtonWalletAuthStore {
                 let msg = callback(session).await;
                 info!("refresh_auth_credential messageFromDart: {}", msg);
             }
-            // });
         });
         info!("refresh_auth_credential- end");
     }

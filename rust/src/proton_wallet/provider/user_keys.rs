@@ -19,6 +19,7 @@ pub trait UserKeysProvider: Send + Sync {
 
     /// Function to get a user key by its ID
     async fn get_user_key(&self, key_id: &str) -> Result<LockedKey>;
+    async fn get_user_keys_from_db(&self) -> Result<Vec<LockedKey>>;
 
     /// Function to get a list of user keys
     async fn get_user_keys(&self) -> Result<Vec<LockedKey>>;
@@ -29,7 +30,7 @@ pub trait UserKeysProvider: Send + Sync {
 pub struct UserKeysProviderImpl {
     pub(crate) user_key_store: Arc<dyn UserKeyStore>,
     pub(crate) user_key_dao: Arc<dyn ProtonUserKeyDao>,
-    pub(crate) proton_user_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
+    pub(crate) proton_users_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
     pub(crate) user_id: String,
 }
 
@@ -38,12 +39,12 @@ impl UserKeysProviderImpl {
         user_id: String,
         user_key_store: Arc<dyn UserKeyStore>,
         user_key_dao: Arc<dyn ProtonUserKeyDao>,
-        proton_user_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
+        proton_users_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
     ) -> Self {
         UserKeysProviderImpl {
             user_key_store,
             user_key_dao,
-            proton_user_client,
+            proton_users_client,
             user_id,
         }
     }
@@ -53,7 +54,7 @@ impl UserKeysProviderImpl {
 impl UserKeysProvider for UserKeysProviderImpl {
     /// Function to get the primary key
     async fn get_primary_key(&self) -> Result<LockedKey> {
-        let keys = self.get_user_keys().await?;
+        let keys = self.get_user_keys_from_db().await?;
         // Find the key by ID
         if let Some(key) = keys.iter().find(|item| item.primary) {
             return Ok(key.clone());
@@ -71,7 +72,7 @@ impl UserKeysProvider for UserKeysProviderImpl {
 
     /// Function to get a user key by its ID
     async fn get_user_key(&self, key_id: &str) -> Result<LockedKey> {
-        let keys = self.get_user_keys().await?;
+        let keys = self.get_user_keys_from_db().await?;
         // Find the key by ID
         if let Some(key) = keys.iter().find(|item| item.id.0 == key_id) {
             return Ok(key.clone());
@@ -87,8 +88,21 @@ impl UserKeysProvider for UserKeysProviderImpl {
         self.get_default_user_key().await
     }
 
-    /// get a list of user keys from the DAO by user ID
+    /// Function to get a user key by its ID
     async fn get_user_keys(&self) -> Result<Vec<LockedKey>> {
+        let keys = self.get_user_keys_from_db().await;
+        // Find the key by ID
+        if let Ok(keys) = keys {
+            return Ok(keys.into_iter().map(LockedKey::from).collect());
+        }
+
+        // load from server and save to db then return
+        let new_keys = self.load_user_keys_from_server().await?;
+        Ok(new_keys)
+    }
+
+    /// get a list of user keys from the DAO by user ID
+    async fn get_user_keys_from_db(&self) -> Result<Vec<LockedKey>> {
         let user_keys = self.user_key_dao.get_all_by_user_id(&self.user_id).await?;
         if user_keys.is_empty() {
             return Err(ProviderError::NoUserKeysFound);
@@ -105,7 +119,7 @@ impl UserKeysProvider for UserKeysProviderImpl {
 }
 impl UserKeysProviderImpl {
     async fn load_user_keys_from_server(&self) -> Result<Vec<LockedKey>> {
-        if let Some(user_keys) = self.proton_user_client.get_user_info().await?.Keys {
+        if let Some(user_keys) = self.proton_users_client.get_user_info().await?.Keys {
             let keys: Vec<ProtonUserKeyModel> = user_keys
                 .into_iter()
                 .map(ProtonUserKeyModel::from)
@@ -143,6 +157,7 @@ pub mod mock {
             async fn get_primary_key(&self) -> Result<LockedKey>;
             async fn get_user_key(&self, key_id: &str) -> Result<LockedKey>;
             async fn get_user_keys(&self) -> Result<Vec<LockedKey>>;
+            async fn get_user_keys_from_db(&self) -> Result<Vec<LockedKey>>;
             async fn get_user_key_passphrase(&self) -> Result<KeySecret>;
         }
     }
@@ -326,7 +341,7 @@ mod tests {
             user_id: "test_user".to_string(),
             user_key_dao: Arc::new(mock_dao),
             user_key_store: Arc::new(mock_store),
-            proton_user_client: Arc::new(mock_client),
+            proton_users_client: Arc::new(mock_client),
         };
         let result = provider.get_user_key("test_key_id").await;
         assert!(matches!(result, Err(ProviderError::NoUserKeysFound)));

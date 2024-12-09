@@ -11,22 +11,21 @@ use crate::proton_wallet::db::{
 #[async_trait]
 pub trait ProtonUserDataProvider: Send + Sync {
     async fn unlock_password_change(&self, proofs: ProtonSrpClientProofs) -> Result<String>;
-    // async fn unlock_sensitive_settings();
 }
 
 pub struct ProtonUserDataProviderImpl {
     dao: ProtonUserDao,
-    pub(crate) proton_user_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
+    pub(crate) proton_users_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
 }
 
 impl ProtonUserDataProviderImpl {
     pub fn new(
         dao: ProtonUserDao,
-        proton_user_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
+        proton_users_client: Arc<dyn ProtonUsersClientExt + Send + Sync>,
     ) -> Self {
         ProtonUserDataProviderImpl {
             dao,
-            proton_user_client,
+            proton_users_client,
         }
     }
 
@@ -39,7 +38,7 @@ impl ProtonUserDataProviderImpl {
 impl ProtonUserDataProvider for ProtonUserDataProviderImpl {
     async fn unlock_password_change(&self, proofs: ProtonSrpClientProofs) -> Result<String> {
         Ok(self
-            .proton_user_client
+            .proton_users_client
             .unlock_password_change(proofs)
             .await?)
     }

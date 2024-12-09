@@ -142,12 +142,6 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                         ],
                         borderData: FlBorderData(
                           show: false,
-                          // border: Border(
-                          //   left: BorderSide(
-                          //     width: 1.0,
-                          //     color: ProtonColors.textWeak,
-                          //   ),
-                          // ),
                         ),
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(

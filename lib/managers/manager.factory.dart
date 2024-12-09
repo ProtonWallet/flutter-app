@@ -46,7 +46,13 @@ class ManagerFactory {
   }
 
   Future<void> login(String userID) async {
-    for (var entry in _managers.entries) {
+    final sortedEntries = _managers.entries.toList()
+      ..sort((a, b) =>
+          a.value.getPriority().index.compareTo(b.value.getPriority().index));
+    for (var entry in sortedEntries) {
+      logger.d(
+        "factory login level: ${entry.value.getPriority()}: Manager: ${entry.key}",
+      );
       await entry.value.login(userID);
     }
   }

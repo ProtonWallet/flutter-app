@@ -4,37 +4,6 @@ use crate::proton_wallet::db::{
     model::account_model::AccountModel,
 };
 
-// pub trait ProivderSink: Send + Sync {
-//     fn send(&self, entry: Dataupdate);
-// }
-
-// impl ProivderSink for StreamSink<Dataupdate> {
-//     fn send(&self, code: Dataupdate) {
-//         self.add(code).unwrap();
-//     }
-// }
-
-// static STREAMSINK: RwLock<Option<Box<dyn ProivderSink>>> = RwLock::new(None);
-
-// /// initialize a stream to pass data events to dart/flutter
-// pub fn init(s: impl ProivderSink + 'static) {
-//     let mut stream_sink = match STREAMSINK.write() {
-//         Ok(val) => val,
-//         Err(val) => val.into_inner(),
-//     };
-//     *stream_sink = Some(Box::new(s));
-// }
-
-// pub fn send(code: Dataupdate) {
-//     let stream_sink = match STREAMSINK.read() {
-//         Ok(val) => val,
-//         Err(val) => val.into_inner(),
-//     };
-//     if let Some(stream_sink) = stream_sink.as_ref() {
-//         stream_sink.send(code);
-//     }
-// }
-
 pub struct AccountDataProvider {
     dao: AccountDaoImpl,
 }
