@@ -31,54 +31,54 @@ class TextFieldTextState extends State<TextChoices> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        constraints: const BoxConstraints.tightFor(),
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: ProtonColors.backgroundSecondary,
-          borderRadius: BorderRadius.circular(8.0),
+      constraints: const BoxConstraints.tightFor(),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: ProtonColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Wrap(
+          spacing: 2.0,
+          runSpacing: 2.0,
+          alignment: WrapAlignment.center,
+          children: List.generate(
+            widget.choices.length,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  if (widget.controller != null) {
+                    widget.controller!.text = widget.choices[index];
+                  }
+                });
+              },
+              child: widget.controller!.text == widget.choices[index]
+                  ? Container(
+                      width: 60,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: ProtonColors.iconWeak,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Center(
+                          child: Text(widget.choices[index],
+                              style: FontManager.body1Regular(
+                                  ProtonColors.white))))
+                  : Container(
+                      width: 60,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Center(
+                          child: Text(widget.choices[index],
+                              style: FontManager.body1Regular(
+                                  ProtonColors.textHint)))),
+            ),
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Wrap(
-                spacing: 2.0,
-                runSpacing: 2.0,
-                alignment: WrapAlignment.center,
-                children: List.generate(
-                  widget.choices.length,
-                  (index) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (widget.controller != null) {
-                            widget.controller!.text = widget.choices[index];
-                          }
-                        });
-                      },
-                      child: widget.controller!.text == widget.choices[index]
-                          ? Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: ProtonColors.iconWeak,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.white))))
-                          : Container(
-                              width: 60,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Center(
-                                  child: Text(widget.choices[index],
-                                      style: FontManager.body1Regular(
-                                          ProtonColors.textHint))))),
-                )),
-          ],
-        ));
+      ]),
+    );
   }
 }

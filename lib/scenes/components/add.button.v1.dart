@@ -9,15 +9,20 @@ class AddButtonV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 20,
-        height: 20,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: ProtonColors.protonBlue)),
-        child: GestureDetector(
-          onTap: onPressed,
-          child: Icon(Icons.add_rounded,
-              color: ProtonColors.protonBlue, size: 16),
-        ));
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: ProtonColors.protonBlue),
+      ),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Icon(
+          Icons.add_rounded,
+          color: ProtonColors.protonBlue,
+          size: 16,
+        ),
+      ),
+    );
   }
 }

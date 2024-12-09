@@ -17,16 +17,18 @@ class Underline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        child: DecoratedBox(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: color ?? ProtonColors.textNorm,
-                  width: 0.3,
-                ),
-              ),
+      onTap: onTap,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: color ?? ProtonColors.textNorm,
+              width: 0.3,
             ),
-            child: child));
+          ),
+        ),
+        child: child,
+      ),
+    );
   }
 }

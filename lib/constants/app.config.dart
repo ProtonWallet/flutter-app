@@ -4,15 +4,26 @@ import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/logger.dart';
 
 class AppConfig {
-  // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
-  CoinType coinType;
-  // use for derivation creation, e.g. m/$ScriptType/$CoinType/$accountIndex
-  ScriptTypeInfo scriptTypeInfo;
-  ApiEnv apiEnv;
-  String esploraWebpageUrl;
-  String esploraApiUrl;
-  bool testMode;
-  int stopGap;
+  /// Used for derivation creation, e.g., `m/$ScriptType/$CoinType/$accountIndex`
+  final CoinType coinType;
+
+  /// Script type for derivation creation.
+  final ScriptTypeInfo scriptTypeInfo;
+
+  /// API environment configuration.
+  final ApiEnv apiEnv;
+
+  /// URL for accessing the Esplora webpage.
+  final String esploraWebpageUrl;
+
+  /// URL for accessing the Esplora API.
+  final String esploraApiUrl;
+
+  /// Flag for enabling/disabling test output.
+  final bool testMode;
+
+  /// Stop gap value for address generation.
+  final int stopGap;
 
   ///
   AppConfig({

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/theme/theme.font.dart';
 
 class AlertWarning extends StatelessWidget {
@@ -16,8 +17,12 @@ class AlertWarning extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: width,
-        padding:
-            const EdgeInsets.only(top: 16, bottom: 16, right: 20, left: 20),
+        padding: const EdgeInsets.only(
+          top: 16,
+          bottom: 16,
+          right: 20,
+          left: 20,
+        ),
         decoration: BoxDecoration(
             color: ProtonColors.alertWaningBackground,
             borderRadius: BorderRadius.circular(10.0),
@@ -29,7 +34,7 @@ class AlertWarning extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.warning, color: ProtonColors.alertWaning),
-                const SizedBox(width: 8),
+                SizedBoxes.box8,
                 Expanded(
                     child: Text(content,
                         style:

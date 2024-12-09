@@ -29,28 +29,26 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
   }
 
   Widget buildHeader(BuildContext context, String body) {
-    return Column(
-      children: [
-        Assets.images.icon.lock.image(
-          fit: BoxFit.fill,
-          width: 240,
-          height: 167,
-        ),
-        Text(
-          S.of(context).setting_2fa_disable,
-          style: ProtonStyles.headline(color: ProtonColors.textNorm),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        Text(
-          body,
-          style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
+    return Column(children: [
+      Assets.images.icon.lock.image(
+        fit: BoxFit.fill,
+        width: 240,
+        height: 167,
+      ),
+      Text(
+        S.of(context).setting_2fa_disable,
+        style: ProtonStyles.headline(color: ProtonColors.textNorm),
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(
+        height: 6,
+      ),
+      Text(
+        body,
+        style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+        textAlign: TextAlign.center,
+      ),
+    ]);
   }
 
   /// build 2fa confirm Widget

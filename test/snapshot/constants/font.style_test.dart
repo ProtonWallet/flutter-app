@@ -5,7 +5,7 @@ import 'package:wallet/constants/fonts.gen.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 
-import '../helper.dart';
+import '../helper/test.wrapper.dart';
 
 void main() {
   const testPath = 'font.style';

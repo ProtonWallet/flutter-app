@@ -6,6 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/alert.warning.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -78,7 +79,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 AlertWarning(
                     content:
                         S.of(context).store_your_passphrase_at_safe_location_,
-                    width: MediaQuery.of(context).size.width),
+                    width: context.width),
                 SizedBoxes.box24,
                 TextFieldTextV2(
                   labelText: S.of(context).passphrase_label,
