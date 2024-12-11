@@ -125,7 +125,6 @@ impl LockedPrivateKeys {
 
     /// Unlocks user using the given provider and secret.
     /// Then relock the user keys with new secret.
-    ///
     pub fn relock_user_key_with<T: PGPProviderSync>(
         provider: &T,
         user_keys: UserKeys,

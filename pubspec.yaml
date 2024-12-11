@@ -132,7 +132,10 @@ dependencies:
   #   # needs to override dependency for flutter_localizations (it depends on ^0.18.1, while flutter@3.22.0 depends on ^0.19.0)
   #   intl: 0.19.0
   # dio: ^4.0.6
-  no_screenshot: ^0.3.1
+  no_screenshot:
+    git:
+      url: https://github.com/ProtonWallet/no_screenshot.git
+      ref: fix_0.3.2_ios_build
 
 dev_dependencies:
   flutter_test:

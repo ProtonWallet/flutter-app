@@ -99,10 +99,12 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
             final primaryUserKey = await userManager.getPrimaryKeyForTL();
             final passphrase = userManager.getUserKeyPassphrase();
 
-            final encryptedWalletKey = FrbTransitionLayer.encryptWalletKey(
-                walletKey: unlockedWalletKey,
-                userKey: primaryUserKey,
-                userKeyPassphrase: passphrase);
+            final encryptedWalletKey =
+                await FrbTransitionLayer.encryptWalletKey(
+              walletKey: unlockedWalletKey,
+              userKey: primaryUserKey,
+              userKeyPassphrase: passphrase,
+            );
 
             /// encrypt wallet key with user private key
             final String encryptedArmoredWalletKey =
@@ -177,7 +179,7 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
               }
 
               final encryptedTransactionID = transaction.transactionId;
-              final txid = FrbTransitionLayer.decryptTransactionId(
+              final txid = await FrbTransitionLayer.decryptTransactionId(
                   userKeys: userKeys,
                   addrKeys: addrKeys,
                   userKeyPassword: userKeyPassword,
@@ -185,8 +187,10 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
 
               final primaryUserKey = await userManager.getPrimaryKeyForTL();
               final transactionId =
-                  FrbTransitionLayer.encryptMessagesWithUserkey(
-                      userKey: primaryUserKey, message: txid);
+                  await FrbTransitionLayer.encryptMessagesWithUserkey(
+                userKey: primaryUserKey,
+                message: txid,
+              );
 
               /// hash transaction id
               final hashedTransID = FrbTransitionLayer.getHmacHashedString(

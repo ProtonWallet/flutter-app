@@ -69,7 +69,8 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     );
 
     /// encrypt wallet name with wallet key
-    final clearWalletName = walletName.isNotEmpty ? walletName : defaultWalletName;
+    final clearWalletName =
+        walletName.isNotEmpty ? walletName : defaultWalletName;
     final encryptedWalletName = FrbWalletKeyHelper.encrypt(
       base64SecureKey: unlockedWalletKey.toBase64(),
       plaintext: clearWalletName,
@@ -86,7 +87,7 @@ class CreateWalletBloc extends Bloc<CreateWalletEvent, CreateWalletState> {
     final primaryUserKey = await userManager.getPrimaryKeyForTL();
     final passphrase = userManager.getUserKeyPassphrase();
 
-    final encryptedWalletKey = FrbTransitionLayer.encryptWalletKey(
+    final encryptedWalletKey = await FrbTransitionLayer.encryptWalletKey(
         walletKey: unlockedWalletKey,
         userKey: primaryUserKey,
         userKeyPassphrase: passphrase);

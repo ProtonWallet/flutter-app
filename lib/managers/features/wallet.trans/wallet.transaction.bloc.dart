@@ -633,7 +633,7 @@ class WalletTransactionBloc
     final addrKeys = await addressKeyProvider.getAddressKeysForTL();
     final userKeyPassword = userManager.getUserKeyPassphrase();
 
-    final frbTransactionIds = FrbTransitionLayer.decryptTransactionIds(
+    final frbTransactionIds = await FrbTransitionLayer.decryptTransactionIds(
       userKeys: userKeys,
       addrKeys: addrKeys,
       userKeyPassword: userKeyPassword,
@@ -725,7 +725,7 @@ class WalletTransactionBloc
 
       if (transactionModel != null) {
         final userKeysTL = await userManager.getUserKeysForTL();
-        final decryptedBoday = FrbTransitionLayer.decryptMessages(
+        final decryptedBoday = await FrbTransitionLayer.decryptMessages(
           userKeys: userKeysTL,
           addrKeys: addressKeys.isEmpty
               ? addressKeys

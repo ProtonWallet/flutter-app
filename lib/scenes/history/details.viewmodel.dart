@@ -257,7 +257,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       );
 
       final primaryUserKey = await userManager.getPrimaryKeyForTL();
-      final transactionId = FrbTransitionLayer.encryptMessagesWithUserkey(
+      final transactionId = await FrbTransitionLayer.encryptMessagesWithUserkey(
           userKey: primaryUserKey, message: frbTransactionDetails.txid);
 
       final now = DateTime.now();
@@ -359,7 +359,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     memoController.text = userLabel;
 
     /// decrypt BvE message
-    final decryptedBody = FrbTransitionLayer.decryptMessages(
+    final decryptedBody = await FrbTransitionLayer.decryptMessages(
       userKeys: await userManager.getUserKeysForTL(),
       addrKeys: addressKeys.isEmpty
           ? addressKeys
@@ -468,7 +468,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     final addressKeys = await addressKeyProvider.getAddressKeysForTL();
     final passphrase = userManager.getUserKeyPassphrase();
 
-    final frbTransactionIds = FrbTransitionLayer.decryptTransactionIds(
+    final frbTransactionIds = await FrbTransitionLayer.decryptTransactionIds(
       userKeys: userKeys,
       addrKeys: addressKeys,
       userKeyPassword: passphrase,
@@ -581,7 +581,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     final String jsonString = jsonEncode(jsonMap);
 
     /// encrypt the sender with userKey
-    final encryptedName = FrbTransitionLayer.encryptMessagesWithUserkey(
+    final encryptedName = await FrbTransitionLayer.encryptMessagesWithUserkey(
       userKey: primaryUserkey,
       message: jsonString,
     );

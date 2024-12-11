@@ -502,7 +502,7 @@ class WalletManager implements Manager {
           walletBitcoinAddress.bitcoinAddressSignature != null) {
         final addressPubKeys =
             addressKeys.map((key) => key.privateKey!).toList();
-        isValidSignature = FrbTransitionLayer.verifySignature(
+        isValidSignature = await FrbTransitionLayer.verifySignature(
             verifier: addressPubKeys,
             message: walletBitcoinAddress.bitcoinAddress!,
             signature: walletBitcoinAddress.bitcoinAddressSignature!,

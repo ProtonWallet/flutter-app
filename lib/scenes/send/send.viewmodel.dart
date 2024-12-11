@@ -632,7 +632,7 @@ class SendViewModelImpl extends SendViewModel {
               bool verifySignature = false;
               final recipientAddressPubKeys =
                   recipientAddressKeys.map((key) => key.publicKey).toList();
-              verifySignature = FrbTransitionLayer.verifySignature(
+              verifySignature = await FrbTransitionLayer.verifySignature(
                   message: emailIntegrationBitcoinAddress.bitcoinAddress ?? "",
                   signature:
                       emailIntegrationBitcoinAddress.bitcoinAddressSignature ??
@@ -1101,7 +1101,7 @@ class SendViewModelImpl extends SendViewModel {
         }
 
         if (!isAnonymous && addressKey != null) {
-          encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
+          encryptedMessage = await FrbTransitionLayer.encryptMessagesWithKeys(
             privateKeys: addressPublicKeys,
             message: emailBodyController.text,
             userKeys: await userManager.getUserKeysForTL(),
@@ -1109,7 +1109,7 @@ class SendViewModelImpl extends SendViewModel {
             userKeyPassword: userManager.getUserKeyPassphrase(),
           );
         } else {
-          encryptedMessage = FrbTransitionLayer.encryptMessagesWithKeys(
+          encryptedMessage = await FrbTransitionLayer.encryptMessagesWithKeys(
             privateKeys: addressPublicKeys,
             message: emailBodyController.text,
           );

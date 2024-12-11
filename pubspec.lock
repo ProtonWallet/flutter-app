@@ -1093,11 +1093,12 @@ packages:
   no_screenshot:
     dependency: "direct main"
     description:
-      name: no_screenshot
-      sha256: ec3d86d7ee89a09c3a3939c1003012536ba4b3fcb4f8cbd23d87ada595c99258
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1"
+      path: "."
+      ref: "fix_0.3.2_ios_build"
+      resolved-ref: "99fc62dd0c0106c8d356513de2471b227b205fd2"
+      url: "https://github.com/ProtonWallet/no_screenshot.git"
+    source: git
+    version: "0.3.2-beta.1"
   node_preamble:
     dependency: transitive
     description:
