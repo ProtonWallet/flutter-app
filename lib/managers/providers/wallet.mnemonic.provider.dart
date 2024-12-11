@@ -40,7 +40,8 @@ class WalletMnemonicProvider extends DataProvider {
       final userKeys = await userManager.getUserKeysForTL();
       final userKeyPassphrase = userManager.getUserKeyPassphrase();
       try {
-        encryptedMnemonicString = FrbTransitionLayer.decryptWalletKeyLegacy(
+        encryptedMnemonicString =
+            await FrbTransitionLayer.decryptWalletKeyLegacy(
           encryptedMnemonicText: encryptedMnemonic.mnemonic,
           userKeys: userKeys,
           userKeyPassword: userKeyPassphrase,

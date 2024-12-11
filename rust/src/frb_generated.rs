@@ -84,7 +84,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.6.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1586380941;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -922656178;
 
 // Section: executor
 
@@ -11071,27 +11071,13 @@ fn wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_new_impl(
         },
     )
 }
-fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_change_password_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_change_password", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_user_key = <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer);
-let api_passphrase = <String>::sse_decode(&mut deserializer);
-let api_new_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::change_password(api_user_key, api_passphrase, api_new_passphrase)?;   Ok(output_ok)
-                })()) })
-}
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_messages_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_messages", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_messages", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
@@ -11099,137 +11085,133 @@ let api_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::
 let api_user_key_password = <String>::sse_decode(&mut deserializer);
 let api_enc_to_list = <Option<String>>::sse_decode(&mut deserializer);
 let api_enc_sender = <Option<String>>::sse_decode(&mut deserializer);
-let api_enc_body = <Option<String>>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_messages(api_user_keys, api_addr_keys, api_user_key_password, api_enc_to_list, api_enc_sender, api_enc_body)?;   Ok(output_ok)
-                })()) })
+let api_enc_body = <Option<String>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_messages(api_user_keys, api_addr_keys, api_user_key_password, api_enc_to_list, api_enc_sender, api_enc_body)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_id_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_transaction_id", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
-let api_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(&mut deserializer);
-let api_user_key_password = <String>::sse_decode(&mut deserializer);
-let api_enc_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_transaction_id(api_user_keys, api_addr_keys, api_user_key_password, api_enc_transaction_id)?;   Ok(output_ok)
-                })()) })
-}
-fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_transaction_ids", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
-let api_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(&mut deserializer);
-let api_user_key_password = <String>::sse_decode(&mut deserializer);
-let api_enc_transaction_ids = <Vec<crate::api::proton_wallet::features::transition_layer::FrbTLEncryptedTransactionID>>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_transaction_ids(api_user_keys, api_addr_keys, api_user_key_password, api_enc_transaction_ids)?;   Ok(output_ok)
-                })()) })
-}
-fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_wallet_key", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_wallet_key = <crate::proton_api::wallet::ApiWalletKey>::sse_decode(&mut deserializer);
-let api_user_key = <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer);
-let api_user_key_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_wallet_key(api_wallet_key, api_user_key, api_user_key_passphrase)?;   Ok(output_ok)
-                })()) })
-}
-fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_wallet_key_legacy", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_encrypted_mnemonic_text = <String>::sse_decode(&mut deserializer);
-let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
-let api_user_key_password = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_wallet_key_legacy(api_encrypted_mnemonic_text, api_user_keys, api_user_key_password)?;   Ok(output_ok)
-                })()) })
-}
-fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_messages", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_transaction_id", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_encryptor_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(&mut deserializer);
-let api_message = <String>::sse_decode(&mut deserializer);
-let api_user_keys = <Option<Vec<crate::proton_api::proton_users::ProtonUserKey>>>::sse_decode(&mut deserializer);
-let api_addr_keys = <Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>>>::sse_decode(&mut deserializer);
-let api_user_key_password = <Option<String>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+            let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
+let api_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(&mut deserializer);
+let api_user_key_password = <String>::sse_decode(&mut deserializer);
+let api_enc_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
                     transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
-                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_messages(api_encryptor_addr_keys, api_message, api_user_keys, api_addr_keys, api_user_key_password)?;   Ok(output_ok)
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_transaction_id(api_user_keys, api_addr_keys, api_user_key_password, api_enc_transaction_id)?;   Ok(output_ok)
+                    })())
+                } })
+}
+fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_transaction_ids", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
+let api_addr_keys = <Vec<crate::proton_api::proton_address::ProtonAddressKey>>::sse_decode(&mut deserializer);
+let api_user_key_password = <String>::sse_decode(&mut deserializer);
+let api_enc_transaction_ids = <Vec<crate::api::proton_wallet::features::transition_layer::FrbTLEncryptedTransactionID>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_transaction_ids(api_user_keys, api_addr_keys, api_user_key_password, api_enc_transaction_ids)?;   Ok(output_ok)
+                    })())
+                } })
+}
+fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_wallet_key", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wallet_key = <crate::proton_api::wallet::ApiWalletKey>::sse_decode(&mut deserializer);
+let api_user_key = <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer);
+let api_user_key_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_wallet_key(api_wallet_key, api_user_key, api_user_key_passphrase)?;   Ok(output_ok)
+                    })())
+                } })
+}
+fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_decrypt_wallet_key_legacy", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_encrypted_mnemonic_text = <String>::sse_decode(&mut deserializer);
+let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
+let api_user_key_password = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::decrypt_wallet_key_legacy(api_encrypted_mnemonic_text, api_user_keys, api_user_key_password)?;   Ok(output_ok)
                     })())
                 } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_keys_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_messages_with_keys", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_messages_with_keys", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_private_keys = <Vec<String>>::sse_decode(&mut deserializer);
 let api_message = <String>::sse_decode(&mut deserializer);
 let api_user_keys = <Option<Vec<crate::proton_api::proton_users::ProtonUserKey>>>::sse_decode(&mut deserializer);
 let api_addr_keys = <Option<Vec<crate::proton_api::proton_address::ProtonAddressKey>>>::sse_decode(&mut deserializer);
-let api_user_key_password = <Option<String>>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_messages_with_keys(api_private_keys, api_message, api_user_keys, api_addr_keys, api_user_key_password)?;   Ok(output_ok)
-                })()) })
+let api_user_key_password = <Option<String>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_messages_with_keys(api_private_keys, api_message, api_user_keys, api_addr_keys, api_user_key_password)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_userkey_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_messages_with_userkey", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_messages_with_userkey", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_user_key = <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer);
-let api_message = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_messages_with_userkey(api_user_key, api_message)?;   Ok(output_ok)
-                })()) })
+let api_message = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_messages_with_userkey(api_user_key, api_message)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_wallet_key_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_wallet_key", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_encrypt_wallet_key", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_wallet_key = <FrbUnlockedWalletKey>::sse_decode(&mut deserializer);
 let api_user_key = <crate::proton_api::proton_users::ProtonUserKey>::sse_decode(&mut deserializer);
-let api_user_key_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_wallet_key(api_wallet_key, api_user_key, api_user_key_passphrase)?;   Ok(output_ok)
-                })()) })
+let api_user_key_passphrase = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::encrypt_wallet_key(api_wallet_key, api_user_key, api_user_key_passphrase)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_get_hmac_hashed_string_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -11246,37 +11228,41 @@ let api_transaction_id = <String>::sse_decode(&mut deserializer);deserializer.en
                 })()) })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_sign_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_sign", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_sign", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_user_keys = <Vec<crate::proton_api::proton_users::ProtonUserKey>>::sse_decode(&mut deserializer);
 let api_addr_keys = <crate::proton_api::proton_address::ProtonAddressKey>::sse_decode(&mut deserializer);
 let api_user_key_password = <String>::sse_decode(&mut deserializer);
 let api_message = <String>::sse_decode(&mut deserializer);
-let api_context = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::sign(api_user_keys, api_addr_keys, api_user_key_password, api_message, api_context)?;   Ok(output_ok)
-                })()) })
+let api_context = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::sign(api_user_keys, api_addr_keys, api_user_key_password, api_message, api_context)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_verify_signature_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_verify_signature", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_transition_layer_verify_signature", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_verifier = <Vec<String>>::sse_decode(&mut deserializer);
 let api_message = <String>::sse_decode(&mut deserializer);
 let api_signature = <String>::sse_decode(&mut deserializer);
-let api_context = <String>::sse_decode(&mut deserializer);deserializer.end();
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::verify_signature(api_verifier, api_message, api_signature, api_context)?;   Ok(output_ok)
-                })()) })
+let api_context = <String>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
+                         let output_ok = crate::api::proton_wallet::features::transition_layer::FrbTransitionLayer::verify_signature(api_verifier, api_message, api_signature, api_context)?;   Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_decrypt_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -17108,13 +17094,22 @@ fn pde_ffi_dispatcher_primary_impl(
 287 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
 288 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
 289 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
-297 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_impl(port, ptr, rust_vec_len, data_len),
-310 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-311 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-312 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-313 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
-316 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-317 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+291 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_messages_impl(port, ptr, rust_vec_len, data_len),
+292 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_id_impl(port, ptr, rust_vec_len, data_len),
+293 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(port, ptr, rust_vec_len, data_len),
+294 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
+295 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(port, ptr, rust_vec_len, data_len),
+296 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_keys_impl(port, ptr, rust_vec_len, data_len),
+297 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_userkey_impl(port, ptr, rust_vec_len, data_len),
+298 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
+300 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_sign_impl(port, ptr, rust_vec_len, data_len),
+301 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_verify_signature_impl(port, ptr, rust_vec_len, data_len),
+308 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+309 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+310 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+311 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
+314 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+315 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -17244,27 +17239,16 @@ fn pde_ffi_dispatcher_sync_impl(
 284 => wire__crate__api__proton_wallet__crypto__wallet_key__frb_locked_wallet_key_get_armored_impl(ptr, rust_vec_len, data_len),
 285 => wire__crate__api__proton_wallet__crypto__wallet_key__frb_locked_wallet_key_get_signature_impl(ptr, rust_vec_len, data_len),
 290 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_new_impl(ptr, rust_vec_len, data_len),
-291 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_change_password_impl(ptr, rust_vec_len, data_len),
-292 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_messages_impl(ptr, rust_vec_len, data_len),
-293 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_id_impl(ptr, rust_vec_len, data_len),
-294 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(ptr, rust_vec_len, data_len),
-295 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(ptr, rust_vec_len, data_len),
-296 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(ptr, rust_vec_len, data_len),
-298 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_keys_impl(ptr, rust_vec_len, data_len),
-299 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_userkey_impl(ptr, rust_vec_len, data_len),
-300 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_wallet_key_impl(ptr, rust_vec_len, data_len),
-301 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_get_hmac_hashed_string_impl(ptr, rust_vec_len, data_len),
-302 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_sign_impl(ptr, rust_vec_len, data_len),
-303 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_verify_signature_impl(ptr, rust_vec_len, data_len),
-304 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_decrypt_impl(ptr, rust_vec_len, data_len),
-305 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_encrypt_impl(ptr, rust_vec_len, data_len),
-306 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_impl(ptr, rust_vec_len, data_len),
-307 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_as_base64_impl(ptr, rust_vec_len, data_len),
-308 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_get_secure_random_impl(ptr, rust_vec_len, data_len),
-309 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_restore_impl(ptr, rust_vec_len, data_len),
-314 => wire__crate__api__logger__init_rust_logging_impl(ptr, rust_vec_len, data_len),
-315 => wire__crate__api__panic_hook__initialize_panic_hook_impl(ptr, rust_vec_len, data_len),
-318 => wire__crate__api__bdk_wallet__storage__wallet_mobile_connector_factory_new_impl(ptr, rust_vec_len, data_len),
+299 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_get_hmac_hashed_string_impl(ptr, rust_vec_len, data_len),
+302 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_decrypt_impl(ptr, rust_vec_len, data_len),
+303 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_encrypt_impl(ptr, rust_vec_len, data_len),
+304 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_impl(ptr, rust_vec_len, data_len),
+305 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_as_base64_impl(ptr, rust_vec_len, data_len),
+306 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_get_secure_random_impl(ptr, rust_vec_len, data_len),
+307 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_restore_impl(ptr, rust_vec_len, data_len),
+312 => wire__crate__api__logger__init_rust_logging_impl(ptr, rust_vec_len, data_len),
+313 => wire__crate__api__panic_hook__initialize_panic_hook_impl(ptr, rust_vec_len, data_len),
+316 => wire__crate__api__bdk_wallet__storage__wallet_mobile_connector_factory_new_impl(ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }

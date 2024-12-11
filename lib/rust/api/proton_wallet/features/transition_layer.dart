@@ -88,17 +88,8 @@ class FrbTLTransactionID {
 class FrbTransitionLayer {
   const FrbTransitionLayer();
 
-  static String changePassword(
-          {required ProtonUserKey userKey,
-          required String passphrase,
-          required String newPassphrase}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerChangePassword(
-              userKey: userKey,
-              passphrase: passphrase,
-              newPassphrase: newPassphrase);
-
-  static FrbSenderBody decryptMessages(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<FrbSenderBody> decryptMessages(
           {required List<ProtonUserKey> userKeys,
           required List<ProtonAddressKey> addrKeys,
           required String userKeyPassword,
@@ -114,7 +105,8 @@ class FrbTransitionLayer {
               encSender: encSender,
               encBody: encBody);
 
-  static String decryptTransactionId(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<String> decryptTransactionId(
           {required List<ProtonUserKey> userKeys,
           required List<ProtonAddressKey> addrKeys,
           required String userKeyPassword,
@@ -126,7 +118,8 @@ class FrbTransitionLayer {
               userKeyPassword: userKeyPassword,
               encTransactionId: encTransactionId);
 
-  static List<FrbTLTransactionID> decryptTransactionIds(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<List<FrbTLTransactionID>> decryptTransactionIds(
           {required List<ProtonUserKey> userKeys,
           required List<ProtonAddressKey> addrKeys,
           required String userKeyPassword,
@@ -138,7 +131,8 @@ class FrbTransitionLayer {
               userKeyPassword: userKeyPassword,
               encTransactionIds: encTransactionIds);
 
-  static FrbUnlockedWalletKey decryptWalletKey(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<FrbUnlockedWalletKey> decryptWalletKey(
           {required ApiWalletKey walletKey,
           required ProtonUserKey userKey,
           required String userKeyPassphrase}) =>
@@ -148,7 +142,8 @@ class FrbTransitionLayer {
               userKey: userKey,
               userKeyPassphrase: userKeyPassphrase);
 
-  static String decryptWalletKeyLegacy(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<String> decryptWalletKeyLegacy(
           {required String encryptedMnemonicText,
           required List<ProtonUserKey> userKeys,
           required String userKeyPassword}) =>
@@ -158,21 +153,8 @@ class FrbTransitionLayer {
               userKeys: userKeys,
               userKeyPassword: userKeyPassword);
 
-  static Future<String> encryptMessages(
-          {required List<ProtonAddressKey> encryptorAddrKeys,
-          required String message,
-          List<ProtonUserKey>? userKeys,
-          List<ProtonAddressKey>? addrKeys,
-          String? userKeyPassword}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessages(
-              encryptorAddrKeys: encryptorAddrKeys,
-              message: message,
-              userKeys: userKeys,
-              addrKeys: addrKeys,
-              userKeyPassword: userKeyPassword);
-
-  static String encryptMessagesWithKeys(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<String> encryptMessagesWithKeys(
           {required List<String> privateKeys,
           required String message,
           List<ProtonUserKey>? userKeys,
@@ -186,13 +168,15 @@ class FrbTransitionLayer {
               addrKeys: addrKeys,
               userKeyPassword: userKeyPassword);
 
-  static String encryptMessagesWithUserkey(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<String> encryptMessagesWithUserkey(
           {required ProtonUserKey userKey, required String message}) =>
       RustLib.instance.api
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerEncryptMessagesWithUserkey(
               userKey: userKey, message: message);
 
-  static FrbLockedWalletKey encryptWalletKey(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<FrbLockedWalletKey> encryptWalletKey(
           {required FrbUnlockedWalletKey walletKey,
           required ProtonUserKey userKey,
           required String userKeyPassphrase}) =>
@@ -209,7 +193,8 @@ class FrbTransitionLayer {
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerGetHmacHashedString(
               walletKey: walletKey, transactionId: transactionId);
 
-  static String sign(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<String> sign(
           {required List<ProtonUserKey> userKeys,
           required ProtonAddressKey addrKeys,
           required String userKeyPassword,
@@ -223,7 +208,8 @@ class FrbTransitionLayer {
               message: message,
               context: context);
 
-  static bool verifySignature(
+  /// Dart async + Rust sync ** handled by Frb thread pool
+  static Future<bool> verifySignature(
           {required List<String> verifier,
           required String message,
           required String signature,

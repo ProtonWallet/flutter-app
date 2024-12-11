@@ -18,7 +18,7 @@ PODS:
     - Flutter
     - FlutterMacOS
   - MTBBarcodeScanner (5.0.11)
-  - "no_screenshot (0.0.1+4)":
+  - no_screenshot (0.3.2-beta.1):
     - Flutter
     - ScreenProtectorKit (~> 1.3.1)
   - package_info_plus (0.4.5):
@@ -163,7 +163,7 @@ SPEC CHECKSUMS:
   fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
-  no_screenshot: 67d110f12466f4913b488803d4e498d03ef2889e
+  no_screenshot: a9b027f15c3466f4908042f4a64015ec91258765
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
