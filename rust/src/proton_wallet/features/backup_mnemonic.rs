@@ -53,7 +53,7 @@ impl BackupMnemonic {
         Ok(MnemonicResult {
             wallet_id,
             wallet_name,
-            wallet_mnemonic: str_mnemonic.as_utf8_string()?.expose_secret().clone(),
+            wallet_mnemonic: str_mnemonic.as_utf8_string()?.expose_secret().to_string(),
         })
     }
 }

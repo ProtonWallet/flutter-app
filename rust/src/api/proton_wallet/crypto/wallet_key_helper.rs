@@ -47,7 +47,7 @@ impl FrbWalletKeyHelper {
         let wallet_key = WalletKeyProvider::restore_base64(&base64_secure_key)?;
         let encrypted_body = EncryptedWalletMnemonic::new_from_base64(&encrypt_text)?;
         let result = encrypted_body.decrypt_with(&wallet_key)?;
-        Ok(result.as_utf8_string()?.expose_secret().clone())
+        Ok(result.as_utf8_string()?.expose_secret().to_string())
     }
 
     /// Cryptographically secure pseudo-random number generation (CSPRNG).
