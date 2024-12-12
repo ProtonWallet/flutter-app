@@ -41,6 +41,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
   final AppStateManager appStateManager;
 
   bool hasCheckFullSynced = false;
+  bool hasShowOnboard = false;
 
   StreamSubscription? walletPassDataSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
@@ -107,7 +108,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         // loading wallet data
         final wallets = await walletsDataProvider.getWallets();
         if (wallets == null || wallets.isEmpty) {
-          onboardingCallback?.call();
+          if (!hasShowOnboard){
+            hasShowOnboard = true;
+            onboardingCallback?.call();
+          }
           emit(state.copyWith(initialized: true, walletsModel: []));
           return; // error;
         }

@@ -166,8 +166,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> logout();
 
-  String userEmail = "";
-  String displayName = "";
+  String getUserEmail();
+
+  String getDisplayName();
+
   TransactionFilterBy transactionListFilterBy = TransactionFilterBy.all;
   String addressListFilterBy = "";
 
@@ -410,11 +412,6 @@ class HomeViewModelImpl extends HomeViewModel {
 
     /// read app version
     appVersion = await UserAgent().display;
-
-    /// read user data
-    final userInfo = userManager.userInfo;
-    userEmail = userInfo.userMail;
-    displayName = userInfo.userDisplayName;
 
     /// check
     final checked = await eligibleCheck();
@@ -704,9 +701,9 @@ class HomeViewModelImpl extends HomeViewModel {
           walletIDtoAddAccount,
         );
       case NavID.acceptTermsConditionDialog:
-        coordinator.showAcceptTermsAndCondition(userEmail);
+        coordinator.showAcceptTermsAndCondition(getUserEmail());
       case NavID.earlyAccess:
-        coordinator.showEarlyAccess(logout, userEmail);
+        coordinator.showEarlyAccess(logout, getUserEmail());
       case NavID.protonProducts:
         coordinator.showProtonProducts();
       case NavID.sendInvite:
@@ -788,5 +785,19 @@ class HomeViewModelImpl extends HomeViewModel {
       Sentry.captureException(e, stackTrace: stacktrace);
       logger.e("setupLogger error: $e stacktrace: $stacktrace");
     }
+  }
+
+  @override
+  String getDisplayName() {
+    final userInfo = userManager.userInfo;
+    return dataProviderManager.userDataProvider.user.protonUser?.displayName ??
+        userInfo.userDisplayName;
+  }
+
+  @override
+  String getUserEmail() {
+    final userInfo = userManager.userInfo;
+    return dataProviderManager.userDataProvider.user.protonUser?.email ??
+        userInfo.userMail;
   }
 }

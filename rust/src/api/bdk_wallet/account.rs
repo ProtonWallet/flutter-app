@@ -1,7 +1,7 @@
 // account.rs
 
 use andromeda_bitcoin::{
-    account::Account, transactions::Pagination, utils::SortOrder, SignOptions,
+    account::Account, transactions::Pagination, utils::SortOrder, KeychainKind, SignOptions,
 };
 use andromeda_common::{Network, ScriptType};
 use tracing::debug;
@@ -181,5 +181,16 @@ impl FrbAccount {
     ) -> Result<FrbPsbt, BridgeError> {
         let psbt = self.inner.bump_transactions_fees(txid, fees).await?;
         FrbPsbt::from_psbt(&psbt, network)
+    }
+
+    pub async fn get_highest_used_address_index_in_output(
+        &self,
+        keychain: KeychainKind,
+    ) -> Result<Option<u32>, BridgeError> {
+        let highest = self
+            .inner
+            .get_highest_used_address_index_in_output(keychain)
+            .await?;
+        Ok(highest)
     }
 }

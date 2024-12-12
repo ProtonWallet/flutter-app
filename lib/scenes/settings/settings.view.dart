@@ -139,6 +139,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                           child: DropdownButtonV2(
                             title: context.local.setting_custom_stopgap,
                             width: 80,
+                            maxSuffixIconWidth: 20,
                             items: stopgapOptions,
                             itemsText: stopgapOptions
                                 .map((v) => v.toString())
