@@ -831,8 +831,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                               ),
                               //account info section
                               AccountInfoV2(
-                                  displayName: viewModel.displayName,
-                                  userEmail: viewModel.userEmail),
+                                  displayName: viewModel.getDisplayName(),
+                                  userEmail: viewModel.getUserEmail()),
                               const SizedBox(
                                 height: 10,
                               ),

@@ -23,6 +23,7 @@ import 'package:wallet/rust/api/bdk_wallet/storage.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
+import 'package:wallet/rust/common/keychain_kind.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';
@@ -422,16 +423,17 @@ class WalletManager implements Manager {
     await dataProviderManager.receiveAddressDataProvider
         .initReceiveAddressForAccount(account, accountModel);
 
-    /// also need to check localLastUsedIndex (lastUsedIndexOnNetwork)
-    final walletModel = await DBHelper.walletDao!.findByServerID(
-      accountModel.walletID,
-    );
-    final localLastUsedIndex = await dataProviderManager
-        .localBitcoinAddressDataProvider
-        .getLastUsedIndex(walletModel, accountModel);
+    /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
+    /// we will check and handle if highest used receive address index is higher than the one store in wallet account
+    /// this will happen when some one send bitcoin via qr code
+    final highestIndexFromBlockchain =
+        await account.getHighestUsedAddressIndexInOutput(
+                keychain: KeychainKind.external_) ??
+            -1;
+
     await dataProviderManager.receiveAddressDataProvider
         .handleLastUsedIndexOnNetwork(
-            account, accountModel, localLastUsedIndex);
+            account, accountModel, highestIndexFromBlockchain);
   }
 
   Future<void> bitcoinAddressPoolHealthCheck(

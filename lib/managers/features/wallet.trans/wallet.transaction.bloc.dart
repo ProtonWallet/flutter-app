@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
@@ -337,13 +338,17 @@ class WalletTransactionBloc
       bool isSyncing = false;
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
-        final historyTransactionsInAccount = await getHistoryTransactions(
-          walletModel,
-          accountMenuModel,
-          unlockedWalletKey,
-        );
-
-        newHistoryTransactions += historyTransactionsInAccount;
+        try {
+          final historyTransactionsInAccount = await getHistoryTransactions(
+            walletModel,
+            accountMenuModel,
+            unlockedWalletKey,
+          );
+          newHistoryTransactions += historyTransactionsInAccount;
+        } catch (e, stacktrace) {
+          logger.e("getHistoryTransactions error: $e stacktrace: $stacktrace");
+          Sentry.captureException(e, stackTrace: stacktrace);
+        }
 
         if (currentAccountModel != null ||
             currentWalletModel!.walletID != walletModel.walletID) {
@@ -437,14 +442,18 @@ class WalletTransactionBloc
 
       List<HistoryTransaction> newHistoryTransactions = [];
 
-      final List<HistoryTransaction> historyTransactionsInAccount =
-          await getHistoryTransactions(
-        walletModel,
-        event.accountMenuModel,
-        unlockedWalletKey,
-      );
-      newHistoryTransactions += historyTransactionsInAccount;
-
+      try {
+        final List<HistoryTransaction> historyTransactionsInAccount =
+            await getHistoryTransactions(
+          walletModel,
+          event.accountMenuModel,
+          unlockedWalletKey,
+        );
+        newHistoryTransactions += historyTransactionsInAccount;
+      } catch (e, stacktrace) {
+        logger.e("getHistoryTransactions error: $e stacktrace: $stacktrace");
+        Sentry.captureException(e, stackTrace: stacktrace);
+      }
       newHistoryTransactions = sortHistoryTransaction(newHistoryTransactions);
 
       const String filter = "";

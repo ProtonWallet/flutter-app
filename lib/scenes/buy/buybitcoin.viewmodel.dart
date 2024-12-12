@@ -23,6 +23,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/common/keychain_kind.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -283,12 +284,15 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         );
       }
 
-      /// check if local highest used bitcoin address index is higher than the one store in wallet account
+      /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
+      /// we will check and handle if highest used receive address index is higher than the one store in wallet account
       /// this will happen when some one send bitcoin via qr code
-      final int localLastUsedIndex = await localBitcoinAddressDataProvider
-          .getLastUsedIndex(walletModel, accountModel);
+      final int highestIndexFromBlockchain = await account!
+              .getHighestUsedAddressIndexInOutput(
+                  keychain: KeychainKind.external_) ??
+          -1;
       await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
-          account!, accountModel, localLastUsedIndex);
+          account, accountModel, highestIndexFromBlockchain);
 
       final addressInfo = await receiveAddressDataProvider.getReceiveAddress(
           account, accountModel);

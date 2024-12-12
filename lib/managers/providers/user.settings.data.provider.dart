@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -207,9 +208,13 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   Future<void> updateReceiveEmailIntegrationNotification(isEnable) async {
-    await settingsClient.receiveNotificationEmail(
-        emailType: UserReceiveNotificationEmailTypes.emailIntegration,
-        isEnable: isEnable);
+    try {
+      await settingsClient.receiveNotificationEmail(
+          emailType: UserReceiveNotificationEmailTypes.emailIntegration,
+          isEnable: isEnable);
+    } catch (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
+    }
 
     /// reload local db and cache
     await loadFromServer();
@@ -217,9 +222,13 @@ class UserSettingsDataProvider extends DataProvider {
   }
 
   Future<void> updateReceiveInviterNotification(isEnable) async {
-    await settingsClient.receiveNotificationEmail(
-        emailType: UserReceiveNotificationEmailTypes.notificationToInviter,
-        isEnable: isEnable);
+    try {
+      await settingsClient.receiveNotificationEmail(
+          emailType: UserReceiveNotificationEmailTypes.notificationToInviter,
+          isEnable: isEnable);
+    } catch (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
+    }
 
     /// reload local db and cache
     await loadFromServer();

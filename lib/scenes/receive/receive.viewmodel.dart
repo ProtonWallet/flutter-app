@@ -21,6 +21,7 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/common/address_info.dart';
+import 'package:wallet/rust/common/keychain_kind.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -37,7 +38,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   String serverAccountID;
 
   String errorMessage = "";
-  int localLastUsedIndex = -1;
+  int highestIndexFromBlockchain = -1;
 
   /// flags for UI
   bool isWalletView;
@@ -130,19 +131,34 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   @override
   Future<void> generateNewAddress() async {
+    loadingAddress = true;
+    sinkAddSafe();
+
+    /// make UI behave smoothly
+    await Future.delayed(const Duration(milliseconds: 500));
+
     /// We will need to avoid user create too many unused address,
     /// or user may encounter the transaction is out of syncing stopGap issue.
+
     if (accountModel != null) {
-      if (localLastUsedIndex + accountModel!.poolSize + 10 >=
-          accountModel!.lastUsedIndex) {
+      if (highestIndexFromBlockchain + 20 > accountModel!.lastUsedIndex) {
         /// if the bitcoin address index still in safe range, allow user to generate new address
-        if (localLastUsedIndex + accountModel!.poolSize + 5 <=
-            accountModel!.lastUsedIndex) {
+        if (highestIndexFromBlockchain + 15 <= accountModel!.lastUsedIndex) {
           /// shows warning when the address gap is near the stopGap
           warnUnusedAddress = true;
         }
         currentAddress = await receiveAddressDataProvider
             .generateNewReceiveAddress(_frbAccount, accountModel!);
+        try {
+          assertCurrentAddressIndexNotFarFromStopgap();
+        } catch (e) {
+          errorMessage = e.toString();
+          CommonHelper.showErrorDialog(errorMessage);
+          errorMessage = "";
+
+          /// return directly to prevent showing address to user
+          return;
+        }
         try {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
             serverWalletID: walletModel!.walletID,
@@ -161,6 +177,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         warnUnusedAddress = false;
         tooManyUnusedAddress = true;
       }
+      loadingAddress = false;
       sinkAddSafe();
     }
   }
@@ -217,24 +234,46 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
       accountModel?.labelDecrypt =
           await decryptAccountName(base64Encode(accountModel!.label));
 
-      /// check if local highest used bitcoin address index is higher than the one store in wallet account
-      /// this will happen when some one send bitcoin via qr code
-      localLastUsedIndex = await localBitcoinAddressDataProvider
-          .getLastUsedIndex(walletModel, accountModel);
       _frbAccount = (await walletManager.loadWalletWithID(
         walletModel!.walletID,
         accountModel!.accountID,
         serverScriptType: accountModel!.scriptType,
       ))!;
 
+      /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
+      /// we will check and handle if highest used receive address index is higher than the one store in wallet account
+      /// this will happen when some one send bitcoin via qr code
+      highestIndexFromBlockchain =
+          await _frbAccount.getHighestUsedAddressIndexInOutput(
+                  keychain: KeychainKind.external_) ??
+              -1;
+
       await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
-          _frbAccount, accountModel!, localLastUsedIndex);
+          _frbAccount, accountModel!, highestIndexFromBlockchain);
       currentAddress = null;
       await getAddress();
+      assertCurrentAddressIndexNotFarFromStopgap();
     } catch (e) {
-      logger.e(e.toString());
+      errorMessage = e.toString();
+      CommonHelper.showErrorDialog(errorMessage);
+      errorMessage = "";
+
+      /// return directly to prevent showing address to user
+      return;
     }
     loadingAddress = false;
     sinkAddSafe();
+  }
+
+  /// check if current address's index is far from stop gap.
+  /// if its far from stop gap, we should raise error to not show this address to user
+  /// since it may cause transaction not found issue after user clean cache
+  /// or import wallet in other wallet app
+  void assertCurrentAddressIndexNotFarFromStopgap() {
+    if ((currentAddress?.index ?? 0) > highestIndexFromBlockchain + 20) {
+      Sentry.captureMessage(
+          "Tries to show address higher than stopgap. address index: ${(currentAddress?.index ?? 0)}, highestIndexFromBlockchain: $highestIndexFromBlockchain");
+      throw ("Tries to show address higher than stopgap");
+    }
   }
 }

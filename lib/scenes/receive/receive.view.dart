@@ -226,16 +226,18 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               height: 48),
                           SizedBoxes.box12,
                           ButtonV5(
-                              onPressed: () async {
-                                viewModel.generateNewAddress();
-                              },
-                              text: S.of(context).generate_new_address,
-                              width: MediaQuery.of(context).size.width,
-                              textStyle: FontManager.body1Median(
-                                  ProtonColors.textNorm),
-                              backgroundColor: ProtonColors.textWeakPressed,
-                              borderColor: ProtonColors.textWeakPressed,
-                              height: 48),
+                            onPressed: () async {
+                              viewModel.generateNewAddress();
+                            },
+                            text: S.of(context).generate_new_address,
+                            width: MediaQuery.of(context).size.width,
+                            textStyle:
+                                FontManager.body1Median(ProtonColors.textNorm),
+                            backgroundColor: ProtonColors.textWeakPressed,
+                            borderColor: ProtonColors.textWeakPressed,
+                            height: 48,
+                            enable: !viewModel.loadingAddress,
+                          ),
                         ],
                       ),
                     ),
