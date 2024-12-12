@@ -1,19 +1,19 @@
 use base64::{prelude::BASE64_STANDARD, Engine};
 use core::str;
-use secrecy::{ExposeSecret, SecretString, SecretVec};
+use secrecy::{ExposeSecret, SecretSlice, SecretString};
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use super::{wallet_key::UnlockedWalletKey, Result};
 
 /// `WalletMnemonic` holds a secret mnemonic phrase that is used for generating wallet keys.
-/// The mnemonic is stored securely in a `SecretVec` to protect it from accidental exposure in memory.
+/// The mnemonic is stored securely in a `SecretSlice` to protect it from accidental exposure in memory.
 pub struct WalletMnemonic {
-    pub mnemonic: SecretVec<u8>,
+    pub mnemonic: SecretSlice<u8>,
 }
 impl WalletMnemonic {
     pub fn new(data: Vec<u8>) -> Self {
         Self {
-            mnemonic: SecretVec::new(data),
+            mnemonic: SecretSlice::from(data),
         }
     }
 
@@ -26,12 +26,12 @@ impl WalletMnemonic {
     }
 
     pub fn to_base64(&self) -> SecretString {
-        SecretString::new(BASE64_STANDARD.encode(self.mnemonic.expose_secret()))
+        SecretString::from(BASE64_STANDARD.encode(self.mnemonic.expose_secret()))
     }
 
     pub fn as_utf8_string(&self) -> Result<SecretString> {
         let plaintext = str::from_utf8(self.mnemonic.expose_secret())?.to_string();
-        Ok(SecretString::new(plaintext))
+        Ok(SecretString::from(plaintext))
     }
 }
 

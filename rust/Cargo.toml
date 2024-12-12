@@ -18,7 +18,7 @@ futures = "0.3"
 aes-gcm = { version = "0.10.3", features = ["zeroize"] }
 zeroize = { version = "1.7.0", features = ["zeroize_derive"] }
 #https://crates.io/crates/secrecy
-secrecy = "0.8.0"
+secrecy = "0.10.0"
 rusqlite = { version = "0.31.0", features = [
     "bundled",
     "modern_sqlite",
