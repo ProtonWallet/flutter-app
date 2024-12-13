@@ -1,6 +1,9 @@
-use proton_crypto::{new_srp_provider, srp::SRPProvider};
+use proton_crypto::{
+    new_srp_provider,
+    srp::{ClientVerifier, SRPProvider},
+};
 use proton_crypto_account::salts::KeySecret;
-use proton_srp::{mailbox_password_hash, SRPProofB64, SRPVerifierB64};
+use proton_srp::{mailbox_password_hash, SRPProofB64};
 use std::str::from_utf8;
 
 use super::{errors::WalletCryptoError, Result};
@@ -33,9 +36,9 @@ impl SrpClient {
     }
 
     /// Generates an SRP verifier based on the password and optional salt.
-    pub fn generate_verifier(password: &str, server_modulus: &str) -> Result<SRPVerifierB64> {
+    pub fn generate_verifier(password: &str, server_modulus: &str) -> Result<ClientVerifier> {
         let srp_provider = new_srp_provider();
-        let verifier = srp_provider.generate_random_verifer(password, None, server_modulus)?;
+        let verifier = srp_provider.generate_client_verifier(password, server_modulus)?;
         Ok(verifier)
     }
 

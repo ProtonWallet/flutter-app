@@ -84,7 +84,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.6.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -420378696;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2063966866;
 
 // Section: executor
 
@@ -10965,22 +10965,6 @@ fn wire__crate__api__proton_wallet__features__transition_layer__frb_sender_body_
                     })())
                 } })
 }
-fn wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_compute_key_password_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "frb_srp_client_compute_key_password", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_password = <String>::sse_decode(&mut deserializer);
-let api_salt = <Vec<u8>>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
-                    transform_result_sse::<_, crate::api::errors::BridgeError>((move ||  {
-                         let output_ok = crate::api::proton_wallet::srp::srp_client::FrbSrpClient::compute_key_password(api_password, api_salt)?;   Ok(output_ok)
-                    })())
-                } })
-}
 fn wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_proofs_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -11018,46 +11002,6 @@ fn wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_pro
                             api_salt,
                             api_modulus,
                             api_server_ephemeral,
-                        )?;
-                    Ok(output_ok)
-                })())
-            }
-        },
-    )
-}
-fn wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_verifer_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "frb_srp_client_generate_verifer",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_password = <String>::sse_decode(&mut deserializer);
-            let api_salt_opt = <Option<String>>::sse_decode(&mut deserializer);
-            let api_server_modulus = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| {
-                transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                    let output_ok =
-                        crate::api::proton_wallet::srp::srp_client::FrbSrpClient::generate_verifer(
-                            api_password,
-                            api_salt_opt,
-                            api_server_modulus,
                         )?;
                     Ok(output_ok)
                 })())
@@ -12066,12 +12010,6 @@ const _: fn() = || {
         let _: String = SRPProofB64.client_ephemeral;
         let _: String = SRPProofB64.client_proof;
         let _: String = SRPProofB64.expected_server_proof;
-    }
-    {
-        let SRPVerifierB64 = None::<crate::srp::proofs::SRPVerifierB64>.unwrap();
-        let _: u8 = SRPVerifierB64.version;
-        let _: String = SRPVerifierB64.salt;
-        let _: String = SRPVerifierB64.verifier;
     }
     match None::<crate::common::transaction_time::TransactionTime>.unwrap() {
         crate::common::transaction_time::TransactionTime::Confirmed { confirmation_time } => {
@@ -16575,20 +16513,6 @@ impl SseDecode for crate::srp::proofs::SRPProofB64 {
     }
 }
 
-impl SseDecode for crate::srp::proofs::SRPVerifierB64 {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_version = <u8>::sse_decode(deserializer);
-        let mut var_salt = <String>::sse_decode(deserializer);
-        let mut var_verifier = <String>::sse_decode(deserializer);
-        return crate::srp::proofs::SRPVerifierB64 {
-            version: var_version,
-            salt: var_salt,
-            verifier: var_verifier,
-        };
-    }
-}
-
 impl SseDecode for crate::proton_api::price_graph::Timeframe {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -17117,25 +17041,23 @@ fn pde_ffi_dispatcher_primary_impl(
 283 => wire__crate__api__proton_api__fork_impl(port, ptr, rust_vec_len, data_len),
 284 => wire__crate__api__proton_api__fork_selector_impl(port, ptr, rust_vec_len, data_len),
 287 => wire__crate__api__proton_wallet__features__transition_layer__frb_sender_body_default_impl(port, ptr, rust_vec_len, data_len),
-288 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_compute_key_password_impl(port, ptr, rust_vec_len, data_len),
-289 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
-290 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_verifer_impl(port, ptr, rust_vec_len, data_len),
-292 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_messages_impl(port, ptr, rust_vec_len, data_len),
-293 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_id_impl(port, ptr, rust_vec_len, data_len),
-294 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(port, ptr, rust_vec_len, data_len),
-295 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
-296 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(port, ptr, rust_vec_len, data_len),
-297 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_keys_impl(port, ptr, rust_vec_len, data_len),
-298 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_userkey_impl(port, ptr, rust_vec_len, data_len),
-299 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
-301 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_sign_impl(port, ptr, rust_vec_len, data_len),
-302 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_verify_signature_impl(port, ptr, rust_vec_len, data_len),
-309 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
-310 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
-311 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-312 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
-315 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-316 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+288 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_generate_proofs_impl(port, ptr, rust_vec_len, data_len),
+290 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_messages_impl(port, ptr, rust_vec_len, data_len),
+291 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_id_impl(port, ptr, rust_vec_len, data_len),
+292 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_transaction_ids_impl(port, ptr, rust_vec_len, data_len),
+293 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
+294 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_decrypt_wallet_key_legacy_impl(port, ptr, rust_vec_len, data_len),
+295 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_keys_impl(port, ptr, rust_vec_len, data_len),
+296 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_messages_with_userkey_impl(port, ptr, rust_vec_len, data_len),
+297 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_encrypt_wallet_key_impl(port, ptr, rust_vec_len, data_len),
+299 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_sign_impl(port, ptr, rust_vec_len, data_len),
+300 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_verify_signature_impl(port, ptr, rust_vec_len, data_len),
+307 => wire__crate__api__proton_api__get_exchange_rate_impl(port, ptr, rust_vec_len, data_len),
+308 => wire__crate__api__proton_api__get_proton_address_impl(port, ptr, rust_vec_len, data_len),
+309 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+310 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
+313 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+314 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -17264,17 +17186,17 @@ fn pde_ffi_dispatcher_sync_impl(
 241 => wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_auth_sync_impl(ptr, rust_vec_len, data_len),
 285 => wire__crate__api__proton_wallet__crypto__wallet_key__frb_locked_wallet_key_get_armored_impl(ptr, rust_vec_len, data_len),
 286 => wire__crate__api__proton_wallet__crypto__wallet_key__frb_locked_wallet_key_get_signature_impl(ptr, rust_vec_len, data_len),
-291 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_new_impl(ptr, rust_vec_len, data_len),
-300 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_get_hmac_hashed_string_impl(ptr, rust_vec_len, data_len),
-303 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_decrypt_impl(ptr, rust_vec_len, data_len),
-304 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_encrypt_impl(ptr, rust_vec_len, data_len),
-305 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_impl(ptr, rust_vec_len, data_len),
-306 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_as_base64_impl(ptr, rust_vec_len, data_len),
-307 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_get_secure_random_impl(ptr, rust_vec_len, data_len),
-308 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_restore_impl(ptr, rust_vec_len, data_len),
-313 => wire__crate__api__logger__init_rust_logging_impl(ptr, rust_vec_len, data_len),
-314 => wire__crate__api__panic_hook__initialize_panic_hook_impl(ptr, rust_vec_len, data_len),
-317 => wire__crate__api__bdk_wallet__storage__wallet_mobile_connector_factory_new_impl(ptr, rust_vec_len, data_len),
+289 => wire__crate__api__proton_wallet__srp__srp_client__frb_srp_client_new_impl(ptr, rust_vec_len, data_len),
+298 => wire__crate__api__proton_wallet__features__transition_layer__frb_transition_layer_get_hmac_hashed_string_impl(ptr, rust_vec_len, data_len),
+301 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_decrypt_impl(ptr, rust_vec_len, data_len),
+302 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_encrypt_impl(ptr, rust_vec_len, data_len),
+303 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_impl(ptr, rust_vec_len, data_len),
+304 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_generate_secret_key_as_base64_impl(ptr, rust_vec_len, data_len),
+305 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_get_secure_random_impl(ptr, rust_vec_len, data_len),
+306 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_restore_impl(ptr, rust_vec_len, data_len),
+311 => wire__crate__api__logger__init_rust_logging_impl(ptr, rust_vec_len, data_len),
+312 => wire__crate__api__panic_hook__initialize_panic_hook_impl(ptr, rust_vec_len, data_len),
+315 => wire__crate__api__bdk_wallet__storage__wallet_mobile_connector_factory_new_impl(ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -20282,28 +20204,6 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::srp::proofs::SRPProofB6
     for crate::srp::proofs::SRPProofB64
 {
     fn into_into_dart(self) -> FrbWrapper<crate::srp::proofs::SRPProofB64> {
-        self.into()
-    }
-}
-// Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::srp::proofs::SRPVerifierB64> {
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        [
-            self.0.version.into_into_dart().into_dart(),
-            self.0.salt.into_into_dart().into_dart(),
-            self.0.verifier.into_into_dart().into_dart(),
-        ]
-        .into_dart()
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<crate::srp::proofs::SRPVerifierB64>
-{
-}
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::srp::proofs::SRPVerifierB64>>
-    for crate::srp::proofs::SRPVerifierB64
-{
-    fn into_into_dart(self) -> FrbWrapper<crate::srp::proofs::SRPVerifierB64> {
         self.into()
     }
 }
@@ -24079,15 +23979,6 @@ impl SseEncode for crate::srp::proofs::SRPProofB64 {
         <String>::sse_encode(self.client_ephemeral, serializer);
         <String>::sse_encode(self.client_proof, serializer);
         <String>::sse_encode(self.expected_server_proof, serializer);
-    }
-}
-
-impl SseEncode for crate::srp::proofs::SRPVerifierB64 {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <u8>::sse_encode(self.version, serializer);
-        <String>::sse_encode(self.salt, serializer);
-        <String>::sse_encode(self.verifier, serializer);
     }
 }
 

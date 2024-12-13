@@ -1920,9 +1920,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   SRPProofB64 dco_decode_srp_proof_b_64(dynamic raw);
 
   @protected
-  SRPVerifierB64 dco_decode_srp_verifier_b_64(dynamic raw);
-
-  @protected
   Timeframe dco_decode_timeframe(dynamic raw);
 
   @protected
@@ -3680,9 +3677,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SRPProofB64 sse_decode_srp_proof_b_64(SseDeserializer deserializer);
-
-  @protected
-  SRPVerifierB64 sse_decode_srp_verifier_b_64(SseDeserializer deserializer);
 
   @protected
   Timeframe sse_decode_timeframe(SseDeserializer deserializer);
@@ -5502,10 +5496,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_srp_proof_b_64(SRPProofB64 self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_srp_verifier_b_64(
-      SRPVerifierB64 self, SseSerializer serializer);
 
   @protected
   void sse_encode_timeframe(Timeframe self, SseSerializer serializer);
