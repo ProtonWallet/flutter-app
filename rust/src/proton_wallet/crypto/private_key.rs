@@ -30,8 +30,8 @@ pub struct UnlockedPrivateKeys<Provider: PGPProviderSync> {
 impl<Provider: PGPProviderSync> UnlockedPrivateKeys<Provider> {
     pub fn from_user_key(user_key: UnlockedUserKey<Provider>) -> Self {
         Self {
-            user_keys: vec![user_key],
-            addr_keys: vec![],
+            user_keys: vec![user_key].into(),
+            addr_keys: vec![].into(),
             user_keys_failed: vec![],
             addr_keys_failed: vec![],
         }
@@ -39,8 +39,8 @@ impl<Provider: PGPProviderSync> UnlockedPrivateKeys<Provider> {
 
     pub fn from_addr_key(address_key: UnlockedAddressKey<Provider>) -> Self {
         Self {
-            user_keys: vec![],
-            addr_keys: vec![address_key],
+            user_keys: vec![].into(),
+            addr_keys: vec![address_key].into(),
             user_keys_failed: vec![],
             addr_keys_failed: vec![],
         }
@@ -116,8 +116,8 @@ impl LockedPrivateKeys {
         );
         // Package everything into the glorious UnlockedPrivateKeys structure!
         UnlockedPrivateKeys {
-            user_keys: unlocked_user_keys.unlocked_keys,
-            addr_keys: unlocked_addr_keys.unlocked_keys,
+            user_keys: unlocked_user_keys.unlocked_keys.into(),
+            addr_keys: unlocked_addr_keys.unlocked_keys.into(),
             user_keys_failed: unlocked_user_keys.failed,
             addr_keys_failed: unlocked_addr_keys.failed,
         }
@@ -367,8 +367,8 @@ mod tests {
         _: &Provider,
     ) -> UnlockedPrivateKeys<Provider> {
         UnlockedPrivateKeys {
-            user_keys: Default::default(),
-            addr_keys: Default::default(),
+            user_keys: vec![].into(),
+            addr_keys: vec![].into(),
             user_keys_failed: Vec::new(),
             addr_keys_failed: Vec::new(),
         }

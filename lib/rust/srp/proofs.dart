@@ -32,27 +32,3 @@ class SRPProofB64 {
           clientProof == other.clientProof &&
           expectedServerProof == other.expectedServerProof;
 }
-
-class SRPVerifierB64 {
-  final int version;
-  final String salt;
-  final String verifier;
-
-  const SRPVerifierB64({
-    required this.version,
-    required this.salt,
-    required this.verifier,
-  });
-
-  @override
-  int get hashCode => version.hashCode ^ salt.hashCode ^ verifier.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SRPVerifierB64 &&
-          runtimeType == other.runtimeType &&
-          version == other.version &&
-          salt == other.salt &&
-          verifier == other.verifier;
-}

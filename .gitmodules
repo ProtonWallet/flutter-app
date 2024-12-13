@@ -1,6 +1,3 @@
 [submodule "vendor/andromeda"]
 	path = vendor/andromeda
 	url = git@gitlab.protontech.ch:wallet/andromeda.git
-[submodule "vendor/proton-crypto-rs"]
-	path = vendor/proton-crypto-rs
-	url = git@gitlab.protontech.ch:rust/proton-crypto-rs.git
