@@ -53,7 +53,13 @@ class TransactionList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onLongPress: () {},
+                            onTap: () {
+                              if (viewModel.selectedAccountMenuModel != null) {
+                                viewModel.coordinator
+                                    .showTransactionAddressSwitch(
+                                        viewModel.selectedAccountMenuModel!);
+                              }
+                            },
                             child: Row(children: [
                               Text(
                                 S.of(context).transactions,
@@ -61,6 +67,11 @@ class TransactionList extends StatelessWidget {
                                     ProtonColors.textNorm),
                                 textAlign: TextAlign.left,
                               ),
+
+                              /// only display address list option in account view
+                              if (!viewModel.isWalletView)
+                                Icon(Icons.arrow_drop_down,
+                                    color: ProtonColors.textNorm, size: 18),
                             ]),
                           ),
                           Row(children: [

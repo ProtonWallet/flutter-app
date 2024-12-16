@@ -1,10 +1,13 @@
 // address.rs
+pub use andromeda_bitcoin::{address::AddressDetails, transactions::TransactionDetails, Balance};
 use andromeda_bitcoin::{Address as BdkAddress, ConsensusParams};
 use andromeda_common::Network;
 use flutter_rust_bridge::frb;
 use std::str::FromStr;
 
-use super::script_buf::FrbScriptBuf;
+use super::{
+    balance::FrbBalance, script_buf::FrbScriptBuf, transaction_details::FrbTransactionDetails,
+};
 use crate::BridgeError;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -50,5 +53,28 @@ impl FrbAddress {
 impl From<BdkAddress> for FrbAddress {
     fn from(address: BdkAddress) -> Self {
         FrbAddress { inner: address }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct FrbAddressDetails {
+    pub index: u32,
+    pub address: String,
+    pub transactions: Vec<FrbTransactionDetails>,
+    pub balance: FrbBalance,
+}
+
+impl From<AddressDetails> for FrbAddressDetails {
+    fn from(address_details: AddressDetails) -> Self {
+        FrbAddressDetails {
+            index: address_details.index,
+            address: address_details.address,
+            transactions: address_details
+                .transactions
+                .into_iter()
+                .map(|element| element.into())
+                .collect(),
+            balance: address_details.balance.into(),
+        }
     }
 }

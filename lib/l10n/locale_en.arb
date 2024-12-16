@@ -553,5 +553,15 @@
   "help_center_clear_caches": "Clear local caches",
   "local_cache_clear": "Cleared local caches",
   "delete_proton_account": "Delete account",
-  "boost_priority": "Boost priority"
+  "boost_priority": "Boost priority",
+  "change_addresses": "Change addresses",
+  "receive_addresses": "Receive addresses",
+  "view_change_addresses": "View change addresses",
+  "view_receive_addresses": "View receive addresses",
+  "address_list_index": "Index",
+  "address_list_status": "Status",
+  "address_list_status_used": "Used",
+  "address_list_status_not_used": "Not used",
+  "address_list_value": "Value",
+  "address_list_use_for": "Use for"
 }
