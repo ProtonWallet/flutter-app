@@ -20,6 +20,7 @@ const int reSyncTime = 600; // trigger sync at least after 600 seconds
 const int btc2satoshi = 100000000;
 const int bdkDatabaseVersion = 4;
 const int driftDatabaseVersion = 4;
+const int sqliteDatabaseVersion = 1;
 const int defaultTwoFactorAmountThreshold = 1000;
 const int maxRecipientCount = 5;
 
