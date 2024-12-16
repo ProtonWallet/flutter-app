@@ -75,9 +75,11 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isFetching = false;
   bool isLogout = false;
   bool displayBalance = true;
+  bool isWalletView = true;
   bool acceptTermsAndConditions = false;
   int currentHistoryPage = 0;
   int currentAddressPage = 0;
+  AccountMenuModel? selectedAccountMenuModel;
   BodyListStatus bodyListStatus = BodyListStatus.transactionList;
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
@@ -518,6 +520,8 @@ class HomeViewModelImpl extends HomeViewModel {
         );
         showWalletRecovery =
             walletMenuModel.walletModel.showWalletRecovery == 1;
+        selectedAccountMenuModel = null;
+        isWalletView = true;
         break;
       }
     }
@@ -547,6 +551,8 @@ class HomeViewModelImpl extends HomeViewModel {
     currentHistoryPage = 0;
     currentAddressPage = 0;
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
+    selectedAccountMenuModel = null;
+    isWalletView = true;
     checkPreference();
     updateBodyListStatus(BodyListStatus.transactionList);
   }
@@ -561,6 +567,8 @@ class HomeViewModelImpl extends HomeViewModel {
     currentHistoryPage = 0;
     currentAddressPage = 0;
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
+    selectedAccountMenuModel = accountMenuModel;
+    isWalletView = false;
     checkPreference();
     updateBodyListStatus(BodyListStatus.transactionList);
   }

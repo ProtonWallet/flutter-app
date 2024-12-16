@@ -2,25 +2,19 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/home.v3/sub.views/delete.wallet.account/delete.wallet.account.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/transaction.addresses.switch.view.dart';
+import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/transaction.addresses.switch.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wallet.account.address.list.coordinator.dart';
-import 'package:wallet/scenes/home.v3/sub.views/wallet.account.setting/wallet.account.setting.view.dart';
-import 'package:wallet/scenes/home.v3/sub.views/wallet.account.setting/wallet.account.setting.viewmodel.dart';
 
-class WalletAccountSettingCoordinator extends Coordinator {
+class TransactionAddressesSwitchCoordinator extends Coordinator {
   late ViewBase widget;
   final AccountMenuModel accountMenuModel;
 
-  WalletAccountSettingCoordinator(
+  TransactionAddressesSwitchCoordinator(
     this.accountMenuModel,
   );
 
-  void showDeleteWalletAccount() {
-    final view = DeleteWalletAccountCoordinator(accountMenuModel).start();
-    showInBottomSheet(view);
-  }
-
-  void showWalletAccountAddressList(){
+  void showWalletAccountAddressList() {
     final view = WalletAccountAddressListCoordinator(accountMenuModel).start();
     showInBottomSheet(view);
   }
@@ -30,11 +24,11 @@ class WalletAccountSettingCoordinator extends Coordinator {
 
   @override
   ViewBase<ViewModel> start() {
-    final viewModel = WalletAccountSettingViewModelImpl(
+    final viewModel = TransactionAddressesSwitchViewModelImpl(
       accountMenuModel,
       this,
     );
-    widget = WalletAccountSettingView(
+    widget = TransactionAddressesSwitchView(
       viewModel,
     );
     return widget;

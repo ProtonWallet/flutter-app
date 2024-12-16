@@ -1,7 +1,9 @@
 // account.rs
 
+use andromeda_api::CoreAPI::v4::addresses::Address;
 use andromeda_bitcoin::{
-    account::Account, transactions::Pagination, utils::SortOrder, KeychainKind, SignOptions,
+    account::Account, address::AddressDetails, transactions::Pagination, utils::SortOrder,
+    KeychainKind, SignOptions,
 };
 use andromeda_common::{Network, ScriptType};
 use tracing::debug;
@@ -15,9 +17,15 @@ use flutter_rust_bridge::frb;
 use std::sync::Arc;
 
 use super::{
-    address::FrbAddress, balance::FrbBalance, derivation_path::FrbDerivationPath,
-    local_output::FrbLocalOutput, psbt::FrbPsbt, storage::WalletMobileConnectorFactory,
-    transaction_builder::FrbTxBuilder, transaction_details::FrbTransactionDetails,
+    address::{FrbAddress, FrbAddressDetails},
+    balance::FrbBalance,
+    blockchain::FrbBlockchainClient,
+    derivation_path::FrbDerivationPath,
+    local_output::FrbLocalOutput,
+    psbt::FrbPsbt,
+    storage::WalletMobileConnectorFactory,
+    transaction_builder::FrbTxBuilder,
+    transaction_details::FrbTransactionDetails,
     wallet::FrbWallet,
 };
 
@@ -192,5 +200,41 @@ impl FrbAccount {
             .get_highest_used_address_index_in_output(keychain)
             .await?;
         Ok(highest)
+    }
+
+    pub async fn get_address_from_graph(
+        &self,
+        network: Network,
+        address_str: String,
+        client: FrbBlockchainClient,
+        sync: bool,
+    ) -> Result<Option<FrbAddressDetails>, BridgeError> {
+        let address_detail = self
+            .inner
+            .get_address(network, address_str, Arc::new(client.inner.clone()), sync)
+            .await?;
+
+        match address_detail {
+            Some(address_detail) => Ok(Some(address_detail.into())),
+            None => Ok(None),
+        }
+    }
+
+    pub async fn get_addresses_from_graph(
+        &self,
+        pagination: Pagination,
+        client: FrbBlockchainClient,
+        keychain: KeychainKind,
+        sync: bool,
+    ) -> Result<Vec<FrbAddressDetails>, BridgeError> {
+        let address_detail = self
+            .inner
+            .get_addresses(pagination, Arc::new(client.inner.clone()), keychain, sync)
+            .await?;
+
+        Ok(address_detail
+            .into_iter()
+            .map(|element| element.into())
+            .collect())
     }
 }

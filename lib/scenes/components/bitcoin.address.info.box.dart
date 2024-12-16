@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
-import 'package:wallet/theme/theme.font.dart';
-
-typedef ShowTransactionDetailCallback = void Function(
-  String txid,
-  String accountID,
-);
+import 'package:wallet/rust/api/bdk_wallet/address.dart';
+import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/scenes/components/wallet.bitcoin.address.list.dart';
 
 class BitcoinAddressInfoBox extends StatelessWidget {
-  final BitcoinAddressDetail bitcoinAddressDetail;
-  final String accountName;
+  final FrbAddressDetails bitcoinAddressDetail;
+  final ProtonExchangeRate exchangeRate;
   final ShowTransactionDetailCallback showTransactionDetailCallback;
+  final bool showTransactions;
 
   const BitcoinAddressInfoBox({
     required this.bitcoinAddressDetail,
-    required this.accountName,
+    required this.exchangeRate,
     required this.showTransactionDetailCallback,
+    this.showTransactions = false,
     super.key,
   });
 
@@ -31,45 +34,43 @@ class BitcoinAddressInfoBox extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
         horizontal: defaultPadding,
       ),
-      color:
-          bitcoinAddressDetail.bitcoinAddressModel.inEmailIntegrationPool == 1
-              ? ProtonColors.yellow1Background
-              : ProtonColors.white,
+      color: ProtonColors.white,
       child: Column(
         children: [
           const SizedBox(
-            height: 6,
+            height: 10,
           ),
           GestureDetector(
             onTap: () {
-              Clipboard.setData(ClipboardData(
-                      text: bitcoinAddressDetail
-                          .bitcoinAddressModel.bitcoinAddress))
+              Clipboard.setData(
+                      ClipboardData(text: bitcoinAddressDetail.address))
                   .then((_) {
                 if (context.mounted) {
-                  CommonHelper.showSnackbar(
-                      context, S.of(context).copied_address);
+                  LocalToast.showToast(
+                    context,
+                    S.of(context).copied_address,
+                    icon: null,
+                  );
                 }
               });
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
-                    bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddress,
-                    style: FontManager.body1Median(ProtonColors.textNorm),
-                    textAlign: TextAlign.center,
+                    bitcoinAddressDetail.address,
+                    style:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
+                    textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(
                   width: 2,
                 ),
-                Transform.translate(
-                  offset: const Offset(0, 2),
-                  child: Icon(Icons.copy_rounded,
-                      color: ProtonColors.textWeak, size: 14),
-                ),
+                Icon(Icons.copy_rounded,
+                    color: ProtonColors.textWeak, size: 18),
               ],
             ),
           ),
@@ -81,14 +82,14 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               SizedBox(
                 width: 120,
                 child: Text(
-                  "Index",
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  S.of(context).address_list_index,
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 ),
               ),
               Text(
-                bitcoinAddressDetail.bitcoinAddressModel.bitcoinAddressIndex
-                    .toString(),
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+                bitcoinAddressDetail.index.toString(),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
               ),
             ],
           ),
@@ -97,91 +98,97 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               SizedBox(
                 width: 120,
                 child: Text(
-                  "Account",
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  S.of(context).address_list_status,
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 ),
               ),
-              Expanded(
-                child: Text(
-                  accountName,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 120,
-                child: Text(
-                  "Use for",
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  bitcoinAddressDetail
-                              .bitcoinAddressModel.inEmailIntegrationPool ==
-                          1
-                      ? "BvE pool"
-                      : "Manual generated",
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              SizedBox(
-                width: 120,
-                child: Text(
-                  "Status",
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
-                ),
-              ),
-              bitcoinAddressDetail.bitcoinAddressModel.used == 1
+              bitcoinAddressDetail.transactions.isNotEmpty
                   ? Text(
-                      "Used",
-                      style:
-                          FontManager.body2Regular(ProtonColors.signalSuccess),
+                      S.of(context).address_list_status_used,
+                      style: ProtonStyles.body2Regular(
+                          color: ProtonColors.signalSuccess),
                     )
                   : Text(
-                      "Unused",
-                      style: FontManager.body2Regular(ProtonColors.signalError),
+                      S.of(context).address_list_status_not_used,
+                      style: ProtonStyles.body2Regular(
+                          color: ProtonColors.signalError),
                     ),
             ],
           ),
-          if (bitcoinAddressDetail.txIDs.isNotEmpty)
+          Row(
+            children: [
+              SizedBox(
+                width: 120,
+                child: Text(
+                  S.of(context).address_list_value,
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+                ),
+              ),
+              Text(
+                CommonHelper.getFiatCurrencySign(exchangeRate.fiatCurrency) +
+                    ExchangeCalculator.getNotionalInFiatCurrency(
+                      exchangeRate,
+                      bitcoinAddressDetail.balance.total().toSat().toInt(),
+                    ).toStringAsFixed(defaultDisplayDigits),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+              ),
+            ],
+          ),
+          if (showTransactions && bitcoinAddressDetail.transactions.isNotEmpty)
             Row(children: [
               SizedBox(
                 width: 120,
                 child: Text(
                   S.of(context).transactions,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 ),
               ),
               Expanded(
                 child: Column(children: [
-                  for (String txID in bitcoinAddressDetail.txIDs)
+                  for (final transaction in bitcoinAddressDetail.transactions)
                     GestureDetector(
                       onTap: () {
-                        showTransactionDetailCallback(
-                            txID, bitcoinAddressDetail.accountID);
+                        showTransactionDetailCallback(transaction);
                       },
                       child: Text(
-                        txID,
-                        style:
-                            FontManager.body2Regular(ProtonColors.protonBlue),
+                        transaction.txid,
+                        style: ProtonStyles.body2Regular(
+                            color: ProtonColors.protonBlue),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                 ]),
               ),
             ]),
-          const SizedBox(
-            height: 10,
+          Align(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  launchUrl(Uri.parse(
+                      "${appConfig.esploraWebpageUrl}address/${bitcoinAddressDetail.address}"));
+                },
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.link_rounded,
+                      color: ProtonColors.protonBlue, size: 18),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    S.of(context).view_on_blockstream,
+                    style: ProtonStyles.body2Regular(
+                        color: ProtonColors.protonBlue),
+                    textAlign: TextAlign.left,
+                  ),
+                ]),
+              ),
+            ),
           ),
           const Divider(
             thickness: 0.2,

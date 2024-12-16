@@ -12,6 +12,7 @@ import '../../frb_generated.dart';
 import '../errors.dart';
 import 'address.dart';
 import 'balance.dart';
+import 'blockchain.dart';
 import 'derivation_path.dart';
 import 'local_output.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -32,6 +33,18 @@ abstract class FrbAccount implements RustOpaqueInterface {
       {required String txid, required BigInt fees, required Network network});
 
   Future<FrbAddressInfo> getAddress({int? index});
+
+  Future<FrbAddressDetails?> getAddressFromGraph(
+      {required Network network,
+      required String addressStr,
+      required FrbBlockchainClient client,
+      required bool sync_});
+
+  Future<List<FrbAddressDetails>> getAddressesFromGraph(
+      {required Pagination pagination,
+      required FrbBlockchainClient client,
+      required KeychainKind keychain,
+      required bool sync_});
 
   Future<FrbBalance> getBalance();
 

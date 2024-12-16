@@ -6,11 +6,13 @@
 import '../../common/network.dart';
 import '../../frb_generated.dart';
 import '../errors.dart';
+import 'balance.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'script_buf.dart';
+import 'transaction_details.dart';
 
 // These functions are ignored because they are not marked as `pub`: `clone_inner`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `cmp`, `eq`, `from`, `hash`, `partial_cmp`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `clone`, `cmp`, `eq`, `fmt`, `from`, `from`, `hash`, `partial_cmp`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbAddress>>
 abstract class FrbAddress implements RustOpaqueInterface {
@@ -26,4 +28,23 @@ abstract class FrbAddress implements RustOpaqueInterface {
           address: address, network: network);
 
   String toString();
+}
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbAddressDetails>>
+abstract class FrbAddressDetails implements RustOpaqueInterface {
+  String get address;
+
+  FrbBalance get balance;
+
+  int get index;
+
+  List<FrbTransactionDetails> get transactions;
+
+  set address(String address);
+
+  set balance(FrbBalance balance);
+
+  set index(int index);
+
+  set transactions(List<FrbTransactionDetails> transactions);
 }
