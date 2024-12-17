@@ -24,6 +24,7 @@ use crate::{
             transaction_id::{EncryptedWalletTransactionID, WalletTransactionID},
             wallet_bitcoin_address::WalletBTCAddress,
             wallet_key::LockedWalletKey,
+            wallet_key_provider::{WalletKeyInterface, WalletKeyProvider},
             wallet_message::WalletMessage,
         },
         features::error::FeaturesError,
@@ -271,7 +272,7 @@ impl FrbTransitionLayer {
             .user_keys
             .first()
             .ok_or(FeaturesError::NoUnlockedUserKeyFound)?;
-        let locked_wallet_key = wallet_key.0.lock_with(&provider, &first_key)?;
+        let locked_wallet_key = wallet_key.inner.lock_with(&provider, &first_key)?;
         Ok(FrbLockedWalletKey::new(locked_wallet_key))
     }
 
@@ -330,11 +331,12 @@ impl FrbTransitionLayer {
 
     #[frb(sync)]
     pub fn get_hmac_hashed_string(
-        wallet_key: FrbUnlockedWalletKey,
+        base64_secure_key: &str,
         transaction_id: &str,
     ) -> Result<String, BridgeError> {
+        let wallet_key = WalletKeyProvider::restore_base64(base64_secure_key)?;
         let transaction_id = WalletTransactionID::new_from_str(transaction_id);
-        Ok(transaction_id.hmac_hash_with(&wallet_key.0)?)
+        Ok(transaction_id.hmac_hash_with(&wallet_key)?)
     }
 }
 
@@ -469,10 +471,8 @@ mod tests {
 
     #[test]
     fn test_hash_hmac() {
-        let wallet_key =
-            FrbWalletKeyHelper::restore("MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=").unwrap();
         let hashed_txid = FrbTransitionLayer::get_hmac_hashed_string(
-            wallet_key,
+            "MmI0OGRmZjQ2YzNhN2YyYmQ2NjFlNWEzNzljYTQwZGQ=",
             "6bbfc06ef911e4b2fffe1150fa8f3729b3ee52c78ef21093b5ae45544ff690fa",
         )
         .unwrap();

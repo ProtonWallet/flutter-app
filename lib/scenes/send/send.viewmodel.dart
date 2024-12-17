@@ -18,6 +18,7 @@ import 'package:wallet/managers/event.loop.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
@@ -36,6 +37,7 @@ import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
+import 'package:wallet/rust/common/blockchain.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -152,10 +154,10 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   /// if exchange rate changed, we tolerate maximum 20 satoshi for send all feature
   final int tolerateBalanceOverflow = 20;
 
-  double feeRateHighPriority = 20.0;
-  double feeRateMedianPriority = 15.0;
-  double feeRateLowPriority = 10.0;
-  double feeRateSatPerVByte = 15.0;
+  int feeRateHighPriority = 20;
+  int feeRateMedianPriority = 15;
+  int feeRateLowPriority = 10;
+  int feeRateSatPerVByte = 15;
 
   String fromAddress = "";
   String errorMessage = "";
@@ -217,6 +219,7 @@ class SendViewModelImpl extends SendViewModel {
     this.walletKeysProvider,
     this.addressKeyProvider,
     this.exclusiveInviteDataProvider,
+    this.unleashDataProvider,
     super.userSettingsDataProvider,
     super.walletDataProvider,
     super.inviteClient,
@@ -236,6 +239,7 @@ class SendViewModelImpl extends SendViewModel {
   final WalletKeysProvider walletKeysProvider;
   final AddressKeyProvider addressKeyProvider;
   final ExclusiveInviteDataProvider exclusiveInviteDataProvider;
+  final UnleashDataProvider unleashDataProvider;
 
   /// api client
   FrbBlockchainClient? blockClient;
@@ -902,7 +906,7 @@ class SendViewModelImpl extends SendViewModel {
       }
       final network = appConfig.coinType.network;
       txBuilder = await txBuilder.setFeeRate(
-        satPerVb: BigInt.from(feeRateHighPriority.ceil()),
+        satPerVb: BigInt.from(feeRateHighPriority),
       );
       txBuilder = await txBuilder.constrainRecipientAmounts();
       frbDraftPsbt = await txBuilder.createDraftPsbt(
@@ -1003,11 +1007,11 @@ class SendViewModelImpl extends SendViewModel {
 
       final network = appConfig.coinType.network;
       final txBuilderHighPriority = await txBuilder.setFeeRate(
-          satPerVb: BigInt.from(feeRateHighPriority.ceil()));
+          satPerVb: BigInt.from(feeRateHighPriority));
       final txBuilderMedianPriority = await txBuilder.setFeeRate(
-          satPerVb: BigInt.from(feeRateMedianPriority.ceil()));
-      final txBuilderLowPriority = await txBuilder.setFeeRate(
-          satPerVb: BigInt.from(feeRateLowPriority.ceil()));
+          satPerVb: BigInt.from(feeRateMedianPriority));
+      final txBuilderLowPriority =
+          await txBuilder.setFeeRate(satPerVb: BigInt.from(feeRateLowPriority));
 
       final frbDraftPsbtHighPriority =
           await txBuilderHighPriority.createDraftPsbt(
@@ -1033,8 +1037,8 @@ class SendViewModelImpl extends SendViewModel {
           frbDraftPsbtLowPriority.fee().toSat().toInt();
 
       /// txBuilder will be use to build real psbt
-      txBuilder = await txBuilder.setFeeRate(
-          satPerVb: BigInt.from(feeRateSatPerVByte.ceil()));
+      txBuilder =
+          await txBuilder.setFeeRate(satPerVb: BigInt.from(feeRateSatPerVByte));
       txBuilder = await txBuilder.constrainRecipientAmounts();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
@@ -1172,17 +1176,43 @@ class SendViewModelImpl extends SendViewModel {
 
   @override
   Future<void> updateFeeRate() async {
+    if (unleashDataProvider.isUsingMempoolFees()) {
+      try {
+        await _updateFeeRateByMempool();
+      } catch (e, stackTrace) {
+        // As a fallback, try using fees estimation if mempool fails for any unexpected reason.
+        logger.e('Unexpected error updating fee rate: $e, $stackTrace');
+        await _updateFeeRateByFeesEstimation();
+      }
+    } else {
+      await _updateFeeRateByFeesEstimation();
+    }
+    // After attempting updates, reflect changes downstream.
+    sinkAddSafe();
+  }
+
+  Future<void> _updateFeeRateByMempool() async {
+    /// move this logic to Rust fee prvider?
+    final recommendedFees = await blockClient?.getRecommendedFees();
+    if (recommendedFees != null) {
+      feeRateHighPriority = recommendedFees.fastestFee;
+      feeRateMedianPriority = recommendedFees.halfHourFee;
+      feeRateLowPriority = recommendedFees.hourFee;
+    } else {
+      throw Exception("Cannot get recommended fees");
+    }
+  }
+
+  Future<void> _updateFeeRateByFeesEstimation() async {
     final fees = await blockClient?.getFeesEstimation();
     if (fees == null) {
       return;
     }
 
     /// set feeRate for 1, 3, 6 blocks
-    feeRateHighPriority = fees["1"] ?? 0;
-    feeRateMedianPriority = fees["3"] ?? 0;
-    feeRateLowPriority = fees["6"] ?? 0;
-
-    sinkAddSafe();
+    feeRateHighPriority = (fees["1"] ?? 0).ceil();
+    feeRateMedianPriority = (fees["3"] ?? 0).ceil();
+    feeRateLowPriority = (fees["6"] ?? 0).ceil();
   }
 
   Future<void> userFinishEmailBody() async {

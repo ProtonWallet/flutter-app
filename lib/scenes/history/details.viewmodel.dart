@@ -133,7 +133,6 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
   /// attributes that we don't need to expose for UI
   Uint8List? entropy;
-  FrbUnlockedWalletKey? unlockedWalletKey;
   List<ProtonAddressKey> addressKeys = [];
 
   void initUIComponents() {
@@ -157,7 +156,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     addressKeys = await addressKeyProvider.getAddressKeysForTL();
 
     /// load walletKey
-    unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
+    final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
       walletID,
     );
 
@@ -244,15 +243,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
 
     /// no server walletTransaction found, create one, encrypted it and send to server
-    if (transactionModel == null && unlockedWalletKey != null) {
-      final hashedTransactionID = FrbTransitionLayer.getHmacHashedString(
-        walletKey: unlockedWalletKey!,
-        transactionId: frbTransactionDetails.txid,
-      );
-
+    if (transactionModel == null) {
       /// default label
       final String encryptedLabel = FrbWalletKeyHelper.encrypt(
-        base64SecureKey: unlockedWalletKey!.toBase64(),
+        base64SecureKey: unlockedWalletKey.toBase64(),
         plaintext: "",
       );
 
@@ -262,6 +256,11 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
 
       final now = DateTime.now();
       try {
+        final hashedTransactionID = FrbTransitionLayer.getHmacHashedString(
+          base64SecureKey: unlockedWalletKey.toBase64(),
+          transactionId: frbTransactionDetails.txid,
+        );
+
         /// create wallet transaction
         final walletTransaction = await walletClient.createWalletTransactions(
           walletId: walletID,
@@ -346,13 +345,11 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     }
 
     /// try decrypt wallet label
-    if (unlockedWalletKey != null) {
-      if (transactionModel!.label.isNotEmpty) {
-        userLabel = FrbWalletKeyHelper.decrypt(
-          base64SecureKey: unlockedWalletKey!.toBase64(),
-          encryptText: utf8.decode(transactionModel!.label),
-        );
-      }
+    if (transactionModel!.label.isNotEmpty) {
+      userLabel = FrbWalletKeyHelper.decrypt(
+        base64SecureKey: unlockedWalletKey.toBase64(),
+        encryptText: utf8.decode(transactionModel!.label),
+      );
     }
 
     /// update UI controller with decrypted label
@@ -491,14 +488,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     EasyLoading.show(maskType: EasyLoadingMaskType.black);
     try {
       if (!memoFocusNode.hasFocus) {
+        final unlockedWalletKey = await walletKeysProvider.getWalletSecretKey(
+          walletID,
+        );
+
         /// only need to do actions when user has update the content
-        if (userLabel != memoController.text && unlockedWalletKey != null) {
+        if (userLabel != memoController.text) {
           /// update cached user label
           userLabel = memoController.text;
 
           /// encrypt label
           final encryptedLabel = FrbWalletKeyHelper.encrypt(
-            base64SecureKey: unlockedWalletKey!.toBase64(),
+            base64SecureKey: unlockedWalletKey.toBase64(),
             plaintext: userLabel,
           );
 

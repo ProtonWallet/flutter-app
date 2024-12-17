@@ -187,11 +187,10 @@ class FrbTransitionLayer {
               userKeyPassphrase: userKeyPassphrase);
 
   static String getHmacHashedString(
-          {required FrbUnlockedWalletKey walletKey,
-          required String transactionId}) =>
+          {required String base64SecureKey, required String transactionId}) =>
       RustLib.instance.api
           .crateApiProtonWalletFeaturesTransitionLayerFrbTransitionLayerGetHmacHashedString(
-              walletKey: walletKey, transactionId: transactionId);
+              base64SecureKey: base64SecureKey, transactionId: transactionId);
 
   /// Dart async + Rust sync ** handled by Frb thread pool
   static Future<String> sign(

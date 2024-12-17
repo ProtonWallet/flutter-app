@@ -1,21 +1,28 @@
+use std::sync::Arc;
+
 use flutter_rust_bridge::frb;
 
 use crate::proton_wallet::crypto::wallet_key::{LockedWalletKey, UnlockedWalletKey};
 
-pub struct FrbUnlockedWalletKey(pub(crate) UnlockedWalletKey);
+pub struct FrbUnlockedWalletKey {
+    pub(crate) inner: Arc<UnlockedWalletKey>,
+}
 
 impl FrbUnlockedWalletKey {
     pub(crate) fn new(key: UnlockedWalletKey) -> Self {
-        Self(key)
+        Self {
+            inner: Arc::new(key),
+        }
     }
 
     #[frb(sync)]
     pub fn to_base64(&self) -> String {
-        self.0.to_base64()
+        self.inner.to_base64()
     }
+
     #[frb(sync)]
     pub fn to_entropy(&self) -> Vec<u8> {
-        self.0.to_entropy()
+        self.inner.to_entropy()
     }
 }
 

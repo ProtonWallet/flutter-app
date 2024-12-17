@@ -194,7 +194,7 @@ class UpdateWalletBloc extends Bloc<UpateWalletEvent, UpdateWalletState> {
 
               /// hash transaction id
               final hashedTransID = FrbTransitionLayer.getHmacHashedString(
-                walletKey: unlockedWalletKey,
+                base64SecureKey: unlockedWalletKey.toBase64(),
                 transactionId: txid,
               );
 

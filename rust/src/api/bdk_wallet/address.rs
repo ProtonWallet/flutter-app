@@ -58,10 +58,32 @@ impl From<BdkAddress> for FrbAddress {
 
 #[derive(Clone, Debug)]
 pub struct FrbAddressDetails {
-    pub index: u32,
-    pub address: String,
-    pub transactions: Vec<FrbTransactionDetails>,
-    pub balance: FrbBalance,
+    pub(crate) index: u32,
+    pub(crate) address: String,
+    pub(crate) transactions: Vec<FrbTransactionDetails>,
+    pub(crate) balance: FrbBalance,
+}
+
+impl FrbAddressDetails {
+    #[frb(getter, sync)]
+    pub fn index(&self) -> u32 {
+        self.index.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn address(&self) -> String {
+        self.address.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn transactions(&self) -> Vec<FrbTransactionDetails> {
+        self.transactions.clone()
+    }
+
+    #[frb(getter, sync)]
+    pub fn balance(&self) -> FrbBalance {
+        self.balance.clone()
+    }
 }
 
 impl From<AddressDetails> for FrbAddressDetails {

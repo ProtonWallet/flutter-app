@@ -59,6 +59,7 @@ import 'api/proton_wallet/storage/wallet_key_store.dart';
 import 'api/proton_wallet/storage/wallet_mnemonic_store.dart';
 import 'api/proton_wallet/wallet.dart';
 import 'common/address_info.dart';
+import 'common/blockchain.dart';
 import 'common/broadcast_message.dart';
 import 'common/change_spend_policy.dart';
 import 'common/coin_selection.dart';
@@ -575,11 +576,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   BdkTransaction
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
-          dynamic raw);
-
-  @protected
-  FrbAddressDetails
-      dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails(
           dynamic raw);
 
   @protected
@@ -1910,6 +1906,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Quote dco_decode_quote(dynamic raw);
 
   @protected
+  RecommendedFees dco_decode_recommended_fees(dynamic raw);
+
+  @protected
   (GatewayProvider, List<ApiCountry>)
       dco_decode_record_gateway_provider_list_api_country(dynamic raw);
 
@@ -2296,11 +2295,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   BdkTransaction
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
-          SseDeserializer deserializer);
-
-  @protected
-  FrbAddressDetails
-      sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails(
           SseDeserializer deserializer);
 
   @protected
@@ -3700,6 +3694,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Quote sse_decode_quote(SseDeserializer deserializer);
 
   @protected
+  RecommendedFees sse_decode_recommended_fees(SseDeserializer deserializer);
+
+  @protected
   (GatewayProvider, List<ApiCountry>)
       sse_decode_record_gateway_provider_list_api_country(
           SseDeserializer deserializer);
@@ -4097,11 +4094,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerbdkTransaction(
           BdkTransaction self, SseSerializer serializer);
-
-  @protected
-  void
-      sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails(
-          FrbAddressDetails self, SseSerializer serializer);
 
   @protected
   void
@@ -5552,6 +5544,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_quote(Quote self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_recommended_fees(
+      RecommendedFees self, SseSerializer serializer);
 
   @protected
   void sse_encode_record_gateway_provider_list_api_country(

@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/blockchain.dart';
 import '../../common/broadcast_message.dart';
 import '../../frb_generated.dart';
 import '../errors.dart';
@@ -36,6 +37,8 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
   Future<void> fullSync({required FrbAccount account, BigInt? stopGap});
 
   Future<Map<String, double>> getFeesEstimation();
+
+  Future<RecommendedFees> getRecommendedFees();
 
   factory FrbBlockchainClient({required ArcProtonApiService apiService}) =>
       RustLib.instance.api.crateApiBdkWalletBlockchainFrbBlockchainClientNew(

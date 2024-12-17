@@ -1,4 +1,6 @@
-use andromeda_api::transaction::{BroadcastMessage, ExchangeRateOrTransactionTime};
+use andromeda_api::transaction::{
+    BroadcastMessage, ExchangeRateOrTransactionTime, RecommendedFees,
+};
 use andromeda_bitcoin::blockchain_client::BlockchainClient;
 use chrono::Utc;
 use flutter_rust_bridge::frb;
@@ -36,6 +38,10 @@ impl FrbBlockchainClient {
 
     pub async fn get_fees_estimation(&mut self) -> Result<HashMap<String, f64>, BridgeError> {
         Ok(self.inner.get_fees_estimation().await?)
+    }
+
+    pub async fn get_recommended_fees(&self) -> Result<RecommendedFees, BridgeError> {
+        Ok(self.inner.get_recommended_fees().await?)
     }
 
     pub async fn full_sync(

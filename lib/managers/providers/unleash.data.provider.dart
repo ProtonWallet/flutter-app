@@ -107,4 +107,8 @@ class UnleashDataProvider extends DataProvider {
     final enableTrace = unleashClient.isEnabled('WalletFlutterLogInternal');
     return enableTrace;
   }
+
+  bool isUsingMempoolFees() {
+    return unleashClient.isEnabled('WalletMempoolRecommendedFees');
+  }
 }

@@ -1,4 +1,5 @@
 pub mod address_info;
+pub mod blockchain;
 pub mod broadcast_message;
 pub mod change_spend_policy;
 pub mod coin_selection;
