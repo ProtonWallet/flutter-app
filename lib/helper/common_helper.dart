@@ -104,9 +104,10 @@ class CommonHelper {
     }
   }
 
-  static String shorterBitcoinAddress(String bitcoinAddress) {
+  static String shorterBitcoinAddress(String bitcoinAddress,
+      {int leftLength = 8, int rightLength = 4}) {
     if (isBitcoinAddress(bitcoinAddress)) {
-      return "${bitcoinAddress.substring(0, 8)}...${bitcoinAddress.substring(bitcoinAddress.length - 4)}";
+      return "${bitcoinAddress.substring(0, leftLength)}...${bitcoinAddress.substring(bitcoinAddress.length - rightLength)}";
     }
     return bitcoinAddress;
   }

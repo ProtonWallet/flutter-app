@@ -80,6 +80,7 @@ class WalletAccountAddressListView
                             AddressListType.receiveAddress
                         ? viewModel.receiveAddresses
                         : viewModel.changeAddresses,
+                addressesInPool: viewModel.addressesInPool,
                 exchangeRate: viewModel.exchangeRate,
                 showTransactionDetailCallback: viewModel.showTransactionDetail,
               ),
