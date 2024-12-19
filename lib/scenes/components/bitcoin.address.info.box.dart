@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
@@ -11,18 +12,21 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/bdk_wallet/address.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
+import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/wallet.bitcoin.address.list.dart';
 
 class BitcoinAddressInfoBox extends StatelessWidget {
   final FrbAddressDetails bitcoinAddressDetail;
   final ProtonExchangeRate exchangeRate;
   final ShowTransactionDetailCallback showTransactionDetailCallback;
+  final bool inPool;
   final bool showTransactions;
 
   const BitcoinAddressInfoBox({
     required this.bitcoinAddressDetail,
     required this.exchangeRate,
     required this.showTransactionDetailCallback,
+    required this.inPool,
     this.showTransactions = false,
     super.key,
   });
@@ -59,10 +63,18 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    bitcoinAddressDetail.address,
-                    style:
-                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                    textAlign: TextAlign.left,
+                    CommonHelper.shorterBitcoinAddress(
+                      bitcoinAddressDetail.address,
+                      leftLength: 12,
+                      rightLength: 12,
+                    ),
+                    style: ProtonStyles.body1Medium(
+                      color: inPool
+                          ? ProtonColors.protonBlue
+                          : ProtonColors.textNorm,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -74,6 +86,13 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               ],
             ),
           ),
+          if (inPool)
+            CustomTooltip(
+              preferredDirection: AxisDirection.down,
+              message: S.of(context).bve_address_tooltip,
+              child: Assets.images.icon.icInfoCircleDark
+                  .svg(fit: BoxFit.fill, width: 20, height: 20),
+            ),
           const SizedBox(
             height: 4,
           ),

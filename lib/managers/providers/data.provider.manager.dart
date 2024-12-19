@@ -16,6 +16,7 @@ import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
+import 'package:wallet/managers/providers/pool.address.data.provider.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
@@ -148,6 +149,7 @@ class DataProviderManager extends Manager {
   late ConnectivityProvider connectivityProvider;
   late PriceGraphDataProvider priceGraphDataProvider;
   late ReceiveAddressDataProvider receiveAddressDataProvider;
+  late PoolAddressDataProvider poolAddressDataProvider;
 
   ///
   late WalletMnemonicProvider walletMnemonicProvider;
@@ -280,6 +282,11 @@ class DataProviderManager extends Manager {
       walletDataProvider,
     );
 
+    /// pool address
+    poolAddressDataProvider = PoolAddressDataProvider(
+      apiServiceManager.getApiService().getBitcoinAddrClient(),
+    );
+
     /// wallet mnemonic
     walletMnemonicProvider = WalletMnemonicProvider(
       walletKeysProvider,
@@ -327,6 +334,7 @@ class DataProviderManager extends Manager {
     await connectivityProvider.clear();
     await priceGraphDataProvider.clear();
     await receiveAddressDataProvider.clear();
+    await poolAddressDataProvider.clear();
     await walletMnemonicProvider.clear();
     await walletNameProvider.clear();
   }
@@ -351,6 +359,7 @@ class DataProviderManager extends Manager {
     await connectivityProvider.reload();
     await priceGraphDataProvider.reload();
     await receiveAddressDataProvider.reload();
+    await poolAddressDataProvider.reload();
     await walletMnemonicProvider.reload();
     await walletNameProvider.reload();
   }

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
+import 'package:wallet/managers/providers/pool.address.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
@@ -42,6 +42,7 @@ abstract class WalletAccountAddressListViewModel
   AddressListType addressListType = AddressListType.receiveAddress;
   List<FrbAddressDetails> changeAddresses = [];
   List<FrbAddressDetails> receiveAddresses = [];
+  List<String> addressesInPool = [];
   FrbAddressDetails? searchedAddress;
 
   /// late variables, needs to make sure we initialized them
@@ -55,6 +56,7 @@ class WalletAccountAddressListViewModelImpl
     super.coordinator,
     this.walletManager,
     this.userSettingsDataProvider,
+    this.poolAddressDataProvider,
     this.accountMenuModel,
   );
 
@@ -63,6 +65,9 @@ class WalletAccountAddressListViewModelImpl
 
   /// user settings data provider
   final UserSettingsDataProvider userSettingsDataProvider;
+
+  /// pool address provider to get addresses in pool
+  final PoolAddressDataProvider poolAddressDataProvider;
 
   /// account info
   final AccountMenuModel accountMenuModel;
@@ -92,6 +97,17 @@ class WalletAccountAddressListViewModelImpl
       accountMenuModel.accountModel.accountID,
       serverScriptType: accountMenuModel.accountModel.scriptType,
     ))!;
+
+    /// load addresses in pool
+    final walletBitcoinAddresses =
+        await poolAddressDataProvider.getWalletBitcoinAddresses(
+      accountMenuModel.accountModel.walletID,
+      accountMenuModel.accountModel.accountID,
+      0,
+    );
+    addressesInPool = walletBitcoinAddresses
+        .map((element) => element.bitcoinAddress ?? "")
+        .toList();
 
     /// load address
     await loadAddresses(addressListType);

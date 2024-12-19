@@ -10,11 +10,13 @@ typedef ShowTransactionDetailCallback = void Function(
 
 class WalletBitcoinAddressList extends StatefulWidget {
   final List<FrbAddressDetails> addresses;
+  final List<String> addressesInPool;
   final ProtonExchangeRate exchangeRate;
   final ShowTransactionDetailCallback showTransactionDetailCallback;
 
   const WalletBitcoinAddressList({
     required this.addresses,
+    required this.addressesInPool,
     required this.exchangeRate,
     required this.showTransactionDetailCallback,
     super.key,
@@ -45,6 +47,7 @@ class WalletBitcoinAddressListState extends State<WalletBitcoinAddressList> {
             bitcoinAddressDetail: address,
             exchangeRate: widget.exchangeRate,
             showTransactionDetailCallback: widget.showTransactionDetailCallback,
+            inPool: widget.addressesInPool.contains(address.address),
           ),
       ],
     );

@@ -46,6 +46,7 @@ class WalletAccountAddressListCoordinator extends Coordinator {
       this,
       walletManager,
       dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.poolAddressDataProvider,
       accountMenuModel,
     );
     widget = WalletAccountAddressListView(
