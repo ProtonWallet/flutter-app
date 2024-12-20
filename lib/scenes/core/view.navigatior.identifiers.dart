@@ -25,6 +25,9 @@ enum NavID {
   sendInvite,
   secureYourWallet,
   importSuccess,
+  deleteWalletAccount,
+  walletAccountAddressList,
+  walletAccountInfo,
 
   // Transactions
   send,

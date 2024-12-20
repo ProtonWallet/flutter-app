@@ -33,6 +33,7 @@ class EventLoop extends Service implements Manager {
   final AppStateManager appStateManager;
   final ConnectivityProvider connectivityProvider;
   final ProtonApiServiceManager apiServiceManager;
+
   // workaround need to improve this
   final PreferencesManager shared;
   String latestEventId = "";
@@ -373,6 +374,9 @@ class EventLoop extends Service implements Manager {
           serverScriptType: accountModel.scriptType,
         );
 
+        await walletManager.ensureReceivedAddressNotGotReused(
+            account!, accountModel);
+
         /// resync the email address in case that user update it on web
         /// and mobile didn't get event loop yet
         await dataProviderManager.walletDataProvider.syncEmailAddresses(
@@ -382,13 +386,17 @@ class EventLoop extends Service implements Manager {
         final accountAddressIDs = await WalletManager.getAccountAddressIDs(
           accountModel.accountID,
         );
-        if (accountAddressIDs.isEmpty) {
+
+        final bool enabledBvE = accountAddressIDs.isNotEmpty;
+
+        /// skip address pool check if user didn't enable BvE for this wallet account
+        if (!enabledBvE) {
           continue;
         }
 
         try {
           await walletManager.handleBitcoinAddressRequests(
-            account!,
+            account,
             walletModel.walletID,
             accountModel.accountID,
           );
@@ -401,7 +409,7 @@ class EventLoop extends Service implements Manager {
         }
         try {
           await walletManager.bitcoinAddressPoolHealthCheck(
-            account!,
+            account,
             walletModel.walletID,
             accountModel.accountID,
           );

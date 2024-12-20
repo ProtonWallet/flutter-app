@@ -4,6 +4,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.setting/wallet.account.setting.viewmodel.dart';
 
 class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
@@ -21,6 +22,21 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// this feature only expose for internal test and CS
+            if (viewModel.isMobileClientDebugMode())
+              ListTile(
+                  leading: Icon(Icons.privacy_tip_outlined,
+                      size: 18, color: ProtonColors.textNorm),
+                  title: Transform.translate(
+                      offset: const Offset(-8, 0),
+                      child: Text("Account info",
+                          style: ProtonStyles.body2Regular(
+                            color: ProtonColors.textNorm,
+                          ))),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    viewModel.move(NavID.walletAccountInfo);
+                  }),
             ListTile(
                 leading: Icon(Icons.receipt_rounded,
                     size: 18, color: ProtonColors.textNorm),
@@ -32,7 +48,7 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
                         ))),
                 onTap: () {
                   Navigator.of(context).pop();
-                  viewModel.coordinator.showWalletAccountAddressList();
+                  viewModel.move(NavID.walletAccountAddressList);
                 }),
             const SizedBox(
               height: 5,
@@ -48,7 +64,7 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
                         ))),
                 onTap: () {
                   Navigator.of(context).pop();
-                  viewModel.coordinator.showDeleteWalletAccount();
+                  viewModel.move(NavID.deleteWalletAccount);
                 }),
           ],
         ),

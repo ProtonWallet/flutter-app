@@ -116,7 +116,7 @@ class WalletManager implements Manager {
       /// * lastUsedIndex is in memory not in cache so we need to reset it right after load account
       account.markReceiveAddressesUsedTo(
         from: 0,
-        to: accountModel.lastUsedIndex,
+        to: accountModel.lastUsedIndex + 1,
       );
       return account;
     }
@@ -333,9 +333,7 @@ class WalletManager implements Manager {
         onlyRequest: 1);
     final AccountModel? accountModel =
         await DBHelper.accountDao!.findByServerID(serverAccountID);
-    if (accountModel != null) {
-      await ensureReceivedAddressInitialized(account, accountModel);
-    }
+
     for (final walletBitcoinAddress in walletBitcoinAddresses) {
       if (accountModel == null) {
         logger.e("handleBitcoinAddressRequests: accountModel is null");
@@ -412,25 +410,35 @@ class WalletManager implements Manager {
     return null;
   }
 
-  Future<void> ensureReceivedAddressInitialized(
+  /// We will check following three index for given walletAccount to make sure we didn't reuse the address
+  /// - lastUsedIndex, provided by walletAccount, representing the last used address showing in receive page
+  /// - highestIndexFromPool, provided by bitcoinAddressClient, representing the highest address index in pool
+  /// - lastUsedIndexOnNetwork, provided by bdk, representing the highest address index in output (i.e. used on blockchain)
+  ///
+  /// more clearly, when lastUsedIndexOnNetwork is higher or equal to lastUsedIndex, we will generate new receive address,
+  /// and update lastUsedIndex to Backend with new receive address's index. So we didn't reuse it in receive page,
+  /// and can keep showing same receive address in different platform
+  Future<void> ensureReceivedAddressNotGotReused(
     FrbAccount account,
     AccountModel accountModel,
   ) async {
     /// need to initialize receiveAddressDataProvider
-    /// so that we can make sure we mark used of the receive address
-    /// and the address at [0, lastUsedIndex]
-    /// also it will handle the pool index
+    /// it will check highestIndexFromPool and lastUsedIndex
+    /// so that we can make sure we mark used of the addresses between [0, lastUsedIndex)
+    /// to prevent reusing address
     await dataProviderManager.receiveAddressDataProvider
         .initReceiveAddressForAccount(account, accountModel);
 
     /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
     /// we will check and handle if highest used receive address index is higher than the one store in wallet account
-    /// this will happen when some one send bitcoin via qr code
     final highestIndexFromBlockchain =
         await account.getHighestUsedAddressIndexInOutput(
                 keychain: KeychainKind.external_) ??
             -1;
 
+    /// we need to consider highest used index on blockchain
+    /// so we will not reuse the address when the cached one is already been used,
+    /// and keep lastUsedIndex updated in case that different platform can find the transaction
     await dataProviderManager.receiveAddressDataProvider
         .handleLastUsedIndexOnNetwork(
             account, accountModel, highestIndexFromBlockchain);
@@ -524,12 +532,13 @@ class WalletManager implements Manager {
     logger.i(
       "walletBitcoinAddresses.length = ${walletBitcoinAddresses.length}, addingCount = $addingCount, unFetchedBitcoinAddressCount=$unFetchedBitcoinAddressCount",
     );
+
+    if (accountModel == null) {
+      return;
+    }
+
     if (addingCount > 0) {
       final List<BitcoinAddress> apiBitcoinAddresses = [];
-      if (accountModel == null) {
-        return;
-      }
-      await ensureReceivedAddressInitialized(account, accountModel);
       for (int offset = 1; offset <= addingCount; offset++) {
         final addressInfo = await account.getNextReceiveAddress();
         final String address = addressInfo.address;

@@ -10,6 +10,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
@@ -79,6 +80,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
   /// external data providers
   final UserSettingsDataProvider userSettingsDataProvider;
+  final UnleashDataProvider unleashDataProvider;
 
   BDKTransactionDataProvider(
     this.accountDao,
@@ -86,6 +88,7 @@ class BDKTransactionDataProvider extends DataProvider {
     this.shared,
     this.walletManager,
     this.userSettingsDataProvider,
+    this.unleashDataProvider,
   );
 
   /// memeory caches
@@ -172,6 +175,20 @@ class BDKTransactionDataProvider extends DataProvider {
     return await shared.read(syncCheckID) ?? false;
   }
 
+  Future<bool> hasUsedStopGap500(
+      WalletModel walletModel, AccountModel accountModel) async {
+    final String syncCheckID =
+        "${getSyncCheckID(walletModel, accountModel)}_${UnleashDataProvider.walletClientStopGap500}";
+    return await shared.read(syncCheckID) ?? false;
+  }
+
+  Future<void> setUsedStopGap500(
+      WalletModel walletModel, AccountModel accountModel) async {
+    final String syncCheckID =
+        "${getSyncCheckID(walletModel, accountModel)}_${UnleashDataProvider.walletClientStopGap500}";
+    await shared.write(syncCheckID, true);
+  }
+
   Future<void> syncWallet(
     WalletModel walletModel,
     AccountModel accountModel, {
@@ -230,8 +247,18 @@ class BDKTransactionDataProvider extends DataProvider {
             lastSyncedTime[accountModel.accountID] = 0;
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync start time: $timeStart");
-            final customStopgap =
+            int customStopgap =
                 await userSettingsDataProvider.getCustomStopgap();
+
+            /// Update custom stopgap to 500 when the feature flag is enabled
+            /// and we didn't use 500 gap for this wallet account before
+            /// so we can find transactions in far index
+            final bool hasUse500Gap =
+                await hasUsedStopGap500(walletModel, accountModel);
+            if (!hasUse500Gap && unleashDataProvider.isUsingStopgap500()) {
+              customStopgap = 500;
+              await setUsedStopGap500(walletModel, accountModel);
+            }
             logger.i("customStopgap: $customStopgap");
             await blockchain?.fullSync(
               account: account,
