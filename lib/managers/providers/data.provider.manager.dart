@@ -234,15 +234,6 @@ class DataProviderManager extends Manager {
         DBHelper.transactionDao!,
         userManager.userID);
 
-    /// bdk transactions
-    bdkTransactionDataProvider = BDKTransactionDataProvider(
-      DBHelper.accountDao!,
-      apiServiceManager.getApiService(),
-      shared,
-      walletManager,
-      userSettingsDataProvider,
-    );
-
     /// local bitcoin address
     localBitcoinAddressDataProvider = LocalBitcoinAddressDataProvider(
       DBHelper.walletDao!,
@@ -305,6 +296,16 @@ class DataProviderManager extends Manager {
     unleashDataProvider = UnleashDataProvider(
       apiEnv,
       apiServiceManager.getUnleashClient(),
+    );
+
+    /// bdk transactions
+    bdkTransactionDataProvider = BDKTransactionDataProvider(
+      DBHelper.accountDao!,
+      apiServiceManager.getApiService(),
+      shared,
+      walletManager,
+      userSettingsDataProvider,
+      unleashDataProvider,
     );
   }
 

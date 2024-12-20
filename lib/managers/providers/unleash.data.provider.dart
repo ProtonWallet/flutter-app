@@ -21,6 +21,14 @@ class UnleashDataProvider extends DataProvider {
   /// refresh interval
   final duration = const Duration(minutes: 2).inSeconds;
 
+  /// const feature names
+  static const String walletFlutterLogInternal = "WalletFlutterLogInternal";
+  static const String walletMempoolRecommendedFees =
+      "WalletMempoolRecommendedFees";
+  static const String walletClientStopGap500 = "WalletClientStopGap500";
+  static const String walletMobileClientDebugMode =
+      "WalletMobileClientDebugMode";
+
   /// timer for job guardian
   Timer? timer;
 
@@ -104,11 +112,19 @@ class UnleashDataProvider extends DataProvider {
     if (kDebugMode) {
       return true;
     }
-    final enableTrace = unleashClient.isEnabled('WalletFlutterLogInternal');
+    final enableTrace = unleashClient.isEnabled(walletFlutterLogInternal);
     return enableTrace;
   }
 
   bool isUsingMempoolFees() {
-    return unleashClient.isEnabled('WalletMempoolRecommendedFees');
+    return unleashClient.isEnabled(walletMempoolRecommendedFees);
+  }
+
+  bool isUsingStopgap500() {
+    return unleashClient.isEnabled(walletClientStopGap500);
+  }
+
+  bool isMobileClientDebugMode() {
+    return unleashClient.isEnabled(walletMobileClientDebugMode);
   }
 }

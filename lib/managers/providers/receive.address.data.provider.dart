@@ -79,7 +79,9 @@ class ReceiveAddressDataProvider extends DataProvider {
               walletId: accountModel.walletID,
               walletAccountId: accountModel.accountID);
 
-      final int poolIndex = max(0, highestPoolIndex.toInt());
+      /// we need to use highestPoolIndex+1, since markReceiveAddressesUsedTo(start, end)
+      /// only mark used for [start, end)
+      final int poolIndex = max(0, highestPoolIndex.toInt() + 1);
 
       await account.markReceiveAddressesUsedTo(from: 0, to: poolIndex);
     } catch (e, stacktrace) {
@@ -95,8 +97,10 @@ class ReceiveAddressDataProvider extends DataProvider {
     AccountModel accountModel,
   ) async {
     if (accountModel.lastUsedIndex >= 0) {
+      /// we need to use lastUsedIndex+1, since markReceiveAddressesUsedTo(start, end)
+      /// only mark used for [start, end)
       await account.markReceiveAddressesUsedTo(
-          from: 0, to: accountModel.lastUsedIndex);
+          from: 0, to: accountModel.lastUsedIndex + 1);
     }
   }
 
