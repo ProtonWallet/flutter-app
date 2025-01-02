@@ -578,16 +578,14 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           thickness: 0.2,
           height: 1,
         ),
-        TransactionHistorySendItem(
-          content: viewModel.toEmail.isNotEmpty
-              ? "${WalletManager.getEmailFromWalletTransaction(viewModel.toEmail)} (You)"
-              : "${viewModel.walletName} - ${viewModel.accountName}",
-          walletAccountName:
-              "${viewModel.walletName} - ${viewModel.accountName}",
-          bitcoinAddress: viewModel.selfBitcoinAddress ?? "",
-          isLoading: !viewModel.initialized,
-          displayBalance: viewModel.displayBalance,
-        ),
+        for (final selfBitcoinAddress in viewModel.selfBitcoinAddresses)
+          TransactionHistorySendItem(
+            content: viewModel.getToEmail(),
+            walletAccountName: viewModel.getWalletAccountName(),
+            bitcoinAddress: selfBitcoinAddress,
+            isLoading: !viewModel.initialized,
+            displayBalance: viewModel.displayBalance,
+          ),
       ],
     );
   }

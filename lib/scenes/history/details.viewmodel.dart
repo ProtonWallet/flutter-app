@@ -26,7 +26,6 @@ import 'package:wallet/models/transaction.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
-import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
@@ -73,7 +72,7 @@ abstract class HistoryDetailViewModel
   String toEmail = "";
   String body = "";
   String errorMessage = "";
-  String? selfBitcoinAddress;
+  List<String> selfBitcoinAddresses = [];
   String senderAddressID = "";
 
   /// boolean attributes
@@ -98,6 +97,10 @@ abstract class HistoryDetailViewModel
   late FocusNode memoFocusNode;
 
   void editMemo();
+
+  String getToEmail();
+
+  String getWalletAccountName();
 
   Future<void> updateSender(
     String senderName,
@@ -235,9 +238,10 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
       } else {
         /// if it's receive
         if (txOut.isMine) {
-          /// set selfBitcoinAddress for display, and we can exit the iteration since we already find self address
-          selfBitcoinAddress = bitcoinAddress;
-          break;
+          /// set selfBitcoinAddress for display
+          /// In general, we will only have one self address been used in transaction.
+          /// but there is still a case that user send transaction to different address in same wallet in one transaction
+          selfBitcoinAddresses.add(bitcoinAddress);
         }
       }
     }
@@ -607,5 +611,18 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     /// then it will notify wallet transaction bloc will update
     fromEmail = jsonString;
     sinkAddSafe();
+  }
+
+  @override
+  String getToEmail() {
+    if (toEmail.isNotEmpty) {
+      return "${WalletManager.getEmailFromWalletTransaction(toEmail)} (You)";
+    }
+    return getWalletAccountName();
+  }
+
+  @override
+  String getWalletAccountName() {
+    return "$walletName - $accountName";
   }
 }
