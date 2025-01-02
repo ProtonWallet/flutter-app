@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV2 extends StatefulWidget {
   final double width;
@@ -118,17 +118,16 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                 });
               },
               style: widget.textStyle ??
-                  FontManager.body1Median(ProtonColors.textNorm),
+                  ProtonStyles.body1Medium(color: ProtonColors.textNorm),
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
                 hintStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textHint),
-                labelStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textWeak)
-                        .copyWith(fontSize: 15),
+                    ProtonStyles.body2Regular(color: ProtonColors.textHint),
+                labelStyle: ProtonStyles.body2Regular(
+                    color: ProtonColors.textWeak, fontSize: 15.0),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
                 contentPadding: EdgeInsets.only(
@@ -273,9 +272,9 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                                 Expanded(
                                                   child: Text(
                                                     widget.itemsText[index],
-                                                    style: FontManager
+                                                    style: ProtonStyles
                                                         .body2Regular(
-                                                            ProtonColors
+                                                            color: ProtonColors
                                                                 .textNorm),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -284,8 +283,9 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                                               ],
                                             )
                                           : Text(widget.itemsText[index],
-                                              style: FontManager.body2Regular(
-                                                  ProtonColors.textNorm)),
+                                              style: ProtonStyles.body2Regular(
+                                                  color:
+                                                      ProtonColors.textNorm)),
                                       onTap: () {
                                         setState(() {
                                           selected = widget.items[index];

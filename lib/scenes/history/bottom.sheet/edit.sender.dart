@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
@@ -17,7 +18,6 @@ import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 // TODO(fix): refactor this to a sperate view and viewmodel. dont need to share the viewmodel with the home viewmodel
 class EditSenderSheet {
@@ -54,12 +54,14 @@ class EditSenderSheet {
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(S.of(context).unknown_sender,
-                    style: FontManager.titleHeadline(ProtonColors.textNorm))),
+                    style: ProtonStyles.subheadline(
+                        color: ProtonColors.textNorm))),
             const SizedBox(height: 10),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(S.of(context).unknown_sender_desc,
-                    style: FontManager.body2Regular(ProtonColors.textWeak))),
+                    style: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak))),
             const SizedBox(height: 30),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -132,8 +134,8 @@ class EditSenderSheet {
                     backgroundColor: ProtonColors.protonBlue,
                     text: S.of(context).update_details,
                     width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(
-                        ProtonColors.backgroundSecondary),
+                    textStyle: ProtonStyles.body1Medium(
+                        color: ProtonColors.backgroundSecondary),
                     height: 48)),
             SizedBox(
               height: MediaQuery.of(context).viewInsets.bottom,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class CustomTodos extends StatelessWidget {
   final String title;
@@ -47,9 +47,13 @@ class CustomTodos extends StatelessWidget {
                   child: Text(
                     title,
                     style: checked
-                        ? FontManager.body2MedianLineThrough(
-                            ProtonColors.protonBlue)
-                        : FontManager.body2Median(ProtonColors.protonBlue),
+                        ? ProtonStyles.body2Medium(
+                                color: ProtonColors.protonBlue)
+                            .copyWith(
+                            decoration: TextDecoration.lineThrough,
+                          )
+                        : ProtonStyles.body2Medium(
+                            color: ProtonColors.protonBlue),
                   )),
               trailing: checked
                   ? null

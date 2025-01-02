@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextField2FA extends StatefulWidget {
   final double width;
@@ -40,7 +40,8 @@ class TextFieldTextState extends State<TextField2FA> {
           child: TextField(
             textAlignVertical: TextAlignVertical.center,
             textAlign: TextAlign.center,
-            style: FontManager.twoFACode(Theme.of(context).colorScheme.primary),
+            style: ProtonWalletStyles.twoFACode(
+                color: Theme.of(context).colorScheme.primary),
             textInputAction: widget.textInputAction,
             onChanged: widget.onChanged,
             minLines: 1,
@@ -76,7 +77,8 @@ class TextFieldTextState extends State<TextField2FA> {
         child: Chip(
           backgroundColor: ProtonColors.backgroundProton,
           label: Text(tag,
-              style: FontManager.body2Median(ProtonColors.interactionNorm)),
+              style: ProtonStyles.body2Medium(
+                  color: ProtonColors.interactionNorm)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
             side: BorderSide(color: ProtonColors.backgroundProton),

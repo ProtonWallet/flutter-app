@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/fonts.gen.dart';
 
+/// define general styles in proton ecosystem
 class ProtonStyles {
-  static TextStyle? hero({Color? color}) {
+  static TextStyle hero({Color? color}) {
     return TextStyle(
       fontFamily: FontFamily.inter,
       fontSize: 28,
@@ -13,10 +14,13 @@ class ProtonStyles {
     );
   }
 
-  static TextStyle headline({Color? color}) {
+  static TextStyle headline({
+    Color? color,
+    double fontSize = 20.0,
+  }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
-      fontSize: 20,
+      fontSize: fontSize,
       fontVariations: const <FontVariation>[FontVariation('wght', 700.0)],
       height: 24 / 20,
       letterSpacing: 0,
@@ -24,11 +28,14 @@ class ProtonStyles {
     );
   }
 
-  static TextStyle subheadline({Color? color}) {
+  static TextStyle subheadline({
+    Color? color,
+    double fontVariation = 600.0,
+  }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
       fontSize: 20,
-      fontVariations: const <FontVariation>[FontVariation('wght', 600.0)],
+      fontVariations: <FontVariation>[FontVariation('wght', fontVariation)],
       height: 24 / 20,
       letterSpacing: 0,
       color: color,
@@ -81,10 +88,13 @@ class ProtonStyles {
     );
   }
 
-  static TextStyle body2Medium({Color? color}) {
+  static TextStyle body2Medium({
+    Color? color,
+    double fontSize = 14.0,
+  }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
-      fontSize: 14,
+      fontSize: fontSize,
       fontVariations: const <FontVariation>[FontVariation('wght', 500.0)],
       height: 20 / 14,
       letterSpacing: 0,
@@ -92,10 +102,13 @@ class ProtonStyles {
     );
   }
 
-  static TextStyle body2Regular({Color? color}) {
+  static TextStyle body2Regular({
+    Color? color,
+    double fontSize = 14.0,
+  }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
-      fontSize: 14,
+      fontSize: fontSize,
       fontVariations: const <FontVariation>[FontVariation('wght', 400.0)],
       height: 20 / 14,
       letterSpacing: 0,
@@ -161,6 +174,30 @@ class ProtonStyles {
   }
 }
 
+/// define special styles in proton wallet
+class ProtonWalletStyles {
+  static TextStyle twoFACode({Color? color}) {
+    return ProtonStyles.overlineRegular(color: color).copyWith(
+      fontSize: 24,
+    );
+  }
+
+  /// this is special text style in proton wallet, we only use it when display major amount
+  static TextStyle textAmount({
+    Color? color,
+    double? fontSize,
+    double fontVariation = 500.0,
+    double height = 1.2,
+  }) {
+    return TextStyle(
+      fontFamily: FontFamily.inter,
+      fontSize: fontSize ?? 36,
+      fontVariations: <FontVariation>[FontVariation('wght', fontVariation)],
+      height: height,
+      color: color,
+    );
+  }
+}
 
 /// maybe for theme later
 // extension TextStyles on BuildContext {

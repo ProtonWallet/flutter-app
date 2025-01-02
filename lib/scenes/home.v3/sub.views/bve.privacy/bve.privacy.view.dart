@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
@@ -7,7 +8,6 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/bve.privacy/bve.privacy.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BvEPrivacyView extends ViewBase<BvEPrivacyViewModel> {
   const BvEPrivacyView(BvEPrivacyViewModel viewModel)
@@ -33,7 +33,7 @@ class BvEPrivacyView extends ViewBase<BvEPrivacyViewModel> {
               viewModel.isPrimaryAccount
                   ? S.of(context).bve_privacy_primary_account_learn_more
                   : S.of(context).bve_privacy_learn_more,
-              style: FontManager.body2Median(ProtonColors.textWeak),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textWeak),
               textAlign: TextAlign.center,
             ),
           ]),

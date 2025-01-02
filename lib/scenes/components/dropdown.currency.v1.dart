@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DropdownCurrencyV1 extends StatefulWidget {
   final double width;
@@ -114,13 +114,13 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                 });
               },
               style: widget.textStyle ??
-                  FontManager.body1Median(ProtonColors.textNorm),
+                  ProtonStyles.body1Medium(color: ProtonColors.textNorm),
               decoration: InputDecoration(
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
-                labelStyle:
-                    FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                labelStyle: ProtonStyles.body2Regular(
+                    color: ProtonColors.textWeak),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
                 contentPadding: EdgeInsets.only(
@@ -259,9 +259,9 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                                                 Expanded(
                                                   child: Text(
                                                     widget.itemsText[index],
-                                                    style: FontManager
+                                                    style: ProtonStyles
                                                         .body2Regular(
-                                                            ProtonColors
+                                                            color: ProtonColors
                                                                 .textNorm),
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -270,8 +270,9 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                                               ],
                                             )
                                           : Text(widget.itemsText[index],
-                                              style: FontManager.body2Regular(
-                                                  ProtonColors.textNorm)),
+                                              style: ProtonStyles.body2Regular(
+                                                  color:
+                                                      ProtonColors.textNorm)),
                                       onTap: () {
                                         setState(() {
                                           selected = widget.items[index];

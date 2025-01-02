@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV1 extends StatefulWidget {
   final double width;
@@ -60,7 +60,8 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
             labelText: widget.labelText,
-            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+            labelStyle: ProtonStyles.body2Regular(
+                color: ProtonColors.textWeak),
             contentPadding:
                 EdgeInsets.only(top: 4, bottom: widget.paddingSize ?? 16),
           ),
@@ -83,7 +84,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
           value: widget.defaultOption,
           child: Text(
             "${widget.defaultOption}",
-            style: FontManager.body1Median(ProtonColors.textNorm),
+            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           )));
     }
     for (int i = 0; i < widget.items.length; i++) {
@@ -91,7 +92,7 @@ class DropdownButtonV1State extends State<DropdownButtonV1> {
           value: widget.items[i],
           child: Text(
             "${widget.itemsText[i]}",
-            style: FontManager.body1Median(ProtonColors.textNorm),
+            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           )));
     }
     return dropdownMenuItems;

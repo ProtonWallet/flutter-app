@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/api/bdk_wallet/payment_link.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 void showQRScanBottomSheet(
   BuildContext context,
@@ -28,7 +28,8 @@ void showQRScanBottomSheet(
                 child: Center(
                   child: Text(
                     S.of(context).scan_btc_address,
-                    style: FontManager.body2Regular(ProtonColors.textNorm),
+                    style:
+                        ProtonStyles.body2Regular(color: ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -61,6 +62,7 @@ class QRScannerWidgetState extends State<QRScannerWidget> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   bool _isProcessing = false;
+
   @override
   void reassemble() {
     super.reassemble();

@@ -4,7 +4,6 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class LoginAndSignupBtn extends StatelessWidget {
   final VoidCallback? signinPressed;
@@ -26,7 +25,7 @@ class LoginAndSignupBtn extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.clear,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
             maximumSize: const Size(560, 48)),
         const SizedBox(height: 4),

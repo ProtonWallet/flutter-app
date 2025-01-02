@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -12,7 +13,6 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.state.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 typedef WalletCallback = void Function(WalletMenuModel wallet);
 typedef SelectedCallback = void Function(
@@ -212,8 +212,8 @@ class SidebarWalletItems extends StatelessWidget {
                       drawerMaxWidth - 110),
                   child: Text(
                     wlModel.walletName,
-                    style: FontManager.captionSemiBold(
-                      AvatarColorHelper.getTextColor(
+                    style: ProtonStyles.captionSemibold(
+                      color: AvatarColorHelper.getTextColor(
                           state.walletsModel.indexOf(wlModel)),
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -221,7 +221,8 @@ class SidebarWalletItems extends StatelessWidget {
                 ),
                 Text(
                   "${wlModel.accountSize} accounts",
-                  style: FontManager.captionRegular(ProtonColors.textHint),
+                  style:
+                      ProtonStyles.captionRegular(color: ProtonColors.textHint),
                 ),
               ],
             ),
@@ -247,8 +248,8 @@ class SidebarWalletItems extends StatelessWidget {
                             drawerMaxWidth - 180),
                         child: Text(
                           wlModel.walletName,
-                          style: FontManager.captionSemiBold(
-                            AvatarColorHelper.getTextColor(
+                          style: ProtonStyles.captionSemibold(
+                            color: AvatarColorHelper.getTextColor(
                                 state.walletsModel.indexOf(wlModel)),
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -256,8 +257,8 @@ class SidebarWalletItems extends StatelessWidget {
                       ),
                       Text(
                         "${wlModel.accountSize} accounts",
-                        style:
-                            FontManager.captionRegular(ProtonColors.textHint),
+                        style: ProtonStyles.captionRegular(
+                            color: ProtonColors.textHint),
                       ),
                     ],
                   ),
@@ -313,8 +314,8 @@ class SidebarWalletItems extends StatelessWidget {
                   children: [
                     Text(
                       CommonHelper.getFirstNChar(actModel.label, 20),
-                      style: FontManager.captionMedian(
-                        AvatarColorHelper.getTextColor(
+                      style: ProtonStyles.captionMedium(
+                        color: AvatarColorHelper.getTextColor(
                             state.walletsModel.indexOf(wlModel)),
                       ),
                     ),
@@ -372,8 +373,8 @@ class SidebarWalletItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(S.of(context).add_account,
-                          style: FontManager.captionRegular(
-                              ProtonColors.textHint)),
+                          style: ProtonStyles.captionRegular(
+                              color: ProtonColors.textHint)),
                     ],
                   )
                 ],
@@ -399,9 +400,9 @@ class SidebarWalletItems extends StatelessWidget {
     // if (displayBalance) {
     //   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     //     Text(accountModel.currencyBalance,
-    //         style: FontManager.captionSemiBold(textColor)),
+    //         style: ProtonStyles.captionSemibold(color: textColor)),
     //     Text(accountModel.btcBalance,
-    //         style: FontManager.overlineRegular(ProtonColors.textHint))
+    //         style: ProtonStyles.overlineRegular(color: ProtonColors.textHint))
     //   ]);
     // } else {
     //   return const SizedBox();

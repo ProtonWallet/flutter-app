@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TransactionFeeBox extends StatelessWidget {
   final String priorityText;
@@ -27,14 +27,15 @@ class TransactionFeeBox extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(priorityText,
-              style: FontManager.body1Median(ProtonColors.textNorm)),
+              style: ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
           Text(timeEstimate,
-              style: FontManager.captionRegular(ProtonColors.textHint)),
+              style: ProtonStyles.captionRegular(color: ProtonColors.textHint)),
           const SizedBox(
             height: 8,
           ),
           Text("~${fee.toStringAsFixed(2)} sat/vB",
-              style: FontManager.body2Regular(ProtonColors.signalSuccess)),
+              style:
+                  ProtonStyles.body2Regular(color: ProtonColors.signalSuccess)),
         ],
       ),
     );

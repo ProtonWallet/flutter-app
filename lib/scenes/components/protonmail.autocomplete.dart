@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/scenes/components/bottom.sheets/qr.code.scanner.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class ProtonMailAutoComplete extends StatelessWidget {
   final List<ContactsModel> emails;
@@ -135,9 +135,10 @@ class ProtonMailAutoComplete extends StatelessWidget {
                 child: TextFormField(
                   focusNode: focusNode,
                   controller: textEditingController,
-                  style: FontManager.body1Median(ProtonColors.textNorm),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   keyboardType: keyboardType,
-                  autocorrect: false, // turn off for email input
+                  autocorrect: false,
+                  // turn off for email input
                   onFieldSubmitted: (value) {
                     if (callback != null) {
                       callback!();
@@ -159,12 +160,11 @@ class ProtonMailAutoComplete extends StatelessWidget {
                           )
                         : null,
                     labelText: labelText,
-                    labelStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textWeak)
-                            .copyWith(fontSize: 15),
+                    labelStyle: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak, fontSize: 15.0),
                     hintText: hintText,
                     hintStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textHint),
+                        ProtonStyles.body2Regular(color: ProtonColors.textHint),
                     contentPadding: const EdgeInsets.only(
                         left: 10, right: 10, top: 4, bottom: 16),
                     enabledBorder: InputBorder.none,
@@ -194,8 +194,8 @@ Widget getEmailAvatar(String name) {
       child: Center(
         child: Text(
           CommonHelper.getFirstNChar(name, 1).toUpperCase(),
-          style: FontManager.body2Median(
-            AvatarColorHelper.getAvatarTextColor(
+          style: ProtonStyles.body2Medium(
+            color: AvatarColorHelper.getAvatarTextColor(
                 AvatarColorHelper.getIndexFromString(name)),
           ),
         ),

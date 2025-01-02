@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/history.transaction.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -12,7 +13,6 @@ import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/transaction/transaction.listtitle.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 typedef ShowDetailCallback = void Function(
   String walletID,
@@ -117,8 +117,8 @@ class WalletHistoryTransactionListState
               child: Container(
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(S.of(context).show_more,
-                      style:
-                          FontManager.body1Regular(ProtonColors.protonBlue)))),
+                      style: ProtonStyles.body1Regular(
+                          color: ProtonColors.protonBlue)))),
       ],
     );
   }

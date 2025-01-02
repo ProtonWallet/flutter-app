@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/home/custom.homepage.box.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BtcTitleActionsView extends StatelessWidget {
   final GestureTapCallback? onSend;
@@ -38,7 +38,7 @@ class BtcTitleActionsView extends StatelessWidget {
         onPressed: onBuy,
         text: S.of(context).buy,
         width: min(160, (MediaQuery.of(context).size.width - 42) / 3),
-        textStyle: FontManager.actionButtonText(ProtonColors.textNorm),
+        textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
@@ -48,7 +48,7 @@ class BtcTitleActionsView extends StatelessWidget {
         onPressed: onReceive,
         text: S.of(context).receive,
         width: min(160, (MediaQuery.of(context).size.width - 42) / 3),
-        textStyle: FontManager.actionButtonText(ProtonColors.textNorm),
+        textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,
@@ -58,7 +58,7 @@ class BtcTitleActionsView extends StatelessWidget {
         onPressed: onSend,
         text: S.of(context).send_button,
         width: min(160, (MediaQuery.of(context).size.width - 42) / 3),
-        textStyle: FontManager.actionButtonText(ProtonColors.textNorm),
+        textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
         backgroundColor: ProtonColors.homeActionButtonBackground,
         borderColor: ProtonColors.homeActionButtonBackground,
         height: 48,

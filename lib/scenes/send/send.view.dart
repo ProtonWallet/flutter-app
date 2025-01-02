@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
@@ -32,7 +33,6 @@ import 'package:wallet/scenes/components/transaction.history.send.item.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/send/send.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SendView extends ViewBase<SendViewModel> {
   const SendView(SendViewModel viewModel)
@@ -140,15 +140,15 @@ class SendView extends ViewBase<SendViewModel> {
                                             BitcoinUnit.btc,
                                         viewModel.balance)
                                     : "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
-                                style: FontManager.captionRegular(
-                                    ProtonColors.textWeak),
+                                style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textWeak),
                               ),
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: viewModel.sendAll,
                                 child: Text(S.of(context).send_all,
-                                    style: FontManager.captionMedian(
-                                        ProtonColors.protonBlue)),
+                                    style: ProtonStyles.captionMedium(
+                                        color: ProtonColors.protonBlue)),
                               )
                             ]),
                         Row(children: [
@@ -191,8 +191,8 @@ class SendView extends ViewBase<SendViewModel> {
                                     left: 10,
                                     right: 10,
                                   ),
-                                  textStyle: FontManager.captionMedian(
-                                      ProtonColors.textNorm),
+                                  textStyle: ProtonStyles.captionMedium(
+                                      color: ProtonColors.textNorm),
                                   backgroundColor:
                                       ProtonColors.backgroundProton,
                                   items: fiatCurrenciesWithBitcoin,
@@ -217,8 +217,8 @@ class SendView extends ViewBase<SendViewModel> {
                               width: MediaQuery.of(context).size.width,
                               child: Text(
                                 S.of(context).recipients,
-                                style: FontManager.captionMedian(
-                                    ProtonColors.textNorm),
+                                style: ProtonStyles.captionMedium(
+                                    color: ProtonColors.textNorm),
                               ),
                             )),
                             GestureDetector(
@@ -228,8 +228,8 @@ class SendView extends ViewBase<SendViewModel> {
                               },
                               child: Text(
                                 S.of(context).edit_recipient,
-                                style: FontManager.body2Median(
-                                    ProtonColors.protonBlue),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.protonBlue),
                               ),
                             ),
                           ]),
@@ -274,8 +274,8 @@ class SendView extends ViewBase<SendViewModel> {
                         if (viewModel.errorMessage.isNotEmpty)
                           Text(
                             viewModel.errorMessage,
-                            style: FontManager.body2Median(
-                                ProtonColors.signalError),
+                            style: ProtonStyles.body2Medium(
+                                color: ProtonColors.signalError),
                           ),
                       ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
@@ -293,7 +293,8 @@ class SendView extends ViewBase<SendViewModel> {
                     text: S.of(context).review_transaction,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.protonBlue,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    textStyle:
+                        ProtonStyles.body1Medium(color: ProtonColors.white),
                     height: 48)),
         ]));
   }
@@ -358,8 +359,8 @@ class SendView extends ViewBase<SendViewModel> {
                         width: MediaQuery.of(context).size.width,
                         child: Text(
                           S.of(context).recipients,
-                          style:
-                              FontManager.captionMedian(ProtonColors.textNorm),
+                          style: ProtonStyles.captionMedium(
+                              color: ProtonColors.textNorm),
                         ),
                       )),
                       GestureDetector(
@@ -368,8 +369,8 @@ class SendView extends ViewBase<SendViewModel> {
                         },
                         child: Text(
                           S.of(context).edit_recipient,
-                          style:
-                              FontManager.body2Median(ProtonColors.protonBlue),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.protonBlue),
                         ),
                       ),
                     ]),
@@ -419,8 +420,8 @@ class SendView extends ViewBase<SendViewModel> {
                         children: [
                           const SizedBox(height: 16),
                           Text(S.of(context).email_integration,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak)),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textWeak)),
                           DropdownButtonV2(
                             width: MediaQuery.of(context).size.width,
                             labelText: S.of(context).send_from_email,
@@ -479,9 +480,9 @@ class SendView extends ViewBase<SendViewModel> {
                                                           viewModel
                                                               .emailBodyController
                                                               .text,
-                                                          style: FontManager
-                                                              .body2Median(
-                                                                  ProtonColors
+                                                          style: ProtonStyles
+                                                              .body2Medium(
+                                                                  color: ProtonColors
                                                                       .textNorm)))
                                                 ])),
                                       Text(
@@ -490,8 +491,8 @@ class SendView extends ViewBase<SendViewModel> {
                                               .message_to_recipient_optional(
                                                   viewModel
                                                       .validRecipientCount()),
-                                          style: FontManager.body2Median(
-                                              ProtonColors.textHint)),
+                                          style: ProtonStyles.body2Medium(
+                                              color: ProtonColors.textHint)),
                                     ],
                                   ))
                             ],
@@ -552,7 +553,8 @@ class SendView extends ViewBase<SendViewModel> {
                           "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
                       fractionDigits: ExchangeCalculator.getDisplayDigit(
                           viewModel.exchangeRate),
-                      textStyle: FontManager.body2Median(ProtonColors.textNorm),
+                      textStyle: ProtonStyles.body2Medium(
+                          color: ProtonColors.textNorm),
                     ),
                     memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
                         viewModel.bitcoinBase
@@ -561,8 +563,8 @@ class SendView extends ViewBase<SendViewModel> {
                                 BitcoinUnit.btc
                             : viewModel.userSettingsDataProvider.bitcoinUnit,
                         estimatedFee,
-                        textStyle:
-                            FontManager.body2Regular(ProtonColors.textHint)),
+                        textStyle: ProtonStyles.body2Regular(
+                            color: ProtonColors.textHint)),
                   ),
                 ),
                 const Padding(
@@ -623,14 +625,14 @@ class SendView extends ViewBase<SendViewModel> {
                                                         viewModel
                                                             .memoTextController
                                                             .text,
-                                                        style: FontManager
-                                                            .body2Median(
-                                                                ProtonColors
+                                                        style: ProtonStyles
+                                                            .body2Medium(
+                                                                color: ProtonColors
                                                                     .textNorm)))
                                               ])),
                                     Text(S.of(context).message_to_myself,
-                                        style: FontManager.body2Median(
-                                            ProtonColors.textHint)),
+                                        style: ProtonStyles.body2Medium(
+                                            color: ProtonColors.textHint)),
                                   ],
                                 ))
                           ],
@@ -696,7 +698,8 @@ class SendView extends ViewBase<SendViewModel> {
                   backgroundColor: ProtonColors.protonBlue,
                   text: S.of(context).confirm_and_send,
                   width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.white),
                   height: 48),
             ),
         ]));
@@ -712,19 +715,20 @@ class SendView extends ViewBase<SendViewModel> {
         ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(S.of(context).you_are_sending,
-          style: FontManager.titleSubHeadline(ProtonColors.textHint)),
+          style: ProtonStyles.subheadline(
+              color: ProtonColors.textHint, fontVariation: 400.0)),
       const SizedBox(height: 6),
       Row(children: [
         Text(
             "${viewModel.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.exchangeRate.fiatCurrency)}${CommonHelper.formatDouble(amountInFiatCurrency, displayDigits: displayDigit)}",
-            style: FontManager.sendAmount(ProtonColors.textNorm)),
+            style: ProtonWalletStyles.textAmount(color: ProtonColors.textNorm)),
         const SizedBox(
           width: 6,
         ),
         Text(
             viewModel.userSettingsDataProvider.getFiatCurrencyName(
                 fiatCurrency: viewModel.exchangeRate.fiatCurrency),
-            style: FontManager.body1Median(ProtonColors.textWeak)),
+            style: ProtonStyles.body1Medium(color: ProtonColors.textWeak)),
       ]),
       const SizedBox(height: 4),
       ExchangeCalculator.getBitcoinUnitLabelWidget(
@@ -734,7 +738,7 @@ class SendView extends ViewBase<SendViewModel> {
                   BitcoinUnit.btc
               : viewModel.userSettingsDataProvider.bitcoinUnit,
           amountInSATS,
-          textStyle: FontManager.body2Regular(ProtonColors.textNorm)),
+          textStyle: ProtonStyles.body2Regular(color: ProtonColors.textNorm)),
     ]);
   }
 
@@ -758,7 +762,7 @@ class SendView extends ViewBase<SendViewModel> {
         prefix:
             "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ",
         fractionDigits: displayDigit,
-        textStyle: FontManager.body2Median(ProtonColors.textNorm),
+        textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
       ),
       memo: ExchangeCalculator.getBitcoinUnitLabelWidget(
           viewModel.bitcoinBase
@@ -767,7 +771,7 @@ class SendView extends ViewBase<SendViewModel> {
                   BitcoinUnit.btc
               : viewModel.userSettingsDataProvider.bitcoinUnit,
           (viewModel.totalAmountInSAT + estimatedFee),
-          textStyle: FontManager.body2Regular(ProtonColors.textHint)),
+          textStyle: ProtonStyles.body2Regular(color: ProtonColors.textHint)),
     );
   }
 
@@ -856,8 +860,8 @@ class SendView extends ViewBase<SendViewModel> {
                                       const SizedBox(width: defaultPadding),
                                       Text(
                                         "${viewModel.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: viewModel.exchangeRate.fiatCurrency)} ${ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.balance).toStringAsFixed(ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate))} ${S.of(context).available_bitcoin_value}",
-                                        style: FontManager.captionRegular(
-                                            ProtonColors.textWeak),
+                                        style: ProtonStyles.captionRegular(
+                                            color: ProtonColors.textWeak),
                                       ),
                                     ]),
                                 const SizedBox(
@@ -871,8 +875,8 @@ class SendView extends ViewBase<SendViewModel> {
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
                                     S.of(context).recipients,
-                                    style: FontManager.captionMedian(
-                                        ProtonColors.textNorm),
+                                    style: ProtonStyles.captionMedium(
+                                        color: ProtonColors.textNorm),
                                   ),
                                 ),
                               for (int index = 0;
@@ -930,7 +934,8 @@ class SendView extends ViewBase<SendViewModel> {
                         text: S.of(context).continue_buttion,
                         width: MediaQuery.of(context).size.width,
                         backgroundColor: ProtonColors.protonBlue,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        textStyle:
+                            ProtonStyles.body1Medium(color: ProtonColors.white),
                         height: 48),
                   ),
               ]));
@@ -1056,8 +1061,8 @@ class SendView extends ViewBase<SendViewModel> {
                         ]),
                         Text(
                           S.of(context).send_broadcasting_content,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textWeak),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textWeak),
                           textAlign: TextAlign.center,
                         ),
                       ]))))),
@@ -1082,15 +1087,15 @@ class SendView extends ViewBase<SendViewModel> {
                         ),
                         Text(
                           S.of(context).send_success_title,
-                          style:
-                              FontManager.titleHeadline(ProtonColors.textNorm),
+                          style: ProtonStyles.subheadline(
+                              color: ProtonColors.textNorm),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 10),
                         Text(
                           S.of(context).send_success_content,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textWeak),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textWeak),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 40),
@@ -1104,7 +1109,8 @@ class SendView extends ViewBase<SendViewModel> {
                     },
                     text: S.of(context).done,
                     width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    textStyle:
+                        ProtonStyles.body1Medium(color: ProtonColors.white),
                     backgroundColor: ProtonColors.protonBlue,
                     borderColor: ProtonColors.protonBlue,
                     height: 48),
@@ -1117,7 +1123,8 @@ class SendView extends ViewBase<SendViewModel> {
                     },
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                    textStyle:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     backgroundColor: ProtonColors.textWeakPressed,
                     borderColor: ProtonColors.textWeakPressed,
                     height: 48),
@@ -1276,8 +1283,9 @@ Widget getEstimatedFeeInfo(BuildContext context, SendViewModel viewModel,
           : viewModel.userSettingsDataProvider.bitcoinUnit,
       estimatedFee);
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Text(feeModeStr, style: FontManager.body2Regular(ProtonColors.textNorm)),
+    Text(feeModeStr,
+        style: ProtonStyles.body2Regular(color: ProtonColors.textNorm)),
     Text("$estimatedFeeInFiatCurrency ($estimatedFeeInSATS)",
-        style: FontManager.captionRegular(ProtonColors.textHint)),
+        style: ProtonStyles.captionRegular(color: ProtonColors.textHint)),
   ]);
 }

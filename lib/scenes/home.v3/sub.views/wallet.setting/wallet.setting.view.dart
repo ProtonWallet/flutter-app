@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/fiat.currency.helper.dart';
@@ -21,7 +22,6 @@ import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class WalletSettingView extends ViewBase<WalletSettingViewModel> {
   const WalletSettingView(WalletSettingViewModel viewModel)
@@ -122,7 +122,8 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                       height: defaultPadding,
                     ),
                     Text(S.of(context).accounts,
-                        style: FontManager.body2Median(ProtonColors.textNorm)),
+                        style: ProtonStyles.body2Medium(
+                            color: ProtonColors.textNorm)),
                     const SizedBox(
                       height: defaultPadding,
                     ),
@@ -246,8 +247,8 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                                       .of(context)
                                                       .receive_bitcoin_via_email,
                                                   style:
-                                                      FontManager.body2Regular(
-                                                          ProtonColors
+                                                      ProtonStyles.body2Regular(
+                                                          color: ProtonColors
                                                               .textNorm)),
                                               CupertinoSwitch(
                                                 value: viewModel
@@ -329,19 +330,29 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                                       text: S
                                                           .of(context)
                                                           .bve_warning_1,
-                                                      style: FontManager
+                                                      style: ProtonStyles
                                                           .body2Regular(
-                                                        ProtonColors.textNorm,
+                                                        color: ProtonColors
+                                                            .textNorm,
                                                       ),
                                                     ),
                                                     TextSpan(
                                                       text: S
                                                           .of(context)
                                                           .bve_warning_create_new_account,
-                                                      style: FontManager
-                                                          .linkUnderline(
-                                                        ProtonColors.textNorm,
-                                                      ).copyWith(fontSize: 14),
+                                                      style: ProtonStyles
+                                                          .captionMedium(
+                                                        color: ProtonColors
+                                                            .textNorm,
+                                                      ).copyWith(
+                                                        fontSize: 14,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationColor:
+                                                            ProtonColors
+                                                                .textNorm,
+                                                      ),
                                                       recognizer:
                                                           TapGestureRecognizer()
                                                             ..onTap = () {
@@ -353,9 +364,10 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                                       text: S
                                                           .of(context)
                                                           .bve_warning_2,
-                                                      style: FontManager
+                                                      style: ProtonStyles
                                                           .body2Regular(
-                                                        ProtonColors.textNorm,
+                                                        color: ProtonColors
+                                                            .textNorm,
                                                       ),
                                                     ),
                                                   ]),
@@ -376,11 +388,19 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                                         S
                                                             .of(context)
                                                             .learn_more,
-                                                        style: FontManager
-                                                            .linkUnderline(
-                                                          ProtonColors.textNorm,
+                                                        style: ProtonStyles
+                                                            .captionMedium(
+                                                          color: ProtonColors
+                                                              .textNorm,
                                                         ).copyWith(
-                                                            fontSize: 14))),
+                                                          fontSize: 14,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          decorationColor:
+                                                              ProtonColors
+                                                                  .textNorm,
+                                                        ))),
                                               ]),
                                         ),
                                       ),
@@ -396,8 +416,10 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                                     .getProtonAddressByID(
                                                         addressID)!
                                                     .email,
-                                                style: FontManager.body2Regular(
-                                                    ProtonColors.textNorm)),
+                                                style:
+                                                    ProtonStyles.body2Regular(
+                                                        color: ProtonColors
+                                                            .textNorm)),
                                             trailing: viewModel.isRemovingBvE
                                                 ? Transform.translate(
                                                     offset:
@@ -442,8 +464,8 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                         title: Transform.translate(
                             offset: const Offset(-8, 0),
                             child: Text(S.of(context).view_more,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textNorm))),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textNorm))),
                         backgroundColor: Colors.transparent,
                         collapsedBackgroundColor: Colors.transparent,
                         onExpansionChanged: (isExpanded) {
@@ -468,8 +490,8 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                             text: S.of(context).backup_wallet_view_seed_phrase,
                             width: MediaQuery.of(context).size.width,
                             backgroundColor: ProtonColors.protonBlue,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.white),
+                            textStyle: ProtonStyles.body1Medium(
+                                color: ProtonColors.white),
                             height: 48,
                           ),
                           const SizedBox(height: 8),
@@ -482,8 +504,8 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                               text: S.of(context).delete_wallet,
                               width: MediaQuery.of(context).size.width,
                               backgroundColor: ProtonColors.signalError,
-                              textStyle:
-                                  FontManager.body1Median(ProtonColors.white),
+                              textStyle: ProtonStyles.body1Medium(
+                                  color: ProtonColors.white),
                               height: 48),
                         ],
                       ),

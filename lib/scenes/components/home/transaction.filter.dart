@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 enum TransactionFilterBy {
   all,
@@ -39,7 +39,7 @@ class TransactionFilterView extends StatelessWidget {
                       .svg(fit: BoxFit.fill, width: 20, height: 20)
                   : null,
               title: Text(S.of(context).transaction_filter_all_transactions,
-                  style: FontManager.body2Regular(ProtonColors.textNorm)),
+                  style: ProtonStyles.body2Regular(color:ProtonColors.textNorm)),
               onTap: () {
                 updateFilterBy?.call(TransactionFilterBy.all);
                 Navigator.of(context).pop();
@@ -55,7 +55,7 @@ class TransactionFilterView extends StatelessWidget {
                       .svg(fit: BoxFit.fill, width: 20, height: 20)
                   : null,
               title: Text(S.of(context).transaction_filter_sent,
-                  style: FontManager.body2Regular(ProtonColors.textNorm)),
+                  style: ProtonStyles.body2Regular(color:ProtonColors.textNorm)),
               onTap: () {
                 updateFilterBy?.call(TransactionFilterBy.send);
                 Navigator.of(context).pop();
@@ -71,7 +71,7 @@ class TransactionFilterView extends StatelessWidget {
                       .svg(fit: BoxFit.fill, width: 20, height: 20)
                   : null,
               title: Text(S.of(context).transaction_filter_received,
-                  style: FontManager.body2Regular(ProtonColors.textNorm)),
+                  style: ProtonStyles.body2Regular(color:ProtonColors.textNorm)),
               onTap: () {
                 updateFilterBy?.call(TransactionFilterBy.receive);
                 Navigator.of(context).pop();

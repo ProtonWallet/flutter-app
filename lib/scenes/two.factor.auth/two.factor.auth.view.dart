@@ -7,6 +7,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -16,7 +17,6 @@ import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.2fa.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 import 'two.factor.auth.viewmodel.dart';
 
@@ -63,7 +63,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -75,7 +75,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -104,7 +104,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
         ),
         Text(
           S.of(context).setting_2fa_setup,
-          style: FontManager.titleHeadline(ProtonColors.textNorm),
+          style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
           textAlign: TextAlign.center,
         ),
         const SizedBox(
@@ -112,7 +112,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
         ),
         Text(
           body,
-          style: FontManager.body2Regular(ProtonColors.textWeak),
+          style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
           textAlign: TextAlign.center,
         ),
       ],
@@ -141,7 +141,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -153,7 +153,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -185,8 +185,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
               },
               child: Text(
                 S.of(context).setting_2fa_enter_key_manual,
-                style: FontManager.body1Median(
-                  ProtonColors.protonBlue,
+                style: ProtonStyles.body1Medium(
+                  color: ProtonColors.protonBlue,
                 ),
               ),
             ),
@@ -218,7 +218,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -230,7 +230,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -247,7 +247,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             const SizedBox(
               height: 4,
             ),
-            Text("Key", style: FontManager.body2Regular(ProtonColors.textNorm)),
+            Text("Key",
+                style: ProtonStyles.body2Regular(color: ProtonColors.textNorm)),
             const SizedBox(
               height: 6,
             ),
@@ -263,7 +264,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
               child: Row(mainAxisSize: MainAxisSize.min, children: [
                 Text(
                   viewModel.secret,
-                  style: FontManager.body2Median(ProtonColors.textNorm),
+                  style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
                   maxLines: 4,
                 ),
                 const SizedBox(
@@ -284,13 +285,13 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
               height: 10,
             ),
             Text("Interval",
-                style: FontManager.body2Regular(ProtonColors.textNorm)),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textNorm)),
             const SizedBox(
               height: 6,
             ),
             Text(
               "30",
-              style: FontManager.body2Median(ProtonColors.textNorm),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
               maxLines: 4,
             ),
             const SizedBox(
@@ -307,13 +308,13 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
               height: 10,
             ),
             Text("Digits",
-                style: FontManager.body2Regular(ProtonColors.textNorm)),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textNorm)),
             const SizedBox(
               height: 6,
             ),
             Text(
               "6",
-              style: FontManager.body2Median(ProtonColors.textNorm),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
               maxLines: 4,
             ),
             const SizedBox(
@@ -333,8 +334,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                 },
                 child: Text(
                   S.of(context).setting_2fa_scan_qrcode,
-                  style: FontManager.body1Median(
-                    ProtonColors.protonBlue,
+                  style: ProtonStyles.body1Medium(
+                    color: ProtonColors.protonBlue,
                   ),
                 ),
               ),
@@ -379,7 +380,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -391,7 +392,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -419,7 +420,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             SizedBoxes.box24,
             Text(
               S.of(context).setting_2fa_code_hint,
-              style: FontManager.body2Regular(ProtonColors.textWeak),
+              style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
               textAlign: TextAlign.center,
             ),
             SizedBoxes.box8,
@@ -495,7 +496,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -507,7 +508,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
         ]),
@@ -518,7 +519,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
           children: [
             Text(
               S.of(context).setting_2fa_setup,
-              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -526,7 +527,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             ),
             Text(
               S.of(context).setting_2fa_backup_alert_title,
-              style: FontManager.body2Median(ProtonColors.textNorm),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -534,7 +535,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             ),
             Text(
               S.of(context).setting_2fa_backup_alert_content,
-              style: FontManager.body2Regular(ProtonColors.textWeak),
+              style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -552,14 +553,15 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
                       children: [
                         Text(
                           viewModel.backupPhrases[i],
-                          style: FontManager.body2Median(ProtonColors.textNorm),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm),
                           textAlign: TextAlign.justify,
                         ),
                         (i + 1 < viewModel.backupPhrases.length)
                             ? Text(
                                 viewModel.backupPhrases[i],
-                                style: FontManager.body2Median(
-                                    ProtonColors.textNorm),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textNorm),
                                 textAlign: TextAlign.justify,
                               )
                             : const SizedBox(),

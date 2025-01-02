@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -13,7 +14,6 @@ import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TransactionList extends StatelessWidget {
   final HomeViewModel viewModel;
@@ -63,8 +63,8 @@ class TransactionList extends StatelessWidget {
                             child: Row(children: [
                               Text(
                                 S.of(context).transactions,
-                                style: FontManager.body1Median(
-                                    ProtonColors.textNorm),
+                                style: ProtonStyles.body1Medium(
+                                    color: ProtonColors.textNorm),
                                 textAlign: TextAlign.left,
                               ),
 
@@ -176,8 +176,8 @@ class TransactionList extends StatelessWidget {
                               children: [
                                 Text(
                                   S.of(context).loading_transactions,
-                                  style: FontManager.body2Regular(
-                                    ProtonColors.textWeak,
+                                  style: ProtonStyles.body2Regular(
+                                    color: ProtonColors.textWeak,
                                   ),
                                   textAlign: TextAlign.left,
                                 ),
@@ -210,8 +210,8 @@ class TransactionList extends StatelessWidget {
                               width: 280,
                               child: Text(
                                 S.of(context).start_your_journey,
-                                style: FontManager.titleHeadline(
-                                    ProtonColors.textNorm),
+                                style: ProtonStyles.subheadline(
+                                    color: ProtonColors.textNorm),
                                 textAlign: TextAlign.center,
                               )),
                           const SizedBox(

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DropdownButtonV3<T> extends StatelessWidget {
   final double width;
@@ -83,12 +83,14 @@ class DropdownButtonV3<T> extends StatelessWidget {
           onTap: () {
             showOptionsInBottomSheet(context);
           },
-          style: textStyle ?? FontManager.body1Median(ProtonColors.textNorm),
+          style: textStyle ??
+              ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
             labelText: labelText,
-            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+            labelStyle:
+                ProtonStyles.body2Regular(color: ProtonColors.textWeak),
             suffixIconConstraints: BoxConstraints(
               maxWidth: maxSuffixIconWidth ?? 24.0,
             ),
@@ -173,8 +175,8 @@ class DropdownButtonV3<T> extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         itemsText[index],
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.textNorm),
+                                        style: ProtonStyles.body2Regular(
+                                            color: ProtonColors.textNorm),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -182,8 +184,8 @@ class DropdownButtonV3<T> extends StatelessWidget {
                                 )
                               : Text(
                                   itemsText[index],
-                                  style: FontManager.body2Regular(
-                                    ProtonColors.textNorm,
+                                  style: ProtonStyles.body2Regular(
+                                    color: ProtonColors.textNorm,
                                   ),
                                 ),
                           onTap: () {

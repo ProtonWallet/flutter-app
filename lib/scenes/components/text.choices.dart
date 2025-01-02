@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextChoices extends StatefulWidget {
   final List<String> choices;
@@ -62,8 +62,8 @@ class TextFieldTextState extends State<TextChoices> {
                       ),
                       child: Center(
                           child: Text(widget.choices[index],
-                              style: FontManager.body1Regular(
-                                  ProtonColors.white))))
+                              style: ProtonStyles.body1Regular(
+                                  color: ProtonColors.white))))
                   : Container(
                       width: 60,
                       height: 42,
@@ -73,8 +73,8 @@ class TextFieldTextState extends State<TextChoices> {
                       ),
                       child: Center(
                           child: Text(widget.choices[index],
-                              style: FontManager.body1Regular(
-                                  ProtonColors.textHint)))),
+                              style: ProtonStyles.body1Regular(
+                                  color: ProtonColors.textHint)))),
             ),
           ),
         ),

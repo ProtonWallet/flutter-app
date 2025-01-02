@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class PassphraseView extends ViewBase<PassphraseViewModel> {
   const PassphraseView(PassphraseViewModel viewModel)
@@ -22,12 +22,12 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
         const SizedBox(height: 10),
         Text(
           viewModel.walletMenuModel.walletName,
-          style: FontManager.titleHeadline(ProtonColors.textNorm),
+          style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
         ),
         const SizedBox(height: 10),
         Text(
           S.of(context).wallet_passphrase_unlock_desc,
-          style: FontManager.body2Regular(ProtonColors.textWeak),
+          style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
@@ -52,7 +52,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
         ),
         if (!viewModel.isWalletPassphraseMatch)
           Text(S.of(context).wrong_passphrase,
-              style: FontManager.body2Median(ProtonColors.signalError)),
+              style: ProtonStyles.body2Medium(color: ProtonColors.signalError)),
         const SizedBox(height: 6),
         Container(
             padding: const EdgeInsets.only(top: 20),
@@ -79,8 +79,8 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
                 backgroundColor: ProtonColors.protonBlue,
                 text: S.of(context).submit,
                 width: MediaQuery.of(context).size.width,
-                textStyle:
-                    FontManager.body1Median(ProtonColors.backgroundSecondary),
+                textStyle: ProtonStyles.body1Medium(
+                    color: ProtonColors.backgroundSecondary),
                 height: 48)),
 
         /// avoid softkeyboard overlay on page

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class HomeMoreSettings extends StatelessWidget {
   final GestureTapCallback? onUpgrade;
@@ -42,7 +42,7 @@ class HomeMoreSettings extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               S.of(context).more,
-              style: FontManager.body2Regular(ProtonColors.textHint),
+              style: ProtonStyles.body2Regular(color: ProtonColors.textHint),
             ),
           ),
         ),
@@ -115,7 +115,8 @@ class HomeMoreSettings extends StatelessWidget {
         offset: const Offset(-8, 0),
         child: Text(
           text,
-          style: FontManager.body2Median(textColor ?? ProtonColors.textHint),
+          style: ProtonStyles.body2Medium(
+              color: textColor ?? ProtonColors.textHint),
         ),
       ),
     );

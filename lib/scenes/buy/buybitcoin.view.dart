@@ -10,6 +10,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
@@ -22,7 +23,6 @@ import 'package:wallet/scenes/buy/widgets/payment.selector.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 import 'buybitcoin.keyboard.done.dart';
 import 'buybitcoin.viewmodel.dart';
@@ -91,7 +91,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               Text(
                 S.of(context).buy,
                 textAlign: TextAlign.center,
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
+                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
               ),
 
               /// switch button [buy / sell]
@@ -548,9 +548,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                         : state.selectedModel
                                                             .provider
                                                             .enumToString(),
-                                                    style:
-                                                        FontManager.body2Median(
-                                                            const Color(
+                                                    style: ProtonStyles
+                                                        .body2Medium(
+                                                            color: const Color(
                                                                 0xFF191C32)),
                                                   ),
                                                   const SizedBox(width: 8),
@@ -622,8 +622,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 : "Buy with ${state.selectedModel.provider.enumToString()}",
                             width: MediaQuery.of(context).size.width - 100,
                             backgroundColor: ProtonColors.protonBlue,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.white),
+                            textStyle: ProtonStyles.body1Medium(
+                                color: ProtonColors.white),
                             height: 48);
                       },
                     ),

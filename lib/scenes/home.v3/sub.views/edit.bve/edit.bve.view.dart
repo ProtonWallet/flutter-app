@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
@@ -8,7 +9,6 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/edit.bve/edit.bve.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class EditBvEView extends ViewBase<EditBvEViewModel> {
   const EditBvEView(EditBvEViewModel viewModel)
@@ -36,13 +36,13 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
           Center(
             child: Text(
               S.of(context).email_integration,
-              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
             ),
           ),
           const SizedBox(height: 10),
           Text(
             S.of(context).email_integration_setting_desc,
-            style: FontManager.body2Regular(ProtonColors.textWeak),
+            style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
@@ -69,8 +69,8 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
                     title: Transform.translate(
                       offset: const Offset(-12, 0),
                       child: Text(protonAddress.email,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textNorm)),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textNorm)),
                     ),
                     onTap: () async {
                       final clickable =
@@ -122,7 +122,8 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
                     backgroundColor: ProtonColors.protonBlue,
                     text: S.of(context).select_this_address,
                     width: MediaQuery.of(context).size.width,
-                    textStyle: FontManager.body1Median(ProtonColors.white),
+                    textStyle:
+                        ProtonStyles.body1Medium(color: ProtonColors.white),
                     height: 48),
               ])),
         ],

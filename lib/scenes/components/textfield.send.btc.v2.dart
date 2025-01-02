@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TextFieldSendBTCV2 extends StatefulWidget {
   final FocusNode myFocusNode;
@@ -118,7 +118,8 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                       bottom: MediaQuery.of(context).viewInsets.bottom + 60),
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,
-                  style: FontManager.sendAmount(ProtonColors.textNorm),
+                  style: ProtonWalletStyles.textAmount(
+                      color: ProtonColors.textNorm),
                   autofocus: widget.autofocus,
                   keyboardType: widget.keyboardType,
                   textInputAction: widget.textInputAction,
@@ -147,16 +148,18 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: widget.hintText,
                     prefixIcon: Text(
-                      widget.bitcoinBase
-                          ? widget.bitcoinUnit == BitcoinUnit.sats
-                              ? "SATS"
-                              : "₿"
-                          : CommonHelper.getFiatCurrencySign(
-                              widget.exchangeRate.fiatCurrency),
-                      style: FontManager.sendAmountSign(ProtonColors.textWeak),
-                    ),
+                        widget.bitcoinBase
+                            ? widget.bitcoinUnit == BitcoinUnit.sats
+                                ? "SATS"
+                                : "₿"
+                            : CommonHelper.getFiatCurrencySign(
+                                widget.exchangeRate.fiatCurrency),
+                        style: ProtonWalletStyles.textAmount(
+                            color: ProtonColors.textWeak,
+                            fontVariation: 400.0)),
                     prefixIconConstraints: const BoxConstraints(),
-                    hintStyle: FontManager.sendAmount(ProtonColors.textHint),
+                    hintStyle: ProtonWalletStyles.textAmount(
+                        color: ProtonColors.textHint),
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     border: InputBorder.none,
@@ -186,7 +189,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
                   : ExchangeCalculator.getBitcoinUnitLabel(
                       widget.bitcoinUnit, estimatedSATS),
               textAlign: TextAlign.start,
-              style: FontManager.captionRegular(ProtonColors.textWeak)),
+              style: ProtonStyles.captionRegular(color: ProtonColors.textWeak)),
         ],
       ),
     );

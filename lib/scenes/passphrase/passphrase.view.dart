@@ -5,6 +5,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -14,7 +15,6 @@ import 'package:wallet/scenes/components/onboarding/content.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/passphrase/passphrase.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
   const SetupPassPhraseView(SetupPassPhraseViewModel viewModel)
@@ -67,12 +67,13 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
               children: <Widget>[
                 SizedBoxes.box20,
                 Text(S.of(context).your_passphrase_optional,
-                    style: FontManager.titleHeadline(ProtonColors.textNorm),
+                    style: ProtonStyles.subheadline(
+                        color: ProtonColors.textNorm),
                     textAlign: TextAlign.center),
                 SizedBoxes.box8,
                 Text(
                   S.of(context).for_additional_security_you_can_use_passphrase_,
-                  style: FontManager.body1Median(ProtonColors.textNorm),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
                 SizedBoxes.box24,
@@ -134,7 +135,7 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                 },
                 text: S.of(context).save_passphrase_button,
                 width: MediaQuery.of(context).size.width,
-                textStyle: FontManager.body1Median(ProtonColors.white),
+                textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
                 backgroundColor: ProtonColors.protonBlue,
                 height: 48),
           ]))
@@ -209,7 +210,8 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   text: S.of(context).continue_without_passphrase_button,
                   width: MediaQuery.of(context).size.width,
                   backgroundColor: ProtonColors.protonBlue,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.white),
                   height: 48),
               SizedBoxes.box12,
               ButtonV5(
@@ -220,7 +222,8 @@ class SetupPassPhraseView extends ViewBase<SetupPassPhraseViewModel> {
                   width: MediaQuery.of(context).size.width,
                   backgroundColor: ProtonColors.white,
                   borderColor: ProtonColors.protonBlue,
-                  textStyle: FontManager.body1Median(ProtonColors.protonBlue),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.protonBlue),
                   height: 48)
             ])),
       ],

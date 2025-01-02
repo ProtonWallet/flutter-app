@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class ErrorBottomSheet {
   static void show(
@@ -41,8 +41,8 @@ class ErrorBottomSheet {
                           children: [
                             Text(
                               S.of(context).something_went_wrong,
-                              style: FontManager.titleHeadline(
-                                  ProtonColors.textNorm),
+                              style: ProtonStyles.subheadline(
+                                  color: ProtonColors.textNorm),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 10),
@@ -50,9 +50,9 @@ class ErrorBottomSheet {
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Text(
                                 errorMessage,
-                                style: FontManager.body2Median(
-                                        ProtonColors.signalError)
-                                    .copyWith(fontSize: 15),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.signalError,
+                                    fontSize: 15.0),
                                 maxLines: 10,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -68,8 +68,8 @@ class ErrorBottomSheet {
                                     ? S.of(context).report_a_problem
                                     : S.of(context).close,
                                 width: MediaQuery.of(context).size.width,
-                                textStyle: FontManager.body1Median(
-                                  ProtonColors.textNorm,
+                                textStyle: ProtonStyles.body1Medium(
+                                  color: ProtonColors.textNorm,
                                 ),
                                 height: 48),
                           ])),

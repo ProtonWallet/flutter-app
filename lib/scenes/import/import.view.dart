@@ -4,6 +4,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/external.url.dart';
@@ -20,7 +21,6 @@ import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/import/import.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class ImportView extends ViewBase<ImportViewModel> {
   const ImportView(ImportViewModel viewModel)
@@ -101,8 +101,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                           child: Underline(
                             child: Text(
                               S.of(context).what_is_seed_phrase,
-                              style: FontManager.body2Regular(
-                                  ProtonColors.purple1Text),
+                              style: ProtonStyles.body2Regular(
+                                  color: ProtonColors.purple1Text),
                             ),
                           ),
                         ),
@@ -111,8 +111,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                       ExpansionTile(
                           shape: const Border(),
                           title: Text(S.of(context).my_wallet_has_passphrase,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak)),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textWeak)),
                           iconColor: ProtonColors.textHint,
                           collapsedIconColor: ProtonColors.textHint,
                           children: [
@@ -138,8 +138,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                                 child: Underline(
                                   child: Text(
                                     S.of(context).what_is_wallet_passphrase,
-                                    style: FontManager.body2Regular(
-                                        ProtonColors.purple1Text),
+                                    style: ProtonStyles.body2Regular(
+                                        color: ProtonColors.purple1Text),
                                   ),
                                 ),
                               ),
@@ -179,8 +179,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                           enable: viewModel.isValidMnemonic,
                           text: S.of(context).import_button,
                           width: MediaQuery.of(context).size.width,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
+                          textStyle: ProtonStyles.body1Medium(
+                              color: ProtonColors.white),
                           backgroundColor: ProtonColors.protonBlue,
                           height: 48),
                       if (viewModel.isFirstWallet)
@@ -190,15 +190,15 @@ class ImportView extends ViewBase<ImportViewModel> {
                             TextSpan(children: [
                               TextSpan(
                                 text: S.of(context).welcome_to_confirm_content,
-                                style: FontManager.captionRegular(
-                                  ProtonColors.textHint,
+                                style: ProtonStyles.captionRegular(
+                                  color: ProtonColors.textHint,
                                 ),
                               ),
                               TextSpan(
                                 text:
                                     S.of(context).welcome_to_term_and_condition,
-                                style: FontManager.captionMedian(
-                                  ProtonColors.protonBlue,
+                                style: ProtonStyles.captionMedium(
+                                  color: ProtonColors.protonBlue,
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
@@ -223,7 +223,7 @@ class ImportView extends ViewBase<ImportViewModel> {
       //       viewModel.switchToManualInputMode();
       //     },
       //     child: Text(S.of(context).import_manual_input,
-      //         style: FontManager.body2Median(ProtonColors.protonBlue))),
+      //         style: ProtonStyles.body2Medium(color:ProtonColors.protonBlue))),
       // SizedBoxes.box8,
       TextFieldTextV2(
         labelText: S.of(context).your_mnemonic,
@@ -270,7 +270,7 @@ class ImportView extends ViewBase<ImportViewModel> {
       GestureDetector(
           onTap: viewModel.switchToPasteMode,
           child: Text(S.of(context).import_paste_input,
-              style: FontManager.body2Median(ProtonColors.protonBlue))),
+              style: ProtonStyles.body2Medium(color: ProtonColors.protonBlue))),
       SizedBoxes.box8,
       const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

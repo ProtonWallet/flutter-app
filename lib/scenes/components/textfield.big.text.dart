@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextFieldBigText extends StatefulWidget {
   final double width;
@@ -30,6 +30,7 @@ class TextFieldBigText extends StatefulWidget {
 class TextFieldTextState extends State<TextFieldBigText> {
   final _decimalFormatter =
       FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$'));
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,7 +44,7 @@ class TextFieldTextState extends State<TextFieldBigText> {
           child: TextField(
             textAlign: TextAlign.center,
             textAlignVertical: TextAlignVertical.center,
-            style: FontManager.sendAmount(ProtonColors.textNorm),
+            style: ProtonWalletStyles.textAmount(color: ProtonColors.textNorm),
             minLines: 1,
             controller: widget.controller,
             focusNode: widget.focusNode,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 Future<void> showDisableDialog(
   BuildContext context,
@@ -17,7 +17,7 @@ Future<void> showDisableDialog(
         title: Center(
           child: Text(
             S.of(context).disable_recovery_phrase_title,
-            style: FontManager.body1Median(ProtonColors.textNorm),
+            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           ),
         ),
         content: SingleChildScrollView(
@@ -27,7 +27,8 @@ Future<void> showDisableDialog(
                 width: 300,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -36,7 +37,8 @@ Future<void> showDisableDialog(
                 width: 300,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content2,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -53,7 +55,7 @@ Future<void> showDisableDialog(
                 },
                 text: S.of(context).disable_recovery_phrase_button,
                 backgroundColor: ProtonColors.signalError,
-                textStyle: FontManager.body1Median(ProtonColors.white),
+                textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
                 width: 300,
                 height: 44,
               ),
@@ -67,7 +69,8 @@ Future<void> showDisableDialog(
                 text: S.of(context).cancel,
                 borderColor: ProtonColors.protonShades20,
                 backgroundColor: ProtonColors.protonShades20,
-                textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                textStyle:
+                    ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                 width: 300,
                 height: 44,
               ),

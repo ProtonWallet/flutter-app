@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistoryItemV2 extends StatelessWidget {
   final String title;
@@ -40,8 +40,8 @@ class TransactionHistoryItemV2 extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(title,
-                            style:
-                                FontManager.body2Median(ProtonColors.textWeak)),
+                            style: ProtonStyles.body2Medium(
+                                color: ProtonColors.textWeak)),
                         const SizedBox(width: 2),
                         if (titleTooltip != null)
                           Assets.images.icon.icInfoCircle.svg(
@@ -53,12 +53,14 @@ class TransactionHistoryItemV2 extends StatelessWidget {
                     ),
                   )
                 : Text(title,
-                    style: FontManager.body2Median(ProtonColors.textWeak)),
+                    style:
+                        ProtonStyles.body2Medium(color: ProtonColors.textWeak)),
             if (titleOptionsCallback != null)
               GestureDetector(
                   onTap: titleOptionsCallback,
                   child: Text(S.of(context).advanced_options,
-                      style: FontManager.body2Median(ProtonColors.textWeak)))
+                      style: ProtonStyles.body2Medium(
+                          color: ProtonColors.textWeak)))
           ]),
           content,
           if (memo != null) memo!,

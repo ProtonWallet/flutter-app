@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
@@ -11,7 +12,6 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BitcoinPriceChart extends StatefulWidget {
   final ProtonExchangeRate exchangeRate;
@@ -184,32 +184,32 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                               if (percentile0.ceil() == value.ceil()) {
                                 return Text(
                                   percentile0.toStringAsFixed(0),
-                                  style: FontManager.captionRegular(
-                                    ProtonColors.textWeak,
+                                  style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textWeak,
                                   ),
                                 );
                               }
                               if (percentile100.ceil() == value.ceil()) {
                                 return Text(
                                   percentile100.toStringAsFixed(0),
-                                  style: FontManager.captionRegular(
-                                    ProtonColors.textWeak,
+                                  style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textWeak,
                                   ),
                                 );
                               }
                               if (percentile25.ceil() == value.ceil()) {
                                 return Text(
                                   percentile25.toStringAsFixed(0),
-                                  style: FontManager.captionRegular(
-                                    ProtonColors.textWeak,
+                                  style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textWeak,
                                   ),
                                 );
                               }
                               if (percentile75.ceil() == value.ceil()) {
                                 return Text(
                                   percentile75.toStringAsFixed(0),
-                                  style: FontManager.captionRegular(
-                                    ProtonColors.textWeak,
+                                  style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textWeak,
                                   ),
                                 );
                               }
@@ -251,14 +251,14 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               choiceStyle: C2ChipStyle.filled(
                 selectedStyle: C2ChipStyle(
                   backgroundColor: ProtonColors.textHint,
-                  foregroundStyle: FontManager.body2Regular(
-                    ProtonColors.white,
+                  foregroundStyle: ProtonStyles.body2Regular(
+                    color: ProtonColors.white,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                 ),
                 color: ProtonColors.white,
-                foregroundStyle: FontManager.body2Regular(
-                  ProtonColors.textNorm,
+                foregroundStyle: ProtonStyles.body2Regular(
+                  color: ProtonColors.textNorm,
                 ),
               ),
             ),
@@ -273,7 +273,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         S.of(context).btc_price,
-        style: FontManager.body2Regular(ProtonColors.textHint),
+        style: ProtonStyles.body2Regular(color: ProtonColors.textHint),
         textAlign: TextAlign.left,
       ),
       const SizedBox(
@@ -289,7 +289,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
           // value: price,
           fractionDigits:
               ExchangeCalculator.getDisplayDigit(widget.exchangeRate),
-          textStyle: FontManager.titleHeadline(ProtonColors.textNorm)),
+          textStyle: ProtonStyles.subheadline(color: ProtonColors.textNorm)),
       const SizedBox(
         height: 2,
       ),
@@ -300,14 +300,16 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle: FontManager.body2Regular(ProtonColors.signalSuccess))
+              textStyle:
+                  ProtonStyles.body2Regular(color: ProtonColors.signalSuccess))
           : AnimatedFlipCounter(
               duration: const Duration(milliseconds: 500),
               prefix: "",
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle: FontManager.body2Regular(ProtonColors.signalError)),
+              textStyle:
+                  ProtonStyles.body2Regular(color: ProtonColors.signalError)),
       const SizedBox(
         height: 8,
       ),

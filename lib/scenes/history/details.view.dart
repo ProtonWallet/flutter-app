@@ -8,6 +8,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -25,7 +26,6 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/history/bottom.sheet/edit.sender.dart';
 import 'package:wallet/scenes/history/details.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
   const HistoryDetailView(HistoryDetailViewModel viewModel)
@@ -122,8 +122,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                           viewModel.isSend
                                               ? S.of(context).you_sent
                                               : S.of(context).you_received,
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textHint))
+                                          style: ProtonStyles.body2Regular(
+                                              color: ProtonColors.textHint))
                                     ],
                                   ),
                                   Row(
@@ -131,18 +131,22 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                       viewModel.displayBalance
                                           ? Text(
                                               "$fiatCurrencySign${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt()).abs(), displayDigits: displayDigits)}",
-                                              style: FontManager
-                                                  .transactionHistoryAmountTitle(
-                                                      ProtonColors.textNorm))
+                                              style:
+                                                  ProtonWalletStyles.textAmount(
+                                                color: ProtonColors.textNorm,
+                                                fontSize: 32,
+                                              ))
                                           : Text(
                                               "$fiatCurrencySign$hidedBalanceString",
-                                              style: FontManager
-                                                  .transactionHistoryAmountTitle(
-                                                      ProtonColors.textNorm)),
+                                              style:
+                                                  ProtonWalletStyles.textAmount(
+                                                color: ProtonColors.textNorm,
+                                                fontSize: 32,
+                                              )),
                                       const SizedBox(width: 4),
                                       Text(fiatCurrencyName,
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textNorm)),
+                                          style: ProtonStyles.body2Regular(
+                                              color: ProtonColors.textNorm)),
                                     ],
                                   ),
                                   viewModel.displayBalance
@@ -155,11 +159,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                   viewModel.amount
                                                       .toInt()
                                                       .abs()),
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textHint))
+                                          style: ProtonStyles.body2Regular(
+                                              color: ProtonColors.textHint))
                                       : Text(getHidedBitcoinAmountString(),
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textHint)),
+                                          style: ProtonStyles.body2Regular(
+                                              color: ProtonColors.textHint)),
                                 ]),
                       const SizedBox(height: 20),
                       viewModel.isSend
@@ -243,9 +247,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                         S
                                                             .of(context)
                                                             .message_to_myself,
-                                                        style: FontManager
+                                                        style: ProtonStyles
                                                             .captionRegular(
-                                                                ProtonColors
+                                                                color: ProtonColors
                                                                     .textHint)),
                                                     Row(children: [
                                                       Expanded(
@@ -253,9 +257,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                               viewModel
                                                                   .memoController
                                                                   .text,
-                                                              style: FontManager
-                                                                  .body2Median(
-                                                                      ProtonColors
+                                                              style: ProtonStyles
+                                                                  .body2Medium(
+                                                                      color: ProtonColors
                                                                           .textNorm)))
                                                     ]),
                                                   ],
@@ -271,17 +275,17 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                         S
                                                             .of(context)
                                                             .message_to_myself,
-                                                        style: FontManager
+                                                        style: ProtonStyles
                                                             .captionRegular(
-                                                                ProtonColors
+                                                                color: ProtonColors
                                                                     .textNorm)),
                                                     Text(
                                                         S
                                                             .of(context)
                                                             .trans_add_note,
-                                                        style: FontManager
-                                                            .body2Median(
-                                                                ProtonColors
+                                                        style: ProtonStyles
+                                                            .body2Medium(
+                                                                color: ProtonColors
                                                                     .textHint)),
                                                   ],
                                                 )),
@@ -313,8 +317,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           title: Transform.translate(
                             offset: const Offset(-16, 0),
                             child: Text(S.of(context).view_more,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textWeak)),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textWeak)),
                           ),
                           iconColor: ProtonColors.textHint,
                           collapsedIconColor: ProtonColors.textHint,
@@ -403,8 +407,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 text: S.of(context).view_on_blockstream,
                                 width: MediaQuery.of(context).size.width,
                                 backgroundColor: ProtonColors.protonBlue,
-                                textStyle:
-                                    FontManager.body1Median(ProtonColors.white),
+                                textStyle: ProtonStyles.body1Medium(
+                                    color: ProtonColors.white),
                                 height: 48),
                             const SizedBox(height: 20),
                           ])
@@ -436,7 +440,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             },
             text: S.of(context).boost_priority,
             width: 160,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             backgroundColor: ProtonColors.textWeakPressed,
             borderColor: ProtonColors.textWeakPressed,
             height: 48,

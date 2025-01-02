@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/tag.v2.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BackupMnemonicView extends StatelessWidget {
   final List<Item> itemList;
   final VoidCallback? onPressed;
   final String walletName;
+
   const BackupMnemonicView({
     required this.itemList,
     required this.walletName,
@@ -32,11 +33,16 @@ class BackupMnemonicView extends StatelessWidget {
             height: 167,
           ),
           Text(S.of(context).mnemonic_backup_content_title,
-              style: FontManager.titleHeadline(ProtonColors.textNorm)),
+              style: ProtonStyles.subheadline(color: ProtonColors.textNorm)),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, ).copyWith(top: 10,),
-            child: Text(S.of(context).mnemonic_backup_content_subtitle(walletName),
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ).copyWith(
+              top: 10,
+            ),
+            child: Text(
+                S.of(context).mnemonic_backup_content_subtitle(walletName),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center),
           ),
           const SizedBox(
@@ -82,7 +88,7 @@ class BackupMnemonicView extends StatelessWidget {
               backgroundColor: ProtonColors.protonBlue,
               text: S.of(context).done,
               width: MediaQuery.of(context).size.width,
-              textStyle: FontManager.body1Median(ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
               radius: 40,
               height: 52)),
     ]));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -13,7 +14,6 @@ import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/recovery/recovery.section.dart';
 import 'package:wallet/scenes/security.setting/security.setting.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
   const SecuritySettingView(SecuritySettingViewModel viewModel)
@@ -36,7 +36,7 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
           if (viewModel.error.isNotEmpty)
             Text(
               viewModel.error,
-              style: FontManager.body2Regular(ProtonColors.signalError),
+              style: ProtonStyles.body2Regular(color: ProtonColors.signalError),
             ),
           const SizedBox(height: 10),
           RecoverySection(

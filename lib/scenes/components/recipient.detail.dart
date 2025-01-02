@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class RecipientDetail extends StatelessWidget {
   final String? name;
@@ -77,8 +77,8 @@ class RecipientDetail extends StatelessWidget {
                       radius: 16,
                       child: Text(
                         "B",
-                        style: FontManager.captionSemiBold(
-                            avatarTextColor ?? ProtonColors.white),
+                        style: ProtonStyles.captionSemibold(
+                            color: avatarTextColor ?? ProtonColors.white),
                       ),
                     )
                   : CircleAvatar(
@@ -91,8 +91,8 @@ class RecipientDetail extends StatelessWidget {
                                 ? CommonHelper.getFirstNChar(email!, 1)
                                     .toUpperCase()
                                 : "",
-                        style: FontManager.captionSemiBold(
-                            avatarTextColor ?? ProtonColors.white),
+                        style: ProtonStyles.captionSemibold(
+                            color: avatarTextColor ?? ProtonColors.white),
                       ),
                     ),
             const SizedBox(width: 6),
@@ -115,23 +115,23 @@ class RecipientDetail extends StatelessWidget {
                   children: [
                     if (name != null)
                       Text(name!,
-                          style:
-                              FontManager.body2Median(ProtonColors.textNorm)),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm)),
                     if (email != null && name == null && !isBitcoinAddress)
                       Text(email!,
-                          style:
-                              FontManager.body2Median(ProtonColors.textNorm)),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm)),
                     if (email != null &&
                         email != name &&
                         name != null &&
                         !isBitcoinAddress)
                       Text(email!,
-                          style:
-                              FontManager.captionMedian(ProtonColors.textHint)),
+                          style: ProtonStyles.captionMedium(
+                              color: ProtonColors.textHint)),
                     if (email != null && isBitcoinAddress)
                       Text(CommonHelper.shorterBitcoinAddress(email!),
-                          style:
-                              FontManager.body2Median(ProtonColors.textNorm)),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm)),
                     // if (!isBitcoinAddress && !isSignatureInvalid && !isBlocked)
                     //   bitcoinAddress.isNotEmpty
                     //       ? GestureDetector(
@@ -155,8 +155,8 @@ class RecipientDetail extends StatelessWidget {
                     //                             260),
                     //                     child: Text(bitcoinAddress,
                     //                         overflow: TextOverflow.ellipsis,
-                    //                         style: FontManager.overlineRegular(
-                    //                             ProtonColors.textWeak))),
+                    //                         style: ProtonStyles.overlineRegular(
+                    //                             color: ProtonColors.textWeak))),
                     //                 Icon(Icons.copy_rounded,
                     //                     color: ProtonColors.textWeak, size: 14)
                     //               ]))
@@ -170,13 +170,13 @@ class RecipientDetail extends StatelessWidget {
                     //             const SizedBox(width: 1),
                     //             Text(
                     //               S.of(context).no_wallet_found,
-                    //               style: FontManager.captionRegular(
-                    //                   ProtonColors.signalError),
+                    //               style: ProtonStyles.captionRegular(
+                    //                   color: ProtonColors.signalError),
                     //             ),
                     //             const SizedBox(width: 16),
                     //             Text(S.of(context).send_invite,
-                    //                 style: FontManager.captionRegular(
-                    //                     ProtonColors.protonBlue)),
+                    //                 style: ProtonStyles.captionRegular(
+                    //                     color: ProtonColors.protonBlue)),
                     //             const SizedBox(width: 1),
                     //             Icon(Icons.email,
                     //                 color: ProtonColors.protonBlue, size: 14),
@@ -192,8 +192,8 @@ class RecipientDetail extends StatelessWidget {
                             S
                                 .of(context)
                                 .error_you_can_not_send_to_self_account,
-                            style: FontManager.captionSemiBold(
-                                ProtonColors.signalError),
+                            style: ProtonStyles.captionSemibold(
+                                color: ProtonColors.signalError),
                           ),
                         )
                       ]),
@@ -208,8 +208,8 @@ class RecipientDetail extends StatelessWidget {
                             S
                                 .of(context)
                                 .error_this_bitcoin_address_signature_is_invalid,
-                            style: FontManager.captionSemiBold(
-                                ProtonColors.signalError),
+                            style: ProtonStyles.captionSemibold(
+                                color: ProtonColors.signalError),
                           ),
                         )
                       ]),
@@ -222,8 +222,8 @@ class RecipientDetail extends StatelessWidget {
                           width: MediaQuery.of(context).size.width - 200,
                           child: Text(
                             S.of(context).error_this_bitcoin_address_is_blocked,
-                            style: FontManager.captionSemiBold(
-                                ProtonColors.signalError),
+                            style: ProtonStyles.captionSemibold(
+                                color: ProtonColors.signalError),
                           ),
                         )
                       ]),
