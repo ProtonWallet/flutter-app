@@ -83,6 +83,7 @@ class WalletAccountAddressListView
                 addressesInPool: viewModel.addressesInPool,
                 exchangeRate: viewModel.exchangeRate,
                 showTransactionDetailCallback: viewModel.showTransactionDetail,
+                showAddressQRcodeCallback: viewModel.showAddressQRcode,
               ),
             if (viewModel.loadingAddress)
               const Align(

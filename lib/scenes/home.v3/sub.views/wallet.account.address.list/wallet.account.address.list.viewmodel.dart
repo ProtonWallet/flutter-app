@@ -30,6 +30,8 @@ abstract class WalletAccountAddressListViewModel
   /// exposed functions for UI
   void showTransactionDetail(frbTransactionDetails);
 
+  void showAddressQRcode(address);
+
   /// exposed functions for UI
   Future<void> updateAddressListType();
 
@@ -199,6 +201,11 @@ class WalletAccountAddressListViewModelImpl
       accountMenuModel.accountModel.accountID,
       frbTransactionDetails,
     );
+  }
+
+  @override
+  void showAddressQRcode(address) {
+    coordinator.showAddressQRcode(address);
   }
 
   @override
