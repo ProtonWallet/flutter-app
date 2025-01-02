@@ -7,18 +7,23 @@ import 'package:wallet/scenes/components/bitcoin.address.info.box.dart';
 typedef ShowTransactionDetailCallback = void Function(
   FrbTransactionDetails frbTransactionDetails,
 );
+typedef ShowAddressQRcodeCallback = void Function(
+  String address,
+);
 
 class WalletBitcoinAddressList extends StatefulWidget {
   final List<FrbAddressDetails> addresses;
   final List<String> addressesInPool;
   final ProtonExchangeRate exchangeRate;
   final ShowTransactionDetailCallback showTransactionDetailCallback;
+  final ShowAddressQRcodeCallback showAddressQRcodeCallback;
 
   const WalletBitcoinAddressList({
     required this.addresses,
     required this.addressesInPool,
     required this.exchangeRate,
     required this.showTransactionDetailCallback,
+    required this.showAddressQRcodeCallback,
     super.key,
   });
 
@@ -47,6 +52,7 @@ class WalletBitcoinAddressListState extends State<WalletBitcoinAddressList> {
             bitcoinAddressDetail: address,
             exchangeRate: widget.exchangeRate,
             showTransactionDetailCallback: widget.showTransactionDetailCallback,
+            showAddressQRcodeCallback: widget.showAddressQRcodeCallback,
             inPool: widget.addressesInPool.contains(address.address),
           ),
       ],

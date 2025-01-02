@@ -9,6 +9,8 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wallet.account.address.list.view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wallet.account.address.list.viewmodel.dart';
+import 'package:wallet/scenes/qrcode.content/qrcode.content.coordinator.dart';
+import 'package:wallet/scenes/qrcode.content/qrcode.content.viewmodel.dart';
 
 class WalletAccountAddressListCoordinator extends Coordinator {
   late ViewBase widget;
@@ -27,6 +29,17 @@ class WalletAccountAddressListCoordinator extends Coordinator {
       walletID,
       accountID,
       frbTransactionDetails,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+    );
+  }
+
+  void showAddressQRcode(String address) {
+    final view = QRcodeContentCoordinator(
+      QRcodeType.bitcoinAddress,
+      address,
     ).start();
     showInBottomSheet(
       view,

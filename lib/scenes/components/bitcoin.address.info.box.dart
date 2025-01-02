@@ -19,6 +19,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
   final FrbAddressDetails bitcoinAddressDetail;
   final ProtonExchangeRate exchangeRate;
   final ShowTransactionDetailCallback showTransactionDetailCallback;
+  final ShowAddressQRcodeCallback showAddressQRcodeCallback;
   final bool inPool;
   final bool showTransactions;
 
@@ -26,6 +27,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
     required this.bitcoinAddressDetail,
     required this.exchangeRate,
     required this.showTransactionDetailCallback,
+    required this.showAddressQRcodeCallback,
     required this.inPool,
     this.showTransactions = false,
     super.key,
@@ -82,7 +84,17 @@ class BitcoinAddressInfoBox extends StatelessWidget {
                   width: 2,
                 ),
                 Icon(Icons.copy_rounded,
-                    color: ProtonColors.textWeak, size: 18),
+                    color: ProtonColors.textWeak, size: 20),
+                const SizedBox(
+                  width: 4,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    showAddressQRcodeCallback(bitcoinAddressDetail.address);
+                  },
+                  child: Icon(Icons.qr_code_rounded,
+                      color: ProtonColors.textWeak, size: 20),
+                ),
               ],
             ),
           ),
