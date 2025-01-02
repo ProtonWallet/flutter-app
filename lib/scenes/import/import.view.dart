@@ -51,6 +51,21 @@ class ImportView extends ViewBase<ImportViewModel> {
                     ),
                     child: SingleChildScrollView(
                         child: Column(children: <Widget>[
+                      Underline(
+                        onTap: () {
+                          ExternalUrl.shared.launchBlogImportWallet();
+                        },
+                        color: ProtonColors.brandLighten20,
+                        child: Text(
+                          S.of(context).learn_more,
+                          style: FontManager.body2Median(
+                            ProtonColors.brandLighten20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       TextFieldTextV2(
                         labelText: S.of(context).name,
                         maxLength: maxAccountNameSize,

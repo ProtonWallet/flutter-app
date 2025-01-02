@@ -33,6 +33,7 @@ class ExternalUrl {
       "https://proton.me/support/wallet-create-btc-account#bitcoin-address-type";
   final String accountIndexLink =
       "https://proton.me/support/wallet-create-btc-account#bitcoin-account-index-type";
+  final String importWalletLink = "https://proton.me/support/wallet-import-wallet";
 
   /// android app store url
   final String googlePlayUrl =
@@ -110,6 +111,10 @@ class ExternalUrl {
 
   void launchBlogAccountIndex() {
     launchString(accountIndexLink);
+  }
+
+  void launchBlogImportWallet(){
+    launchString(importWalletLink);
   }
 
   void launchWalletHomepage() {
