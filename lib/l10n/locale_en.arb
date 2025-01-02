@@ -381,7 +381,7 @@
   "wrong_mnemonic_order": "Wrong mnemonic order",
   "continue_buttion": "Continue",
   "save_12_words_securely": "Save these 12 words securely and never share them with anyone.",
-  "your_mnemonic": "Seed phrase (12-24 words)",
+  "your_mnemonic": "Seed phrase (12-24 words, separated by space)",
   "your_mnemonic_hint": "Enter your seed phrase in exact order",
   "import_manual_input": "Manual input",
   "import_paste_input": "Paste to complete",
