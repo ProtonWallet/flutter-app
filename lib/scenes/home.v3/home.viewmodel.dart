@@ -678,8 +678,6 @@ class HomeViewModelImpl extends HomeViewModel {
           selectedAccount?.accountID ?? "",
           isWalletView: isWalletView,
         );
-      case NavID.testWebsocket:
-        coordinator.showWebSocket();
       case NavID.securitySetting:
         coordinator.showSecuritySetting();
       case NavID.welcome:
