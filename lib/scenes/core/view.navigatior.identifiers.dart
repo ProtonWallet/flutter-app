@@ -75,6 +75,5 @@ enum NavID {
 
   // Others
   testWallet,
-  testWebsocket,
   newuser,
 }

@@ -25,7 +25,6 @@ import 'package:wallet/scenes/buy/buybitcoin.instruction.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/debug/websocket.coordinator.dart';
 import 'package:wallet/scenes/discover/discover.coordinator.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/home.view.dart';
@@ -123,11 +122,6 @@ class HomeCoordinator extends Coordinator {
       isWalletView: isWalletView,
     ).start();
     showInBottomSheet(view);
-  }
-
-  void showWebSocket() {
-    final view = WebSocketCoordinator().start();
-    push(view, fullscreenDialog: true);
   }
 
   void showDiscover() {
