@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
@@ -15,7 +16,6 @@ import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.viewmodel.dart';
 import 'package:wallet/scenes/recovery/recovery.auth.dialog.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
   const DeleteWalletView(DeleteWalletViewModel viewModel)
@@ -83,8 +83,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                         Text(
                             S.of(context).confirm_to_delete_wallet(
                                 viewModel.walletMenuModel.walletName),
-                            style: FontManager.titleHeadline(
-                                ProtonColors.textNorm),
+                            style: ProtonStyles.subheadline(
+                                color: ProtonColors.textNorm),
                             textAlign: TextAlign.center),
                         const SizedBox(height: 10),
                         if (viewModel.hasBalance)
@@ -110,8 +110,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             ),
                           ),
                         Text(S.of(context).confirm_to_delete_wallet_content,
-                            style: FontManager.body2Regular(
-                                ProtonColors.textWeak)),
+                            style: ProtonStyles.body2Regular(
+                                color: ProtonColors.textWeak)),
                         const SizedBox(height: 40),
                         BlocSelector<DeleteWalletBloc, DeleteWalletState, bool>(
                             selector: (state) {
@@ -125,8 +125,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             enable: !loading,
                             text: S.of(context).backup_wallet,
                             width: MediaQuery.of(context).size.width,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.textNorm),
+                            textStyle: ProtonStyles.body1Medium(
+                                color: ProtonColors.textNorm),
                             backgroundColor: ProtonColors.textWeakPressed,
                             borderColor: ProtonColors.textWeakPressed,
                             height: 48,
@@ -152,8 +152,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                               width: MediaQuery.of(context).size.width,
                               backgroundColor: ProtonColors.signalError,
                               borderColor: ProtonColors.signalError,
-                              textStyle:
-                                  FontManager.body1Median(ProtonColors.white),
+                              textStyle: ProtonStyles.body1Medium(
+                                  color: ProtonColors.white),
                               height: 48,
                             );
                           },

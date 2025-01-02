@@ -1,13 +1,14 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/protonmail.autocomplete.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 typedef EmailSelectedCallback = void Function(String email);
 
@@ -43,7 +44,7 @@ class EmailAutoCompleteSheet {
                 flex: 3,
                 child: Text(
                   S.of(context).send_invite_to(""),
-                  style: FontManager.body1Median(ProtonColors.textNorm),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
               ),

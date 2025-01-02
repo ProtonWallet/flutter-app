@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TransactionListTitle extends StatelessWidget {
   final double width;
@@ -70,8 +70,8 @@ class TransactionListTitle extends StatelessWidget {
                                     .formatLocaleTimeWithSendOrReceiveOn(
                                         context, timestamp!,
                                         isSend: isSend),
-                                style: FontManager.body2Median(
-                                    ProtonColors.textHint),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textHint),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ))
@@ -82,8 +82,8 @@ class TransactionListTitle extends StatelessWidget {
                                         : S
                                             .of(context)
                                             .in_progress_waiting_for_confirm,
-                                    style: FontManager.body2Median(
-                                        ProtonColors.protonBlue)),
+                                    style: ProtonStyles.body2Medium(
+                                        color: ProtonColors.protonBlue)),
                               ]),
                       ]),
                   Row(
@@ -94,8 +94,8 @@ class TransactionListTitle extends StatelessWidget {
                           isSend
                               ? "${S.of(context).trans_to} $address"
                               : "${S.of(context).trans_from} $address",
-                          style: FontManager.actionButtonText(
-                              ProtonColors.textNorm),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )),
@@ -117,7 +117,7 @@ class TransactionListTitle extends StatelessWidget {
                   //           .of(context)
                   //           .trans_note(CommonHelper.getFirstNChar(note, 24)),
                   //       style:
-                  //           FontManager.captionRegular(ProtonColors.textHint),
+                  //           ProtonStyles.captionRegular(color:ProtonColors.textHint),
                   //       overflow: TextOverflow.ellipsis,
                   //     ))
                   //   ]),
@@ -137,7 +137,8 @@ class TransactionListTitle extends StatelessWidget {
                         S.of(context).trans_body((body ?? "")
                             .replaceAll("\r", " ")
                             .replaceAll("\n", " ")),
-                        style: FontManager.body2Median(ProtonColors.textWeak),
+                        style: ProtonStyles.body2Medium(
+                            color: ProtonColors.textWeak),
                         overflow: TextOverflow.ellipsis,
                       ))
                     ]),
@@ -154,12 +155,12 @@ class TransactionListTitle extends StatelessWidget {
                     ? Text(
                         bitcoinAmount.toFiatCurrencySignString(
                             displayBalance: displayBalance),
-                        style: FontManager.captionRegular(
-                            ProtonColors.signalError))
+                        style: ProtonStyles.captionRegular(
+                            color: ProtonColors.signalError))
                     : Text(
                         "+${bitcoinAmount.toFiatCurrencySignString(displayBalance: displayBalance)}",
-                        style: FontManager.captionRegular(
-                            ProtonColors.signalSuccess)),
+                        style: ProtonStyles.captionRegular(
+                            color: ProtonColors.signalSuccess)),
               ],
             ),
           ]),

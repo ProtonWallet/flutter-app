@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 void showUpgradeErrorDialog(
   String errorMessage,
@@ -37,7 +37,7 @@ void showUpgradeErrorDialog(
                 ExternalUrl.shared.lanuchStore();
               },
               text: S.of(context).upgrade,
-              textStyle: FontManager.body1Median(ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
               backgroundColor: ProtonColors.protonBlue,
               borderColor: ProtonColors.protonBlue,
               height: 48,
@@ -55,7 +55,8 @@ void showUpgradeErrorDialog(
                 text: S.of(context).learn_more,
                 backgroundColor: ProtonColors.protonShades20,
                 borderColor: ProtonColors.protonShades20,
-                textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                textStyle:
+                    ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                 height: 48,
                 width: max(
                   330,

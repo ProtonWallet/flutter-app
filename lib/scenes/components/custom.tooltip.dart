@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class CustomTooltip extends StatelessWidget {
   final String message;
@@ -34,7 +34,7 @@ class CustomTooltip extends StatelessWidget {
             ),
             child: Text(
               message,
-              style: FontManager.body2Regular(ProtonColors.white),
+              style: ProtonStyles.body2Regular(color: ProtonColors.white),
               textAlign: TextAlign.center,
             )),
         child: child);

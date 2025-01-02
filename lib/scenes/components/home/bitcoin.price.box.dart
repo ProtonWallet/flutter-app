@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -12,7 +13,6 @@ import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
 import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BitcoinPriceBox extends StatefulWidget {
   final String title;
@@ -158,8 +158,8 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                         fractionDigits:
                                             ExchangeCalculator.getDisplayDigit(
                                                 widget.exchangeRate),
-                                        textStyle: FontManager.body2Median(
-                                            ProtonColors.textNorm)),
+                                        textStyle: ProtonStyles.body2Medium(
+                                            color: ProtonColors.textNorm)),
                                     const SizedBox(
                                       width: 8,
                                     ),
@@ -171,8 +171,10 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                             value: priceChange,
                                             suffix: "% (1d)",
                                             fractionDigits: 2,
-                                            textStyle: FontManager.body2Regular(
-                                                ProtonColors.signalSuccess))
+                                            textStyle:
+                                                ProtonStyles.body2Regular(
+                                                    color: ProtonColors
+                                                        .signalSuccess))
                                         : AnimatedFlipCounter(
                                             duration: const Duration(
                                                 milliseconds: 500),
@@ -180,8 +182,10 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                             value: priceChange,
                                             suffix: "% (1d)",
                                             fractionDigits: 2,
-                                            textStyle: FontManager.body2Regular(
-                                                ProtonColors.signalError)),
+                                            textStyle:
+                                                ProtonStyles.body2Regular(
+                                                    color: ProtonColors
+                                                        .signalError)),
                                   ]),
                                 )
                         ],

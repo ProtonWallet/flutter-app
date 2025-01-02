@@ -2,6 +2,7 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
@@ -13,7 +14,6 @@ import 'package:wallet/scenes/components/custom.slider.v1.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/rbf/rbf.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class RbfView extends ViewBase<RbfViewModel> {
   const RbfView(RbfViewModel viewModel)
@@ -47,13 +47,13 @@ class RbfView extends ViewBase<RbfViewModel> {
             ),
             Text(
               S.of(context).rbf_title,
-              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Text(
               S.of(context).rbf_desc,
-              style: FontManager.body2Median(ProtonColors.textWeak),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textWeak),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -65,12 +65,14 @@ class RbfView extends ViewBase<RbfViewModel> {
                     children: [
                       Text(
                         S.of(context).rbf_current_fee,
-                        style: FontManager.body1Median(ProtonColors.textNorm),
+                        style: ProtonStyles.body1Medium(
+                            color: ProtonColors.textNorm),
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         "${viewModel.fiatCurrencySign} ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.currentFee), displayDigits: viewModel.displayDigits)}",
-                        style: FontManager.body1Median(ProtonColors.textNorm),
+                        style: ProtonStyles.body1Medium(
+                            color: ProtonColors.textNorm),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -81,9 +83,8 @@ class RbfView extends ViewBase<RbfViewModel> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   ExchangeCalculator.getBitcoinUnitLabel(
-                      viewModel.bitcoinUnit,
-                      viewModel.currentFee),
-                  style: FontManager.body1Median(ProtonColors.textHint),
+                      viewModel.bitcoinUnit, viewModel.currentFee),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textHint),
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -97,12 +98,14 @@ class RbfView extends ViewBase<RbfViewModel> {
                 children: [
                   Text(
                     S.of(context).rbf_new_fee,
-                    style: FontManager.body1Median(ProtonColors.textNorm),
+                    style:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     "${viewModel.fiatCurrencySign} ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, int.parse(viewModel.newFeeController.text)), displayDigits: viewModel.displayDigits)}",
-                    style: FontManager.body1Median(ProtonColors.textNorm),
+                    style:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -111,10 +114,9 @@ class RbfView extends ViewBase<RbfViewModel> {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  ExchangeCalculator.getBitcoinUnitLabel(
-                      viewModel.bitcoinUnit,
+                  ExchangeCalculator.getBitcoinUnitLabel(viewModel.bitcoinUnit,
                       int.parse(viewModel.newFeeController.text)),
-                  style: FontManager.body1Median(ProtonColors.textHint),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textHint),
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -143,13 +145,15 @@ class RbfView extends ViewBase<RbfViewModel> {
                           S
                               .of(context)
                               .rbf_confirm_speed(getSpeedString(context)),
-                          style: FontManager.body2Median(ProtonColors.textWeak),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textWeak),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           S.of(context).rbf_confirm_speed_in_minutes(
                               viewModel.estimatedBlock * 10),
-                          style: FontManager.body1Bold(ProtonColors.textNorm),
+                          style: ProtonStyles.body1Semibold(
+                              color: ProtonColors.textNorm),
                           textAlign: TextAlign.center,
                         ),
                       ])
@@ -173,8 +177,8 @@ class RbfView extends ViewBase<RbfViewModel> {
                 text: S.of(context).rbf_send,
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.protonBlue,
-                textStyle:
-                    FontManager.body1Median(ProtonColors.backgroundSecondary),
+                textStyle: ProtonStyles.body1Medium(
+                    color: ProtonColors.backgroundSecondary),
                 borderColor: ProtonColors.protonBlue,
                 height: 48),
           ],

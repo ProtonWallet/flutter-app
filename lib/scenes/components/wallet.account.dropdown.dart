@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -10,7 +11,6 @@ import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class WalletAccountDropdown extends StatefulWidget {
   final double width;
@@ -92,13 +92,15 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
               });
             }
           },
-          style: FontManager.body1Median(ProtonColors.textNorm),
+          style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
             labelText: widget.labelText,
-            labelStyle: FontManager.textFieldLabelStyle(ProtonColors.textWeak)
-                .copyWith(fontSize: 15),
+            labelStyle: ProtonStyles.body2Regular(
+              color: ProtonColors.textWeak,
+              fontSize: 15.0,
+            ),
             suffixIconConstraints: const BoxConstraints(maxWidth: 24.0),
             contentPadding: const EdgeInsets.only(top: 4, bottom: 16),
             suffixIcon: widget.accounts.length > 1
@@ -138,11 +140,11 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
     return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
       Text(
           "${Provider.of<UserSettingProvider>(context).getFiatCurrencyName(fiatCurrency: exchangeRate?.fiatCurrency ?? FiatCurrency.usd)}${estimatedValue.toStringAsFixed(defaultDisplayDigits)}",
-          style: FontManager.captionSemiBold(ProtonColors.textNorm)),
+          style: ProtonStyles.captionSemibold(color: ProtonColors.textNorm)),
       Text(
           ExchangeCalculator.getBitcoinUnitLabel(
               widget.bitcoinUnit!, accountModel.balance.toInt()),
-          style: FontManager.overlineRegular(ProtonColors.textHint))
+          style: ProtonStyles.overlineRegular(color: ProtonColors.textHint))
     ]);
   }
 
@@ -178,7 +180,8 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
                         Center(
                             child: Text(
                           S.of(context).accounts,
-                          style: FontManager.body2Median(ProtonColors.textNorm),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textNorm),
                         )),
                         const SizedBox(
                           height: 10,
@@ -210,8 +213,10 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
                                             Text(
                                                 widget.accounts[index]
                                                     .labelDecrypt,
-                                                style: FontManager.body2Regular(
-                                                    ProtonColors.textNorm)),
+                                                style:
+                                                    ProtonStyles.body2Regular(
+                                                        color: ProtonColors
+                                                            .textNorm)),
                                             getWalletAccountBalanceWidget(
                                                 context,
                                                 widget.accounts[index]),

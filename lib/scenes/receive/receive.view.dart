@@ -8,6 +8,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -16,7 +17,6 @@ import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class ReceiveView extends ViewBase<ReceiveViewModel> {
   const ReceiveView(ReceiveViewModel viewModel)
@@ -50,8 +50,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         children: [
                           Text(
                             S.of(context).receive_desc,
-                            style:
-                                FontManager.body2Regular(ProtonColors.textWeak),
+                            style: ProtonStyles.body2Regular(
+                                color: ProtonColors.textWeak),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
@@ -115,8 +115,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         children: [
                                           Text(
                                             S.of(context).bitcoin_address,
-                                            style: FontManager.body2Median(
-                                                ProtonColors.textNorm),
+                                            style: ProtonStyles.body2Medium(
+                                                color: ProtonColors.textNorm),
                                           ),
                                           const SizedBox(width: 4),
                                           Assets.images.icon.icInfoCircleDark
@@ -149,8 +149,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                                           ?.address ??
                                                       "",
                                                   style:
-                                                      FontManager.body2Regular(
-                                                          ProtonColors
+                                                      ProtonStyles.body2Regular(
+                                                          color: ProtonColors
                                                               .textWeak),
                                                   maxLines: 5,
                                                   overflow:
@@ -183,8 +183,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         S
                                             .of(context)
                                             .warn_you_create_too_many_unused_address,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.signalError),
+                                        style: ProtonStyles.body2Regular(
+                                            color: ProtonColors.signalError),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -194,8 +194,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                         S
                                             .of(context)
                                             .you_can_not_create_too_many_unused_address,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.signalError),
+                                        style: ProtonStyles.body2Regular(
+                                            color: ProtonColors.signalError),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -203,7 +203,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                                     // const SizedBox(height: 10),
                                     // Text(
                                     //   "(Debug) AddressIndex: ${viewModel.currentAddress?.index ?? -1}",
-                                    //   style: FontManager.body2Regular(
+                                    //   style: ProtonStyles.body2Regular(color:
                                     //       ProtonColors.textWeak),
                                     //   maxLines: 2,
                                     //   overflow: TextOverflow.ellipsis,
@@ -221,8 +221,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               text: S.of(context).share_address_button,
                               width: MediaQuery.of(context).size.width,
                               backgroundColor: ProtonColors.protonBlue,
-                              textStyle:
-                                  FontManager.body1Median(ProtonColors.white),
+                              textStyle: ProtonStyles.body1Medium(
+                                  color: ProtonColors.white),
                               height: 48),
                           SizedBoxes.box12,
                           ButtonV5(
@@ -231,8 +231,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                             },
                             text: S.of(context).generate_new_address,
                             width: MediaQuery.of(context).size.width,
-                            textStyle:
-                                FontManager.body1Median(ProtonColors.textNorm),
+                            textStyle: ProtonStyles.body1Medium(
+                                color: ProtonColors.textNorm),
                             backgroundColor: ProtonColors.textWeakPressed,
                             borderColor: ProtonColors.textWeakPressed,
                             height: 48,

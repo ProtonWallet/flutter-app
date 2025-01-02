@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SendFlowInviteSuccessSheet {
   static void show(
@@ -34,13 +34,13 @@ class SendFlowInviteSuccessSheet {
               const SizedBox(height: 20),
               Text(
                 S.of(context).invitation_sent_to(email),
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
+                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 S.of(context).invitation_success_content,
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 60),
@@ -50,7 +50,8 @@ class SendFlowInviteSuccessSheet {
                   },
                   text: S.of(context).close,
                   width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   backgroundColor: ProtonColors.protonShades20,
                   borderColor: ProtonColors.protonShades20,
                   height: 48),

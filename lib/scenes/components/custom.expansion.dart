@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class CustomExpansion extends StatefulWidget {
   final List<Widget> children;
@@ -79,8 +79,8 @@ class CustomExpansionState extends State<CustomExpansion>
                             width: 20,
                           ),
                           Text(S.of(context).secure_your_wallet,
-                              style:
-                                  FontManager.body2Regular(ProtonColors.white)),
+                              style: ProtonStyles.body2Regular(
+                                  color: ProtonColors.white)),
                         ]),
                         RotationTransition(
                             turns: _animation,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
@@ -11,7 +12,6 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet.account/delete.wallet.account.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
   const DeleteWalletAccountView(DeleteWalletAccountViewModel viewModel)
@@ -48,7 +48,8 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                     Text(
                       S.of(context).confirm_to_delete_wallet_account(
                           viewModel.accountMenuModel.label),
-                      style: FontManager.titleHeadline(ProtonColors.textNorm),
+                      style: ProtonStyles.subheadline(
+                          color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10),
@@ -73,7 +74,8 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                             color: ProtonColors.signalError,
                           )),
                     Text(S.of(context).confirm_to_delete_wallet_account_content,
-                        style: FontManager.body2Regular(ProtonColors.textWeak)),
+                        style: ProtonStyles.body2Regular(
+                            color: ProtonColors.textWeak)),
                     const SizedBox(height: 40),
                     ButtonV6(
                       onPressed: () async {
@@ -94,8 +96,8 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                       backgroundColor: ProtonColors.signalError,
                       text: S.of(context).delete_account,
                       width: MediaQuery.of(context).size.width,
-                      textStyle: FontManager.body1Median(
-                          ProtonColors.backgroundSecondary),
+                      textStyle: ProtonStyles.body1Medium(
+                          color: ProtonColors.backgroundSecondary),
                       height: 48,
                     ),
                   ],

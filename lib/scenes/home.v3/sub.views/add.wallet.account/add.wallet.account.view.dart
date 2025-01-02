@@ -4,6 +4,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -16,7 +17,6 @@ import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
   const AddWalletAccountView(AddWalletAccountViewModel viewModel)
@@ -38,7 +38,8 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(
                   S.of(context).add_wallet_account_desc,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 )),
             const SizedBox(height: 20),
@@ -57,19 +58,22 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
             ExpansionTile(
                 shape: const Border(),
                 title: Text(S.of(context).advanced_settings,
-                    style: FontManager.body2Median(ProtonColors.textWeak)),
+                    style:
+                        ProtonStyles.body2Medium(color: ProtonColors.textWeak)),
                 iconColor: ProtonColors.textHint,
                 collapsedIconColor: ProtonColors.textHint,
                 children: [
                   Text(S.of(context).script_type,
-                      style: FontManager.body1Median(ProtonColors.textNorm)),
+                      style: ProtonStyles.body1Medium(
+                          color: ProtonColors.textNorm)),
                   const SizedBox(height: 5),
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: Text(
                         S.of(context).wallet_account_script_type_desc,
-                        style: FontManager.body2Regular(ProtonColors.textWeak),
+                        style: ProtonStyles.body2Regular(
+                            color: ProtonColors.textWeak),
                         textAlign: TextAlign.center,
                       )),
                   const SizedBox(height: 20),
@@ -117,18 +121,20 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       },
                       color: ProtonColors.protonBlue,
                       child: Text(S.of(context).learn_more,
-                          style: FontManager.body2Median(
-                              ProtonColors.protonBlue))),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.protonBlue))),
                   const SizedBox(height: 20),
                   Text(S.of(context).wallet_account_index,
-                      style: FontManager.body1Median(ProtonColors.textNorm)),
+                      style: ProtonStyles.body1Medium(
+                          color: ProtonColors.textNorm)),
                   const SizedBox(height: 5),
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),
                       child: Text(
                         S.of(context).wallet_account_index_desc,
-                        style: FontManager.body2Regular(ProtonColors.textWeak),
+                        style: ProtonStyles.body2Regular(
+                            color: ProtonColors.textWeak),
                         textAlign: TextAlign.center,
                       )),
                   const SizedBox(height: 20),
@@ -154,8 +160,8 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       },
                       color: ProtonColors.protonBlue,
                       child: Text(S.of(context).learn_more,
-                          style: FontManager.body2Median(
-                              ProtonColors.protonBlue))),
+                          style: ProtonStyles.body2Medium(
+                              color: ProtonColors.protonBlue))),
                 ]),
             const SizedBox(height: 12),
             Container(
@@ -202,8 +208,8 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       backgroundColor: ProtonColors.protonBlue,
                       text: S.of(context).create_wallet_account,
                       width: MediaQuery.of(context).size.width,
-                      textStyle: FontManager.body1Median(
-                          ProtonColors.backgroundSecondary),
+                      textStyle: ProtonStyles.body1Medium(
+                          color: ProtonColors.backgroundSecondary),
                       height: 48),
                   SizedBoxes.box8,
                   ButtonV5(
@@ -212,7 +218,8 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       },
                       text: S.of(context).cancel,
                       width: MediaQuery.of(context).size.width,
-                      textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                      textStyle: ProtonStyles.body1Medium(
+                          color: ProtonColors.textNorm),
                       backgroundColor: ProtonColors.textWeakPressed,
                       borderColor: ProtonColors.textWeakPressed,
                       height: 48),

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 Future<void> showMnemonicDialog(
   BuildContext context,
@@ -21,7 +21,7 @@ Future<void> showMnemonicDialog(
         title: Center(
           child: Text(
             S.of(context).enable_recovery_title,
-            style: FontManager.body1Median(ProtonColors.textNorm),
+            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
           ),
         ),
         content: SingleChildScrollView(
@@ -31,7 +31,8 @@ Future<void> showMnemonicDialog(
                 width: 360,
                 child: Text(
                   S.of(context).enable_recovery_content,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -40,7 +41,8 @@ Future<void> showMnemonicDialog(
                 width: 360,
                 child: Text(
                   S.of(context).enable_recovery_remind,
-                  style: FontManager.body2Regular(ProtonColors.signalError),
+                  style: ProtonStyles.body2Regular(
+                      color: ProtonColors.signalError),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -110,7 +112,7 @@ Future<void> showMnemonicDialog(
                 text: S.of(context).done,
                 borderColor: ProtonColors.protonBlue,
                 backgroundColor: ProtonColors.protonBlue,
-                textStyle: FontManager.body1Median(ProtonColors.white),
+                textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
                 width: 300,
                 height: 44,
               ),

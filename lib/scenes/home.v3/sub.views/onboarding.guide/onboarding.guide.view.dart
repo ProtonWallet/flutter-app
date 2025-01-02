@@ -5,6 +5,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/external.url.dart';
@@ -24,7 +25,6 @@ import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
   const OnboardingGuideView(OnboardingGuideViewModel viewModel)
@@ -53,8 +53,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                       child: Column(children: [
                         Text(
                           S.of(context).wallet_setup_desc,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textWeak),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textWeak),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30),
@@ -103,22 +103,22 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                   offset: const Offset(-12, 0),
                                   child: Text(
                                       S.of(context).add_a_passphrase_optional,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textWeak))),
+                                      style: ProtonStyles.body2Medium(
+                                          color: ProtonColors.textWeak))),
                               iconColor: ProtonColors.textHint,
                               collapsedIconColor: ProtonColors.textHint,
                               children: [
                                 const SizedBox(height: 10),
                                 Text(
                                   S.of(context).add_a_passphrase_title,
-                                  style: FontManager.titleHeadline(
-                                      ProtonColors.textNorm),
+                                  style: ProtonStyles.subheadline(
+                                      color: ProtonColors.textNorm),
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
                                   S.of(context).add_a_passphrase_desc,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 20),
@@ -184,8 +184,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                     child: Underline(
                                       child: Text(
                                         S.of(context).learn_more,
-                                        style: FontManager.body2Regular(
-                                            ProtonColors.purple1Text),
+                                        style: ProtonStyles.body2Regular(
+                                            color: ProtonColors.purple1Text),
                                       ),
                                     ),
                                   ),
@@ -239,22 +239,23 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                   },
                                   text: S.of(context).create_new_wallet,
                                   width: MediaQuery.of(context).size.width,
-                                  textStyle: FontManager.body1Median(
-                                      ProtonColors.white),
+                                  textStyle: ProtonStyles.body1Medium(
+                                      color: ProtonColors.white),
                                   backgroundColor: ProtonColors.protonBlue,
                                   enable: viewModel.passphraseMatched,
                                   height: 48),
                               SizedBoxes.box8,
                               ButtonV5(
                                 onPressed: () {
-                                  viewModel.coordinator.showImportWallet(viewModel.nameTextController.text);
+                                  viewModel.coordinator.showImportWallet(
+                                      viewModel.nameTextController.text);
                                   Navigator.of(context).pop();
                                 },
                                 enable: !viewModel.isCreatingWallet,
                                 text: S.of(context).import_your_wallet,
                                 width: MediaQuery.of(context).size.width,
-                                textStyle: FontManager.body1Median(
-                                    ProtonColors.textNorm),
+                                textStyle: ProtonStyles.body1Medium(
+                                    color: ProtonColors.textNorm),
                                 backgroundColor: ProtonColors.textWeakPressed,
                                 borderColor: ProtonColors.textWeakPressed,
                                 height: 48,
@@ -268,16 +269,16 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                 TextSpan(
                                   text:
                                       S.of(context).welcome_to_confirm_content,
-                                  style: FontManager.captionRegular(
-                                    ProtonColors.textHint,
+                                  style: ProtonStyles.captionRegular(
+                                    color: ProtonColors.textHint,
                                   ),
                                 ),
                                 TextSpan(
                                   text: S
                                       .of(context)
                                       .welcome_to_term_and_condition,
-                                  style: FontManager.captionMedian(
-                                    ProtonColors.protonBlue,
+                                  style: ProtonStyles.captionMedium(
+                                    color: ProtonColors.protonBlue,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {

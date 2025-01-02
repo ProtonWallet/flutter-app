@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -12,7 +13,6 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class UpgradeView extends ViewBase<UpgradeViewModel> {
   const UpgradeView(UpgradeViewModel viewModel)
@@ -44,7 +44,8 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
                 const SizedBox(height: 20),
                 Text(
                   S.of(context).upgrade_intro_title,
-                  style: FontManager.titleHeadline(ProtonColors.textNorm),
+                  style:
+                      ProtonStyles.subheadline(color: ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
@@ -57,20 +58,20 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
                                 ? S.of(context).upgrade_intro_type_accounts
                                 : S.of(context).upgrade_intro_type_wallets,
                           ),
-                      style: FontManager.body2Regular(
-                        ProtonColors.textWeak,
+                      style: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak,
                       ),
                     ),
                     TextSpan(
                       text: S.of(context).to_upgrade_content,
-                      style: FontManager.body2Regular(
-                        ProtonColors.textWeak,
+                      style: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak,
                       ),
                     ),
                     TextSpan(
                       text: "wallet.proton.me",
-                      style: FontManager.body2Median(
-                        ProtonColors.protonBlue,
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.protonBlue,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
@@ -91,8 +92,8 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
                           },
                           text: S.of(context).upgrade_now,
                           width: MediaQuery.of(context).size.width,
-                          textStyle:
-                              FontManager.body1Median(ProtonColors.white),
+                          textStyle: ProtonStyles.body1Medium(
+                              color: ProtonColors.white),
                           backgroundColor: ProtonColors.protonBlue,
                           borderColor: ProtonColors.protonBlue,
                           height: 48),

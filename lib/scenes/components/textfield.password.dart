@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextFieldPassword extends StatefulWidget {
   final double width;
@@ -27,7 +27,7 @@ class TextFieldPasswordState extends State<TextFieldPassword> {
         width: widget.width,
         child: Center(
           child: TextField(
-            style: FontManager.body2Regular(ProtonColors.textNorm),
+            style: ProtonStyles.body2Regular(color: ProtonColors.textNorm),
             controller: widget.controller,
             obscureText: isTextVisible,
             decoration: InputDecoration(

@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
@@ -42,7 +43,6 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sidebar.wallet.items.dart';
 import 'package:wallet/scenes/home.v3/transaction.list.dart';
 import 'package:wallet/scenes/settings/settings.account.v2.view.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class HomeView extends ViewBase<HomeViewModel> {
   const HomeView(HomeViewModel viewModel, {super.locker})
@@ -174,10 +174,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                           S
                                                               .of(context)
                                                               .invite_friends,
-                                                          style: FontManager
-                                                              .body2Median(
-                                                                  ProtonColors
-                                                                      .white),
+                                                          style: ProtonStyles
+                                                              .body2Medium(
+                                                                  color:
+                                                                      ProtonColors
+                                                                          .white),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -190,9 +191,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                                         .remainingMonthlyInvitations
                                                                         ?.available ??
                                                                     0),
-                                                            style: FontManager
-                                                                .body2Median(
-                                                                    ProtonColors
+                                                            style: ProtonStyles
+                                                                .body2Medium(
+                                                                    color: ProtonColors
                                                                         .white),
                                                           ),
                                                         ),
@@ -251,8 +252,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       .of(context)
                                                       .secure_your_wallet,
                                                   style:
-                                                      FontManager.body2Median(
-                                                          ProtonColors
+                                                      ProtonStyles.body2Medium(
+                                                          color: ProtonColors
                                                               .protonBlue),
                                                 ),
                                                 Transform.translate(
@@ -374,8 +375,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                               2 -
                                                           defaultPadding * 2,
                                                   textStyle:
-                                                      FontManager.body1Median(
-                                                          ProtonColors
+                                                      ProtonStyles.body1Medium(
+                                                          color: ProtonColors
                                                               .protonBlue),
                                                   height: 48),
                                               const SizedBox(
@@ -398,9 +399,10 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                                   .width /
                                                               2 -
                                                           defaultPadding * 2,
-                                                  textStyle: FontManager
-                                                      .body1Median(ProtonColors
-                                                          .backgroundSecondary),
+                                                  textStyle:
+                                                      ProtonStyles.body1Medium(
+                                                          color: ProtonColors
+                                                              .backgroundSecondary),
                                                   height: 48),
                                             ]),
                                         const SizedBox(
@@ -423,10 +425,11 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     .isEmpty &&
                                                 !walletTransactionState
                                                     .isSyncing)
-                                              Text(S.of(context).explore_wallet,
+                                              Text(
+                                                  S.of(context).explore_wallet,
                                                   style:
-                                                      FontManager.body1Median(
-                                                          ProtonColors
+                                                      ProtonStyles.body1Medium(
+                                                          color: ProtonColors
                                                               .textNorm)),
                                             const SizedBox(height: 10),
                                             if (walletTransactionState
@@ -486,7 +489,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           onTap: viewModel.setOnBoard,
           child: Text(
             S.of(context).wallet_setup,
-            style: FontManager.titleHeadline(ProtonColors.protonBlue),
+            style: ProtonStyles.subheadline(color: ProtonColors.protonBlue),
           ),
         ),
       );
@@ -497,7 +500,8 @@ class HomeView extends ViewBase<HomeViewModel> {
           children: [
             accountName.isNotEmpty
                 ? Text(accountName,
-                    style: FontManager.body1Regular(ProtonColors.textHint))
+                    style:
+                        ProtonStyles.body1Regular(color: ProtonColors.textHint))
                 : const CardLoading(
                     width: 200,
                     height: 16,
@@ -546,7 +550,7 @@ class HomeView extends ViewBase<HomeViewModel> {
       children: [
         Column(children: [
           Text(accountName,
-              style: FontManager.body1Regular(ProtonColors.textHint)),
+              style: ProtonStyles.body1Regular(color: ProtonColors.textHint)),
           const SizedBox(
             height: 4,
           ),
@@ -577,12 +581,19 @@ class HomeView extends ViewBase<HomeViewModel> {
                         walletBalanceState.balanceInSatoshi,
                       ),
                       fractionDigits: defaultDisplayDigits,
-                      textStyle: FontManager.balanceInFiatCurrency(
-                          ProtonColors.textNorm))
+                      textStyle: ProtonWalletStyles.textAmount(
+                        color: ProtonColors.textNorm,
+                        fontVariation: 400.0,
+                        height: 1.0,
+                      ))
                   : Text(
                       "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}$hidedBalanceString",
-                      style: FontManager.balanceInFiatCurrency(
-                          ProtonColors.textNorm)),
+                      style: ProtonWalletStyles.textAmount(
+                        color: ProtonColors.textNorm,
+                        fontVariation: 400.0,
+                        height: 1.0,
+                      ),
+                    ),
           const SizedBox(width: 10),
           viewModel.displayBalance
               ? GestureDetector(
@@ -625,10 +636,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                       viewModel.bitcoinUnit,
                       walletBalanceState.balanceInSatoshi,
                     ),
-                    style: FontManager.balanceInBTC(ProtonColors.textHint))
+                    style:
+                        ProtonStyles.body1Regular(color: ProtonColors.textHint)
+                            .copyWith(height: 1))
                 : Text(
                     "$hidedBalanceString ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
-                    style: FontManager.balanceInBTC(ProtonColors.textHint),
+                    style:
+                        ProtonStyles.body1Regular(color: ProtonColors.textHint)
+                            .copyWith(height: 1),
                   ),
       ],
     );
@@ -710,7 +725,7 @@ class HomeView extends ViewBase<HomeViewModel> {
             }
             return Text(
               walletName.isNotEmpty ? walletName : S.of(context).proton_wallet,
-              style: FontManager.body2Median(ProtonColors.textNorm),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
             );
           }),
       centerTitle: true,
@@ -849,8 +864,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                       children: [
                                         Text(
                                           S.of(context).wallets,
-                                          style: FontManager.body2Regular(
-                                              ProtonColors.textHint),
+                                          style: ProtonStyles.body2Regular(
+                                              color: ProtonColors.textHint),
                                         ),
                                         GestureDetector(
                                             onTap: () {
@@ -946,8 +961,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: Text(
                                     viewModel.appVersion,
-                                    style: FontManager.captionRegular(
-                                      ProtonColors.textHint,
+                                    style: ProtonStyles.captionRegular(
+                                      color: ProtonColors.textHint,
                                     ),
                                   ),
                                 ),
@@ -1019,10 +1034,10 @@ Widget getWalletAccountBalanceWidget(
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
         "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
-        style: FontManager.captionSemiBold(textColor)),
+        style: ProtonStyles.captionSemibold(color: textColor)),
     Text(
         ExchangeCalculator.getBitcoinUnitLabel(
             viewModel.bitcoinUnit, accountModel.balance.toInt()),
-        style: FontManager.overlineRegular(ProtonColors.textHint))
+        style: ProtonStyles.overlineRegular(color: ProtonColors.textHint))
   ]);
 }

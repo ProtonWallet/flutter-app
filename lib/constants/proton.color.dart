@@ -30,7 +30,6 @@ class ProtonColors {
   static Color brandLighten20 = const Color(0XFF9F9DF3);
 
   static Color surfaceLight = const Color(0xFFFBFBFB);
-  static Color surfaceTagText = const Color(0xFFFEFEFE);
 
   static Color protonBlue = const Color(0XFF767DFF);
   static Color protonBrandLighten30 = const Color(0XFFE0E2FF);
@@ -63,7 +62,6 @@ class ProtonColors {
   static Color yellow1Background = const Color(0x88FFC483);
   static Color green1Text = const Color(0xff5fc88f);
   static Color green1Background = const Color(0x485fc88f);
-
 
   static Color avatarOrange1Text = const Color(0xfffd8445);
   static Color avatarOrange1Background = const Color(0xffffede4);
@@ -103,7 +101,6 @@ class ProtonColors {
     mailIntegrationBox = const Color(0xFFEDEAFB);
 
     surfaceLight = const Color(0xFFFBFBFB);
-    surfaceTagText = const Color(0xFFFEFEFE);
 
     protonBlue = const Color(0XFF767DFF);
     homepageProgressBarBackground = const Color.fromARGB(51, 255, 255, 255);
@@ -131,6 +128,5 @@ class ProtonColors {
     mailIntegrationBox = const Color(0x12151504);
 
     surfaceLight = const Color(0x04040404);
-    surfaceTagText = const Color(0x01010101);
   }
 }

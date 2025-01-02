@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistoryItem extends StatelessWidget {
   final String title;
@@ -62,8 +62,8 @@ class TransactionHistoryItem extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(title,
-                                      style: FontManager.body2Median(
-                                          ProtonColors.textWeak)),
+                                      style: ProtonStyles.body2Medium(
+                                          color: ProtonColors.textWeak)),
                                   const SizedBox(width: 2),
                                   if (titleTooltip != null)
                                     Assets.images.icon.icInfoCircle.svg(
@@ -75,14 +75,14 @@ class TransactionHistoryItem extends StatelessWidget {
                               ),
                             )
                           : Text(title,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak)),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textWeak)),
                       if (titleOptionsCallback != null)
                         GestureDetector(
                             onTap: titleOptionsCallback,
                             child: Text(S.of(context).advanced_options,
-                                style: FontManager.body2Median(
-                                    ProtonColors.textWeak)))
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textWeak)))
                     ]),
                 if (content.isNotEmpty || memo != null)
                   GestureDetector(
@@ -97,9 +97,10 @@ class TransactionHistoryItem extends StatelessWidget {
                       });
                     },
                     child: Text(content.isNotEmpty ? content : memo ?? "",
-                        style: FontManager.body2Median(contentColor != null
-                            ? contentColor!
-                            : ProtonColors.textNorm),
+                        style: ProtonStyles.body2Medium(
+                            color: contentColor != null
+                                ? contentColor!
+                                : ProtonColors.textNorm),
                         softWrap: true),
                   ),
                 if (memo != null && content.isNotEmpty)
@@ -114,8 +115,8 @@ class TransactionHistoryItem extends StatelessWidget {
                         });
                       },
                       child: Text(memo!,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textHint))),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textHint))),
                 if (walletAccountName != null)
                   GestureDetector(
                       onLongPress: () {
@@ -129,8 +130,8 @@ class TransactionHistoryItem extends StatelessWidget {
                         });
                       },
                       child: Text(walletAccountName!,
-                          style:
-                              FontManager.body2Regular(ProtonColors.textNorm))),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textNorm))),
                 if (bitcoinAddress != null)
                   GestureDetector(
                     onTap: () {
@@ -148,8 +149,8 @@ class TransactionHistoryItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(bitcoinAddress!,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textHint),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textHint),
                               softWrap: true),
                           const SizedBox(width: 4),
                           Icon(Icons.copy_rounded,
@@ -163,12 +164,12 @@ class TransactionHistoryItem extends StatelessWidget {
                   Row(
                     children: [
                       Text(bitcoinAmount!.toFiatCurrencyString(),
-                          style:
-                              FontManager.body2Regular(ProtonColors.textHint)),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textHint)),
                       const SizedBox(width: 5),
                       Text(bitcoinAmount!.toString(),
-                          style:
-                              FontManager.body2Regular(ProtonColors.textHint)),
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textHint)),
                     ],
                   )
               ],

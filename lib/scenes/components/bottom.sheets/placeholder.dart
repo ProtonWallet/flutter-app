@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class CustomPlaceholder {
   static void show(BuildContext context) {
@@ -16,16 +16,16 @@ class CustomPlaceholder {
                 .svg(fit: BoxFit.fill, width: 86, height: 87),
             const SizedBox(height: 10),
             Text(S.of(context).placeholder,
-                style: FontManager.body1Median(ProtonColors.textNorm)),
+                style: ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
             const SizedBox(height: 5),
             Text(S.of(context).placeholder,
-                style: FontManager.body2Regular(ProtonColors.textWeak)),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak)),
             const SizedBox(height: 20),
             ButtonV5(
               text: S.of(context).ok,
               width: MediaQuery.of(context).size.width,
               backgroundColor: ProtonColors.protonBlue,
-              textStyle: FontManager.body1Median(ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
               height: 48,
               onPressed: () {
                 Navigator.of(context).pop();

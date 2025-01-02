@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextFieldTextV2 extends StatefulWidget {
   final FocusNode myFocusNode;
@@ -130,7 +130,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   obscureText: widget.isPassword ? isObscureText : false,
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,
-                  style: FontManager.body1Median(ProtonColors.textNorm),
+                  style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   autofocus: widget.autofocus,
                   keyboardType: widget.keyboardType,
                   textInputAction: widget.textInputAction,
@@ -185,13 +185,13 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     counterText: widget.showCounterText ? null : "",
                     hintText: widget.hintText,
                     hintStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textHint),
+                        ProtonStyles.body2Regular(color: ProtonColors.textHint),
                     labelText: widget.labelText,
                     labelStyle: isError
-                        ? FontManager.textFieldLabelStyle(
-                            ProtonColors.signalError).copyWith(fontSize: 15)
-                        : FontManager.textFieldLabelStyle(
-                            ProtonColors.textWeak).copyWith(fontSize: 15),
+                        ? ProtonStyles.body2Regular(
+                            color: ProtonColors.signalError, fontSize: 15.0)
+                        : ProtonStyles.body2Regular(
+                            color: ProtonColors.textWeak, fontSize: 15.0),
                     prefixIcon: widget.prefixIcon,
                     contentPadding: EdgeInsets.only(
                         left: 10,
@@ -216,7 +216,8 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   padding: const EdgeInsets.only(left: 15.0, top: 2.0),
                   child: Text(
                     errorString,
-                    style: FontManager.body2Regular(ProtonColors.signalError),
+                    style: ProtonStyles.body2Regular(
+                        color: ProtonColors.signalError),
                   ))),
         ],
       ),

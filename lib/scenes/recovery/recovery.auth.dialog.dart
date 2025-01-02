@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -9,7 +10,6 @@ import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 typedef VoidValueCallback = Future<void> Function(String, String);
 
@@ -49,7 +49,8 @@ Future<void> showAuthBottomSheet(
                   offset: const Offset(0, -20),
                   child: Center(
                     child: Text(S.of(context).password,
-                        style: FontManager.titleHeadline(ProtonColors.textNorm),
+                        style: ProtonStyles.subheadline(
+                            color: ProtonColors.textNorm),
                         textAlign: TextAlign.center),
                   ),
                 ),
@@ -69,7 +70,8 @@ Future<void> showAuthBottomSheet(
                   Center(
                     child: Text(
                       S.of(context).two_factor_code,
-                      style: FontManager.titleHeadline(ProtonColors.textNorm),
+                      style: ProtonStyles.subheadline(
+                          color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -78,7 +80,8 @@ Future<void> showAuthBottomSheet(
                   Center(
                     child: Text(
                       S.of(context).two_factor_code_desc,
-                      style: FontManager.body2Regular(ProtonColors.textWeak),
+                      style: ProtonStyles.body2Regular(
+                          color: ProtonColors.textWeak),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -116,7 +119,7 @@ Future<void> showAuthBottomSheet(
             text: S.of(context).authenticate,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: FontManager.body1Median(ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
             height: 48,
             width: max(
               330,
@@ -134,7 +137,7 @@ Future<void> showAuthBottomSheet(
             text: S.of(context).cancel,
             backgroundColor: ProtonColors.protonShades20,
             borderColor: ProtonColors.protonShades20,
-            textStyle: FontManager.body1Median(ProtonColors.textNorm),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
             width: max(
               330,

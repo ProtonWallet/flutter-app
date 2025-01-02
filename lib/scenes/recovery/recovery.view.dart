@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
@@ -14,7 +15,6 @@ import 'package:wallet/scenes/recovery/recovery.disable.dialog.dart';
 import 'package:wallet/scenes/recovery/recovery.mnemonic.dialog.dart';
 import 'package:wallet/scenes/recovery/recovery.section.dart';
 import 'package:wallet/scenes/recovery/recovery.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class RecoveryView extends ViewBase<RecoveryViewModel> {
   const RecoveryView(RecoveryViewModel viewModel)
@@ -65,7 +65,8 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                   if (state.error.isNotEmpty)
                     Text(
                       state.error,
-                      style: FontManager.body2Regular(ProtonColors.signalError),
+                      style: ProtonStyles.body2Regular(
+                          color: ProtonColors.signalError),
                     ),
 
                   RecoverySection(

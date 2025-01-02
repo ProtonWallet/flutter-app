@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/email.autocomplete.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -13,7 +14,6 @@ import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class SendInviteView extends ViewBase<SendInviteViewModel> {
   const SendInviteView(SendInviteViewModel viewModel)
@@ -55,13 +55,13 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                 S
                     .of(context)
                     .invitation_sent_to(viewModel.emailController.text),
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
+                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 S.of(context).invitation_success_content,
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 60),
@@ -71,7 +71,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   },
                   text: S.of(context).invite_another_friend,
                   width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.white),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 48),
@@ -82,7 +83,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   },
                   text: S.of(context).close,
                   width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   backgroundColor: ProtonColors.protonShades20,
                   borderColor: ProtonColors.protonShades20,
                   height: 48),
@@ -105,13 +107,13 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
               ),
               Text(
                 S.of(context).exclusive_invites,
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
+                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               Text(
                 S.of(context).exclusive_invites_content,
-                style: FontManager.body2Regular(ProtonColors.textWeak),
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -162,16 +164,16 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                           enabled: false,
                           focusNode: FocusNode(),
                           controller: viewModel.emailController,
-                          style: FontManager.body1Median(ProtonColors.textNorm),
+                          style: ProtonStyles.body1Medium(
+                              color: ProtonColors.textNorm),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: S.of(context).your_friend_email,
-                            labelStyle: FontManager.textFieldLabelStyle(
-                                    ProtonColors.textWeak)
-                                .copyWith(fontSize: 15),
+                            labelStyle: ProtonStyles.body2Regular(
+                                color: ProtonColors.textWeak, fontSize: 15.0),
                             hintText: S.of(context).you_can_invite_any,
-                            hintStyle: FontManager.textFieldLabelStyle(
-                                ProtonColors.textHint),
+                            hintStyle: ProtonStyles.body2Regular(
+                                color: ProtonColors.textHint),
                             contentPadding: const EdgeInsets.only(
                                 left: 10, right: 10, top: 4, bottom: 16),
                             enabledBorder: InputBorder.none,
@@ -205,8 +207,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                       },
                       text: S.of(context).send_invite_email,
                       width: MediaQuery.of(context).size.width,
-                      textStyle: FontManager.body1Median(
-                          viewModel.emailController.text.isEmpty
+                      textStyle: ProtonStyles.body1Medium(
+                          color: viewModel.emailController.text.isEmpty
                               ? ProtonColors.textNorm
                               : ProtonColors.white),
                       backgroundColor: viewModel.emailController.text.isEmpty

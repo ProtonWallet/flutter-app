@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 /// Discover Box
 class DiscoverBox extends StatelessWidget {
@@ -91,11 +91,12 @@ class _Details extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: FontManager.discoveryTitle(ProtonColors.textNorm)),
+        Text(title,
+            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
         const SizedBox(height: 4),
         Text(
           description,
-          style: FontManager.body2Regular(ProtonColors.textWeak),
+          style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),

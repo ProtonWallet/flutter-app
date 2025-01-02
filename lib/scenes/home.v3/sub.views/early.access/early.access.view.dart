@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -10,7 +11,6 @@ import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
   const EarlyAccessView(EarlyAccessViewModel viewModel)
@@ -32,7 +32,7 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
               ),
               Text(
                 S.of(context).early_access_title,
-                style: FontManager.titleHeadline(ProtonColors.textNorm),
+                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -41,26 +41,26 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                 TextSpan(children: [
                   TextSpan(
                     text: S.of(context).early_access_content_1_fix,
-                    style: FontManager.body2Median(
-                      ProtonColors.textWeak,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.textWeak,
                     ),
                   ),
                   TextSpan(
                     text: viewModel.email,
-                    style: FontManager.body2Median(
-                      ProtonColors.textNorm,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.textNorm,
                     ),
                   ),
                   TextSpan(
                     text: S.of(context).early_access_content_2,
-                    style: FontManager.body2Median(
-                      ProtonColors.textWeak,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.textWeak,
                     ),
                   ),
                   TextSpan(
                     text: "wallet.proton.me",
-                    style: FontManager.body2Median(
-                      ProtonColors.protonBlue,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.protonBlue,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
@@ -80,7 +80,8 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                         },
                         text: S.of(context).explore_other_proton_products,
                         width: MediaQuery.of(context).size.width,
-                        textStyle: FontManager.body1Median(ProtonColors.white),
+                        textStyle:
+                            ProtonStyles.body1Medium(color: ProtonColors.white),
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
                         height: 48),
@@ -93,8 +94,8 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                         },
                         text: S.of(context).logout,
                         width: MediaQuery.of(context).size.width,
-                        textStyle:
-                            FontManager.body1Median(ProtonColors.textNorm),
+                        textStyle: ProtonStyles.body1Medium(
+                            color: ProtonColors.textNorm),
                         backgroundColor: ProtonColors.protonShades20,
                         borderColor: ProtonColors.protonShades20,
                         height: 48),

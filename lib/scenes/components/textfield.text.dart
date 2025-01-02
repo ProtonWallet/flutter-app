@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class TextFieldText extends StatefulWidget {
   final double width;
@@ -23,7 +23,8 @@ class TextFieldText extends StatefulWidget {
   final EdgeInsets? scrollPadding;
 
   const TextFieldText(
-      {required this.width, super.key,
+      {required this.width,
+      super.key,
       this.height,
       this.controller,
       this.focusNode,
@@ -66,7 +67,8 @@ class TextFieldTextState extends State<TextFieldText> {
                   child: buildTagWidget(widget.controller!.text))
               : TextField(
                   textAlignVertical: TextAlignVertical.center,
-                  style: FontManager.captionMedian(ProtonColors.textNorm),
+                  style:
+                      ProtonStyles.captionMedium(color: ProtonColors.textNorm),
                   maxLines: widget.multiLine ? null : 1,
                   minLines: widget.multiLine ? 5 : 1,
                   controller: widget.controller,
@@ -84,8 +86,8 @@ class TextFieldTextState extends State<TextFieldText> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: widget.hintText,
                     labelText: widget.labelText,
-                    labelStyle:
-                        FontManager.textFieldLabelStyle(ProtonColors.textWeak),
+                    labelStyle: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide: BorderSide(
@@ -95,8 +97,8 @@ class TextFieldTextState extends State<TextFieldText> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
-                      borderSide: BorderSide(
-                          color: ProtonColors.interactionNorm),
+                      borderSide:
+                          BorderSide(color: ProtonColors.interactionNorm),
                     ),
                     suffixIcon: widget.showSuffixIcon
                         ? IconButton(
@@ -115,7 +117,8 @@ class TextFieldTextState extends State<TextFieldText> {
         child: Chip(
           backgroundColor: ProtonColors.backgroundProton,
           label: Text(tag,
-              style: FontManager.body2Median(ProtonColors.interactionNorm)),
+              style: ProtonStyles.body2Medium(
+                  color: ProtonColors.interactionNorm)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             side: BorderSide(color: ProtonColors.backgroundProton),

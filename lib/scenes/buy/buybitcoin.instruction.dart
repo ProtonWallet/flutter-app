@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class BuyBitcoinInstruction extends StatelessWidget {
   const BuyBitcoinInstruction({
@@ -54,7 +54,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               S.of(context).buy_bitcoin,
-              style: FontManager.titleHeadline(ProtonColors.textNorm),
+              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -63,19 +63,22 @@ class BuyBitcoinInstruction extends StatelessWidget {
               child: Column(children: [
                 Text(
                   S.of(context).buybitcoin_instruction_body_part_one,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 18),
                 Text(
                   S.of(context).buybitcoin_instruction_body_part_two,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 18),
                 Text(
                   S.of(context).buybitcoin_instruction_body_part_three,
-                  style: FontManager.body2Regular(ProtonColors.textWeak),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 44),
@@ -86,7 +89,8 @@ class BuyBitcoinInstruction extends StatelessWidget {
                   },
                   text: S.of(context).continue_buttion,
                   width: MediaQuery.of(context).size.width,
-                  textStyle: FontManager.body1Median(ProtonColors.white),
+                  textStyle:
+                      ProtonStyles.body1Medium(color: ProtonColors.white),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 48,

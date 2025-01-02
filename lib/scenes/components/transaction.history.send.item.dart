@@ -2,10 +2,10 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class TransactionHistorySendItem extends StatelessWidget {
   final String content;
@@ -58,20 +58,20 @@ class TransactionHistorySendItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(S.of(context).trans_to,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak)),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textWeak)),
                           Text(
                             content,
-                            style:
-                                FontManager.body2Median(ProtonColors.textNorm),
+                            style: ProtonStyles.body2Medium(
+                                color: ProtonColors.textNorm),
                             overflow: TextOverflow.ellipsis,
                           ),
                           if (walletAccountName != null &&
                               walletAccountName != content)
                             Text(
                               walletAccountName!,
-                              style: FontManager.body2Median(
-                                  ProtonColors.textWeak),
+                              style: ProtonStyles.body2Medium(
+                                  color: ProtonColors.textWeak),
                               overflow: TextOverflow.ellipsis,
                             ),
                         ],
@@ -85,13 +85,13 @@ class TransactionHistorySendItem extends StatelessWidget {
                               Text(
                                   bitcoinAmount!.toFiatCurrencyString(
                                       displayBalance: displayBalance),
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textNorm)),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textNorm)),
                               Text(
                                   bitcoinAmount!
                                       .toString(displayBalance: displayBalance),
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textHint)),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textHint)),
                             ],
                           ),
                         const SizedBox(width: 8),

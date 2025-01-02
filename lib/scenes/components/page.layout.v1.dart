@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/scenes/components/back.button.v1.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class PageLayoutV1 extends StatelessWidget {
   final Widget? child;
@@ -15,6 +15,7 @@ class PageLayoutV1 extends StatelessWidget {
   final bool showHeader;
   final bool initialized;
   final ScrollController? scrollController;
+
   /// we will expanded the child to match parent height if set it to true
   final bool expanded;
   final double? height;
@@ -89,7 +90,11 @@ class PageLayoutV1 extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const SizedBox(height: defaultPadding),
         if (title != null)
-          Text(title!, style: FontManager.titleSubHero(ProtonColors.textNorm)),
+          Text(
+            title!,
+            style: ProtonStyles.headline(
+                color: ProtonColors.textNorm, fontSize: 24.0),
+          ),
         if (child != null) child!,
       ]),
     );

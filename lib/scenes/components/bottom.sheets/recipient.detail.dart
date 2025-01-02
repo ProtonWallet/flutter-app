@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class RecipientDetailSheet {
   static void show(
@@ -42,25 +42,29 @@ class RecipientDetailSheet {
                       : email != null
                           ? CommonHelper.getFirstNChar(email, 1).toUpperCase()
                           : "",
-                  style: FontManager.body1Median(
-                      avatarTextColor ?? ProtonColors.white),
+                  style: ProtonStyles.body1Medium(
+                      color: avatarTextColor ?? ProtonColors.white),
                 ),
               ),
             const SizedBox(height: 10),
             if (name != null && !isBitcoinAddress)
-              Text(name, style: FontManager.body1Median(ProtonColors.textNorm)),
+              Text(name,
+                  style:
+                      ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
             if (email != null &&
                 name != email &&
                 name == null &&
                 !isBitcoinAddress)
               Text(email,
-                  style: FontManager.body1Median(ProtonColors.textNorm)),
+                  style:
+                      ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
             if (email != null &&
                 name != email &&
                 name != null &&
                 !isBitcoinAddress)
               Text(email,
-                  style: FontManager.body2Regular(ProtonColors.textHint)),
+                  style:
+                      ProtonStyles.body2Regular(color: ProtonColors.textHint)),
             const SizedBox(height: defaultPadding),
             if (bitcoinAddress.isNotEmpty)
               Column(
@@ -68,12 +72,14 @@ class RecipientDetailSheet {
                 children: [
                   Text(
                     S.of(context).bitcoin_address,
-                    style: FontManager.body1Median(ProtonColors.textWeak),
+                    style:
+                        ProtonStyles.body1Medium(color: ProtonColors.textWeak),
                     textAlign: TextAlign.start,
                   ),
                   Text(bitcoinAddress,
                       maxLines: 5,
-                      style: FontManager.body1Median(ProtonColors.textNorm)),
+                      style: ProtonStyles.body1Medium(
+                          color: ProtonColors.textNorm)),
                   const SizedBox(height: 40),
                   ButtonV5(
                       onPressed: () async {
@@ -88,7 +94,8 @@ class RecipientDetailSheet {
                       },
                       text: S.of(context).copy_address,
                       width: MediaQuery.of(context).size.width,
-                      textStyle: FontManager.body1Median(ProtonColors.textNorm),
+                      textStyle: ProtonStyles.body1Medium(
+                          color: ProtonColors.textNorm),
                       backgroundColor: ProtonColors.backgroundProton,
                       borderColor: ProtonColors.backgroundProton,
                       height: 48),

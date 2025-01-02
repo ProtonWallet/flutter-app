@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
@@ -9,7 +10,6 @@ import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/proton.products/proton.products.viewmodel.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
   const ProtonProductsView(ProtonProductsViewModel viewModel)
@@ -54,8 +54,8 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                                 ),
                                 Text(
                                   S.of(context).product_intro_proton_mail,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
@@ -92,8 +92,8 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                                 ),
                                 Text(
                                   S.of(context).product_intro_proton_calendar,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
@@ -130,8 +130,8 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                                 ),
                                 Text(
                                   S.of(context).product_intro_proton_drive,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
@@ -171,8 +171,8 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                                 ),
                                 Text(
                                   S.of(context).product_intro_proton_pass,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,
@@ -212,8 +212,8 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                                   S
                                       .of(context)
                                       .product_intro_proton_for_business,
-                                  style: FontManager.body2Regular(
-                                      ProtonColors.textWeak),
+                                  style: ProtonStyles.body2Regular(
+                                      color: ProtonColors.textWeak),
                                   textAlign: TextAlign.left,
                                   maxLines: 5,
                                   overflow: TextOverflow.ellipsis,

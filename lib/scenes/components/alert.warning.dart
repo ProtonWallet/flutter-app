@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/theme/theme.font.dart';
+import 'package:wallet/constants/text.style.dart';
 
 class AlertWarning extends StatelessWidget {
   final String content;
@@ -38,7 +38,7 @@ class AlertWarning extends StatelessWidget {
                 Expanded(
                     child: Text(content,
                         style:
-                            FontManager.body2Regular(ProtonColors.alertWaning)))
+                            ProtonStyles.body2Regular(color:ProtonColors.alertWaning)))
               ],
             )
           ],

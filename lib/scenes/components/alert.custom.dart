@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/scenes/components/underline.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class AlertCustom extends StatefulWidget {
   final String content;
@@ -82,12 +82,12 @@ class AlertCustomState extends State<AlertCustom> {
                                     color: widget.color ??
                                         ProtonColors.alertWaning,
                                     child: Text(widget.content,
-                                        style: FontManager.body2Regular(
-                                            widget.color ??
+                                        style: ProtonStyles.body2Regular(
+                                            color: widget.color ??
                                                 ProtonColors.alertWaning)))
                                 : Text(widget.content,
-                                    style: FontManager.body2Regular(
-                                        widget.color ??
+                                    style: ProtonStyles.body2Regular(
+                                        color: widget.color ??
                                             ProtonColors.alertWaning)),
                             if (widget.learnMore != null)
                               Padding(

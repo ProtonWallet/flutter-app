@@ -3,8 +3,8 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/theme/theme.font.dart';
 
 class WelcomeImage extends StatelessWidget {
   const WelcomeImage({
@@ -69,7 +69,7 @@ class WelcomeImage extends StatelessWidget {
             child: Center(
               child: Text(
                 context.local.welcome_desc,
-                style: FontManager.body1Regular(ProtonColors.textWeak),
+                style: ProtonStyles.body1Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
             ),
