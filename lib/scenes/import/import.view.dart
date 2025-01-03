@@ -58,8 +58,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                         color: ProtonColors.brandLighten20,
                         child: Text(
                           S.of(context).learn_more,
-                          style: FontManager.body2Median(
-                            ProtonColors.brandLighten20,
+                          style: ProtonStyles.body2Medium(
+                            color: ProtonColors.brandLighten20,
                           ),
                         ),
                       ),
