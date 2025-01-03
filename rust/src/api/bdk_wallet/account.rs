@@ -202,6 +202,14 @@ impl FrbAccount {
         Ok(highest)
     }
 
+    pub async fn get_maximum_gap_size(
+        &self,
+        keychain: KeychainKind,
+    ) -> Result<Option<u32>, BridgeError> {
+        let highest = self.inner.get_maximum_gap_size(keychain).await?;
+        Ok(highest)
+    }
+
     pub async fn get_address_from_graph(
         &self,
         network: Network,

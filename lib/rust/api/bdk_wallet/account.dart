@@ -53,6 +53,8 @@ abstract class FrbAccount implements RustOpaqueInterface {
   Future<int?> getHighestUsedAddressIndexInOutput(
       {required KeychainKind keychain});
 
+  Future<int?> getMaximumGapSize({required KeychainKind keychain});
+
   Future<FrbAddressInfo> getNextReceiveAddress();
 
   Future<FrbTransactionDetails> getTransaction({required String txid});

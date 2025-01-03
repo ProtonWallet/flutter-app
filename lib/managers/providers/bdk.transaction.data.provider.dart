@@ -21,6 +21,7 @@ import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
+import 'package:wallet/rust/common/keychain_kind.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;
@@ -189,6 +190,20 @@ class BDKTransactionDataProvider extends DataProvider {
     await shared.write(syncCheckID, true);
   }
 
+  Future<bool> hasLogMaximumGap(
+      WalletModel walletModel, AccountModel accountModel) async {
+    final String syncCheckID =
+        "${getSyncCheckID(walletModel, accountModel)}_LogMaximumGap";
+    return await shared.read(syncCheckID) ?? false;
+  }
+
+  Future<void> setLogMaximumGap(
+      WalletModel walletModel, AccountModel accountModel) async {
+    final String syncCheckID =
+        "${getSyncCheckID(walletModel, accountModel)}_LogMaximumGap";
+    await shared.write(syncCheckID, true);
+  }
+
   Future<void> syncWallet(
     WalletModel walletModel,
     AccountModel accountModel, {
@@ -318,6 +333,27 @@ class BDKTransactionDataProvider extends DataProvider {
           final timeEnd = DateTime.now().secondsSinceEpoch();
           final check = "${accountModel.accountID}_$timeEnd";
           emitState(BDKSyncUpdated(check));
+        }
+      }
+    }
+
+    /// log maximum gap after sync if needed
+    final hasLoged = await hasLogMaximumGap(walletModel, accountModel);
+    if (!hasLoged) {
+      await setLogMaximumGap(walletModel, accountModel);
+
+      final FrbAccount? account = await walletManager.loadWalletWithID(
+        walletModel.walletID,
+        accountModel.accountID,
+        serverScriptType: accountModel.scriptType,
+      );
+      if (account != null) {
+        final int? maximumGapSize =
+            await account.getMaximumGapSize(keychain: KeychainKind.external_);
+        if (maximumGapSize != null && maximumGapSize > 20) {
+          final String msg =
+              "maximumGapSize log\nwalletID: ${accountModel.walletID}\naccountID: ${accountModel.accountID}\nmaximumGapSize: $maximumGapSize";
+          await Sentry.captureMessage(msg);
         }
       }
     }
