@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
 
 import '../frb.helper.dart';

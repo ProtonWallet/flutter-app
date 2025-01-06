@@ -10,6 +10,7 @@ import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.viewmodel.dart';
 
 class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
@@ -51,46 +52,57 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                       color: ProtonColors.textNorm,
                     ),
                   ),
-                  TextSpan(
-                    text: S.of(context).early_access_content_2,
-                    style: ProtonStyles.body2Medium(
-                      color: ProtonColors.textWeak,
+                  if (!viewModel.showProducts)
+                    TextSpan(
+                      text: S.of(context).early_access_content_without_product,
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.textWeak,
+                      ),
                     ),
-                  ),
-                  TextSpan(
-                    text: "wallet.proton.me",
-                    style: ProtonStyles.body2Medium(
-                      color: ProtonColors.protonBlue,
+                  if (viewModel.showProducts)
+                    TextSpan(
+                      text: S.of(context).early_access_content_2,
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.textWeak,
+                      ),
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        ExternalUrl.shared.launchWalletHomepage();
-                      },
-                  ),
+                  if (viewModel.showProducts)
+                    TextSpan(
+                      text: "wallet.proton.me",
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.protonBlue,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          ExternalUrl.shared.launchWalletHomepage();
+                        },
+                    ),
                 ]),
               ),
               const SizedBox(height: 30),
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: defaultPadding),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                  ),
                   child: Column(children: [
-                    ButtonV5(
-                        onPressed: () async {
-                          viewModel.showProtonProducts.call();
-                        },
-                        text: S.of(context).explore_other_proton_products,
-                        width: MediaQuery.of(context).size.width,
-                        textStyle:
-                            ProtonStyles.body1Medium(color: ProtonColors.white),
-                        backgroundColor: ProtonColors.protonBlue,
-                        borderColor: ProtonColors.protonBlue,
-                        height: 48),
+                    if (viewModel.showProducts)
+                      ButtonV5(
+                          onPressed: () async {
+                            viewModel.move(NavID.protonProducts);
+                          },
+                          text: S.of(context).explore_other_proton_products,
+                          width: MediaQuery.of(context).size.width,
+                          textStyle: ProtonStyles.body1Medium(
+                              color: ProtonColors.white),
+                          backgroundColor: ProtonColors.protonBlue,
+                          borderColor: ProtonColors.protonBlue,
+                          height: 48),
                     const SizedBox(
                       height: 12,
                     ),
                     ButtonV6(
                         onPressed: () async {
-                          viewModel.logoutFunction.call();
+                          viewModel.move(NavID.logout);
                         },
                         text: S.of(context).logout,
                         width: MediaQuery.of(context).size.width,
