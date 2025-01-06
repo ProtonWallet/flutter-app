@@ -80,7 +80,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
                 text: S.of(context).submit,
                 width: MediaQuery.of(context).size.width,
                 textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.backgroundSecondary),
+                    color: ProtonColors.textInverted),
                 height: 48)),
 
         /// avoid softkeyboard overlay on page

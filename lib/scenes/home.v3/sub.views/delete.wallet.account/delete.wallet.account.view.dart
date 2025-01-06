@@ -97,7 +97,7 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                       text: S.of(context).delete_account,
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
-                          color: ProtonColors.backgroundSecondary),
+                          color: ProtonColors.textInverted),
                       height: 48,
                     ),
                   ],

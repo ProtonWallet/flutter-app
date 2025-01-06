@@ -29,7 +29,7 @@ class SendFlowInviteSheet {
         Align(
             alignment: Alignment.centerLeft,
             child: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundProton,
+                backgroundColor: ProtonColors.backgroundNorm,
                 onPressed: () {
                   Navigator.of(context).pop();
                 })),
@@ -60,7 +60,7 @@ class SendFlowInviteSheet {
                 items: userAddresses,
                 itemsText: userAddresses.map((e) => e.email).toList(),
                 valueNotifier: userAddressValueNotifier,
-                border: Border.all(color: ProtonColors.protonShades20),
+                border: Border.all(color: ProtonColors.interActionWeak),
                 padding: const EdgeInsets.only(
                     left: defaultPadding, right: 8, top: 12, bottom: 12),
               ),
@@ -81,7 +81,7 @@ class SendFlowInviteSheet {
                   text: S.of(context).send_invite_email,
                   width: MediaQuery.of(context).size.width,
                   textStyle:
-                      ProtonStyles.body1Medium(color: ProtonColors.white),
+                      ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 48),

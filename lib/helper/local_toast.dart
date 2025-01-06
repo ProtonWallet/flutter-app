@@ -26,7 +26,7 @@ class LocalToast {
         border: !isWarning ? Border.all() : const Border(),
         color: isWarning
             ? Theme.of(context).colorScheme.error
-            : ProtonColors.backgroundProton,
+            : ProtonColors.backgroundNorm,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

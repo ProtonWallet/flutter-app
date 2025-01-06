@@ -25,7 +25,7 @@ class CustomTooltip extends StatelessWidget {
           horizontal: defaultPadding * 2,
         ),
         preferredDirection: preferredDirection!,
-        backgroundColor: ProtonColors.backgroundBlack,
+        backgroundColor: ProtonColors.black,
         triggerMode: TooltipTriggerMode.tap,
         content: Padding(
             padding: const EdgeInsets.symmetric(
@@ -34,7 +34,7 @@ class CustomTooltip extends StatelessWidget {
             ),
             child: Text(
               message,
-              style: ProtonStyles.body2Regular(color: ProtonColors.white),
+              style: ProtonStyles.body2Regular(color: ProtonColors.textInverted),
               textAlign: TextAlign.center,
             )),
         child: child);

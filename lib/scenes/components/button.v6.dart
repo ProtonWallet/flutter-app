@@ -106,7 +106,7 @@ class ButtonV6State extends State<ButtonV6>
                 right: 20,
                 top: widget.height / 2 - 10,
                 child: CustomLoading(
-                  color: ProtonColors.white,
+                  color: ProtonColors.textInverted,
                   durationInMilliSeconds: 1400,
                   size: 20,
                 )),

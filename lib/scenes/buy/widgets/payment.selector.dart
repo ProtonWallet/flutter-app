@@ -2,7 +2,7 @@ import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
-import 'package:wallet/constants/colors.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
@@ -118,8 +118,8 @@ class PaymentSelector extends StatelessWidget {
                                   ? "-------"
                                   : state.selectedModel.paymentMethod
                                       .enumToString(),
-                              style: const TextStyle(
-                                color: ColorName.light100,
+                              style: TextStyle(
+                                color: ProtonColors.textNorm,
                                 fontSize: 16,
                                 fontFamily: 'Inter',
                                 fontWeight: FontWeight.w500,

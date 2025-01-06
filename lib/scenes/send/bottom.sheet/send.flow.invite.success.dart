@@ -19,7 +19,7 @@ class SendFlowInviteSuccessSheet {
         Align(
             alignment: Alignment.centerLeft,
             child: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundProton,
+                backgroundColor: ProtonColors.backgroundNorm,
                 onPressed: () {
                   Navigator.of(context).pop();
                 })),
@@ -52,8 +52,8 @@ class SendFlowInviteSuccessSheet {
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                  backgroundColor: ProtonColors.protonShades20,
-                  borderColor: ProtonColors.protonShades20,
+                  backgroundColor: ProtonColors.interActionWeak,
+                  borderColor: ProtonColors.interActionWeak,
                   height: 48),
             ]))
       ]);

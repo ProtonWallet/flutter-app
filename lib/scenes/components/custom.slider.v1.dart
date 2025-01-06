@@ -48,8 +48,8 @@ class CustomSliderV1State extends State<CustomSliderV1> {
         value: value.toDouble(),
         max: widget.maxValue.toDouble(),
         min: widget.minValue.toDouble(),
-        activeColor: ProtonColors.interactionNormMinor1,
-        inactiveColor: ProtonColors.textDisabled,
+        activeColor: ProtonColors.sliderActiveColor,
+        inactiveColor: ProtonColors.sliderInactiveColor,
         thumbColor: ProtonColors.white,
         label: value.toString(),
         onChanged: (double value) {
@@ -92,7 +92,7 @@ class CustomSliderV1ThumbShape extends SliderComponentShape {
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()
-      ..color = ProtonColors.textDisabled
+      ..color = ProtonColors.sliderInactiveColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 

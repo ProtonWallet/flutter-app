@@ -28,7 +28,7 @@ class TransactionHistoryItemV2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-      color: backgroundColor ?? ProtonColors.backgroundProton,
+      color: backgroundColor ?? ProtonColors.backgroundNorm,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,

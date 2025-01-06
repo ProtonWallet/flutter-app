@@ -26,7 +26,7 @@ class RbfView extends ViewBase<RbfViewModel> {
         buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.all(0.0),
         button: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -178,7 +178,7 @@ class RbfView extends ViewBase<RbfViewModel> {
                 width: MediaQuery.of(context).size.width,
                 backgroundColor: ProtonColors.protonBlue,
                 textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.backgroundSecondary),
+                    color: ProtonColors.textInverted),
                 borderColor: ProtonColors.protonBlue,
                 height: 48),
           ],

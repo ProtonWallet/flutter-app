@@ -23,7 +23,7 @@ class PaymentDropdownItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 8),
         decoration: ShapeDecoration(
-          color: selected ? ProtonColors.textWeakPressed : null,
+          color: selected ? ProtonColors.interActionWeak : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

@@ -25,7 +25,7 @@ class LoginAndSignupBtn extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.clear,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
             maximumSize: const Size(560, 48)),
         const SizedBox(height: 4),

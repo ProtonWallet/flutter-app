@@ -10,7 +10,7 @@ class InputDoneView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: ProtonColors.protonGrey,
+      color: ProtonColors.inputDoneOverlay,
       child: Align(
         alignment: Alignment.topRight,
         child: Padding(

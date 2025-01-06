@@ -22,7 +22,7 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
           buttonDirection: AxisDirection.left,
           padding: const EdgeInsets.all(0.0),
           button: CloseButtonV1(
-              backgroundColor: ProtonColors.backgroundProton,
+              backgroundColor: ProtonColors.backgroundNorm,
               onPressed: () {
                 Navigator.of(context).pop();
               }),

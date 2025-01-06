@@ -15,7 +15,7 @@ class CloseButtonV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
         radius: 18,
-        backgroundColor: backgroundColor ?? ProtonColors.white,
+        backgroundColor: backgroundColor ?? ProtonColors.textInverted,
         child: IconButton(
           icon:
               Icon(Icons.close_rounded, color: ProtonColors.textNorm, size: 16),

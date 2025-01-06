@@ -36,7 +36,7 @@ class CommonHelper {
       content: Center(
           child: Text(
         message,
-        style: ProtonStyles.body2Regular(color: ProtonColors.white),
+        style: ProtonStyles.body2Regular(color: ProtonColors.textInverted),
       )),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

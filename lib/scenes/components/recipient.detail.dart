@@ -66,7 +66,7 @@ class RecipientDetail extends StatelessWidget {
                       radius: 10,
                       child: Icon(
                         Icons.close,
-                        color: ProtonColors.white,
+                        color: ProtonColors.textInverted,
                         size: 12,
                       ))),
             SizedBox(width: canBeClosed ? 8 : 28),
@@ -78,7 +78,7 @@ class RecipientDetail extends StatelessWidget {
                       child: Text(
                         "B",
                         style: ProtonStyles.captionSemibold(
-                            color: avatarTextColor ?? ProtonColors.white),
+                            color: avatarTextColor ?? ProtonColors.textInverted),
                       ),
                     )
                   : CircleAvatar(
@@ -92,7 +92,7 @@ class RecipientDetail extends StatelessWidget {
                                     .toUpperCase()
                                 : "",
                         style: ProtonStyles.captionSemibold(
-                            color: avatarTextColor ?? ProtonColors.white),
+                            color: avatarTextColor ?? ProtonColors.textInverted),
                       ),
                     ),
             const SizedBox(width: 6),
@@ -238,7 +238,7 @@ class RecipientDetail extends StatelessWidget {
                       textController: amountController!,
                       paddingSize: 2,
                       myFocusNode: amountFocusNode ?? FocusNode(),
-                      backgroundColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.backgroundNorm,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [

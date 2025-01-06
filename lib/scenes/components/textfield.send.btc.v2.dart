@@ -55,7 +55,7 @@ class TextFieldSendBTCV2State extends State<TextFieldSendBTCV2> {
   double estimatedFiatAmount = 0.0;
 
   Color getBorderColor(isFocus) {
-    return isFocus ? ProtonColors.interactionNorm : Colors.transparent;
+    return isFocus ? ProtonColors.protonBlue : Colors.transparent;
   }
 
   @override

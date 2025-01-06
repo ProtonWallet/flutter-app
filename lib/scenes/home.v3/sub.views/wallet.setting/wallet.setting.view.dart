@@ -191,7 +191,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                                               child: CircleAvatar(
                                                   radius: 30,
                                                   backgroundColor: ProtonColors
-                                                      .backgroundProton,
+                                                      .backgroundNorm,
                                                   child: IconButton(
                                                     onPressed: () {
                                                       viewModel.coordinator

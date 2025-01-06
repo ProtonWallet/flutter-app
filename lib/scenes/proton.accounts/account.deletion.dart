@@ -172,7 +172,7 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
             decoration: BoxDecoration(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24.0)),
-              color: ProtonColors.backgroundProton,
+              color: ProtonColors.backgroundNorm,
             ),
             child: SafeArea(
               child: Column(

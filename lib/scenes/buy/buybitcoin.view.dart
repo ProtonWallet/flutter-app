@@ -50,7 +50,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
       body: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          color: ProtonColors.backgroundProton,
+          color: ProtonColors.backgroundNorm,
         ),
         child: SafeArea(
           child: Column(children: [
@@ -623,7 +623,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             width: MediaQuery.of(context).size.width - 100,
                             backgroundColor: ProtonColors.protonBlue,
                             textStyle: ProtonStyles.body1Medium(
-                                color: ProtonColors.white),
+                                color: ProtonColors.textInverted),
                             height: 48);
                       },
                     ),

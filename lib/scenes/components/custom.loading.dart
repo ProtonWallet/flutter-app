@@ -50,7 +50,7 @@ class CustomLoadingState extends State<CustomLoading>
             valueColor: AlwaysStoppedAnimation<Color>(
                 widget.color ?? ProtonColors.protonBlue),
             backgroundColor:
-                widget.backgroundColor ?? ProtonColors.protonBlueAlpha20,
+                widget.backgroundColor ?? ProtonColors.loadingShadow,
             strokeWidth: widget.strokeWidth,
           );
         },

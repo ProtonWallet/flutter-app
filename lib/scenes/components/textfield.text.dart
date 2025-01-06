@@ -98,7 +98,7 @@ class TextFieldTextState extends State<TextFieldText> {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide:
-                          BorderSide(color: ProtonColors.interactionNorm),
+                          BorderSide(color: ProtonColors.protonBlue),
                     ),
                     suffixIcon: widget.showSuffixIcon
                         ? IconButton(
@@ -115,13 +115,13 @@ class TextFieldTextState extends State<TextFieldText> {
     return Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Chip(
-          backgroundColor: ProtonColors.backgroundProton,
+          backgroundColor: ProtonColors.backgroundNorm,
           label: Text(tag,
               style: ProtonStyles.body2Medium(
-                  color: ProtonColors.interactionNorm)),
+                  color: ProtonColors.protonBlue)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
-            side: BorderSide(color: ProtonColors.backgroundProton),
+            side: BorderSide(color: ProtonColors.backgroundNorm),
           ),
           onDeleted: () {
             setState(() {

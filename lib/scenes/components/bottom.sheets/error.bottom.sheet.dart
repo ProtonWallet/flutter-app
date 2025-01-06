@@ -63,7 +63,7 @@ class ErrorBottomSheet {
                                   callback?.call();
                                   Navigator.of(context).pop();
                                 },
-                                backgroundColor: ProtonColors.protonShades20,
+                                backgroundColor: ProtonColors.interActionWeak,
                                 text: callback != null
                                     ? S.of(context).report_a_problem
                                     : S.of(context).close,

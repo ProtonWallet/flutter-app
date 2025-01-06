@@ -30,7 +30,7 @@ Future<void> showAuthBottomSheet(
       header: CustomHeader(
         buttonDirection: AxisDirection.right,
         button: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               onCancel.call();
               Navigator.of(context).pop();
@@ -63,7 +63,7 @@ Future<void> showAuthBottomSheet(
                     return "";
                   },
                   isPassword: true,
-                  borderColor: ProtonColors.protonShades20,
+                  borderColor: ProtonColors.interActionWeak,
                 ),
                 const SizedBox(height: 16),
                 if (twoFaEnable != 0)
@@ -93,7 +93,7 @@ Future<void> showAuthBottomSheet(
                     style: const TextStyle(fontSize: 16),
                     decoration: BoxDecoration(
                       color: CupertinoColors.white,
-                      border: Border.all(color: ProtonColors.protonShades20),
+                      border: Border.all(color: ProtonColors.interActionWeak),
                       borderRadius: BorderRadius.circular(14.0),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -119,7 +119,7 @@ Future<void> showAuthBottomSheet(
             text: S.of(context).authenticate,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
             width: max(
               330,
@@ -135,8 +135,8 @@ Future<void> showAuthBottomSheet(
               Navigator.of(context).pop();
             },
             text: S.of(context).cancel,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
             width: max(

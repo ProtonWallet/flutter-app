@@ -113,7 +113,7 @@ abstract class Coordinator implements ViewNavigator {
           return Align(
               child: Container(
                   decoration: BoxDecoration(
-                    color: backgroundColor ?? ProtonColors.backgroundProton,
+                    color: backgroundColor ?? ProtonColors.backgroundNorm,
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 30),

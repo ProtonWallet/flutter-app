@@ -17,7 +17,7 @@ Future<void> showMnemonicDialog(
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: ProtonColors.backgroundNorm,
         title: Center(
           child: Text(
             S.of(context).enable_recovery_title,
@@ -112,7 +112,7 @@ Future<void> showMnemonicDialog(
                 text: S.of(context).done,
                 borderColor: ProtonColors.protonBlue,
                 backgroundColor: ProtonColors.protonBlue,
-                textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+                textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                 width: 300,
                 height: 44,
               ),

@@ -127,8 +127,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
                       ? Border.all(
                           width: 1.6,
                           color: focusNode.hasFocus
-                              ? ProtonColors.interactionNorm
-                              : ProtonColors.protonShades20,
+                              ? ProtonColors.protonBlue
+                              : ProtonColors.interActionWeak,
                         )
                       : null,
                 ),

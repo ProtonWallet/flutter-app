@@ -178,7 +178,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                               .body2Medium(
                                                                   color:
                                                                       ProtonColors
-                                                                          .white),
+                                                                          .textInverted),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -194,7 +194,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                             style: ProtonStyles
                                                                 .body2Medium(
                                                                     color: ProtonColors
-                                                                        .white),
+                                                                        .textInverted),
                                                           ),
                                                         ),
                                                       ]),
@@ -204,7 +204,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   child: Icon(
                                                       Icons
                                                           .arrow_forward_ios_rounded,
-                                                      color: ProtonColors.white,
+                                                      color: ProtonColors.textInverted,
                                                       size: 14),
                                                 ),
                                               ],
@@ -386,8 +386,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   onPressed: () {
                                                     viewModel.move(NavID.buy);
                                                   },
-                                                  backgroundColor: ProtonColors
-                                                      .backgroundBlack,
+                                                  backgroundColor:
+                                                      ProtonColors.black,
                                                   text: S.of(context).buy,
                                                   width: MediaQuery.of(context)
                                                               .size
@@ -402,7 +402,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   textStyle:
                                                       ProtonStyles.body1Medium(
                                                           color: ProtonColors
-                                                              .backgroundSecondary),
+                                                              .textInverted),
                                                   height: 48),
                                             ]),
                                         const SizedBox(
@@ -673,11 +673,11 @@ class HomeView extends ViewBase<HomeViewModel> {
       BodyListStatus listStatus) {
     if (listStatus == BodyListStatus.transactionList) {
       return walletTransactionState.historyTransaction.isEmpty
-          ? ProtonColors.backgroundProton
+          ? ProtonColors.backgroundNorm
           : ProtonColors.white;
     } else {
       return walletTransactionState.bitcoinAddresses.isEmpty
-          ? ProtonColors.backgroundProton
+          ? ProtonColors.backgroundNorm
           : ProtonColors.white;
     }
   }
@@ -704,7 +704,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                 ? Brightness.light
                 : Brightness.dark,
       ),
-      backgroundColor: ProtonColors.backgroundProton,
+      backgroundColor: ProtonColors.backgroundNorm,
       title: BlocBuilder<WalletListBloc, WalletListState>(
           bloc: viewModel.walletListBloc,
           builder: (context, state) {

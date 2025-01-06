@@ -30,7 +30,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
           child: Column(children: [
             CustomHeader(
               button: CloseButtonV1(
-                  backgroundColor: ProtonColors.backgroundProton,
+                  backgroundColor: ProtonColors.backgroundNorm,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),

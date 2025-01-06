@@ -41,7 +41,7 @@ class PageLayoutV1 extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius:
             BorderRadius.vertical(top: Radius.circular(borderRadius ?? 24.0)),
-        color: backgroundColor ?? ProtonColors.backgroundProton,
+        color: backgroundColor ?? ProtonColors.backgroundNorm,
       ),
       child: SafeArea(
         child: SizedBox(

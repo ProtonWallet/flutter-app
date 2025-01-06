@@ -32,7 +32,7 @@ class WalletAccountAddressListView
           buttonDirection: AxisDirection.left,
           padding: const EdgeInsets.all(0.0),
           button: CloseButtonV1(
-              backgroundColor: ProtonColors.backgroundProton,
+              backgroundColor: ProtonColors.backgroundNorm,
               onPressed: () {
                 Navigator.of(context).pop();
               }),
@@ -50,7 +50,7 @@ class WalletAccountAddressListView
               height: 48,
               backgroundColor: ProtonColors.protonBlue,
               textStyle: ProtonStyles.body1Medium(
-                color: ProtonColors.white,
+                color: ProtonColors.textInverted,
               ),
               onPressed: () async {
                 viewModel.updateAddressListType();
@@ -63,7 +63,7 @@ class WalletAccountAddressListView
               borderRadius: 20,
               width: MediaQuery.of(context).size.width,
               height: 50,
-              color: ProtonColors.backgroundSecondary,
+              color: ProtonColors.textInverted,
               prefixIcon: const Icon(Icons.search, size: 16),
               showSuffixIcon: false,
               scrollPadding: EdgeInsets.only(

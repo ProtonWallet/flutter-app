@@ -182,7 +182,7 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: CloseButtonV1(
-                      backgroundColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.backgroundNorm,
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),

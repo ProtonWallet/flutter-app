@@ -53,7 +53,6 @@ class HomeMoreSettings extends StatelessWidget {
             onTap: onUpgrade,
             icon: Assets.images.icon.icDiamondwalletPlus,
             text: S.of(context).wallet_plus,
-            textColor: ProtonColors.drawerWalletPlus,
           ),
         _buildListTile(
           context,

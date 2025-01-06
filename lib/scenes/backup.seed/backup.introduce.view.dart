@@ -61,11 +61,11 @@ class BackupIntroduceView extends StatelessWidget {
                       onTap: () {
                         ExternalUrl.shared.launchBlogSeedPhrase();
                       },
-                      color: ProtonColors.brandLighten20,
+                      color: ProtonColors.protonBlue,
                       child: Text(
                         S.of(context).learn_more,
                         style: ProtonStyles.body2Medium(
-                          color: ProtonColors.brandLighten20,
+                          color: ProtonColors.protonBlue,
                         ),
                       ),
                     ),
@@ -82,7 +82,7 @@ class BackupIntroduceView extends StatelessWidget {
             backgroundColor: ProtonColors.protonBlue,
             text: S.of(context).view_wallet_mnemonic,
             width: MediaQuery.of(context).size.width,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             radius: 40,
             height: 52,
           ),
