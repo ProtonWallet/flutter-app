@@ -35,7 +35,6 @@ import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.coor
 import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinator.dart';
-import 'package:wallet/scenes/home.v3/sub.views/proton.products/proton.products.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/transaction.addresses.switch.coordinator.dart';
@@ -210,7 +209,6 @@ class HomeCoordinator extends Coordinator {
   ) {
     final view = EarlyAccessCoordinator(
       logoutFunction,
-      showProtonProducts,
       email,
     ).start();
     showInBottomSheet(
@@ -218,14 +216,6 @@ class HomeCoordinator extends Coordinator {
       backgroundColor: ProtonColors.white,
       enableDrag: false,
       isDismissible: false,
-    );
-  }
-
-  void showProtonProducts() {
-    final view = ProtonProductsCoordinator().start();
-    showInBottomSheet(
-      view,
-      backgroundColor: ProtonColors.white,
     );
   }
 

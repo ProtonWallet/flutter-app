@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.coordinator.dart';
 
 abstract class EarlyAccessViewModel extends ViewModel<EarlyAccessCoordinator> {
   final String email;
-  final VoidCallback logoutFunction;
-  final VoidCallback showProtonProducts;
+  bool get showProducts => true;
 
   EarlyAccessViewModel(
     super.coordinator,
-    this.logoutFunction,
-    this.showProtonProducts,
     this.email,
   );
 }
@@ -21,8 +17,6 @@ abstract class EarlyAccessViewModel extends ViewModel<EarlyAccessCoordinator> {
 class EarlyAccessViewModelImpl extends EarlyAccessViewModel {
   EarlyAccessViewModelImpl(
     super.coordinator,
-    super.logoutFunction,
-    super.showProtonProducts,
     super.email,
   );
 
@@ -32,5 +26,19 @@ class EarlyAccessViewModelImpl extends EarlyAccessViewModel {
   }
 
   @override
-  Future<void> move(NavID to) async {}
+  bool get showProducts {
+    if (defaultTargetPlatform == TargetPlatform.iOS) return false;
+    return true;
+  }
+
+  @override
+  Future<void> move(NavID to) async {
+    switch (to) {
+      case NavID.protonProducts:
+        coordinator.showProtonProductions();
+      case NavID.logout:
+        coordinator.logout();
+      default:
+    }
+  }
 }

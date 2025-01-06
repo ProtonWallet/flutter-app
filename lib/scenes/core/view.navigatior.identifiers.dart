@@ -62,6 +62,7 @@ enum NavID {
   nativeSignup,
   signin,
   signup,
+  logout,
 
   // Feeds
   discover,

@@ -37,7 +37,6 @@ import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart';
 import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key_helper.dart';
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
-import 'package:wallet/rust/common/blockchain.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';

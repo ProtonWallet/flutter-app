@@ -1,9 +1,7 @@
 // account.rs
 
-use andromeda_api::CoreAPI::v4::addresses::Address;
 use andromeda_bitcoin::{
-    account::Account, address::AddressDetails, transactions::Pagination, utils::SortOrder,
-    KeychainKind, SignOptions,
+    account::Account, transactions::Pagination, utils::SortOrder, KeychainKind, SignOptions,
 };
 use andromeda_common::{Network, ScriptType};
 use tracing::debug;

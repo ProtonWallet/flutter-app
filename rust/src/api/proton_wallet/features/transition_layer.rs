@@ -342,13 +342,10 @@ impl FrbTransitionLayer {
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        api::proton_wallet::crypto::wallet_key_helper::FrbWalletKeyHelper,
-        mocks::user_keys::tests::{
-            get_test_user_1_locked_proton_user_key, get_test_user_1_locked_user_key,
-            get_test_user_1_locked_user_key_secret, get_test_user_2_locked_proton_address_key,
-            get_test_user_2_locked_proton_user_key, get_test_user_2_locked_user_key,
-        },
+    use crate::mocks::user_keys::tests::{
+        get_test_user_1_locked_proton_user_key, get_test_user_1_locked_user_key,
+        get_test_user_1_locked_user_key_secret, get_test_user_2_locked_proton_address_key,
+        get_test_user_2_locked_proton_user_key, get_test_user_2_locked_user_key,
     };
 
     use super::FrbTransitionLayer;

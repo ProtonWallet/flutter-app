@@ -40,6 +40,7 @@
   "early_access_title": "Early Access Waitlist",
   "early_access_content_1_fix": "You have been added to the first come, first serve waiting list. We will notify you at ",
   "early_access_content_2": " once we have more server capacity.\n\nInvites from active users of Proton Wallet will allow you to skip this waiting list.\n\nYou can also support us and get immediate access by upgrading to Proton Visionary, our most premium plan with paid features in all Proton products.\n\nTo upgrade to Visionary, please go to ",
+  "early_access_content_without_product": " once we have more server capacity.\n\nInvites from active users of Proton Wallet will allow you to skip this waiting list.\n\n ",
   "upgrade_to_visionary": "Upgrade to Visionary",
   "explore_other_proton_products": "Explore other Proton products",
   "create_new_wallet": "Create a new wallet",

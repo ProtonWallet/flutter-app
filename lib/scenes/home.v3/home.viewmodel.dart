@@ -710,8 +710,6 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showAcceptTermsAndCondition(getUserEmail());
       case NavID.earlyAccess:
         coordinator.showEarlyAccess(logout, getUserEmail());
-      case NavID.protonProducts:
-        coordinator.showProtonProducts();
       case NavID.sendInvite:
         coordinator.showSendInvite();
       case NavID.secureYourWallet:
