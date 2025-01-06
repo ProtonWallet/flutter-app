@@ -88,7 +88,7 @@ class BackupMnemonicView extends StatelessWidget {
               backgroundColor: ProtonColors.protonBlue,
               text: S.of(context).done,
               width: MediaQuery.of(context).size.width,
-              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
               radius: 40,
               height: 52)),
     ]));

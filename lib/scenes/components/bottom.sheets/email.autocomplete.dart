@@ -34,7 +34,7 @@ class EmailAutoCompleteSheet {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: CloseButtonV1(
-                      backgroundColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.backgroundNorm,
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),

@@ -187,7 +187,7 @@ class SidebarWalletItems extends StatelessWidget {
         return Padding(
             padding: const EdgeInsets.only(left: defaultPadding),
             child: CircularProgressIndicator(
-              color: ProtonColors.white,
+              color: ProtonColors.textInverted,
             ));
       },
     );

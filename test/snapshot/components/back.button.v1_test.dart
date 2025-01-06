@@ -26,7 +26,7 @@ void main() {
           'Sample with background color',
           Row(children: [
             BackButtonV1(
-              backgroundColor: ProtonColors.backgroundProton,
+              backgroundColor: ProtonColors.backgroundNorm,
               onPressed: () {},
             ),
           ]));

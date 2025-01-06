@@ -63,15 +63,16 @@ class CustomExpansionState extends State<CustomExpansion>
                                 height: 32,
                                 child: CircularProgressIndicator(
                                   value: widget.currentStep / widget.totalSteps,
-                                  color: ProtonColors.white,
+                                  color: ProtonColors.textInverted,
                                   backgroundColor: ProtonColors
-                                      .homepageProgressBarBackground,
+                                      .circularProgressIndicatorBackGround,
                                 ),
                               ),
                               Text(
                                 '${widget.currentStep}/${widget.totalSteps}',
                                 style: TextStyle(
-                                    fontSize: 9, color: ProtonColors.white),
+                                    fontSize: 9,
+                                    color: ProtonColors.textInverted),
                               ),
                             ],
                           ),
@@ -80,13 +81,13 @@ class CustomExpansionState extends State<CustomExpansion>
                           ),
                           Text(S.of(context).secure_your_wallet,
                               style: ProtonStyles.body2Regular(
-                                  color: ProtonColors.white)),
+                                  color: ProtonColors.textInverted)),
                         ]),
                         RotationTransition(
                             turns: _animation,
                             child: Icon(
                               Icons.expand_more_rounded,
-                              color: ProtonColors.white,
+                              color: ProtonColors.textInverted,
                             )),
                       ])),
               if (!_isExpanded)
@@ -94,7 +95,7 @@ class CustomExpansionState extends State<CustomExpansion>
                     margin: const EdgeInsets.symmetric(horizontal: 36),
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: ProtonColors.protonBrandLighten30,
+                      color: ProtonColors.expansionShadow,
                       borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(24),
                           bottomRight: Radius.circular(24)),
@@ -104,7 +105,7 @@ class CustomExpansionState extends State<CustomExpansion>
                     margin: const EdgeInsets.symmetric(horizontal: 56),
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                      color: ProtonColors.protonShades20,
+                      color: ProtonColors.interActionWeak,
                       borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(24),
                           bottomRight: Radius.circular(24)),

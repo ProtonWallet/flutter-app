@@ -66,7 +66,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
 
   Color getBorderColor(isFocus) {
     return isFocus
-        ? ProtonColors.interactionNorm
+        ? ProtonColors.protonBlue
         : widget.borderColor ?? Colors.transparent;
   }
 

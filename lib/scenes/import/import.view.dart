@@ -35,7 +35,7 @@ class ImportView extends ViewBase<ImportViewModel> {
           decoration: BoxDecoration(
             borderRadius:
                 const BorderRadius.vertical(top: Radius.circular(24.0)),
-            color: ProtonColors.backgroundProton,
+            color: ProtonColors.backgroundNorm,
           ),
           child: Column(
             children: [
@@ -55,11 +55,11 @@ class ImportView extends ViewBase<ImportViewModel> {
                         onTap: () {
                           ExternalUrl.shared.launchBlogImportWallet();
                         },
-                        color: ProtonColors.brandLighten20,
+                        color: ProtonColors.protonBlue,
                         child: Text(
                           S.of(context).learn_more,
                           style: ProtonStyles.body2Medium(
-                            color: ProtonColors.brandLighten20,
+                            color: ProtonColors.protonBlue,
                           ),
                         ),
                       ),
@@ -117,7 +117,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                             child: Text(
                               S.of(context).what_is_seed_phrase,
                               style: ProtonStyles.body2Regular(
-                                  color: ProtonColors.purple1Text),
+                                  color: ProtonColors.protonBlue),
                             ),
                           ),
                         ),
@@ -154,7 +154,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                                   child: Text(
                                     S.of(context).what_is_wallet_passphrase,
                                     style: ProtonStyles.body2Regular(
-                                        color: ProtonColors.purple1Text),
+                                        color: ProtonColors.protonBlue),
                                   ),
                                 ),
                               ),
@@ -195,7 +195,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                           text: S.of(context).import_button,
                           width: MediaQuery.of(context).size.width,
                           textStyle: ProtonStyles.body1Medium(
-                              color: ProtonColors.white),
+                              color: ProtonColors.textInverted),
                           backgroundColor: ProtonColors.protonBlue,
                           height: 48),
                       if (viewModel.isFirstWallet)

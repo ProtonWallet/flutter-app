@@ -55,7 +55,7 @@ Future<void> showDisableDialog(
                 },
                 text: S.of(context).disable_recovery_phrase_button,
                 backgroundColor: ProtonColors.signalError,
-                textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+                textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                 width: 300,
                 height: 44,
               ),
@@ -67,8 +67,8 @@ Future<void> showDisableDialog(
                   Navigator.of(context).pop();
                 },
                 text: S.of(context).cancel,
-                borderColor: ProtonColors.protonShades20,
-                backgroundColor: ProtonColors.protonShades20,
+                borderColor: ProtonColors.interActionWeak,
+                backgroundColor: ProtonColors.interActionWeak,
                 textStyle:
                     ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                 width: 300,

@@ -37,7 +37,7 @@ void showUpgradeErrorDialog(
                 ExternalUrl.shared.lanuchStore();
               },
               text: S.of(context).upgrade,
-              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
               backgroundColor: ProtonColors.protonBlue,
               borderColor: ProtonColors.protonBlue,
               height: 48,
@@ -53,8 +53,8 @@ void showUpgradeErrorDialog(
                   ExternalUrl.shared.lanuchForceUpgradeLearnMore();
                 },
                 text: S.of(context).learn_more,
-                backgroundColor: ProtonColors.protonShades20,
-                borderColor: ProtonColors.protonShades20,
+                backgroundColor: ProtonColors.interActionWeak,
+                borderColor: ProtonColors.interActionWeak,
                 textStyle:
                     ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                 height: 48,

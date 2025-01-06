@@ -75,13 +75,13 @@ class TextFieldTextState extends State<TextField2FA> {
     return Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Chip(
-          backgroundColor: ProtonColors.backgroundProton,
+          backgroundColor: ProtonColors.backgroundNorm,
           label: Text(tag,
               style: ProtonStyles.body2Medium(
-                  color: ProtonColors.interactionNorm)),
+                  color: ProtonColors.protonBlue)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
-            side: BorderSide(color: ProtonColors.backgroundProton),
+            side: BorderSide(color: ProtonColors.backgroundNorm),
           ),
           onDeleted: () {
             setState(() {

@@ -81,7 +81,7 @@ class SendView extends ViewBase<SendViewModel> {
     if ([SendFlowStatus.addRecipient, SendFlowStatus.sendSuccess]
         .contains(viewModel.sendFlowStatus)) {
       return CloseButtonV1(
-        backgroundColor: ProtonColors.backgroundProton,
+        backgroundColor: ProtonColors.backgroundNorm,
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -91,7 +91,7 @@ class SendView extends ViewBase<SendViewModel> {
       return const SizedBox();
     }
     return BackButtonV1(
-      backgroundColor: ProtonColors.backgroundProton,
+      backgroundColor: ProtonColors.backgroundNorm,
       onPressed: () {
         if (viewModel.sendFlowStatus == SendFlowStatus.reviewTransaction) {
           viewModel.updatePageStatus(SendFlowStatus.editAmount);
@@ -193,8 +193,7 @@ class SendView extends ViewBase<SendViewModel> {
                                   ),
                                   textStyle: ProtonStyles.captionMedium(
                                       color: ProtonColors.textNorm),
-                                  backgroundColor:
-                                      ProtonColors.backgroundProton,
+                                  backgroundColor: ProtonColors.backgroundNorm,
                                   items: fiatCurrenciesWithBitcoin,
                                   itemsText: fiatCurrenciesWithBitcoin
                                       .map((v) => v.toFullName())
@@ -293,8 +292,8 @@ class SendView extends ViewBase<SendViewModel> {
                     text: S.of(context).review_transaction,
                     width: MediaQuery.of(context).size.width,
                     backgroundColor: ProtonColors.protonBlue,
-                    textStyle:
-                        ProtonStyles.body1Medium(color: ProtonColors.white),
+                    textStyle: ProtonStyles.body1Medium(
+                        color: ProtonColors.textInverted),
                     height: 48)),
         ]));
   }
@@ -432,7 +431,7 @@ class SendView extends ViewBase<SendViewModel> {
                                 .toList(),
                             valueNotifier: viewModel.userAddressValueNotifier,
                             border:
-                                Border.all(color: ProtonColors.protonShades20),
+                                Border.all(color: ProtonColors.interActionWeak),
                             padding: const EdgeInsets.only(
                                 left: defaultPadding,
                                 right: 8,
@@ -450,7 +449,7 @@ class SendView extends ViewBase<SendViewModel> {
                           ),
                           padding: const EdgeInsets.all(defaultPadding),
                           decoration: BoxDecoration(
-                              color: ProtonColors.transactionNoteBackground,
+                              color: ProtonColors.backgroundNorm,
                               borderRadius: BorderRadius.circular(40.0)),
                           child: Row(
                             children: [
@@ -596,7 +595,7 @@ class SendView extends ViewBase<SendViewModel> {
                         ),
                         padding: const EdgeInsets.all(defaultPadding),
                         decoration: BoxDecoration(
-                            color: ProtonColors.transactionNoteBackground,
+                            color: ProtonColors.backgroundNorm,
                             borderRadius: BorderRadius.circular(40.0)),
                         child: Row(
                           children: [
@@ -1125,8 +1124,8 @@ class SendView extends ViewBase<SendViewModel> {
                     width: MediaQuery.of(context).size.width,
                     textStyle:
                         ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                    backgroundColor: ProtonColors.textWeakPressed,
-                    borderColor: ProtonColors.textWeakPressed,
+                    backgroundColor: ProtonColors.interActionWeak,
+                    borderColor: ProtonColors.interActionWeak,
                     height: 48),
                 const SizedBox(height: 20),
               ])),

@@ -30,8 +30,9 @@ class MigrationContainer {
 
   List<Migration>? findMigrationPath(int startVersion, int endVersion) {
     final List<Migration> result = [];
-    while (startVersion < endVersion) {
-      final Map<int, Migration>? targetMap = migrations[startVersion];
+    int start = startVersion;
+    while (start < endVersion) {
+      final Map<int, Migration>? targetMap = migrations[start];
       if (targetMap == null) {
         return null;
       }
@@ -39,10 +40,10 @@ class MigrationContainer {
       bool find = false;
       for (int targetVersion in sortedKeys) {
         final bool shouldAddToPath =
-            targetVersion <= endVersion && targetVersion > startVersion;
+            targetVersion <= endVersion && targetVersion > start;
         if (shouldAddToPath) {
           result.add(targetMap[targetVersion]!);
-          startVersion = targetVersion;
+          start = targetVersion;
           find = true;
           break; // only one migrate at one version
         }

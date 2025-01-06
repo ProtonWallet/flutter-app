@@ -71,7 +71,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
       children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: ProtonColors.backgroundProton,
+          backgroundColor: ProtonColors.backgroundNorm,
           drawer:
               viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
           onDrawerChanged:
@@ -128,7 +128,7 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
       builder: (context) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: ProtonColors.backgroundProton,
+          backgroundColor: ProtonColors.backgroundNorm,
           appBar: appBar(context),
           drawer:
               viewModel.currentSize == ViewSize.mobile ? drawer(context) : null,

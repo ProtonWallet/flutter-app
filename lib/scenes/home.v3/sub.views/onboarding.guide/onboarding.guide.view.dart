@@ -185,7 +185,7 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                       child: Text(
                                         S.of(context).learn_more,
                                         style: ProtonStyles.body2Regular(
-                                            color: ProtonColors.purple1Text),
+                                            color: ProtonColors.protonBlue),
                                       ),
                                     ),
                                   ),
@@ -240,7 +240,7 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                   text: S.of(context).create_new_wallet,
                                   width: MediaQuery.of(context).size.width,
                                   textStyle: ProtonStyles.body1Medium(
-                                      color: ProtonColors.white),
+                                      color: ProtonColors.textInverted),
                                   backgroundColor: ProtonColors.protonBlue,
                                   enable: viewModel.passphraseMatched,
                                   height: 48),
@@ -256,8 +256,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                 width: MediaQuery.of(context).size.width,
                                 textStyle: ProtonStyles.body1Medium(
                                     color: ProtonColors.textNorm),
-                                backgroundColor: ProtonColors.textWeakPressed,
-                                borderColor: ProtonColors.textWeakPressed,
+                                backgroundColor: ProtonColors.interActionWeak,
+                                borderColor: ProtonColors.interActionWeak,
                                 height: 48,
                               ),
                             ])),

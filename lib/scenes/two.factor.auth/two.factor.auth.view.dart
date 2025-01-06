@@ -46,7 +46,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-          backgroundColor: ProtonColors.backgroundProton,
+          backgroundColor: ProtonColors.backgroundNorm,
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -63,7 +63,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -73,8 +73,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             },
             text: S.of(context).cancel,
             width: MediaQuery.of(context).size.width,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
@@ -125,7 +125,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -141,7 +141,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -151,8 +151,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             },
             text: S.of(context).cancel,
             width: MediaQuery.of(context).size.width,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
@@ -202,7 +202,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -228,8 +228,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             },
             text: S.of(context).cancel,
             width: MediaQuery.of(context).size.width,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
@@ -352,7 +352,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -390,8 +390,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             },
             text: S.of(context).cancel,
             width: MediaQuery.of(context).size.width,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),
@@ -471,7 +471,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -506,8 +506,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             },
             text: S.of(context).done,
             width: MediaQuery.of(context).size.width,
-            backgroundColor: ProtonColors.protonShades20,
-            borderColor: ProtonColors.protonShades20,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 48,
           ),

@@ -28,7 +28,7 @@ class RecipientDetailSheet {
             Align(
                 alignment: Alignment.centerRight,
                 child: CloseButtonV1(
-                    backgroundColor: ProtonColors.backgroundProton,
+                    backgroundColor: ProtonColors.backgroundNorm,
                     onPressed: () {
                       Navigator.of(context).pop();
                     })),
@@ -43,7 +43,7 @@ class RecipientDetailSheet {
                           ? CommonHelper.getFirstNChar(email, 1).toUpperCase()
                           : "",
                   style: ProtonStyles.body1Medium(
-                      color: avatarTextColor ?? ProtonColors.white),
+                      color: avatarTextColor ?? ProtonColors.textInverted),
                 ),
               ),
             const SizedBox(height: 10),
@@ -96,8 +96,8 @@ class RecipientDetailSheet {
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
                           color: ProtonColors.textNorm),
-                      backgroundColor: ProtonColors.backgroundProton,
-                      borderColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.backgroundNorm,
+                      borderColor: ProtonColors.backgroundNorm,
                       height: 48),
                   const SizedBox(height: 8),
                 ],

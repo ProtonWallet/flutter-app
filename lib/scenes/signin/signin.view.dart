@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/assets.gen.dart';
-import 'package:wallet/constants/colors.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
@@ -34,7 +34,7 @@ class SigninView extends ViewBase<SigninViewModel> {
 
     return AlertDialog(
       title: SignInHeader(),
-      backgroundColor: ColorName.light10,
+      backgroundColor: ProtonColors.backgroundNorm,
       content: SigninContentForm(
         usernameController: usernameController,
         passwordController: passwordController,
@@ -97,7 +97,7 @@ class SigninContentForm extends StatelessWidget {
         children: [
           Text(
             S.of(context).sign_in_username_or_email,
-            style: ProtonStyles.body2Medium(color: ColorName.weakLight),
+            style: ProtonStyles.body2Medium(color: ProtonColors.textWeak),
             textAlign: TextAlign.left,
           ),
           SizedBoxes.box8,
@@ -117,7 +117,7 @@ class SigninContentForm extends StatelessWidget {
           SizedBoxes.box16,
           Text(
             "Password",
-            style: ProtonStyles.body2Medium(color: ColorName.weakLight),
+            style: ProtonStyles.body2Medium(color: ProtonColors.textWeak),
             textAlign: TextAlign.left,
           ),
           SizedBoxes.box8,

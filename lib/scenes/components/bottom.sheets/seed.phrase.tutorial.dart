@@ -19,7 +19,7 @@ class SeedPhraseTutorialSheet {
             Align(
                 alignment: Alignment.centerRight,
                 child: CloseButtonV1(
-                    backgroundColor: ProtonColors.backgroundProton,
+                    backgroundColor: ProtonColors.backgroundNorm,
                     onPressed: () {
                       Navigator.of(context).pop();
                     })),
@@ -54,7 +54,7 @@ class SeedPhraseTutorialSheet {
                     child: Text(
                       S.of(context).learn_more,
                       style: ProtonStyles.body2Regular(
-                          color: ProtonColors.purple1Text),
+                          color: ProtonColors.protonBlue),
                     ),
                   ),
                   const SizedBox(height: 10),

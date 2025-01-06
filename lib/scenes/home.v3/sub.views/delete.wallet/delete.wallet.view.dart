@@ -127,8 +127,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             width: MediaQuery.of(context).size.width,
                             textStyle: ProtonStyles.body1Medium(
                                 color: ProtonColors.textNorm),
-                            backgroundColor: ProtonColors.textWeakPressed,
-                            borderColor: ProtonColors.textWeakPressed,
+                            backgroundColor: ProtonColors.interActionWeak,
+                            borderColor: ProtonColors.interActionWeak,
                             height: 48,
                           );
                         }),

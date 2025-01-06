@@ -130,7 +130,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
                 children: [
                   Expanded(child: Center(child: Text(labelText ?? ""))),
                   CloseButtonV1(
-                    backgroundColor: ProtonColors.backgroundProton,
+                    backgroundColor: ProtonColors.backgroundNorm,
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

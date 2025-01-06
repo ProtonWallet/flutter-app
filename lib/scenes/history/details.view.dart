@@ -76,7 +76,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               title: S.of(context).transaction_detail,
               buttonDirection: AxisDirection.left,
               button: CloseButtonV1(
-                  backgroundColor: ProtonColors.backgroundProton,
+                  backgroundColor: ProtonColors.backgroundNorm,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -223,8 +223,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                       padding:
                                           const EdgeInsets.all(defaultPadding),
                                       decoration: BoxDecoration(
-                                          color: ProtonColors
-                                              .transactionNoteBackground,
+                                          color: ProtonColors.backgroundNorm,
                                           borderRadius:
                                               BorderRadius.circular(32.0)),
                                       child: Row(
@@ -408,7 +407,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 width: MediaQuery.of(context).size.width,
                                 backgroundColor: ProtonColors.protonBlue,
                                 textStyle: ProtonStyles.body1Medium(
-                                    color: ProtonColors.white),
+                                    color: ProtonColors.textInverted),
                                 height: 48),
                             const SizedBox(height: 20),
                           ])
@@ -441,8 +440,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             text: S.of(context).boost_priority,
             width: 160,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            backgroundColor: ProtonColors.textWeakPressed,
-            borderColor: ProtonColors.textWeakPressed,
+            backgroundColor: ProtonColors.interActionWeak,
+            borderColor: ProtonColors.interActionWeak,
             height: 48,
             alignment: Alignment.centerRight,
           ),

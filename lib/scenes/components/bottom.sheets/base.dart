@@ -74,7 +74,7 @@ class HomeModalBottomSheet {
               child: Align(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: backgroundColor ?? ProtonColors.backgroundProton,
+                    color: backgroundColor ?? ProtonColors.backgroundNorm,
                     borderRadius: const BorderRadius.all(Radius.circular(24.0)),
                   ),
                   margin: const EdgeInsets.symmetric(vertical: 30),
@@ -117,7 +117,7 @@ class HomeModalBottomSheet {
   }) {
     showModalBottomSheet(
         context: context,
-        backgroundColor: backgroundColor ?? ProtonColors.backgroundProton,
+        backgroundColor: backgroundColor ?? ProtonColors.backgroundNorm,
         isScrollControlled: true,
         isDismissible: isDismissible ?? true,
         enableDrag: enableDrag ?? true,

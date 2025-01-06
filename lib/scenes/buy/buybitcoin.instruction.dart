@@ -90,7 +90,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
                   text: S.of(context).continue_buttion,
                   width: MediaQuery.of(context).size.width,
                   textStyle:
-                      ProtonStyles.body1Medium(color: ProtonColors.white),
+                      ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 48,

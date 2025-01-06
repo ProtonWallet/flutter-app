@@ -54,7 +54,7 @@ class TextFieldAutoComplete extends StatelessWidget {
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                       borderSide: BorderSide(
-                          color: ProtonColors.interactionNorm, width: 2),
+                          color: ProtonColors.protonBlue, width: 2),
                     ),
                   )));
         });

@@ -64,7 +64,6 @@ class AppView extends ViewBase<AppViewModel> {
             colorScheme:
                 ThemeData(brightness: Brightness.light).colorScheme.copyWith(
                       primary: ProtonColors.textNorm,
-                      surface: ProtonColors.surfaceLight,
                     ),
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity,

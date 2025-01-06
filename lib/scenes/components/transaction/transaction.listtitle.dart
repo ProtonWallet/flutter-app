@@ -100,38 +100,8 @@ class TransactionListTitle extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         )),
                       ]),
-                  // if (note != "")
-                  //   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  //     Container(
-                  //         decoration: BoxDecoration(
-                  //           shape: BoxShape.circle,
-                  //           color: ProtonColors.wMajor1,
-                  //         ),
-                  //         margin: const EdgeInsets.only(right: 4, top: 2),
-                  //         padding: const EdgeInsets.all(2.0),
-                  //         child: Icon(Icons.edit_outlined,
-                  //             size: 10, color: ProtonColors.textHint)),
-                  //     Expanded(
-                  //         child: Text(
-                  //       S
-                  //           .of(context)
-                  //           .trans_note(CommonHelper.getFirstNChar(note, 24)),
-                  //       style:
-                  //           ProtonStyles.captionRegular(color:ProtonColors.textHint),
-                  //       overflow: TextOverflow.ellipsis,
-                  //     ))
-                  //   ]),
                   if ((body ?? "").isNotEmpty)
                     Row(children: [
-                      // Container(
-                      //     decoration: BoxDecoration(
-                      //       shape: BoxShape.circle,
-                      //       color: ProtonColors.wMajor1,
-                      //     ),
-                      //     margin: const EdgeInsets.only(right: 4, top: 2),
-                      //     padding: const EdgeInsets.all(2.0),
-                      //     child: Icon(Icons.messenger_outline,
-                      //         size: 10, color: ProtonColors.textHint)),
                       Expanded(
                           child: Text(
                         S.of(context).trans_body((body ?? "")

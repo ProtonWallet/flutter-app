@@ -145,7 +145,7 @@ class OnRampTCSheet {
                         text: "Agree and confirm",
                         width: MediaQuery.of(context).size.width,
                         textStyle:
-                            ProtonStyles.body1Medium(color: ProtonColors.white),
+                            ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
                         height: 48),
@@ -161,8 +161,8 @@ class OnRampTCSheet {
                         width: MediaQuery.of(context).size.width,
                         textStyle: ProtonStyles.body1Medium(
                             color: ProtonColors.textNorm),
-                        backgroundColor: ProtonColors.protonShades20,
-                        borderColor: ProtonColors.protonShades20,
+                        backgroundColor: ProtonColors.interActionWeak,
+                        borderColor: ProtonColors.interActionWeak,
                         height: 48),
                     const SizedBox(
                       height: 12,

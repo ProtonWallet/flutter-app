@@ -26,7 +26,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
         buttonDirection: AxisDirection.left,
         padding: const EdgeInsets.all(0.0),
         button: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -85,8 +85,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                  backgroundColor: ProtonColors.protonShades20,
-                  borderColor: ProtonColors.protonShades20,
+                  backgroundColor: ProtonColors.interActionWeak,
+                  borderColor: ProtonColors.interActionWeak,
                   height: 48),
             ]))
       ]);
@@ -130,7 +130,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                       itemsText:
                           viewModel.userAddresses.map((e) => e.email).toList(),
                       valueNotifier: viewModel.userAddressValueNotifier,
-                      border: Border.all(color: ProtonColors.protonShades20),
+                      border: Border.all(color: ProtonColors.interActionWeak),
                       padding: const EdgeInsets.only(
                           left: defaultPadding, right: 8, top: 12, bottom: 12),
                     ),
@@ -158,7 +158,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(18.0)),
                             border: Border.all(
-                              color: ProtonColors.protonShades20,
+                              color: ProtonColors.interActionWeak,
                             )),
                         child: TextFormField(
                           enabled: false,
@@ -212,10 +212,10 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                               ? ProtonColors.textNorm
                               : ProtonColors.white),
                       backgroundColor: viewModel.emailController.text.isEmpty
-                          ? ProtonColors.protonShades20
+                          ? ProtonColors.interActionWeak
                           : ProtonColors.protonBlue,
                       borderColor: viewModel.emailController.text.isEmpty
-                          ? ProtonColors.protonShades20
+                          ? ProtonColors.interActionWeak
                           : ProtonColors.protonBlue,
                       enable: viewModel.emailController.text.isNotEmpty,
                       height: 48),

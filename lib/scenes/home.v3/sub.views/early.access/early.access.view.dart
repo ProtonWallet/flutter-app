@@ -108,8 +108,8 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                         width: MediaQuery.of(context).size.width,
                         textStyle: ProtonStyles.body1Medium(
                             color: ProtonColors.textNorm),
-                        backgroundColor: ProtonColors.protonShades20,
-                        borderColor: ProtonColors.protonShades20,
+                        backgroundColor: ProtonColors.interActionWeak,
+                        borderColor: ProtonColors.interActionWeak,
                         height: 48),
                   ])),
             ]))

@@ -30,7 +30,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
             decoration: BoxDecoration(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(24.0)),
-              color: ProtonColors.backgroundProton,
+              color: ProtonColors.backgroundNorm,
             ),
             child: SafeArea(
               child: Column(children: [
@@ -222,7 +222,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               width: MediaQuery.of(context).size.width,
                               backgroundColor: ProtonColors.protonBlue,
                               textStyle: ProtonStyles.body1Medium(
-                                  color: ProtonColors.white),
+                                  color: ProtonColors.textInverted),
                               height: 48),
                           SizedBoxes.box12,
                           ButtonV5(
@@ -233,8 +233,8 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                             width: MediaQuery.of(context).size.width,
                             textStyle: ProtonStyles.body1Medium(
                                 color: ProtonColors.textNorm),
-                            backgroundColor: ProtonColors.textWeakPressed,
-                            borderColor: ProtonColors.textWeakPressed,
+                            backgroundColor: ProtonColors.interActionWeak,
+                            borderColor: ProtonColors.interActionWeak,
                             height: 48,
                             enable: !viewModel.loadingAddress,
                           ),

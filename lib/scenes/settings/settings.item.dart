@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/colors.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 
 class SettingsItem extends StatelessWidget {
@@ -24,7 +24,7 @@ class SettingsItem extends StatelessWidget {
     return ListTile(
       title: Text(
         title,
-        style: ProtonStyles.body1Medium(color: color ?? ColorName.light100),
+        style: ProtonStyles.body1Medium(color: color ?? ProtonColors.textNorm),
       ),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing: logo ??

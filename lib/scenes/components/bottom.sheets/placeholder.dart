@@ -25,7 +25,7 @@ class CustomPlaceholder {
               text: S.of(context).ok,
               width: MediaQuery.of(context).size.width,
               backgroundColor: ProtonColors.protonBlue,
-              textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
+              textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
               height: 48,
               onPressed: () {
                 Navigator.of(context).pop();

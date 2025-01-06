@@ -22,7 +22,7 @@ class ImportSuccessView extends ViewBase<ImportSuccessViewModel> {
         buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.all(0.0),
         button: CloseButtonV1(
-            backgroundColor: ProtonColors.backgroundProton,
+            backgroundColor: ProtonColors.backgroundNorm,
             onPressed: () {
               Navigator.of(context).pop();
             }),
@@ -68,7 +68,7 @@ class ImportSuccessView extends ViewBase<ImportSuccessViewModel> {
                           text: S.of(context).continue_buttion,
                           width: MediaQuery.of(context).size.width,
                           textStyle: ProtonStyles.body1Medium(
-                              color: ProtonColors.white),
+                              color: ProtonColors.textInverted),
                           backgroundColor: ProtonColors.protonBlue,
                           borderColor: ProtonColors.protonBlue,
                           height: 48),

@@ -135,7 +135,7 @@ class EditSenderSheet {
                     text: S.of(context).update_details,
                     width: MediaQuery.of(context).size.width,
                     textStyle: ProtonStyles.body1Medium(
-                        color: ProtonColors.backgroundSecondary),
+                        color: ProtonColors.textInverted),
                     height: 48)),
             SizedBox(
               height: MediaQuery.of(context).viewInsets.bottom,

@@ -191,7 +191,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                 CustomHeader(
                   buttonDirection: AxisDirection.right,
                   button: CloseButtonV1(
-                      backgroundColor: ProtonColors.backgroundProton,
+                      backgroundColor: ProtonColors.backgroundNorm,
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),

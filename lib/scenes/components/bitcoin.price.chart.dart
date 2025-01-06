@@ -145,7 +145,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                         ),
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
-                              getTooltipColor: (_) => ProtonColors.white,
+                              getTooltipColor: (_) => ProtonColors.textInverted,
                               tooltipBorder: BorderSide(
                                 color: ProtonColors.textWeak,
                               )),
@@ -252,11 +252,11 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                 selectedStyle: C2ChipStyle(
                   backgroundColor: ProtonColors.textHint,
                   foregroundStyle: ProtonStyles.body2Regular(
-                    color: ProtonColors.white,
+                    color: ProtonColors.textInverted,
                   ),
                   borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                 ),
-                color: ProtonColors.white,
+                color: ProtonColors.textInverted,
                 foregroundStyle: ProtonStyles.body2Regular(
                   color: ProtonColors.textNorm,
                 ),

@@ -209,7 +209,7 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       text: S.of(context).create_wallet_account,
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
-                          color: ProtonColors.backgroundSecondary),
+                          color: ProtonColors.textInverted),
                       height: 48),
                   SizedBoxes.box8,
                   ButtonV5(
@@ -220,8 +220,8 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
                           color: ProtonColors.textNorm),
-                      backgroundColor: ProtonColors.textWeakPressed,
-                      borderColor: ProtonColors.textWeakPressed,
+                      backgroundColor: ProtonColors.interActionWeak,
+                      borderColor: ProtonColors.interActionWeak,
                       height: 48),
                   SizedBoxes.box8,
                 ])),
