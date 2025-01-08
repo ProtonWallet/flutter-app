@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
@@ -149,7 +148,9 @@ class ProtonMailAutoComplete extends StatelessWidget {
                     suffixIcon: showQRcodeScanner
                         ? IconButton(
                             onPressed: () {
-                              if (Platform.isAndroid || Platform.isIOS) {
+                              if (defaultTargetPlatform ==
+                                      TargetPlatform.android ||
+                                  defaultTargetPlatform == TargetPlatform.iOS) {
                                 focusNode.unfocus();
                                 showQRScanBottomSheet(
                                     context, textEditingController, callback);

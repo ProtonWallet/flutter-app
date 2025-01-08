@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/onramp_gateway_client.dart';
@@ -32,7 +31,7 @@ class GatewayDataProvider extends DataProvider {
     /// update supported providers
     supportedProviders = countries.keys.toList();
 
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       supportedProviders.remove(GatewayProvider.moonPay);
     }
 
@@ -78,6 +77,7 @@ class GatewayDataProvider extends DataProvider {
     if (fiatCurrencies.isEmpty) {
       fiatCurrencies = await onRampGatewayClient.getFiatCurrencies();
     }
+
     /// set default country
     final Set<String> uniqueCodesSet = {};
     final providerCountries = countries[provider];

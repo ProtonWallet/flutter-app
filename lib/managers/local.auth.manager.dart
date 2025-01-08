@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
@@ -14,7 +15,9 @@ class LocalAuthManager implements Manager {
   String? userID;
 
   static bool isPlatformSupported() {
-    if (Platform.isAndroid || Platform.isIOS || Platform.isWindows) {
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.windows) {
       return true;
     }
     logger.i(
