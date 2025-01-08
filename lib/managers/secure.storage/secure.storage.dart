@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'secure.storage.interface.dart';
@@ -15,13 +14,13 @@ class SecureStorage implements SecureStorageInterface {
     if (!isPlatformSupported()) {
       return;
     }
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       storage = FlutterSecureStorage(aOptions: getAndroidOptions());
-    } else if (Platform.isIOS) {
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       storage = FlutterSecureStorage(iOptions: getIOSOptions());
-    } else if (Platform.isMacOS) {
+    } else if (defaultTargetPlatform == TargetPlatform.macOS) {
       storage = FlutterSecureStorage(mOptions: getMacOsOptions());
-    } else if (Platform.isWindows) {
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
       storage = FlutterSecureStorage(wOptions: getWindowsOptions());
     } else {
       storage = const FlutterSecureStorage();
