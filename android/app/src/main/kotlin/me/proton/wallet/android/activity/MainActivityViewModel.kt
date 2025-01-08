@@ -101,7 +101,7 @@ class MainActivityViewModel @Inject constructor(
         val user = userManager.getUser(account.userId)
         val sessionId = sessionProvider.getSessionId(user.userId)
         val session = sessionProvider.getSession(sessionId) ?: return
-        val passphrase = passphraseRepository.getPassphrase(user.userId)?.decrypt(keyStoreCrypto)
+        val passphrase = passphraseRepository.getPassphrase(user.userId)?.decrypt(keyStoreCrypto) ?: return
         when {
             // Parent session ?
             session.scopes.map { it.lowercase() }.contains("parent") -> {
