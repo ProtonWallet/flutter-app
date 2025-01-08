@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:no_screenshot/no_screenshot.dart';
 import 'package:sentry/sentry.dart';
@@ -210,15 +211,25 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
 
   @override
   Future<void> disableScreenShot() async {
-    final noScreenshot = NoScreenshot.instance;
-    final result = await noScreenshot.screenshotOff();
-    logger.i("Screenshot Off: $result");
+    /// NoScreenshot only supports iOS / android / macOS
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      final noScreenshot = NoScreenshot.instance;
+      final result = await noScreenshot.screenshotOff();
+      logger.i("Screenshot Off: $result");
+    }
   }
 
   @override
   Future<void> enableScreenShot() async {
-    final noScreenshot = NoScreenshot.instance;
-    final result = await noScreenshot.screenshotOn();
-    logger.i("Screenshot On: $result");
+    /// NoScreenshot only supports iOS / android / macOS
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      final noScreenshot = NoScreenshot.instance;
+      final result = await noScreenshot.screenshotOn();
+      logger.i("Screenshot On: $result");
+    }
   }
 }
