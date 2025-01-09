@@ -36,7 +36,7 @@ class TransactionList extends StatelessWidget {
                       borderRadius: 20,
                       width: MediaQuery.of(context).size.width,
                       height: 50,
-                      color: ProtonColors.textInverted,
+                      color: ProtonColors.backgroundNorm,
                       suffixIcon: const Icon(Icons.close, size: 16),
                       prefixIcon: const Icon(Icons.search, size: 16),
                       suffixIconOnPressed: () {
