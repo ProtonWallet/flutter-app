@@ -63,7 +63,7 @@ class WalletAccountAddressListView
               borderRadius: 20,
               width: MediaQuery.of(context).size.width,
               height: 50,
-              color: ProtonColors.textInverted,
+              color: ProtonColors.backgroundNorm,
               prefixIcon: const Icon(Icons.search, size: 16),
               showSuffixIcon: false,
               scrollPadding: EdgeInsets.only(
