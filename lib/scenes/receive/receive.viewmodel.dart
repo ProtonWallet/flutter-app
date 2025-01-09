@@ -150,16 +150,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         currentAddress = await receiveAddressDataProvider
             .generateNewReceiveAddress(_frbAccount, accountModel!);
         try {
-          assertCurrentAddressIndexNotFarFromStopgap();
-        } catch (e) {
-          errorMessage = e.toString();
-          CommonHelper.showErrorDialog(errorMessage);
-          errorMessage = "";
-
-          /// return directly to prevent showing address to user
-          return;
-        }
-        try {
           await DBHelper.bitcoinAddressDao!.insertOrUpdate(
             serverWalletID: walletModel!.walletID,
             serverAccountID: accountModel!.accountID,
@@ -252,7 +242,6 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
           _frbAccount, accountModel!, highestIndexFromBlockchain);
       currentAddress = null;
       await getAddress();
-      assertCurrentAddressIndexNotFarFromStopgap();
     } catch (e) {
       errorMessage = e.toString();
       CommonHelper.showErrorDialog(errorMessage);
@@ -263,17 +252,5 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     }
     loadingAddress = false;
     sinkAddSafe();
-  }
-
-  /// check if current address's index is far from stop gap.
-  /// if its far from stop gap, we should raise error to not show this address to user
-  /// since it may cause transaction not found issue after user clean cache
-  /// or import wallet in other wallet app
-  void assertCurrentAddressIndexNotFarFromStopgap() {
-    if ((currentAddress?.index ?? 0) > highestIndexFromBlockchain + 20) {
-      Sentry.captureMessage(
-          "Tries to show address higher than stopgap. address index: ${(currentAddress?.index ?? 0)}, highestIndexFromBlockchain: $highestIndexFromBlockchain");
-      throw ("Tries to show address higher than stopgap");
-    }
   }
 }
