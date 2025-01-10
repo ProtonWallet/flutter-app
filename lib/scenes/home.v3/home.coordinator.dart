@@ -227,18 +227,6 @@ class HomeCoordinator extends Coordinator {
     );
   }
 
-  void showUpgrade({
-    required bool isWalletAccountExceedLimit,
-  }) {
-    final view = UpgradeCoordinator(
-      isWalletAccountExceedLimit: isWalletAccountExceedLimit,
-    ).start();
-    showInBottomSheet(
-      view,
-      backgroundColor: ProtonColors.white,
-    );
-  }
-
   void showImportWalletPassphrase({
     required WalletMenuModel walletMenuModel,
   }) {
@@ -296,6 +284,15 @@ class HomeCoordinator extends Coordinator {
       walletMenuModel,
     ).start();
     showInBottomSheet(view);
+  }
+
+  void showUpgrade({required bool isWalletAccountExceedLimit}) {
+    showInBottomSheet(
+      UpgradeCoordinator(
+        isWalletAccountExceedLimit: isWalletAccountExceedLimit,
+      ).start(),
+      backgroundColor: ProtonColors.white,
+    );
   }
 
   void showTransactionAddressSwitch(

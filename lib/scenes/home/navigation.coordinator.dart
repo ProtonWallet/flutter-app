@@ -1,3 +1,4 @@
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/managers/channels/platform.channel.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -12,8 +13,9 @@ import 'package:wallet/scenes/home/navigation.viewmodel.dart';
 class HomeNavigationCoordinator extends Coordinator {
   late ViewBase widget;
   ApiEnv apiEnv;
-
+  @protected
   List<ViewBase<ViewModel>> pageViews = [];
+
   HomeNavigationCoordinator(this.apiEnv);
 
   @override

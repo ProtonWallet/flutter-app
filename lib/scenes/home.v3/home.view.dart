@@ -176,9 +176,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                               .invite_friends,
                                                           style: ProtonStyles
                                                               .body2Medium(
-                                                                  color:
-                                                                      ProtonColors
-                                                                          .textInverted),
+                                                                  color: ProtonColors
+                                                                      .textInverted),
                                                         ),
                                                         Padding(
                                                           padding:
@@ -204,7 +203,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   child: Icon(
                                                       Icons
                                                           .arrow_forward_ios_rounded,
-                                                      color: ProtonColors.textInverted,
+                                                      color: ProtonColors
+                                                          .textInverted,
                                                       size: 14),
                                                 ),
                                               ],
@@ -747,13 +747,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                       viewModel.setOnBoard();
                       return;
                     }
-                    for (WalletMenuModel walletMenuModel
-                        in state.walletsModel) {
+                    for (final walletMenuModel in state.walletsModel) {
                       if (walletMenuModel.isSelected) {
-                        viewModel.coordinator.showWalletSetting(
-                          viewModel.walletListBloc,
-                          viewModel.walletBalanceBloc,
-                          viewModel.walletNameBloc,
+                        viewModel.showWalletSettings(
                           walletMenuModel,
                         );
                         break;
@@ -761,13 +757,9 @@ class HomeView extends ViewBase<HomeViewModel> {
 
                       /// check if it's wallet account view
                       bool inAccount = false;
-                      for (AccountMenuModel accountMenuModel
-                          in walletMenuModel.accounts) {
+                      for (final accountMenuModel in walletMenuModel.accounts) {
                         if (accountMenuModel.isSelected) {
-                          viewModel.coordinator.showWalletSetting(
-                            viewModel.walletListBloc,
-                            viewModel.walletBalanceBloc,
-                            viewModel.walletNameBloc,
+                          viewModel.showWalletSettings(
                             walletMenuModel,
                           );
                           inAccount = true;
@@ -915,7 +907,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 updatePassphrase: (wallet) {
                                   viewModel.coordinator
                                       .showImportWalletPassphrase(
-                                          walletMenuModel: wallet);
+                                    walletMenuModel: wallet,
+                                  );
                                 },
 
                                 /// add new account into wallet

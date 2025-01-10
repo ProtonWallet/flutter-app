@@ -20,7 +20,7 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
             child: PageView(
               controller: viewModel.pageController,
               physics: const NeverScrollableScrollPhysics(),
-              children: viewModel.coordinator.starts(),
+              children: viewModel.pageViewStarts(),
             ),
           ),
         ],
@@ -33,7 +33,7 @@ class HomeNavigationView extends ViewBase<HomeNavigationViewModel> {
       body: PageView(
         controller: viewModel.pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: viewModel.coordinator.starts(),
+        children: viewModel.pageViewStarts(),
       ),
     );
   }

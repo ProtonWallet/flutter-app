@@ -28,14 +28,9 @@ class ImportCoordinator extends Coordinator {
   @override
   void end() {}
 
-  void showUpgrade({
-    required bool isWalletAccountExceedLimit,
-  }) {
-    final view = UpgradeCoordinator(
-      isWalletAccountExceedLimit: isWalletAccountExceedLimit,
-    ).start();
+  void showUpgrade() {
     showInBottomSheet(
-      view,
+      UpgradeCoordinator(isWalletAccountExceedLimit: false).start(),
       backgroundColor: ProtonColors.white,
     );
   }

@@ -204,6 +204,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Future<void> updateFeeRate();
 
   Future<bool> buildTransactionScript();
+
+  void showSendInvite();
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -1414,5 +1416,10 @@ class SendViewModelImpl extends SendViewModel {
       }
     }
     return decryptedName;
+  }
+
+  @override
+  void showSendInvite() {
+    coordinator.showSendInvite();
   }
 }

@@ -1118,7 +1118,7 @@ class SendView extends ViewBase<SendViewModel> {
                 ),
                 ButtonV5(
                     onPressed: () async {
-                      viewModel.coordinator.showSendInvite();
+                      viewModel.showSendInvite();
                     },
                     text: S.of(context).invite_a_friend,
                     width: MediaQuery.of(context).size.width,

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.event.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';

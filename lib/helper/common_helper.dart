@@ -13,6 +13,7 @@ import 'package:wallet/helper/fiat.currency.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/bottom.sheets/error.bottom.sheet.dart';
+import 'package:wallet/scenes/components/bottom.sheets/info.bottom.sheet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
 class CommonHelper {
@@ -116,6 +117,17 @@ class CommonHelper {
     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
     if (context != null && context.mounted) {
       ErrorBottomSheet.show(
+        context,
+        errorMessage,
+        callback,
+      );
+    }
+  }
+
+  static void showInfoDialog(String errorMessage, {VoidCallback? callback}) {
+    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+    if (context != null && context.mounted) {
+      InfoBottomSheet.show(
         context,
         errorMessage,
         callback,

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/env.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
+import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home/navigation.coordinator.dart';
@@ -20,6 +22,8 @@ abstract class HomeNavigationViewModel
       PageController(initialPage: selectedPage);
 
   ApiEnv apiEnv;
+
+  List<ViewBase<ViewModel>> pageViewStarts();
 }
 
 class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
@@ -43,4 +47,9 @@ class HomeNavigationViewModelImpl extends HomeNavigationViewModel {
 
   @override
   Future<void> move(NavID to) async {}
+
+  @override
+  List<ViewBase<ViewModel<Coordinator>>> pageViewStarts() {
+    return coordinator.starts();
+  }
 }

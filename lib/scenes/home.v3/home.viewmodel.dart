@@ -141,6 +141,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
 
+  void showWalletSettings(WalletMenuModel walletMenuModel);
+
   int totalTodoSteps = 3;
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
@@ -803,5 +805,15 @@ class HomeViewModelImpl extends HomeViewModel {
     final userInfo = userManager.userInfo;
     return dataProviderManager.userDataProvider.user.protonUser?.email ??
         userInfo.userMail;
+  }
+
+  @override
+  void showWalletSettings(WalletMenuModel walletMenuModel) {
+    coordinator.showWalletSetting(
+      walletListBloc,
+      walletBalanceBloc,
+      walletNameBloc,
+      walletMenuModel,
+    );
   }
 }

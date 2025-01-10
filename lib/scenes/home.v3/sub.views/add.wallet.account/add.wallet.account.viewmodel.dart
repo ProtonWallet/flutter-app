@@ -1,17 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.coordinator.dart';
@@ -26,11 +28,11 @@ abstract class AddWalletAccountViewModel
     int accountIndex,
   );
 
-  String errorMessage = "";
-
-  late ValueNotifier newAccountScriptTypeValueNotifier;
-  late TextEditingController newAccountNameController;
-  late TextEditingController newAccountIndexController;
+  final newAccountScriptTypeValueNotifier = ValueNotifier(
+    appConfig.scriptTypeInfo,
+  );
+  final newAccountNameController = TextEditingController();
+  final newAccountIndexController = TextEditingController();
 
   final FocusNode newAccountNameFocusNode = FocusNode();
   final FocusNode newAccountIndexFocusNode = FocusNode();
@@ -61,15 +63,12 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
       appConfig.coinType,
     );
 
-    newAccountScriptTypeValueNotifier = ValueNotifier(appConfig.scriptTypeInfo);
-    newAccountNameController =
-        TextEditingController(text: "Account $accountIndex");
-    newAccountIndexController =
-        TextEditingController(text: accountIndex.toString());
+    newAccountNameController.text = "Account $accountIndex";
+    newAccountIndexController.text = accountIndex.toString();
 
     newAccountScriptTypeValueNotifier.addListener(() async {
       /// get lowest unused account index when user change script type
-      final int accountIndex =
+      final accountIndex =
           await walletDataProvider.getNewDerivationAccountIndex(
         walletID,
         newAccountScriptTypeValueNotifier.value,
@@ -104,30 +103,27 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
       );
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-    } catch (e) {
-      errorMessage = e.toString();
-    }
-    if (errorMessage.isNotEmpty) {
-      if (errorMessage.toLowerCase() ==
-          "You have reached the creation limit for this type of wallet account"
-              .toLowerCase()) {
-        /// reach maximum wallet account limit, needs to show upgrade page
-        errorMessage = "";
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          coordinator.showUpgrade(
-            isWalletAccountExceedLimit: true,
-          );
+      final responsError = parseResponseError(e);
+      if (responsError != null && responsError.isCreationLimition()) {
+        if (defaultTargetPlatform == TargetPlatform.iOS) {
+          CommonHelper.showInfoDialog(responsError.error);
+          return false;
+        } else {
+          coordinator.showUpgrade();
         }
         return false;
       }
-      CommonHelper.showErrorDialog(errorMessage);
-      errorMessage = "";
+
+      final msg = parseSampleDisplayError(e);
+      CommonHelper.showErrorDialog(msg);
+      logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      Sentry.captureException(e, stackTrace: stacktrace);
+    } catch (e, stacktrace) {
+      CommonHelper.showErrorDialog(e.toString());
+      Sentry.captureException(e, stackTrace: stacktrace);
       return false;
     }
+
     return true;
   }
 }

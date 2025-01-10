@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
@@ -21,7 +23,6 @@ import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/common/word_count.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.coordinator.dart';
@@ -132,6 +133,7 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
   Future<bool> createWallet() async {
     WalletModel? walletModel;
     AccountModel? accountModel;
+
     try {
       final FrbMnemonic mnemonic = FrbMnemonic(wordCount: WordCount.words12);
       final String strMnemonic = mnemonic.asString();
@@ -196,20 +198,20 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
       }
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      final msg = parseSampleDisplayError(e);
-      if (msg.toLowerCase() ==
-          "You have reached the creation limit for this type of wallet"
-              .toLowerCase()) {
-        /// reach maximum wallet limit, needs to show upgrade page
-        final BuildContext? context =
-            Coordinator.rootNavigatorKey.currentContext;
-        if (context != null && context.mounted) {
-          coordinator.showUpgrade(
-            isWalletAccountExceedLimit: false,
-          );
+      final responsError = parseResponseError(e);
+      if (responsError != null && responsError.isCreationLimition()) {
+        if (defaultTargetPlatform == TargetPlatform.iOS) {
+          CommonHelper.showInfoDialog(responsError.error);
+          errorMessage = "";
+          return false;
+        } else {
+          errorMessage = "";
+          coordinator.showUpgrade();
         }
         return false;
       }
+
+      final msg = parseSampleDisplayError(e);
       CommonHelper.showErrorDialog(msg);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
