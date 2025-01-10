@@ -165,22 +165,21 @@ class ImportView extends ViewBase<ImportViewModel> {
                           onPressed: () async {
                             if (!viewModel.isImporting) {
                               viewModel.isImporting = true;
-                              final bool isSuccess =
-                                  await viewModel.importWallet();
+                              final isSuccess = await viewModel.importWallet();
                               if (context.mounted) {
                                 if (isSuccess) {
                                   Navigator.of(context).pop();
                                   CommonHelper.showSnackbar(
-                                      context, S.of(context).wallet_imported);
+                                    context,
+                                    S.of(context).wallet_imported,
+                                  );
                                 }
                                 if (viewModel.errorMessage.isEmpty) {
                                   if (viewModel.isFirstWallet &&
                                       !viewModel.acceptTermsAndConditions) {
                                     viewModel.move(NavID.importSuccess);
                                   } else if (viewModel.hitWalletAccountLimit) {
-                                    viewModel.coordinator.showUpgrade(
-                                      isWalletAccountExceedLimit: false,
-                                    );
+                                    viewModel.showUpgrade();
                                   }
                                 } else {
                                   CommonHelper.showErrorDialog(

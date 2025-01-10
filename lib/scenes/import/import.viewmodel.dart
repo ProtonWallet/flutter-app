@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
@@ -47,6 +48,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
 
   bool isPasteMode = true;
   String errorMessage = "";
+  String limitErrorMessage = "";
   bool isValidMnemonic = false;
   bool isFirstWallet = false;
   bool isImporting = false;
@@ -63,6 +65,7 @@ abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
   (bool, String) mnemonicValidation(String strMnemonic);
 
   Future<bool> importWallet();
+  void showUpgrade();
 }
 
 class ImportViewModelImpl extends ImportViewModel {
@@ -219,10 +222,10 @@ class ImportViewModelImpl extends ImportViewModel {
     } on BridgeError catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
-
       final limitError = parseUserLimitationError(e);
       if (limitError != null) {
         hitWalletAccountLimit = true;
+        limitErrorMessage = limitError;
         return true;
       } else {
         errorMessage = parseSampleDisplayError(e);
@@ -308,7 +311,16 @@ class ImportViewModelImpl extends ImportViewModel {
       final pending = "\nLength: $length";
       return (false, pending);
     }
-
     return (true, "");
+  }
+
+  @override
+  void showUpgrade() {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      CommonHelper.showInfoDialog(limitErrorMessage);
+      limitErrorMessage = "";
+      return;
+    }
+    coordinator.showUpgrade();
   }
 }

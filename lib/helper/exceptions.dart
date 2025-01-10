@@ -1,3 +1,4 @@
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/rust/api/errors.dart';
 
 ResponseError? parseResponseError(BridgeError exception) {
@@ -5,13 +6,6 @@ ResponseError? parseResponseError(BridgeError exception) {
     apiResponse: (e) => e.field0,
     orElse: () => null,
   );
-}
-
-/// extensions
-extension ResponseErrorCheck on ResponseError {
-  bool isMissingLockedScope() {
-    return code == 9101;
-  }
 }
 
 String parseSampleDisplayError(BridgeError exception) {
@@ -50,16 +44,9 @@ String? parseSessionExpireError(BridgeError exception) {
 }
 
 String? parseUserLimitationError(BridgeError exception) {
-  final error = exception.maybeMap(
-    apiResponse: (e) => e.field0,
-    orElse: () => null,
-  );
-  if (error != null) {
-    if (error.error.toLowerCase() ==
-        "You have reached the creation limit for this type of wallet account"
-            .toLowerCase()) {
-      return error.error;
-    }
+  final responseError = parseResponseError(exception);
+  if (responseError != null && responseError.isCreationLimition()) {
+    return responseError.error;
   }
   return null;
 }

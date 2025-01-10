@@ -240,7 +240,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                   text: S.of(context).create_new_wallet,
                                   width: MediaQuery.of(context).size.width,
                                   textStyle: ProtonStyles.body1Medium(
-                                      color: ProtonColors.textInverted),
+                                    color: ProtonColors.textInverted,
+                                  ),
                                   backgroundColor: ProtonColors.protonBlue,
                                   enable: viewModel.passphraseMatched,
                                   height: 48),

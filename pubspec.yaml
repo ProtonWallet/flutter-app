@@ -200,9 +200,8 @@ flutter_gen:
     # flare_flutter: true
     # rive: true
     # lottie: true
-  colors:
-    inputs:
-      - assets/colors/colors.xml
+  # colors:
+  #   inputs:
 
 # The following section is specific to Flutter packages.
 flutter:
