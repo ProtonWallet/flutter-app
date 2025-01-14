@@ -220,21 +220,15 @@ class HomeCoordinator extends Coordinator {
   }
 
   void showSendInvite() {
-    final view = SendInviteCoordinator().start();
     showInBottomSheet(
-      view,
+      SendInviteCoordinator().start(),
       backgroundColor: ProtonColors.white,
     );
   }
 
-  void showImportWalletPassphrase({
-    required WalletMenuModel walletMenuModel,
-  }) {
-    final view = PassphraseCoordinator(
-      walletMenuModel,
-    ).start();
+  void showImportWalletPassphrase(WalletMenuModel walletMenuModel) {
     showInBottomSheet(
-      view,
+      PassphraseCoordinator(walletMenuModel).start(),
       backgroundColor: ProtonColors.white,
     );
   }

@@ -32,6 +32,7 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
@@ -141,7 +142,40 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   void updateDrawerStatus(WalletDrawerStatus walletDrawerStatus);
 
-  void showWalletSettings(WalletMenuModel walletMenuModel);
+  void showWalletSettings(WalletMenuModel walletMenuModel) {
+    coordinator.showWalletSetting(
+      walletListBloc,
+      walletBalanceBloc,
+      walletNameBloc,
+      walletMenuModel,
+    );
+  }
+
+  void showDeleteWallet(
+    WalletMenuModel walletMenuModel, {
+    required bool triggerFromSidebar,
+  }) {
+    coordinator.showDeleteWallet(
+      walletMenuModel,
+      triggerFromSidebar: triggerFromSidebar,
+    );
+  }
+
+  void showImportWalletPassphrase(WalletMenuModel walletMenuModel) {
+    coordinator.showImportWalletPassphrase(walletMenuModel);
+  }
+
+  void showTransactionAddressSwitch(AccountMenuModel accountMenuModel) {
+    coordinator.showTransactionAddressSwitch(accountMenuModel);
+  }
+
+  void showHistoryDetails(
+    String walletID,
+    String accountID,
+    FrbTransactionDetails frbTransactionDetails,
+  ) {
+    coordinator.showHistoryDetails(walletID, accountID, frbTransactionDetails);
+  }
 
   int totalTodoSteps = 3;
   int currentTodoStep = 0;
@@ -805,15 +839,5 @@ class HomeViewModelImpl extends HomeViewModel {
     final userInfo = userManager.userInfo;
     return dataProviderManager.userDataProvider.user.protonUser?.email ??
         userInfo.userMail;
-  }
-
-  @override
-  void showWalletSettings(WalletMenuModel walletMenuModel) {
-    coordinator.showWalletSetting(
-      walletListBloc,
-      walletBalanceBloc,
-      walletNameBloc,
-      walletMenuModel,
-    );
   }
 }

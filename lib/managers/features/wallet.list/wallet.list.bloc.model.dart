@@ -30,4 +30,8 @@ class AccountMenuModel {
   List<String> emailIds = [];
 
   AccountMenuModel(this.accountModel);
+
+  String get accountID {
+    return accountModel.accountID;
+  }
 }

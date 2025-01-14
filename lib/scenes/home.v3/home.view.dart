@@ -897,7 +897,7 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                   required hasBalance,
                                   required isInvalidWallet,
                                 }) {
-                                  viewModel.coordinator.showDeleteWallet(
+                                  viewModel.showDeleteWallet(
                                     wallet,
                                     triggerFromSidebar: true,
                                   );
@@ -905,9 +905,8 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
 
                                 /// update passphrase
                                 updatePassphrase: (wallet) {
-                                  viewModel.coordinator
-                                      .showImportWalletPassphrase(
-                                    walletMenuModel: wallet,
+                                  viewModel.showImportWalletPassphrase(
+                                    wallet,
                                   );
                                 },
 

@@ -13,10 +13,15 @@ abstract class TransactionAddressesSwitchViewModel
     super.coordinator,
   );
 
+  void showWalletAccountAddressList() {
+    coordinator.showWalletAccountAddressList();
+  }
+
   String errorMessage = "";
 }
 
-class TransactionAddressesSwitchViewModelImpl extends TransactionAddressesSwitchViewModel {
+class TransactionAddressesSwitchViewModelImpl
+    extends TransactionAddressesSwitchViewModel {
   TransactionAddressesSwitchViewModelImpl(
     super.accountMenuModel,
     super.coordinator,

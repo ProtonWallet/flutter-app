@@ -55,8 +55,7 @@ abstract class WalletSettingViewModel
   List<ProtonAddress> userAddresses = [];
   Map<String, AccountSettingInfo> accountID2SettingInfo = {};
 
-  ValueNotifier<BitcoinUnit> bitcoinUnitNotifier =
-      ValueNotifier(BitcoinUnit.btc);
+  final bitcoinUnitNotifier = ValueNotifier(BitcoinUnit.btc);
 
   String errorMessage = "";
   bool isRemovingBvE = false;
@@ -64,14 +63,9 @@ abstract class WalletSettingViewModel
 
   void updateRemovingBvE(isRemoving);
 
-  void updateBvEEnabledStatus(
-    String accountID,
-    enabled,
-  );
+  void updateBvEEnabledStatus(String accountID, enabled);
 
-  Future<void> updateWalletName(
-    String newName,
-  );
+  Future<void> updateWalletName(String newName);
 
   Future<void> updateAccountName(
     AccountModel accountModel,
@@ -88,9 +82,13 @@ abstract class WalletSettingViewModel
     String serverAddressID,
   );
 
-  AccountSettingInfo getAccountSettingInfoByAccountID(
-    accountID,
-  );
+  AccountSettingInfo getAccSettingsBy({
+    required String accountID,
+  });
+
+  bool isBveEnabled(accountID) {
+    return getAccSettingsBy(accountID: accountID).bveEnabled;
+  }
 
   ProtonAddress? getProtonAddressByID(
     String addressID,
@@ -103,6 +101,30 @@ abstract class WalletSettingViewModel
     this.walletNameBloc,
     this.walletMenuModel,
   );
+
+  void showBvEPrivacy({required bool isPrimaryAccount}) {
+    coordinator.showBvEPrivacy(isPrimaryAccount: isPrimaryAccount);
+  }
+
+  void showWalletAccountSetting(AccountMenuModel accountMenuModel) {
+    coordinator.showWalletAccountSetting(accountMenuModel);
+  }
+
+  void showDeleteWallet({required bool triggerFromSidebar}) {
+    coordinator.showDeleteWallet(triggerFromSidebar: triggerFromSidebar);
+  }
+
+  void showEditBvE(
+    WalletListBloc walletListBloc,
+    AccountModel accountModel,
+    VoidCallback? callback,
+  ) {
+    coordinator.showEditBvE(
+      walletListBloc,
+      accountModel,
+      callback,
+    );
+  }
 }
 
 class WalletSettingViewModelImpl extends WalletSettingViewModel {
@@ -289,7 +311,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
   }
 
   @override
-  AccountSettingInfo getAccountSettingInfoByAccountID(accountID) {
+  AccountSettingInfo getAccSettingsBy({required String accountID}) {
     try {
       return accountID2SettingInfo[accountID]!;
     } catch (e, stacktrace) {
@@ -306,7 +328,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
 
   @override
   void updateBvEEnabledStatus(String accountID, enabled) {
-    final accountSettingInfo = getAccountSettingInfoByAccountID(accountID);
+    final accountSettingInfo = getAccSettingsBy(accountID: accountID);
     accountSettingInfo.bveEnabled = enabled;
     accountID2SettingInfo[accountID] = accountSettingInfo;
     sinkAddSafe();
