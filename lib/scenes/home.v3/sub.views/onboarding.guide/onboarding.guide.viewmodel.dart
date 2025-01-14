@@ -59,6 +59,10 @@ abstract class OnboardingGuideViewModel
 
   Future<bool> createWallet();
 
+  void showImportWallet(String preInputName) {
+    coordinator.showImportWallet(preInputName);
+  }
+
   OnboardingGuideViewModel(
     super.coordinator,
     this.walletManager,

@@ -14,6 +14,7 @@ abstract class ViewModel<T extends Coordinator>
   ViewModel(this.coordinator);
 
   /// coordinator
+  @protected
   final T coordinator;
 
   /// [ViewModel] stream controller

@@ -22,10 +22,8 @@ class DeleteWalletCoordinator extends Coordinator {
   });
 
   void showSetupBackup() {
-    final view =
-        SetupBackupCoordinator(walletMenuModel.walletModel.walletID).start();
     showInBottomSheet(
-      view,
+      SetupBackupCoordinator(walletMenuModel.walletModel.walletID).start(),
       backgroundColor: ProtonColors.white,
     );
   }

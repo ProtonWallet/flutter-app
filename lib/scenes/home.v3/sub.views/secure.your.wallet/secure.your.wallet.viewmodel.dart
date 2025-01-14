@@ -16,6 +16,18 @@ abstract class SecureYourWalletViewModel
     required this.showWalletRecovery,
     required this.hadSetup2FA,
   });
+
+  void showSecuritySetting() {
+    coordinator.showSecuritySetting();
+  }
+
+  void showRecovery() {
+    coordinator.showRecovery();
+  }
+
+  void showSetupBackup() {
+    coordinator.showSetupBackup();
+  }
 }
 
 class SecureYourWalletViewModelImpl extends SecureYourWalletViewModel {

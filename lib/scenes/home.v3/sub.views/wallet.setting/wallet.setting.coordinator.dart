@@ -77,11 +77,8 @@ class WalletSettingCoordinator extends Coordinator {
   void showBvEPrivacy({
     required bool isPrimaryAccount,
   }) {
-    final view = BvEPrivacyCoordinator(
-      isPrimaryAccount: isPrimaryAccount,
-    ).start();
     showInBottomSheet(
-      view,
+      BvEPrivacyCoordinator(isPrimaryAccount: isPrimaryAccount).start(),
       backgroundColor: ProtonColors.white,
     );
   }

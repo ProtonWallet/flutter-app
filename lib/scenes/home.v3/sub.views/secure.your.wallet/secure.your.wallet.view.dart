@@ -33,7 +33,7 @@ class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
             onTap: () {
               if (!viewModel.hadSetupRecovery) {
                 Navigator.of(context).pop();
-                viewModel.coordinator.showRecovery();
+                viewModel.showRecovery();
               }
             },
           ),
@@ -54,7 +54,7 @@ class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
             onTap: () {
               if (viewModel.showWalletRecovery) {
                 Navigator.of(context).pop();
-                viewModel.coordinator.showSetupBackup();
+                viewModel.showSetupBackup();
               }
             },
           ),
@@ -75,7 +75,7 @@ class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
             onTap: () {
               if (!viewModel.hadSetup2FA) {
                 Navigator.of(context).pop();
-                viewModel.coordinator.showSecuritySetting();
+                viewModel.showSecuritySetting();
               }
             },
           ),

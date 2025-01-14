@@ -55,9 +55,9 @@ class TransactionList extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               if (viewModel.selectedAccountMenuModel != null) {
-                                viewModel.coordinator
-                                    .showTransactionAddressSwitch(
-                                        viewModel.selectedAccountMenuModel!);
+                                viewModel.showTransactionAddressSwitch(
+                                  viewModel.selectedAccountMenuModel!,
+                                );
                               }
                             },
                             child: Row(children: [
@@ -150,7 +150,7 @@ class TransactionList extends StatelessWidget {
               transactions: state.historyTransaction,
               currentPage: viewModel.currentHistoryPage,
               showMoreCallback: viewModel.showMoreTransactionHistory,
-              showDetailCallback: viewModel.coordinator.showHistoryDetails,
+              showDetailCallback: viewModel.showHistoryDetails,
               selfEmailAddresses: const [],
               filterBy: viewModel.transactionListFilterBy,
               keyWord: viewModel.transactionSearchController.text,

@@ -5,6 +5,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
@@ -84,7 +85,8 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             S.of(context).confirm_to_delete_wallet(
                                 viewModel.walletMenuModel.walletName),
                             style: ProtonStyles.subheadline(
-                                color: ProtonColors.textNorm),
+                              color: ProtonColors.textNorm,
+                            ),
                             textAlign: TextAlign.center),
                         const SizedBox(height: 10),
                         if (viewModel.hasBalance)
@@ -120,13 +122,14 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                           return ButtonV5(
                             onPressed: () async {
                               Navigator.of(context).pop();
-                              viewModel.coordinator.showSetupBackup();
+                              viewModel.showSetupBackup();
                             },
                             enable: !loading,
                             text: S.of(context).backup_wallet,
-                            width: MediaQuery.of(context).size.width,
+                            width: context.width,
                             textStyle: ProtonStyles.body1Medium(
-                                color: ProtonColors.textNorm),
+                              color: ProtonColors.textNorm,
+                            ),
                             backgroundColor: ProtonColors.interActionWeak,
                             borderColor: ProtonColors.interActionWeak,
                             height: 48,
@@ -149,11 +152,12 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                               isLoading: loading,
                               enable: !loading,
                               text: S.of(context).delete_wallet_now,
-                              width: MediaQuery.of(context).size.width,
+                              width: context.width,
                               backgroundColor: ProtonColors.signalError,
                               borderColor: ProtonColors.signalError,
                               textStyle: ProtonStyles.body1Medium(
-                                  color: ProtonColors.white),
+                                color: ProtonColors.white,
+                              ),
                               height: 48,
                             );
                           },

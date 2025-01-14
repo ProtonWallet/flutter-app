@@ -40,6 +40,10 @@ abstract class DeleteWalletViewModel
   String errorMessage = "";
 
   bool isDeleting = false;
+
+  void showSetupBackup() {
+    coordinator.showSetupBackup();
+  }
 }
 
 class DeleteWalletViewModelImpl extends DeleteWalletViewModel {
