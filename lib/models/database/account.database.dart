@@ -25,4 +25,8 @@ class AccountDatabase extends BaseDatabase {
     await addIndex("walletID");
     await addIndex("accountID");
   }
+
+  Future<void> migration_1() async {
+    await addColumn("stopGap", "INTEGER default 500");
+  }
 }

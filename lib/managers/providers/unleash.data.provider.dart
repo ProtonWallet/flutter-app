@@ -25,7 +25,6 @@ class UnleashDataProvider extends DataProvider {
   static const String walletFlutterLogInternal = "WalletFlutterLogInternal";
   static const String walletMempoolRecommendedFees =
       "WalletMempoolRecommendedFees";
-  static const String walletClientStopGap500 = "WalletClientStopGap500";
   static const String walletMobileClientDebugMode =
       "WalletMobileClientDebugMode";
 
@@ -118,10 +117,6 @@ class UnleashDataProvider extends DataProvider {
 
   bool isUsingMempoolFees() {
     return unleashClient.isEnabled(walletMempoolRecommendedFees);
-  }
-
-  bool isUsingStopgap500() {
-    return unleashClient.isEnabled(walletClientStopGap500);
   }
 
   bool isMobileClientDebugMode() {

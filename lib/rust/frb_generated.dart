@@ -14329,8 +14329,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ApiWalletAccount dco_decode_api_wallet_account(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return ApiWalletAccount(
       id: dco_decode_String(arr[0]),
       walletId: dco_decode_String(arr[1]),
@@ -14341,7 +14341,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       poolSize: dco_decode_u_32(arr[6]),
       priority: dco_decode_u_32(arr[7]),
       scriptType: dco_decode_u_8(arr[8]),
-      addresses: dco_decode_list_api_email_address(arr[9]),
+      stopGap: dco_decode_opt_box_autoadd_u_32(arr[9]),
+      addresses: dco_decode_list_api_email_address(arr[10]),
     );
   }
 
@@ -18389,6 +18390,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_poolSize = sse_decode_u_32(deserializer);
     var var_priority = sse_decode_u_32(deserializer);
     var var_scriptType = sse_decode_u_8(deserializer);
+    var var_stopGap = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_addresses = sse_decode_list_api_email_address(deserializer);
     return ApiWalletAccount(
         id: var_id,
@@ -18400,6 +18402,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         poolSize: var_poolSize,
         priority: var_priority,
         scriptType: var_scriptType,
+        stopGap: var_stopGap,
         addresses: var_addresses);
   }
 
@@ -23183,6 +23186,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_u_32(self.poolSize, serializer);
     sse_encode_u_32(self.priority, serializer);
     sse_encode_u_8(self.scriptType, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.stopGap, serializer);
     sse_encode_list_api_email_address(self.addresses, serializer);
   }
 

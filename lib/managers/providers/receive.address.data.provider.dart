@@ -169,6 +169,7 @@ class ReceiveAddressDataProvider extends DataProvider {
       accountModel.poolSize,
       accountModel.priority,
       accountModel.lastUsedIndex,
+      accountModel.stopGap,
       notify: false,
     );
   }

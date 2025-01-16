@@ -12130,6 +12130,7 @@ const _: fn() = || {
         let _: u32 = ApiWalletAccount.PoolSize;
         let _: u32 = ApiWalletAccount.Priority;
         let _: u8 = ApiWalletAccount.ScriptType;
+        let _: Option<u32> = ApiWalletAccount.StopGap;
         let _: Vec<crate::proton_api::wallet_account::ApiEmailAddress> = ApiWalletAccount.Addresses;
     }
     {
@@ -14224,6 +14225,7 @@ impl SseDecode for crate::proton_api::wallet_account::ApiWalletAccount {
         let mut var_poolSize = <u32>::sse_decode(deserializer);
         let mut var_priority = <u32>::sse_decode(deserializer);
         let mut var_scriptType = <u8>::sse_decode(deserializer);
+        let mut var_stopGap = <Option<u32>>::sse_decode(deserializer);
         let mut var_addresses =
             <Vec<crate::proton_api::wallet_account::ApiEmailAddress>>::sse_decode(deserializer);
         return crate::proton_api::wallet_account::ApiWalletAccount {
@@ -14236,6 +14238,7 @@ impl SseDecode for crate::proton_api::wallet_account::ApiWalletAccount {
             PoolSize: var_poolSize,
             Priority: var_priority,
             ScriptType: var_scriptType,
+            StopGap: var_stopGap,
             Addresses: var_addresses,
         };
     }
@@ -18776,6 +18779,7 @@ impl flutter_rust_bridge::IntoDart
             self.0.PoolSize.into_into_dart().into_dart(),
             self.0.Priority.into_into_dart().into_dart(),
             self.0.ScriptType.into_into_dart().into_dart(),
+            self.0.StopGap.into_into_dart().into_dart(),
             self.0.Addresses.into_into_dart().into_dart(),
         ]
         .into_dart()
@@ -22391,6 +22395,7 @@ impl SseEncode for crate::proton_api::wallet_account::ApiWalletAccount {
         <u32>::sse_encode(self.PoolSize, serializer);
         <u32>::sse_encode(self.Priority, serializer);
         <u8>::sse_encode(self.ScriptType, serializer);
+        <Option<u32>>::sse_encode(self.StopGap, serializer);
         <Vec<crate::proton_api::wallet_account::ApiEmailAddress>>::sse_encode(
             self.Addresses,
             serializer,

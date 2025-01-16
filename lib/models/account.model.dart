@@ -8,14 +8,19 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 
 class AccountModel {
   int id;
+
   // unique account id from server
   String accountID;
+
   // wallet server id, 1 account : N
   String walletID;
+
   // 1 account : N,  join unique with wallet id
   String derivationPath;
+
   // encrypted label
   Uint8List label;
+
   // script type
   int scriptType;
   int createTime;
@@ -24,6 +29,7 @@ class AccountModel {
   int priority;
   int lastUsedIndex;
   int poolSize;
+  int stopGap;
 
   String labelDecrypt = "Default Account";
   double balance = 0;
@@ -41,6 +47,7 @@ class AccountModel {
     required this.modifyTime,
     required this.fiatCurrency,
     required this.lastUsedIndex,
+    required this.stopGap,
   });
 
   Map<String, dynamic> toMap() {
@@ -56,6 +63,7 @@ class AccountModel {
       'modifyTime': modifyTime,
       'fiatCurrency': fiatCurrency,
       'lastUsedIndex': lastUsedIndex,
+      'stopGap': stopGap,
     };
   }
 
@@ -91,6 +99,7 @@ class AccountModel {
       modifyTime: map['modifyTime'],
       fiatCurrency: map['fiatCurrency'],
       lastUsedIndex: map['lastUsedIndex'],
+      stopGap: map['stopGap'],
     );
     return accountModel;
   }

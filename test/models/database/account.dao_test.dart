@@ -31,6 +31,7 @@ Future<void> main() async {
         priority: 1,
         poolSize: 10,
         lastUsedIndex: 10,
+        stopGap: 20,
       ));
       expect(id, 1);
       id = await appDatabase.accountDao.insert(AccountModel(
@@ -46,6 +47,7 @@ Future<void> main() async {
         priority: 2,
         poolSize: 20,
         lastUsedIndex: 20,
+        stopGap: 456,
       ));
       expect(id, 2);
 
@@ -62,6 +64,7 @@ Future<void> main() async {
         priority: 3,
         poolSize: 30,
         lastUsedIndex: 30,
+        stopGap: 20,
       ));
       expect(id, 3);
 
@@ -78,6 +81,7 @@ Future<void> main() async {
         priority: 4,
         poolSize: 40,
         lastUsedIndex: 40,
+        stopGap: 20,
       ));
       expect(id, 4);
 
@@ -95,6 +99,7 @@ Future<void> main() async {
         priority: 5,
         poolSize: 50,
         lastUsedIndex: 50,
+        stopGap: 20,
       ));
       expect(id, 5);
     });
@@ -125,6 +130,7 @@ Future<void> main() async {
       expect(results[0].scriptType, ScriptTypeInfo.nativeSegWit.index);
       expect(results[0].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[0].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
+      expect(results[0].stopGap, 456);
 
       expect(results[1].id, 3);
       expect(results[1].priority, 3);
@@ -136,6 +142,7 @@ Future<void> main() async {
       expect(results[1].scriptType, ScriptTypeInfo.nestedSegWit.index);
       expect(results[1].createTime, now.millisecondsSinceEpoch ~/ 1000);
       expect(results[1].modifyTime, now.millisecondsSinceEpoch ~/ 1000);
+      expect(results[1].stopGap, 20);
 
       expect(results[2].id, 5);
       expect(results[2].priority, 5);
@@ -243,6 +250,7 @@ Future<void> main() async {
         priority: 12,
         poolSize: 13,
         lastUsedIndex: 13,
+        stopGap: 123,
       ));
       final AccountModel accountModel =
           await appDatabase.accountDao.findById(3);
@@ -257,6 +265,7 @@ Future<void> main() async {
       expect(accountModel.priority, 12);
       expect(accountModel.lastUsedIndex, 13);
       expect(accountModel.poolSize, 13);
+      expect(accountModel.stopGap, 123);
     });
   });
 }

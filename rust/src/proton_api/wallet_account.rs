@@ -46,6 +46,7 @@ pub struct _ApiWalletAccount {
     pub PoolSize: u32,
     pub Priority: u32,
     pub ScriptType: u8,
+    pub StopGap: Option<u32>,
     pub Addresses: Vec<ApiEmailAddress>,
 }
 
