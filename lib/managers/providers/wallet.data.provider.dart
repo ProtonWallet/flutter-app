@@ -459,6 +459,7 @@ class WalletsDataProvider extends DataProvider {
       apiWalletAcct.poolSize,
       apiWalletAcct.priority,
       apiWalletAcct.lastUsedIndex,
+      apiWalletAcct.stopGap,
       initialize: true,
     );
   }
@@ -618,10 +619,18 @@ class WalletsDataProvider extends DataProvider {
     FiatCurrency fiatCurrency,
     int poolSize,
     int priority,
-    int lastUsedIndex, {
+    int lastUsedIndex,
+    int? stopGap, {
     bool initialize = false,
     bool notify = true,
   }) async {
+    /// stopgap default to 500 from server
+    /// before db update, it will return 0 for all wallet accounts
+    /// so we need to double check the value is greater than normal stopgap
+    int finalStopgap = stopGap ?? 500;
+    if (finalStopgap < 20) {
+      finalStopgap = 500;
+    }
     int tmpID = -1;
     AccountModel? account = await accountDao.findByServerID(accountID);
     final DateTime now = DateTime.now();
@@ -650,6 +659,7 @@ class WalletsDataProvider extends DataProvider {
         priority: priority,
         poolSize: poolSize,
         lastUsedIndex: lastUsedIndex,
+        stopGap: finalStopgap,
       );
       tmpID = await accountDao.insert(account);
     }

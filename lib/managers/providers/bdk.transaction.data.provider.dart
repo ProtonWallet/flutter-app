@@ -176,17 +176,17 @@ class BDKTransactionDataProvider extends DataProvider {
     return await shared.read(syncCheckID) ?? false;
   }
 
-  Future<bool> hasUsedStopGap500(
+  Future<bool> hasUsedServerStopgap(
       WalletModel walletModel, AccountModel accountModel) async {
     final String syncCheckID =
-        "${getSyncCheckID(walletModel, accountModel)}_${UnleashDataProvider.walletClientStopGap500}";
+        "${getSyncCheckID(walletModel, accountModel)}_ServerStopgap";
     return await shared.read(syncCheckID) ?? false;
   }
 
-  Future<void> setUsedStopGap500(
+  Future<void> setUsedServerStopgap(
       WalletModel walletModel, AccountModel accountModel) async {
     final String syncCheckID =
-        "${getSyncCheckID(walletModel, accountModel)}_${UnleashDataProvider.walletClientStopGap500}";
+        "${getSyncCheckID(walletModel, accountModel)}_ServerStopgap";
     await shared.write(syncCheckID, true);
   }
 
@@ -265,14 +265,14 @@ class BDKTransactionDataProvider extends DataProvider {
             int customStopgap =
                 await userSettingsDataProvider.getCustomStopgap();
 
-            /// Update custom stopgap to 500 when the feature flag is enabled
-            /// and we didn't use 500 gap for this wallet account before
+            /// use max(customStopgap, accountModel.stopGap)
+            /// for first full sync
             /// so we can find transactions in far index
-            final bool hasUse500Gap =
-                await hasUsedStopGap500(walletModel, accountModel);
-            if (!hasUse500Gap && unleashDataProvider.isUsingStopgap500()) {
-              customStopgap = 500;
-              await setUsedStopGap500(walletModel, accountModel);
+            final bool hasUseServerGap =
+                await hasUsedServerStopgap(walletModel, accountModel);
+            if (!hasUseServerGap) {
+              customStopgap = max(customStopgap, accountModel.stopGap);
+              await setUsedServerStopgap(walletModel, accountModel);
             }
             logger.i("customStopgap: $customStopgap");
             await blockchain?.fullSync(

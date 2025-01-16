@@ -241,6 +241,7 @@ class EventLoop extends Service implements Manager {
                 account.poolSize,
                 account.priority,
                 account.lastUsedIndex,
+                account.stopGap,
               );
             }
           }
