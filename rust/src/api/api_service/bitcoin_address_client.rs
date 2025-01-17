@@ -36,6 +36,18 @@ impl BitcoinAddressClient {
         Ok(result?)
     }
 
+    pub async fn get_used_indexes(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+    ) -> Result<Vec<u64>, BridgeError> {
+        let result = self
+            .inner
+            .get_used_indexes(wallet_id, wallet_account_id)
+            .await;
+        Ok(result?)
+    }
+
     pub async fn add_bitcoin_addresses(
         &self,
         wallet_id: String,

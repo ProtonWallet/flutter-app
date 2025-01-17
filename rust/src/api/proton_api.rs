@@ -111,6 +111,21 @@ pub async fn update_bitcoin_address(
         .await?)
 }
 
+/// proton_api.get_used_indexes
+pub async fn get_used_indexes(
+    wallet_id: String,
+    wallet_account_id: String,
+) -> Result<Vec<u64>, BridgeError> {
+    let proton_api = retrieve_proton_api()?;
+
+    Ok(proton_api
+        .inner
+        .clients()
+        .bitcoin_address
+        .get_used_indexes(wallet_id, wallet_account_id)
+        .await?)
+}
+
 /// proton_api.addbitcoinaddresses
 pub async fn add_bitcoin_addresses(
     wallet_id: String,

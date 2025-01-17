@@ -284,16 +284,9 @@ class BuyBitcoinViewModelImpl extends BuyBitcoinViewModel {
         );
       }
 
-      /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
-      /// we will check and handle if highest used receive address index is higher than the one store in wallet account
-      /// this will happen when some one send bitcoin via qr code
-      final int highestIndexFromBlockchain = await account!
-              .getHighestUsedAddressIndexInOutput(
-                  keychain: KeychainKind.external_) ??
-          -1;
-      await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
-          account, accountModel, highestIndexFromBlockchain);
-
+      /// we need to init receive address to check if it's used on network
+      await receiveAddressDataProvider.initReceiveAddressForAccount(
+          account!, accountModel);
       final addressInfo = await receiveAddressDataProvider.getReceiveAddress(
           account, accountModel);
       receiveAddress = addressInfo.address;
