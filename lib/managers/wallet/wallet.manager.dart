@@ -428,20 +428,6 @@ class WalletManager implements Manager {
     /// to prevent reusing address
     await dataProviderManager.receiveAddressDataProvider
         .initReceiveAddressForAccount(account, accountModel);
-
-    /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
-    /// we will check and handle if highest used receive address index is higher than the one store in wallet account
-    final highestIndexFromBlockchain =
-        await account.getHighestUsedAddressIndexInOutput(
-                keychain: KeychainKind.external_) ??
-            -1;
-
-    /// we need to consider highest used index on blockchain
-    /// so we will not reuse the address when the cached one is already been used,
-    /// and keep lastUsedIndex updated in case that different platform can find the transaction
-    await dataProviderManager.receiveAddressDataProvider
-        .handleLastUsedIndexOnNetwork(
-            account, accountModel, highestIndexFromBlockchain);
   }
 
   Future<void> bitcoinAddressPoolHealthCheck(

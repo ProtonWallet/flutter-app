@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:sentry/sentry.dart';
+import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/extension/data.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
@@ -12,6 +12,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/rust/api/api_service/bitcoin_address_client.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/common/address_info.dart';
 
 class ReceiveAddressDataProvider extends DataProvider {
@@ -35,30 +36,6 @@ class ReceiveAddressDataProvider extends DataProvider {
   StreamController<DataUpdated> dataUpdateController =
       StreamController<DataUpdated>();
 
-  /// we need to consider last used index on blockchain
-  /// so we will not reuse the address when the cached one
-  /// is already been used (i.e. someone send btc on this address)
-  Future<void> handleLastUsedIndexOnNetwork(
-    FrbAccount account,
-    AccountModel accountModel,
-    int lastUsedIndexOnNetwork,
-  ) async {
-    if (lastUsedIndexOnNetwork >= 0) {
-      account.markReceiveAddressesUsedTo(from: 0, to: lastUsedIndexOnNetwork);
-    }
-    final FrbAddressInfo oldAddress = await getReceiveAddress(
-      account,
-      accountModel,
-    );
-    if (lastUsedIndexOnNetwork >= oldAddress.index) {
-      /// need to generate new receive address when the cached one had been used on blockchain
-      await generateNewReceiveAddress(
-        account,
-        accountModel,
-      );
-    }
-  }
-
   /// we need to consider bitcoin addresses in server pool
   /// to prevent reuse for receive page
   Future<void> handlePoolIndex(
@@ -72,18 +49,33 @@ class ReceiveAddressDataProvider extends DataProvider {
       return;
     }
 
-    /// needs to check the highest pool index and mark them as used to avoid reuse bitcoin address
+    /// needs to check the used indexes from pool and mark them as used to avoid reuse
     try {
-      final BigInt highestPoolIndex =
-          await bitcoinAddressClient.getBitcoinAddressLatestIndex(
+      final usedIndexes = await bitcoinAddressClient.getUsedIndexes(
+          walletId: accountModel.walletID,
+          walletAccountId: accountModel.accountID);
+
+      for (final index in usedIndexes) {
+        await account.markReceiveAddressesUsedTo(from: index.toInt());
+      }
+    } catch (e, stacktrace) {
+      Sentry.captureException(e, stackTrace: stacktrace);
+      logger.e(e.toString());
+    }
+
+    /// needs to check the addresses in pool and mark them as used to avoid reuse
+    try {
+      final bitcoinAddresses =
+          await bitcoinAddressClient.getWalletBitcoinAddress(
               walletId: accountModel.walletID,
               walletAccountId: accountModel.accountID);
 
-      /// we need to use highestPoolIndex+1, since markReceiveAddressesUsedTo(start, end)
-      /// only mark used for [start, end)
-      final int poolIndex = max(0, highestPoolIndex.toInt() + 1);
-
-      await account.markReceiveAddressesUsedTo(from: 0, to: poolIndex);
+      for (final address in bitcoinAddresses) {
+        if (address.bitcoinAddressIndex != null) {
+          await account.markReceiveAddressesUsedTo(
+              from: address.bitcoinAddressIndex!.toInt());
+        }
+      }
     } catch (e, stacktrace) {
       Sentry.captureException(e, stackTrace: stacktrace);
       logger.e(e.toString());
@@ -116,6 +108,27 @@ class ReceiveAddressDataProvider extends DataProvider {
     if (!id2AddressInfo.containsKey(accountModel.accountID)) {
       id2AddressInfo[accountModel.accountID] =
           await account.getAddress(index: accountModel.lastUsedIndex);
+    }
+
+    /// need to check if the receive address has been used
+    bool isValidReceiveAddress = false;
+    FrbAddressInfo addressInfo = id2AddressInfo[accountModel.accountID]!;
+    while (!isValidReceiveAddress) {
+      final blockChainClient = FrbBlockchainClient.createEsploraBlockchain();
+      final searchedAddress = await account.getAddressFromGraph(
+        network: appConfig.coinType.network,
+        addressStr: addressInfo.address,
+        client: blockChainClient,
+        sync_: false,
+      );
+      final bool isUsed =
+          searchedAddress != null && searchedAddress.transactions.isNotEmpty;
+      if (isUsed) {
+        /// we need to generate new receive address if it's used
+        addressInfo = await generateNewReceiveAddress(account, accountModel);
+      } else {
+        isValidReceiveAddress = true;
+      }
     }
   }
 

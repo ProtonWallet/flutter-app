@@ -230,16 +230,17 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         serverScriptType: accountModel!.scriptType,
       ))!;
 
-      /// get highest used receive address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
-      /// we will check and handle if highest used receive address index is higher than the one store in wallet account
-      /// this will happen when some one send bitcoin via qr code
+      /// get highest used address (external keychain) index in bdk output, mark as -1 if we cannot found any used index
+      /// we will show warning when LU - 15 > highest used address index
+      /// and prevent to generate new receive address when LU - 20 > highest used address index
       highestIndexFromBlockchain =
           await _frbAccount.getHighestUsedAddressIndexInOutput(
                   keychain: KeychainKind.external_) ??
               -1;
 
-      await receiveAddressDataProvider.handleLastUsedIndexOnNetwork(
-          _frbAccount, accountModel!, highestIndexFromBlockchain);
+      /// we need to init receive address to check if it's used on network
+      await receiveAddressDataProvider.initReceiveAddressForAccount(
+          _frbAccount, accountModel!);
       currentAddress = null;
       await getAddress();
     } catch (e) {

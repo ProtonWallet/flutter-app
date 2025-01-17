@@ -49,6 +49,12 @@ Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
         walletAccountBitcoinAddressId: walletAccountBitcoinAddressId,
         bitcoinAddress: bitcoinAddress);
 
+/// proton_api.get_used_indexes
+Future<Uint64List> getUsedIndexes(
+        {required String walletId, required String walletAccountId}) =>
+    RustLib.instance.api.crateApiProtonApiGetUsedIndexes(
+        walletId: walletId, walletAccountId: walletAccountId);
+
 /// proton_api.addbitcoinaddresses
 Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
         {required String walletId,

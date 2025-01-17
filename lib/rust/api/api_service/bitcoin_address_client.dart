@@ -19,6 +19,9 @@ abstract class BitcoinAddressClient implements RustOpaqueInterface {
   Future<BigInt> getBitcoinAddressLatestIndex(
       {required String walletId, required String walletAccountId});
 
+  Future<Uint64List> getUsedIndexes(
+      {required String walletId, required String walletAccountId});
+
   Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
       {required String walletId,
       required String walletAccountId,
