@@ -9,12 +9,28 @@ import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 
 class ErrorBottomSheet {
+  static List<String> existingSheets = [];
+
   static void show(
     BuildContext context,
     String errorMessage,
     VoidCallback? callback,
   ) {
-    HomeModalBottomSheet.show(context,
+    /// use errorMessage as unique id
+    final id = errorMessage;
+
+    /// avoid to display same errorMessage twice
+    if (existingSheets.contains(id)) {
+      return;
+    }
+
+    /// add id to cached list
+    existingSheets.add(id);
+
+    HomeModalBottomSheet.show(context, onFinish: () {
+      /// remove id from cached list
+      existingSheets.remove(id);
+    },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

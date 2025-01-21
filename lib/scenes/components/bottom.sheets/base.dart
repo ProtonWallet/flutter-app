@@ -14,6 +14,7 @@ class HomeModalBottomSheet {
     double? maxHeight,
     bool? isDismissible,
     bool? enableDrag,
+    VoidCallback? onFinish,
   }) {
     if (Responsive.isMobile(context)) {
       _showMobile(
@@ -26,6 +27,7 @@ class HomeModalBottomSheet {
         maxHeight: maxHeight,
         isDismissible: isDismissible,
         enableDrag: enableDrag,
+        onFinish: onFinish,
       );
     } else {
       // desktop and tablet
@@ -39,6 +41,7 @@ class HomeModalBottomSheet {
         maxHeight: maxHeight,
         isDismissible: isDismissible,
         enableDrag: enableDrag,
+        onFinish: onFinish,
       );
     }
   }
@@ -53,6 +56,7 @@ class HomeModalBottomSheet {
     double? maxHeight,
     bool? isDismissible,
     bool? enableDrag,
+    VoidCallback? onFinish,
   }) {
     showModalBottomSheet(
         context: context,
@@ -101,7 +105,9 @@ class HomeModalBottomSheet {
                   ),
                 ),
               ));
-        });
+        }).whenComplete(() {
+      onFinish?.call();
+    });
   }
 
   static void _showMobile(
@@ -114,6 +120,7 @@ class HomeModalBottomSheet {
     double? maxHeight,
     bool? isDismissible,
     bool? enableDrag,
+    VoidCallback? onFinish,
   }) {
     showModalBottomSheet(
         context: context,
@@ -152,7 +159,9 @@ class HomeModalBottomSheet {
               ),
             ),
           );
-        });
+        }).whenComplete(() {
+      onFinish?.call();
+    });
   }
 
   static Widget _buildContent(
