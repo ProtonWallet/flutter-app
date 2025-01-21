@@ -566,5 +566,6 @@
   "address_list_value": "Value",
   "address_list_use_for": "Use for",
   "bve_address_tooltip": "This address is for Bitcoin via Email",
+  "flip_camera": "Flip camera",
   "syncing_new_data": "Syncing new data"
 }
