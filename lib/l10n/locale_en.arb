@@ -565,5 +565,6 @@
   "address_list_status_not_used": "Not used",
   "address_list_value": "Value",
   "address_list_use_for": "Use for",
-  "bve_address_tooltip": "This address is for Bitcoin via Email"
+  "bve_address_tooltip": "This address is for Bitcoin via Email",
+  "syncing_new_data": "Syncing new data"
 }

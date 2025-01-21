@@ -3,7 +3,6 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../common/confirmation_time.dart';
 import '../../common/keychain_kind.dart';
 import '../../frb_generated.dart';
 import 'amount.dart';
@@ -14,8 +13,6 @@ import 'script_buf.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbLocalOutput>>
 abstract class FrbLocalOutput implements RustOpaqueInterface {
-  ConfirmationTime get confirmationTime;
-
   int get derivationIndex;
 
   bool get isSpent;

@@ -119,6 +119,11 @@ abstract class WalletClient implements RustOpaqueInterface {
       required String walletAccountId,
       required int lastUsedIndex});
 
+  Future<ApiWalletAccount> updateWalletAccountStopGap(
+      {required String walletId,
+      required String walletAccountId,
+      required int stopGap});
+
   Future<List<ApiWalletAccount>> updateWalletAccountsOrder(
       {required String walletId, required List<String> walletAccountIds});
 

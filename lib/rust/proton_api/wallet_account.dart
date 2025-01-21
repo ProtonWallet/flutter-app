@@ -38,7 +38,7 @@ class ApiWalletAccount {
   final int poolSize;
   final int priority;
   final int scriptType;
-  final int? stopGap;
+  final int stopGap;
   final List<ApiEmailAddress> addresses;
 
   const ApiWalletAccount({
@@ -51,7 +51,7 @@ class ApiWalletAccount {
     required this.poolSize,
     required this.priority,
     required this.scriptType,
-    this.stopGap,
+    required this.stopGap,
     required this.addresses,
   });
 

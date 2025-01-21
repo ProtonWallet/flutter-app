@@ -177,6 +177,7 @@ class WalletTransactionBloc
   final UserSettingsDataProvider userSettingsDataProvider;
 
   StreamSubscription? serverTransactionDataSubscription;
+  StreamSubscription? newBroadcastTransactionSubscription;
   StreamSubscription? bdkTransactionDataSubscription;
   StreamSubscription? walletsDataSubscription;
   StreamSubscription? fiatCurrencySettingSubscription;
@@ -288,6 +289,12 @@ class WalletTransactionBloc
           handleTransactionDataProviderUpdate();
         }
       }
+    });
+
+    newBroadcastTransactionSubscription = walletsDataProvider
+        .newBroadcastTransactionController.stream
+        .listen((_) {
+      syncWallet(forceSync: true, heightChanged: false);
     });
 
     serverTransactionDataSubscription = serverTransactionDataProvider
@@ -405,12 +412,12 @@ class WalletTransactionBloc
             forceSync: false,
             heightChanged: false,
           );
-          isSyncing = isSyncing ||
-              bdkTransactionDataProvider.isSyncing(
-                walletModel,
-                accountMenuModel.accountModel,
-              );
         }
+        isSyncing = isSyncing ||
+            bdkTransactionDataProvider.isSyncing(
+              walletModel,
+              accountMenuModel.accountModel,
+            );
       }
 
       emit(state.copyWith(
@@ -483,10 +490,10 @@ class WalletTransactionBloc
           forceSync: false,
           heightChanged: false,
         );
-        isSyncing = bdkTransactionDataProvider.isSyncing(
-            walletModel, event.accountMenuModel.accountModel);
       }
 
+      isSyncing = bdkTransactionDataProvider.isSyncing(
+          walletModel, event.accountMenuModel.accountModel);
       emit(state.copyWith(
         isSyncing: isSyncing,
         historyTransaction: historyTransaction,
@@ -927,6 +934,7 @@ class WalletTransactionBloc
   @override
   Future<void> close() {
     serverTransactionDataSubscription?.cancel();
+    newBroadcastTransactionSubscription?.cancel();
     bdkTransactionDataSubscription?.cancel();
     walletsDataSubscription?.cancel();
     fiatCurrencySettingSubscription?.cancel();

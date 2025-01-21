@@ -3,7 +3,6 @@ pub mod blockchain;
 pub mod broadcast_message;
 pub mod change_spend_policy;
 pub mod coin_selection;
-pub mod confirmation_time;
 pub mod esplora_config;
 pub mod keychain_kind;
 pub mod logger;

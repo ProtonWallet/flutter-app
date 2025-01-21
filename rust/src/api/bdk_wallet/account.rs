@@ -154,14 +154,6 @@ impl FrbAccount {
         self.inner.has_sync_data().await
     }
 
-    pub async fn insert_unconfirmed_tx(&self, psbt: &FrbPsbt) -> Result<(), BridgeError> {
-        let transaction = psbt.extract_tx()?;
-
-        self.inner.insert_unconfirmed_tx(transaction.inner).await?;
-
-        Ok(())
-    }
-
     pub async fn sign(&self, psbt: &mut FrbPsbt, network: Network) -> Result<FrbPsbt, BridgeError> {
         let mut psbt = psbt.clone_inner().inner();
         self.inner

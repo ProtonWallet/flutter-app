@@ -65,8 +65,6 @@ abstract class FrbAccount implements RustOpaqueInterface {
 
   Future<bool> hasSyncData();
 
-  Future<void> insertUnconfirmedTx({required FrbPsbt psbt});
-
   Future<bool> isMine({required FrbAddress address});
 
   Future<void> markReceiveAddressesUsedTo({required int from, int? to});

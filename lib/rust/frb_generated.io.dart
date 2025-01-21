@@ -63,7 +63,6 @@ import 'common/blockchain.dart';
 import 'common/broadcast_message.dart';
 import 'common/change_spend_policy.dart';
 import 'common/coin_selection.dart';
-import 'common/confirmation_time.dart';
 import 'common/keychain_kind.dart';
 import 'common/network.dart';
 import 'common/pagination.dart';
@@ -1413,9 +1412,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CoinSelection dco_decode_coin_selection(dynamic raw);
-
-  @protected
-  ConfirmationTime dco_decode_confirmation_time(dynamic raw);
 
   @protected
   ContactEmailEvent dco_decode_contact_email_event(dynamic raw);
@@ -3136,9 +3132,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CoinSelection sse_decode_coin_selection(SseDeserializer deserializer);
-
-  @protected
-  ConfirmationTime sse_decode_confirmation_time(SseDeserializer deserializer);
 
   @protected
   ContactEmailEvent sse_decode_contact_email_event(
@@ -4976,10 +4969,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_coin_selection(CoinSelection self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_confirmation_time(
-      ConfirmationTime self, SseSerializer serializer);
 
   @protected
   void sse_encode_contact_email_event(

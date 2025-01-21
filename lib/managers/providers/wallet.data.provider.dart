@@ -38,6 +38,8 @@ class WalletsDataProvider extends DataProvider {
       StreamController<DataUpdated>.broadcast();
   StreamController<SelectedWalletUpdated> selectedWalletUpdateController =
       StreamController<SelectedWalletUpdated>.broadcast();
+  StreamController<NewBroadcastTransaction> newBroadcastTransactionController =
+      StreamController<NewBroadcastTransaction>.broadcast();
 
   /// api client
   final WalletClient walletClient;
@@ -673,6 +675,10 @@ class WalletsDataProvider extends DataProvider {
     return tmpID;
   }
 
+  Future<void> newBroadcastTransaction() async {
+    newBroadcastTransactionController.add(NewBroadcastTransaction());
+  }
+
   Future<WalletData?> getFirstPriorityWallet() async {
     final List<WalletData>? walletDataList = await getWallets();
     if (walletDataList != null && walletDataList.isNotEmpty) {
@@ -718,6 +724,8 @@ class WalletsDataProvider extends DataProvider {
   Future<void> clear() async {
     walletsData = null;
     dataUpdateController.close();
+    selectedWalletUpdateController.close();
+    newBroadcastTransactionController.close();
   }
 
   Future<void> reset() async {

@@ -161,6 +161,18 @@ impl WalletClient {
         Ok(result)
     }
 
+    pub async fn update_wallet_account_stop_gap(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        stop_gap: u16,
+    ) -> Result<ApiWalletAccount, BridgeError> {
+        Ok(self
+            .inner
+            .update_wallet_account_stop_gap(wallet_id, wallet_account_id, stop_gap)
+            .await?)
+    }
+
     pub async fn delete_wallet_account(
         &self,
         wallet_id: String,

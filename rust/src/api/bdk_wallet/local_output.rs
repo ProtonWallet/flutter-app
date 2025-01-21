@@ -1,6 +1,6 @@
 // local_output.rs
 
-use andromeda_bitcoin::{ConfirmationTime, KeychainKind, LocalOutput, OutPoint, TxOut};
+use andromeda_bitcoin::{KeychainKind, LocalOutput, OutPoint, TxOut};
 use flutter_rust_bridge::frb;
 
 use super::amount::FrbAmount;
@@ -18,8 +18,6 @@ pub struct FrbLocalOutput {
     pub(crate) is_spent: bool,
     /// The derivation index for the script pubkey in the wallet
     pub(crate) derivation_index: u32,
-    /// The confirmation time for transaction containing this utxo
-    pub(crate) confirmation_time: ConfirmationTime,
 }
 
 impl From<LocalOutput> for FrbLocalOutput {
@@ -30,7 +28,6 @@ impl From<LocalOutput> for FrbLocalOutput {
             keychain: local_utxo.keychain,
             is_spent: local_utxo.is_spent,
             derivation_index: local_utxo.derivation_index,
-            confirmation_time: local_utxo.confirmation_time,
         }
     }
 }
@@ -59,11 +56,6 @@ impl FrbLocalOutput {
     #[frb(getter, sync)]
     pub fn derivation_index(&self) -> u32 {
         self.derivation_index.clone()
-    }
-
-    #[frb(getter, sync)]
-    pub fn confirmation_time(&self) -> ConfirmationTime {
-        self.confirmation_time.clone()
     }
 }
 
