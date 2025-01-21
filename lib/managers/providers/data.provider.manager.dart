@@ -76,6 +76,11 @@ class SelectedWalletUpdated extends DataState {
   List<Object?> get props => [];
 }
 
+class NewBroadcastTransaction extends DataState {
+  @override
+  List<Object?> get props => [];
+}
+
 abstract class DataDeleted extends DataState {}
 
 class DataError extends DataState {

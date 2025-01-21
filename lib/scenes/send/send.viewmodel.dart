@@ -1146,15 +1146,6 @@ class SendViewModelImpl extends SendViewModel {
         recipients: apiRecipientsMap.isNotEmpty ? apiRecipientsMap : null,
         isAnonymous: isAnonymous ? 1 : 0,
       );
-
-      try {
-        if (txid.isNotEmpty) {
-          /// insert unconfirmedTX so that we can display immediately in transaction list without waiting the partial sync done
-          _frbAccount?.insertUnconfirmedTx(psbt: frbPsbt);
-        }
-      } catch (e) {
-        logger.e(e.toString());
-      }
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       return _processError(e, stacktrace);
@@ -1169,6 +1160,7 @@ class SendViewModelImpl extends SendViewModel {
     logger.i("End add local transaction record");
     try {
       await eventLoop.fetchEvents();
+      await walletDataProvider.newBroadcastTransaction();
     } catch (e) {
       e.toString();
     }
