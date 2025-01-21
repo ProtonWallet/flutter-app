@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 
@@ -44,12 +45,14 @@ class ClearCacheBloc extends Bloc<ClearCacheEvent, ClearCacheState> {
   final UserManager userManager;
   final WalletManager walletManager;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
+  final UserDataProvider userDataProvider;
 
   /// initialize the bloc with the initial state
   ClearCacheBloc(
     this.userManager,
     this.walletManager,
     this.bdkTransactionDataProvider,
+    this.userDataProvider,
   ) : super(const ClearCacheState()) {
     on<ClearingCache>((event, emit) async {
       emit(state.copyWith(
@@ -62,6 +65,9 @@ class ClearCacheBloc extends Bloc<ClearCacheEvent, ClearCacheState> {
       if (hasCache) {
         /// clear bdk in-memory caches
         await bdkTransactionDataProvider.clear();
+
+        /// clear user data provider caches to reload user info
+        await userDataProvider.clear();
 
         /// clear bdk sqlite local caches
         await walletManager.cleanBDKCache();

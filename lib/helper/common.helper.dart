@@ -7,9 +7,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/coin_type.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/bottom.sheets/error.bottom.sheet.dart';
@@ -17,32 +15,6 @@ import 'package:wallet/scenes/components/bottom.sheets/info.bottom.sheet.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
 class CommonHelper {
-  static FiatCurrency getFiatCurrency(String str) {
-    switch (str) {
-      case "USD":
-        return FiatCurrency.usd;
-      case "EUR":
-        return FiatCurrency.eur;
-      case "CHF":
-        return FiatCurrency.chf;
-      default:
-        return FiatCurrency.eur;
-    }
-  }
-
-  static void showSnackbar(BuildContext context, String message,
-      {bool isError = false}) {
-    final snackBar = SnackBar(
-      backgroundColor: isError ? ProtonColors.signalError : null,
-      content: Center(
-          child: Text(
-        message,
-        style: ProtonStyles.body2Regular(color: ProtonColors.textInverted),
-      )),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   static String getFirstNChar(String str, int n) {
     if (n >= str.length) {
       return str;

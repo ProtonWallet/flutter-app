@@ -3,6 +3,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
+import 'package:wallet/rust/api/api_service/discovery_content_client.dart';
 import 'package:wallet/rust/api/api_service/proton_api_service.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
@@ -141,6 +142,10 @@ class ProtonApiServiceManager implements Manager {
 
   FrbUnleashClient getUnleashClient() {
     return getApiService().getUnleashClient();
+  }
+
+  DiscoveryContentClient getDiscoveryContentClient() {
+    return getApiService().getDiscoveryContentClient();
   }
 
   @override

@@ -7,9 +7,10 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
@@ -212,8 +213,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                         if (context.mounted && success) {
                                           Navigator.of(context).pop();
                                           if (viewModel.errorMessage.isEmpty) {
-                                            CommonHelper.showSnackbar(context,
-                                                S.of(context).wallet_created);
+                                            context.showSnackbar(
+                                                context.local.wallet_created);
                                           } else {
                                             CommonHelper.showErrorDialog(
                                               viewModel.errorMessage,
@@ -238,7 +239,7 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                     }
                                   },
                                   text: S.of(context).create_new_wallet,
-                                  width: MediaQuery.of(context).size.width,
+                                  width: context.width,
                                   textStyle: ProtonStyles.body1Medium(
                                     color: ProtonColors.textInverted,
                                   ),
@@ -255,9 +256,10 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                                 },
                                 enable: !viewModel.isCreatingWallet,
                                 text: S.of(context).import_your_wallet,
-                                width: MediaQuery.of(context).size.width,
+                                width: context.width,
                                 textStyle: ProtonStyles.body1Medium(
-                                    color: ProtonColors.textNorm),
+                                  color: ProtonColors.textNorm,
+                                ),
                                 backgroundColor: ProtonColors.interActionWeak,
                                 borderColor: ProtonColors.interActionWeak,
                                 height: 48,

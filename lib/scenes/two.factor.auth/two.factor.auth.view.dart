@@ -63,7 +63,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+            textStyle:
+                ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
           ),
           SizedBoxes.box12,
@@ -141,7 +142,8 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             width: MediaQuery.of(context).size.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+            textStyle:
+                ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 48,
           ),
           SizedBoxes.box12,

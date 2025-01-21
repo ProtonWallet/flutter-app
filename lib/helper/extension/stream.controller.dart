@@ -7,7 +7,9 @@ extension SafeStreamController<T> on StreamController<T> {
     if (!isClosed) {
       add(event);
     } else {
-      logger.i("StreamController<$T> is closed, cannot add event of type $T.");
+      logger.i(
+        "StreamController<$T> is closed, cannot add event of type $T.",
+      );
     }
   }
 
@@ -16,7 +18,8 @@ extension SafeStreamController<T> on StreamController<T> {
       sink.add(event);
     } else {
       logger.i(
-          "StreamController<$T> is closed, cannot add sink event of type $T.");
+        "StreamController<$T> is closed, cannot add sink event of type $T.",
+      );
     }
   }
 }

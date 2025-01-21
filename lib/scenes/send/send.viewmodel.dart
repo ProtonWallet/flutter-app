@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/app.state.manager.dart';
@@ -651,12 +652,11 @@ class SendViewModelImpl extends SendViewModel {
                 final BuildContext? context =
                     Coordinator.rootNavigatorKey.currentContext;
                 if (context != null && context.mounted) {
-                  CommonHelper.showSnackbar(
-                      context,
-                      S
-                          .of(context)
-                          .error_this_bitcoin_address_signature_is_invalid,
-                      isError: true);
+                  context.showSnackbar(
+                    context
+                        .local.error_this_bitcoin_address_signature_is_invalid,
+                    isError: true,
+                  );
                 }
                 bitcoinAddressesInvalidSignature[email] = true;
               }
@@ -727,7 +727,7 @@ class SendViewModelImpl extends SendViewModel {
         final BuildContext? context =
             Coordinator.rootNavigatorKey.currentContext;
         if (context != null && context.mounted) {
-          CommonHelper.showSnackbar(context,
+          context.showSnackbar(
               S.of(context).error_this_bitcoin_address_already_in_recipients,
               isError: true);
         }
@@ -774,11 +774,9 @@ class SendViewModelImpl extends SendViewModel {
             final BuildContext? context =
                 Coordinator.rootNavigatorKey.currentContext;
             if (context != null && context.mounted) {
-              CommonHelper.showSnackbar(
-                  context,
-                  S
-                      .of(context)
-                      .error_this_bitcoin_address_already_in_recipients,
+              context.showSnackbar(
+                  context
+                      .local.error_this_bitcoin_address_already_in_recipients,
                   isError: true);
             }
             removeRecipientByEmail(email);
@@ -788,9 +786,14 @@ class SendViewModelImpl extends SendViewModel {
         /// not a valid bitcoinAddress, remove the recipient
         removeRecipientByEmail(email);
         if (!showInvite && !showInviteBvE) {
-          CommonHelper.showSnackbar(
-              context!, S.of(context!).incorrect_bitcoin_address,
-              isError: true);
+          final BuildContext? context =
+              Coordinator.rootNavigatorKey.currentContext;
+          if (context != null && context.mounted) {
+            context.showSnackbar(
+              S.of(context).incorrect_bitcoin_address,
+              isError: true,
+            );
+          }
         }
       }
     } on BridgeError catch (e, stacktrace) {
@@ -839,9 +842,13 @@ class SendViewModelImpl extends SendViewModel {
     if (isSelfBitcoinAddress) {
       if (context!.mounted) {
         removeRecipientByEmail(email);
-        CommonHelper.showSnackbar(
-            context!, S.of(context!).error_you_can_not_send_to_self_account,
-            isError: true);
+        final BuildContext? context =
+            Coordinator.rootNavigatorKey.currentContext;
+        if (context != null && context.mounted) {
+          context.showSnackbar(
+              context.local.error_you_can_not_send_to_self_account,
+              isError: true);
+        }
       }
     }
     sinkAddSafe();
@@ -985,8 +992,7 @@ class SendViewModelImpl extends SendViewModel {
               final BuildContext? context =
                   Coordinator.rootNavigatorKey.currentContext;
               if (context != null && context.mounted) {
-                CommonHelper.showSnackbar(
-                  context,
+                context.showSnackbar(
                   S.of(context).error_you_can_not_send_amount_below_dust,
                   isError: true,
                 );
@@ -1241,9 +1247,10 @@ class SendViewModelImpl extends SendViewModel {
       addRecipient();
     } else {
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null) {
-        CommonHelper.showSnackbar(
-            context, S.of(context).error_you_dont_have_sufficient_balance);
+      if (context != null && context.mounted) {
+        context.showSnackbar(
+          S.of(context).error_you_dont_have_sufficient_balance,
+        );
       }
     }
   }
@@ -1357,8 +1364,7 @@ class SendViewModelImpl extends SendViewModel {
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (msg.toLowerCase().contains("outputbelowdustlimit")) {
         if (context != null) {
-          CommonHelper.showSnackbar(
-            context,
+          context.showSnackbar(
             S.of(context).error_you_dont_have_sufficient_balance_hint_fee,
             isError: true,
           );
@@ -1370,8 +1376,7 @@ class SendViewModelImpl extends SendViewModel {
         }
       } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
         if (context != null) {
-          CommonHelper.showSnackbar(
-            context,
+          context.showSnackbar(
             S.of(context).error_this_bitcoin_address_incorrect_checksum,
             isError: true,
           );

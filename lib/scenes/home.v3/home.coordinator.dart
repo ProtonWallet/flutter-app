@@ -56,8 +56,9 @@ class HomeCoordinator extends Coordinator {
   ApiEnv apiEnv;
 
   HomeCoordinator(this.apiEnv, this.nativeViewChannel) {
-    Coordinator.nestedNavigatorKey ??=
-        GlobalKey<NavigatorState>(debugLabel: "HomeNestedNavigatorKey");
+    Coordinator.nestedNavigatorKey ??= GlobalKey<NavigatorState>(
+      debugLabel: "HomeNestedNavigatorKey",
+    );
   }
 
   @override

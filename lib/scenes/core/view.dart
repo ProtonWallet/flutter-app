@@ -67,26 +67,24 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     WidgetBuilder content,
     DrawerCallback onDrawerChanged,
   ) {
-    return Stack(
-      children: [
-        Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: ProtonColors.backgroundNorm,
-          drawer:
-              viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
-          onDrawerChanged:
-              viewModel.currentSize == ViewSize.mobile ? null : onDrawerChanged,
-          body: _buildNavigatorView(
-            context,
-            appBar,
-            drawer,
-            content,
-            onDrawerChanged,
-          ),
+    return Stack(children: [
+      Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: ProtonColors.backgroundNorm,
+        drawer:
+            viewModel.currentSize == ViewSize.mobile ? null : drawer(context),
+        onDrawerChanged:
+            viewModel.currentSize == ViewSize.mobile ? null : onDrawerChanged,
+        body: _buildNavigatorView(
+          context,
+          appBar,
+          drawer,
+          content,
+          onDrawerChanged,
         ),
-        // const LockOverlay(),
-      ],
-    );
+      ),
+      // const LockOverlay(),
+    ]);
   }
 
   Widget _buildDesktop(
@@ -100,17 +98,19 @@ abstract class ViewBase<V extends ViewModel> extends StatefulWidget {
     return Scaffold(
         body: Row(children: [
       ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: drawerMaxWidth),
-          child: drawer(context)),
+        constraints: BoxConstraints(maxWidth: drawerMaxWidth),
+        child: drawer(context),
+      ),
       const VerticalDivider(thickness: 1, width: 1),
       Expanded(
-          child: _buildNavigatorView(
-        context,
-        appBar,
-        drawer,
-        content,
-        onDrawerChanged,
-      ))
+        child: _buildNavigatorView(
+          context,
+          appBar,
+          drawer,
+          content,
+          onDrawerChanged,
+        ),
+      )
     ]));
   }
 
@@ -163,7 +163,7 @@ class ViewState<V extends ViewModel> extends State<ViewBase>
 
   @override
   void dispose() {
-    for (var subscription in subscriptions) {
+    for (final subscription in subscriptions) {
       subscription.cancel();
     }
     widget.dispose();

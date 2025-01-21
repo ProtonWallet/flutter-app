@@ -171,6 +171,9 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   mockito: ^5.4.4
   alchemist: ^0.11.0 # golden_toolkit replacement
+  #path provider mock
+  path_provider_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.8
 
 #flutter launcher icons configs
 flutter_launcher_icons:

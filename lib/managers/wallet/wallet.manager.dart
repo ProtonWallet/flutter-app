@@ -23,7 +23,6 @@ import 'package:wallet/rust/api/bdk_wallet/storage.dart';
 import 'package:wallet/rust/api/bdk_wallet/wallet.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/rust/api/proton_wallet/features/transition_layer.dart';
-import 'package:wallet/rust/common/keychain_kind.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/wallet.dart';
 import 'package:wallet/rust/proton_api/wallet_account.dart';

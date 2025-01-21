@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/rust/proton_api/discovery_content.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 
@@ -66,8 +66,9 @@ class ProtonFeedItem {
         if (context != null && context.mounted) {
           localeTime = CommonHelper.formatLocaleTime(context, content.pubDate);
         } else {
-          final DateTime date =
-              DateTime.fromMillisecondsSinceEpoch(content.pubDate * 1000);
+          final date = DateTime.fromMillisecondsSinceEpoch(
+            content.pubDate * 1000,
+          );
           localeTime = DateFormat('yyyy-MM-dd').format(date);
         }
         items.add(ProtonFeedItem(

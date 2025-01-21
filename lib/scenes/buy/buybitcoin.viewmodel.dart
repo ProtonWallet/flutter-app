@@ -23,7 +23,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
-import 'package:wallet/rust/common/keychain_kind.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';

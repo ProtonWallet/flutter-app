@@ -4,7 +4,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
@@ -44,8 +44,7 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                   /// sidebar only need popup once
                   Navigator.of(context).pop();
                 }
-                CommonHelper.showSnackbar(
-                    context, S.of(context).wallet_deleted);
+                context.showSnackbar(context.local.wallet_deleted);
               }
             }
             if (state.error.isNotEmpty) {

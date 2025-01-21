@@ -13,7 +13,11 @@ class WalletKey {
   final String walletKeySignature;
 
   WalletKey(
-      this.walletId, this.userKeyId, this.walletKey, this.walletKeySignature);
+    this.walletId,
+    this.userKeyId,
+    this.walletKey,
+    this.walletKeySignature,
+  );
 
   WalletKey.fromApiWalletKey(ApiWalletKey item)
       : this(

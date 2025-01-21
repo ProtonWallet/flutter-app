@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart'

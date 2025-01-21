@@ -6,9 +6,10 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/passphrase.tutorial.dart';
@@ -33,8 +34,9 @@ class ImportView extends ViewBase<ImportViewModel> {
         body: Container(
           height: double.infinity,
           decoration: BoxDecoration(
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(24.0)),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(24.0),
+            ),
             color: ProtonColors.backgroundNorm,
           ),
           child: Column(
@@ -45,7 +47,7 @@ class ImportView extends ViewBase<ImportViewModel> {
               ),
               Expanded(
                 child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: context.width,
                     margin: const EdgeInsets.symmetric(
                       horizontal: defaultPadding,
                     ),
@@ -93,7 +95,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                       SizedBoxes.box12,
                       DropdownCurrencyV1(
                           labelText: S.of(context).setting_fiat_currency_label,
-                          width: MediaQuery.of(context).size.width,
+                          width: context.width,
                           items: fiatCurrencies,
                           itemsText: fiatCurrencies
                               .map(FiatCurrencyHelper.getFullName)
@@ -117,7 +119,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                             child: Text(
                               S.of(context).what_is_seed_phrase,
                               style: ProtonStyles.body2Regular(
-                                  color: ProtonColors.protonBlue),
+                                color: ProtonColors.protonBlue,
+                              ),
                             ),
                           ),
                         ),
@@ -125,9 +128,12 @@ class ImportView extends ViewBase<ImportViewModel> {
                       SizedBoxes.box24,
                       ExpansionTile(
                           shape: const Border(),
-                          title: Text(S.of(context).my_wallet_has_passphrase,
-                              style: ProtonStyles.body2Medium(
-                                  color: ProtonColors.textWeak)),
+                          title: Text(
+                            S.of(context).my_wallet_has_passphrase,
+                            style: ProtonStyles.body2Medium(
+                              color: ProtonColors.textWeak,
+                            ),
+                          ),
                           iconColor: ProtonColors.textHint,
                           collapsedIconColor: ProtonColors.textHint,
                           children: [
@@ -169,9 +175,8 @@ class ImportView extends ViewBase<ImportViewModel> {
                               if (context.mounted) {
                                 if (isSuccess) {
                                   Navigator.of(context).pop();
-                                  CommonHelper.showSnackbar(
-                                    context,
-                                    S.of(context).wallet_imported,
+                                  context.showSnackbar(
+                                    context.local.wallet_imported,
                                   );
                                 }
                                 if (viewModel.errorMessage.isEmpty) {
@@ -192,9 +197,10 @@ class ImportView extends ViewBase<ImportViewModel> {
                           },
                           enable: viewModel.isValidMnemonic,
                           text: S.of(context).import_button,
-                          width: MediaQuery.of(context).size.width,
+                          width: context.width,
                           textStyle: ProtonStyles.body1Medium(
-                              color: ProtonColors.textInverted),
+                            color: ProtonColors.textInverted,
+                          ),
                           backgroundColor: ProtonColors.protonBlue,
                           height: 48),
                       if (viewModel.isFirstWallet)
@@ -232,13 +238,6 @@ class ImportView extends ViewBase<ImportViewModel> {
 
   Widget buildPasteMode(BuildContext context) {
     return Column(children: [
-      // GestureDetector(
-      //     onTap: () {
-      //       viewModel.switchToManualInputMode();
-      //     },
-      //     child: Text(S.of(context).import_manual_input,
-      //         style: ProtonStyles.body2Medium(color:ProtonColors.protonBlue))),
-      // SizedBoxes.box8,
       TextFieldTextV2(
         labelText: S.of(context).your_mnemonic,
         hintText: S.of(context).your_mnemonic_hint,
@@ -282,9 +281,14 @@ class ImportView extends ViewBase<ImportViewModel> {
   Widget buildManualInputMode(BuildContext context) {
     return Column(children: [
       GestureDetector(
-          onTap: viewModel.switchToPasteMode,
-          child: Text(S.of(context).import_paste_input,
-              style: ProtonStyles.body2Medium(color: ProtonColors.protonBlue))),
+        onTap: viewModel.switchToPasteMode,
+        child: Text(
+          S.of(context).import_paste_input,
+          style: ProtonStyles.body2Medium(
+            color: ProtonColors.protonBlue,
+          ),
+        ),
+      ),
       SizedBoxes.box8,
       const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

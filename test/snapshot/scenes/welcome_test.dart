@@ -2,22 +2,15 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:wallet/scenes/core/view.dart';
-import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.view.dart';
-import 'package:wallet/scenes/welcome/welcome.viewmodel.dart';
 
+import '../../mocks/welcome.mocks.dart';
 import '../helper/comparator.config.dart';
 import '../helper/test.wrapper.dart';
-import 'welcome_test.mocks.dart';
 
 // works with --- command: make build-runner
-@GenerateMocks([
-  WelcomeViewModel,
-  WelcomeCoordinator,
-])
 void main() {
   setUpAll(() async {
     await loadAppFonts();

@@ -74,18 +74,29 @@ void main() {
     expect(updatedConfig.testMode, true); // Unchanged
   });
 
-  testUnit('initAppEnv sets appConfig correctly', () {
-    const environment = String.fromEnvironment('appEnv', defaultValue: 'prod');
-    AppConfig.initAppEnv();
+  testUnit('AppConfig.initAppEnv for "payment" environment', () {
+    AppConfig.initAppEnv(customEnv: 'payment');
+    expect(appConfig, equals(appConfigForPayments));
+  });
 
-    if (environment == 'payment') {
-      expect(appConfig, appConfigForPayments);
-    } else if (environment == 'prod') {
-      expect(appConfig, appConfigForProduction);
-    } else if (environment == 'atlas') {
-      expect(appConfig.apiEnv, ApiEnv.atlas(null));
-    } else if (environment.isNotEmpty) {
-      expect(appConfig.apiEnv, ApiEnv.atlas(environment));
-    }
+  testUnit('AppConfig.initAppEnv for "prod" environment', () {
+    AppConfig.initAppEnv(customEnv: 'prod');
+    expect(appConfig, equals(appConfigForProduction));
+  });
+
+  testUnit('AppConfig.initAppEnv for "atlas" environment', () {
+    AppConfig.initAppEnv(customEnv: 'atlas');
+    expect(appConfig.apiEnv, equals(ApiEnv.atlas(null)));
+  });
+
+  testUnit('AppConfig.initAppEnv for custom value', () {
+    const customEnv = 'custom';
+    AppConfig.initAppEnv(customEnv: customEnv);
+    expect(appConfig.apiEnv, equals(ApiEnv.atlas(customEnv)));
+  });
+
+  testUnit('should default to "prod" environment', () {
+    AppConfig.initAppEnv(); // No environment parameter
+    expect(appConfig, equals(appConfigForProduction));
   });
 }

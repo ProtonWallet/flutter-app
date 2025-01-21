@@ -5,8 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/constants/history.transaction.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
@@ -31,6 +30,7 @@ import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/history.transaction.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
@@ -85,10 +85,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool canInvite = false;
   RemainingMonthlyInvitations? remainingMonthlyInvitations;
 
-  TextEditingController transactionSearchController =
-      TextEditingController(text: "");
-  TextEditingController addressSearchController =
-      TextEditingController(text: "");
+  final transactionSearchController = TextEditingController(text: "");
+  final addressSearchController = TextEditingController(text: "");
 
   String errorMessage = "";
   List<HistoryTransaction> historyTransactions = [];

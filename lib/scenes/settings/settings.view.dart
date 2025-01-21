@@ -8,7 +8,6 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
-import 'package:wallet/helper/common_helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -190,8 +189,7 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
             BlocListener<ClearCacheBloc, ClearCacheState>(
               listener: (context, state) {
                 if (!state.isClearing && state.hasCache) {
-                  CommonHelper.showSnackbar(
-                      context, S.of(context).local_cache_clear);
+                  context.showSnackbar(S.of(context).local_cache_clear);
                 }
               },
               child: BlocSelector<ClearCacheBloc, ClearCacheState, bool>(

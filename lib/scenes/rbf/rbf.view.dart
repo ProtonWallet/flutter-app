@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -38,7 +38,7 @@ class RbfView extends ViewBase<RbfViewModel> {
         child: Column(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width,
+              width: context.width,
             ),
             Assets.images.icon.earlyAccess.image(
               fit: BoxFit.fill,
@@ -66,13 +66,15 @@ class RbfView extends ViewBase<RbfViewModel> {
                       Text(
                         S.of(context).rbf_current_fee,
                         style: ProtonStyles.body1Medium(
-                            color: ProtonColors.textNorm),
+                          color: ProtonColors.textNorm,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         "${viewModel.fiatCurrencySign} ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, viewModel.currentFee), displayDigits: viewModel.displayDigits)}",
                         style: ProtonStyles.body1Medium(
-                            color: ProtonColors.textNorm),
+                          color: ProtonColors.textNorm,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -83,7 +85,9 @@ class RbfView extends ViewBase<RbfViewModel> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   ExchangeCalculator.getBitcoinUnitLabel(
-                      viewModel.bitcoinUnit, viewModel.currentFee),
+                    viewModel.bitcoinUnit,
+                    viewModel.currentFee,
+                  ),
                   style: ProtonStyles.body1Medium(color: ProtonColors.textHint),
                   textAlign: TextAlign.right,
                 ),
@@ -104,8 +108,9 @@ class RbfView extends ViewBase<RbfViewModel> {
                   ),
                   Text(
                     "${viewModel.fiatCurrencySign} ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate, int.parse(viewModel.newFeeController.text)), displayDigits: viewModel.displayDigits)}",
-                    style:
-                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
+                    style: ProtonStyles.body1Medium(
+                      color: ProtonColors.textNorm,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -146,14 +151,16 @@ class RbfView extends ViewBase<RbfViewModel> {
                               .of(context)
                               .rbf_confirm_speed(getSpeedString(context)),
                           style: ProtonStyles.body2Medium(
-                              color: ProtonColors.textWeak),
+                            color: ProtonColors.textWeak,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           S.of(context).rbf_confirm_speed_in_minutes(
                               viewModel.estimatedBlock * 10),
                           style: ProtonStyles.body1Semibold(
-                              color: ProtonColors.textNorm),
+                            color: ProtonColors.textNorm,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ])
@@ -162,25 +169,24 @@ class RbfView extends ViewBase<RbfViewModel> {
               height: 26,
             ),
             ButtonV6(
-                onPressed: () async {
-                  final success = await viewModel.bumpTransactionFees();
-                  if (context.mounted && success) {
-                    Navigator.of(context).pop(); // exit rbf view
-                    Navigator.of(context).pop(); // exit transaction detail view
-                    CommonHelper.showSnackbar(
-                      context,
-                      S.of(context).rbf_send_success,
-                    );
-                  }
-                },
-                enable: viewModel.initialized,
-                text: S.of(context).rbf_send,
-                width: MediaQuery.of(context).size.width,
-                backgroundColor: ProtonColors.protonBlue,
-                textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.textInverted),
-                borderColor: ProtonColors.protonBlue,
-                height: 48),
+              onPressed: () async {
+                final success = await viewModel.bumpTransactionFees();
+                if (context.mounted && success) {
+                  Navigator.of(context).pop(); // exit rbf view
+                  Navigator.of(context).pop(); // exit transaction detail view
+                  context.showSnackbar(context.local.rbf_send_success);
+                }
+              },
+              enable: viewModel.initialized,
+              text: S.of(context).rbf_send,
+              width: context.width,
+              backgroundColor: ProtonColors.protonBlue,
+              textStyle: ProtonStyles.body1Medium(
+                color: ProtonColors.textInverted,
+              ),
+              borderColor: ProtonColors.protonBlue,
+              height: 48,
+            ),
           ],
         ),
       ),

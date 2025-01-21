@@ -8,8 +8,11 @@ class DiscoverFeedsView extends StatelessWidget {
   final List<ProtonFeedItem> protonFeedItems;
   final void Function(String)? onTap;
 
-  const DiscoverFeedsView(
-      {required this.protonFeedItems, super.key, this.onTap});
+  const DiscoverFeedsView({
+    required this.protonFeedItems,
+    super.key,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,9 @@ class DiscoverFeedsView extends StatelessWidget {
             }
           },
           avatar: _CoverImages.getCoverImage(
-              item.title, protonFeedItems.indexOf(item)),
+            item.title,
+            protonFeedItems.indexOf(item),
+          ),
         );
       }).toList(),
     );
@@ -35,10 +40,11 @@ class _DiscoverFeedView extends StatelessWidget {
   final GestureTapCallback? onTap;
   final Widget avatar;
 
-  // final
-
-  const _DiscoverFeedView(
-      {required this.protonFeedItem, required this.avatar, this.onTap});
+  const _DiscoverFeedView({
+    required this.protonFeedItem,
+    required this.avatar,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +65,6 @@ class _DiscoverFeedView extends StatelessWidget {
 }
 
 class _CoverImages {
-  static final List<AssetGenImage> _imagePaths = [
-    Assets.images.icon.discoverWhatIsBitcoin,
-  ];
-
   static Widget getCoverImage(String title, int index) {
     if (title.toLowerCase().contains("guide for newcomers")) {
       return Assets.images.icon.discoverBitcoinGuide.image(
@@ -106,7 +108,7 @@ class _CoverImages {
         height: 104,
       );
     }
-    return _imagePaths[0].image(
+    return Assets.images.icon.discoverWhatIsBitcoin.image(
       fit: BoxFit.fill,
       width: 104,
       height: 104,
