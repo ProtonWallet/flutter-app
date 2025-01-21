@@ -39,8 +39,9 @@ class PageLayoutV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(borderRadius ?? 24.0)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(borderRadius ?? 24.0),
+        ),
         color: backgroundColor ?? ProtonColors.backgroundNorm,
       ),
       child: SafeArea(
@@ -64,17 +65,15 @@ class PageLayoutV1 extends StatelessWidget {
                     child: SizedBox(
                       width: 30,
                       height: 30,
-                      child: CustomLoading(
-                        size: 30,
-                      ),
+                      child: CustomLoading(size: 30),
                     ),
                   ),
                 if (initialized)
                   expanded
                       ? Expanded(
-                          child: buildMain(context),
+                          child: _buildMain(context),
                         )
-                      : buildMain(context),
+                      : _buildMain(context),
                 if (bottomWidget != null) bottomWidget!,
               ],
             ),
@@ -84,7 +83,7 @@ class PageLayoutV1 extends StatelessWidget {
     );
   }
 
-  Widget buildMain(BuildContext context) {
+  Widget _buildMain(BuildContext context) {
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -93,7 +92,9 @@ class PageLayoutV1 extends StatelessWidget {
           Text(
             title!,
             style: ProtonStyles.headline(
-                color: ProtonColors.textNorm, fontSize: 24.0),
+              color: ProtonColors.textNorm,
+              fontSize: 24.0,
+            ),
           ),
         if (child != null) child!,
       ]),

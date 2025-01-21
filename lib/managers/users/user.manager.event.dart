@@ -6,7 +6,7 @@ abstract class UserManagerEvent extends Equatable {
 }
 
 class DirectEmitEvent extends UserManagerEvent {
-  final NativeLoginSucess newState;
+  final NativeLoginSuccess newState;
   const DirectEmitEvent(this.newState);
   @override
   List<Object> get props => [newState];

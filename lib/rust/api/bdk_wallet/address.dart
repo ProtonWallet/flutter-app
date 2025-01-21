@@ -38,5 +38,7 @@ abstract class FrbAddressDetails implements RustOpaqueInterface {
 
   int get index;
 
+  bool get isTransEmpty;
+
   List<FrbTransactionDetails> get transactions;
 }

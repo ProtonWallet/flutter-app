@@ -35,7 +35,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
   /// Commands
   @override
   Future<void> switchToNativeSignup() async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("switchToNativeSignup is mobile only feature");
     }
     try {
@@ -47,7 +47,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> switchToNativeLogin() async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("switchToNativeLogin is mobile only feature");
     }
     try {
@@ -59,7 +59,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> restartNative() async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("restartNative is mobile only feature");
     }
     try {
@@ -71,7 +71,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> switchToUpgrade(FlutterSession session) async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("switchToUpgrade is mobile only feature");
     }
     const key = "session-key";
@@ -89,7 +89,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
     String appVersion,
     String userAgent,
   ) async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("initalNativeApiEnv is mobile only feature");
     }
     const envKey = "env-key";
@@ -109,7 +109,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> nativeLogout() async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("initalNativeApiEnv is mobile only feature");
     }
     try {
@@ -121,7 +121,7 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
 
   @override
   Future<void> nativeReportBugs(String userName, String email) async {
-    if (PlatformExtension.desktop) {
+    if (desktop) {
       return logger.i("initalNativeApiEnv is mobile only feature");
     }
     try {
@@ -142,11 +142,11 @@ class PlatformChannelManager extends Bloc<ChannelEvent, NativeLoginState>
         final UserInfo userInfo = UserInfo.fromJson(map);
         logger.d("Data received from Native: ${userInfo.userId}");
 
-        directEmitExample(NativeLoginSucess(userInfo));
+        directEmitExample(NativeLoginSuccess(userInfo));
     }
   }
 
-  void directEmitExample(NativeLoginSucess newState) {
+  void directEmitExample(NativeLoginSuccess newState) {
     add(DirectEmitEvent(newState));
   }
 

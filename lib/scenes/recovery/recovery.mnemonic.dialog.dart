@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 
@@ -31,8 +31,9 @@ Future<void> showMnemonicDialog(
                 width: 360,
                 child: Text(
                   S.of(context).enable_recovery_content,
-                  style:
-                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+                  style: ProtonStyles.body2Regular(
+                    color: ProtonColors.textWeak,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -42,7 +43,8 @@ Future<void> showMnemonicDialog(
                 child: Text(
                   S.of(context).enable_recovery_remind,
                   style: ProtonStyles.body2Regular(
-                      color: ProtonColors.signalError),
+                    color: ProtonColors.signalError,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -58,8 +60,10 @@ Future<void> showMnemonicDialog(
               ),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
                   color: ProtonColors.white,
                   borderRadius: const BorderRadius.all(
@@ -71,8 +75,9 @@ Future<void> showMnemonicDialog(
                   onTap: () async {
                     Clipboard.setData(ClipboardData(text: mnemonic)).then((_) {
                       if (context.mounted) {
-                        CommonHelper.showSnackbar(
-                            context, "Recovery phrase copied to clipboard");
+                        context.showSnackbar(
+                          "Recovery phrase copied to clipboard",
+                        );
                       }
                     });
                   },
@@ -112,7 +117,9 @@ Future<void> showMnemonicDialog(
                 text: S.of(context).done,
                 borderColor: ProtonColors.protonBlue,
                 backgroundColor: ProtonColors.protonBlue,
-                textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                textStyle: ProtonStyles.body1Medium(
+                  color: ProtonColors.textInverted,
+                ),
                 width: 300,
                 height: 44,
               ),

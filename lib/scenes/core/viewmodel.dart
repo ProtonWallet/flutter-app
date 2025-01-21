@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:wallet/helper/extension/platform.extension.dart';
+import 'package:wallet/helper/extension/platform.extension.dart' as pf_ext;
 import 'package:wallet/helper/extension/stream.controller.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -15,6 +15,7 @@ abstract class ViewModel<T extends Coordinator>
 
   /// coordinator
   @protected
+  @visibleForTesting
   final T coordinator;
 
   /// [ViewModel] stream controller
@@ -44,7 +45,7 @@ abstract class ViewModel<T extends Coordinator>
   bool get isMobileSize => currentSize == ViewSize.mobile;
 
   bool get keepAlive => false;
-  bool get mobile => PlatformExtension.mobile;
-  bool get desktop => PlatformExtension.desktop;
+  bool get mobile => pf_ext.mobile;
+  bool get desktop => pf_ext.desktop;
   bool get screenSizeState => false;
 }

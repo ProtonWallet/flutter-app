@@ -8,13 +8,14 @@ class CustomLoading extends StatefulWidget {
   final Color? color;
   final Color? backgroundColor;
 
-  const CustomLoading(
-      {super.key,
-      this.durationInMilliSeconds = 1200,
-      this.size = 12,
-      this.strokeWidth = 2.0,
-      this.color,
-      this.backgroundColor});
+  const CustomLoading({
+    super.key,
+    this.durationInMilliSeconds = 1200,
+    this.size = 12,
+    this.strokeWidth = 2.0,
+    this.color,
+    this.backgroundColor,
+  });
 
   @override
   CustomLoadingState createState() => CustomLoadingState();
@@ -48,7 +49,8 @@ class CustomLoadingState extends State<CustomLoading>
           return CircularProgressIndicator(
             value: _controller!.value,
             valueColor: AlwaysStoppedAnimation<Color>(
-                widget.color ?? ProtonColors.protonBlue),
+              widget.color ?? ProtonColors.protonBlue,
+            ),
             backgroundColor:
                 widget.backgroundColor ?? ProtonColors.loadingShadow,
             strokeWidth: widget.strokeWidth,

@@ -4,7 +4,7 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -14,10 +14,9 @@ class ExchangeCalculator {
     ProtonExchangeRate exchangeRate,
     int amountInSatoshi,
   ) {
-    final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+    final fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      final FiatCurrencyInfo fiatCurrencyInfo =
-          fiatCurrency2Info[fiatCurrency]!;
+      final fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       final outValue = exchangeRate.exchangeRate *
           BigInt.from(amountInSatoshi) /
           BigInt.from(fiatCurrencyInfo.cents) /
@@ -29,9 +28,7 @@ class ExchangeCalculator {
         BigInt.from(btc2satoshi);
   }
 
-  static int getDisplayDigit(
-    ProtonExchangeRate exchangeRate,
-  ) {
+  static int getDisplayDigit(ProtonExchangeRate exchangeRate) {
     try {
       return (log(exchangeRate.cents.toInt()) / log(10)).round();
     } catch (e, stacktrace) {
@@ -59,8 +56,10 @@ class ExchangeCalculator {
   }
 
   static Widget getBitcoinUnitLabelWidget(
-      BitcoinUnit bitcoinUnit, int amountInSatoshi,
-      {required TextStyle textStyle}) {
+    BitcoinUnit bitcoinUnit,
+    int amountInSatoshi, {
+    required TextStyle textStyle,
+  }) {
     double amount = amountInSatoshi.toDouble();
     switch (bitcoinUnit) {
       case BitcoinUnit.btc:
@@ -97,10 +96,9 @@ class ExchangeCalculator {
     ProtonExchangeRate exchangeRate,
     double amountInFiatCurrency,
   ) {
-    final FiatCurrency fiatCurrency = exchangeRate.fiatCurrency;
+    final fiatCurrency = exchangeRate.fiatCurrency;
     if (fiatCurrency2Info.containsKey(fiatCurrency)) {
-      final FiatCurrencyInfo fiatCurrencyInfo =
-          fiatCurrency2Info[fiatCurrency]!;
+      final fiatCurrencyInfo = fiatCurrency2Info[fiatCurrency]!;
       return amountInFiatCurrency /
           (exchangeRate.exchangeRate / BigInt.from(fiatCurrencyInfo.cents));
     }

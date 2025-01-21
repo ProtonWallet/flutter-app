@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
@@ -108,7 +108,7 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
         // loading wallet data
         final wallets = await walletsDataProvider.getWallets();
         if (wallets == null || wallets.isEmpty) {
-          if (!hasShowOnboard){
+          if (!hasShowOnboard) {
             hasShowOnboard = true;
             onboardingCallback?.call();
           }

@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';

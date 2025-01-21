@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/script_type.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/helper/logger.dart';

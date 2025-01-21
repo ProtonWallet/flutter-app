@@ -1,22 +1,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/common_helper.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/common.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 extension StringToBitcoinUnitExtension on String {
   BitcoinUnit toBitcoinUnit() {
-    return BitcoinUnit.values
-        .firstWhere((e) => e.toString().split('.').last == toLowerCase());
+    return BitcoinUnit.values.firstWhere(
+      (e) => e.toString().split('.').last == toLowerCase(),
+    );
   }
 }
 
 extension StringToFiatCurrencyExtension on String {
   FiatCurrency toFiatCurrency() {
-    return FiatCurrency.values
-        .firstWhere((e) => e.toString().split('.').last == toLowerCase());
+    return FiatCurrency.values.firstWhere(
+      (e) => e.toString().split('.').last == toLowerCase(),
+    );
   }
 }
 

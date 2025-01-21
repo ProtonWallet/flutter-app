@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/scenes/components/page_route.dart';
 import 'package:wallet/scenes/core/responsive.dart';
@@ -10,8 +11,9 @@ import 'package:wallet/scenes/core/view.navigator.dart';
 
 abstract class Coordinator implements ViewNavigator {
   // root navigator key used for app level
-  static GlobalKey<NavigatorState> rootNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: "RootNavigatorKey");
+  static final rootNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: "RootNavigatorKey",
+  );
 
   // nested navigator key. used on sub navigation view.
   static GlobalKey<NavigatorState>? nestedNavigatorKey;
@@ -23,6 +25,7 @@ abstract class Coordinator implements ViewNavigator {
 
   // create base class for manager and implement it
   // create a list of managers. reflection by class name. T etc
+  @protected
   ManagerFactory get serviceManager {
     return ManagerFactory();
   }
@@ -74,20 +77,19 @@ abstract class Coordinator implements ViewNavigator {
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
-        context: context,
-        enableDrag: enableDrag,
-        isDismissible: isDismissible,
-        backgroundColor: Colors.transparent,
-        constraints: BoxConstraints(
-          minWidth: MediaQuery.of(context).size.width,
-          maxHeight: fullScreen
-              ? MediaQuery.of(context).size.height
-              : MediaQuery.of(context).size.height - 60,
-        ),
-        isScrollControlled: true,
-        builder: (context) {
-          return view;
-        });
+      context: context,
+      enableDrag: enableDrag,
+      isDismissible: isDismissible,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        minWidth: context.width,
+        maxHeight: fullScreen ? context.height : context.height - 60,
+      ),
+      isScrollControlled: true,
+      builder: (context) {
+        return view;
+      },
+    );
   }
 
   void _showDesktopBottomSheet(
@@ -98,39 +100,42 @@ abstract class Coordinator implements ViewNavigator {
   }) {
     final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
     showModalBottomSheet(
-        context: context,
-        enableDrag: enableDrag,
-        isDismissible: isDismissible,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        constraints: BoxConstraints(
-          maxWidth:
-              max(maxDeskTopSheetWidth, MediaQuery.of(context).size.width / 3),
-          maxHeight: MediaQuery.of(context).size.height,
-          minHeight: MediaQuery.of(context).size.height,
-        ),
-        builder: (BuildContext context) {
-          return Align(
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: backgroundColor ?? ProtonColors.backgroundNorm,
-                    borderRadius: const BorderRadius.all(Radius.circular(24.0)),
-                  ),
-                  margin: const EdgeInsets.symmetric(vertical: 30),
-                  padding: const EdgeInsets.all(10),
-                  child: view));
-        });
+      context: context,
+      enableDrag: enableDrag,
+      isDismissible: isDismissible,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      constraints: BoxConstraints(
+        maxWidth: max(maxDeskTopSheetWidth, context.width / 3),
+        maxHeight: context.height,
+        minHeight: context.height,
+      ),
+      builder: (BuildContext context) {
+        return Align(
+          child: Container(
+            decoration: BoxDecoration(
+              color: backgroundColor ?? ProtonColors.backgroundNorm,
+              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+            ),
+            margin: const EdgeInsets.symmetric(vertical: 30),
+            padding: const EdgeInsets.all(10),
+            child: view,
+          ),
+        );
+      },
+    );
   }
 
   void pushReplacement(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.rootNavigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
-            settings: RouteSettings(name: view.key.toString()),
-            builder: (context) {
-              return view;
-            },
-            fullscreenDialog: fullscreenDialog),
+          settings: RouteSettings(name: view.key.toString()),
+          builder: (context) {
+            return view;
+          },
+          fullscreenDialog: fullscreenDialog,
+        ),
       );
     });
   }
@@ -154,11 +159,12 @@ abstract class Coordinator implements ViewNavigator {
     Future.delayed(Duration.zero, () {
       navigatorKey.currentState?.push(
         MaterialPageRoute(
-            settings: RouteSettings(name: view.key.toString()),
-            builder: (context) {
-              return view;
-            },
-            fullscreenDialog: fullscreenDialog),
+          settings: RouteSettings(name: view.key.toString()),
+          builder: (context) {
+            return view;
+          },
+          fullscreenDialog: fullscreenDialog,
+        ),
       );
     });
   }
@@ -169,15 +175,18 @@ abstract class Coordinator implements ViewNavigator {
 
   void pushCustom(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
-      Coordinator.rootNavigatorKey.currentState?.push(
-          CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+      Coordinator.rootNavigatorKey.currentState?.push(CustomPageRoute(
+        page: view,
+        fullscreenDialog: fullscreenDialog,
+      ));
     });
   }
 
   void pushReplacementCustom(Widget view, {bool fullscreenDialog = false}) {
     Future.delayed(Duration.zero, () {
       Coordinator.rootNavigatorKey.currentState?.pushReplacement(
-          CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog));
+        CustomPageRoute(page: view, fullscreenDialog: fullscreenDialog),
+      );
     });
   }
 

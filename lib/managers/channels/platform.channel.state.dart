@@ -12,9 +12,9 @@ class NativeLoginInitial extends NativeLoginState {
   List<Object> get props => [];
 }
 
-class NativeLoginSucess extends NativeLoginState {
+class NativeLoginSuccess extends NativeLoginState {
   final UserInfo userInfo;
-  const NativeLoginSucess(this.userInfo);
+  const NativeLoginSuccess(this.userInfo);
   @override
   List<Object> get props => [userInfo];
 }

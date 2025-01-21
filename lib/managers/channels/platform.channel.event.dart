@@ -6,7 +6,7 @@ abstract class ChannelEvent extends Equatable {
 }
 
 class DirectEmitEvent extends ChannelEvent {
-  final NativeLoginSucess newState;
+  final NativeLoginSuccess newState;
   const DirectEmitEvent(this.newState);
   @override
   List<Object> get props => [newState];

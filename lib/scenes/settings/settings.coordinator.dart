@@ -31,6 +31,7 @@ class SettingsCoordinator extends Coordinator {
       userManager,
       walletManager,
       dataProviderManager.bdkTransactionDataProvider,
+      dataProviderManager.userDataProvider,
     );
     final viewModel = SettingsViewModelImpl(
       this,

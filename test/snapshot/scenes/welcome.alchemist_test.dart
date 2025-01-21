@@ -10,10 +10,10 @@ import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/welcome/welcome.view.dart';
 
+import '../../mocks/welcome.mocks.dart';
 import '../helper/alchemist.device.dart';
 import '../helper/alchemist.device.scenario.dart';
 import '../helper/comparator.config.dart';
-import 'welcome_test.mocks.dart';
 
 void main() {
   group('MyApp Golden Test', () {

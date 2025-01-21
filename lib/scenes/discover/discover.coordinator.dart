@@ -15,12 +15,10 @@ class DiscoverCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final viewModel = DiscoverViewModelImpl(
-      apiServiceManager.getApiService().getDiscoveryContentClient(),
+      apiServiceManager.getDiscoveryContentClient(),
       this,
     );
-    widget = DiscoverView(
-      viewModel,
-    );
+    widget = DiscoverView(viewModel);
     return widget;
   }
 }

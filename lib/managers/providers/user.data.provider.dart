@@ -183,6 +183,8 @@ class UserDataProvider extends DataProvider {
 
   @override
   Future<void> clear() async {
+    userKeysQueries.clearTable();
+    userQueries.clearTable();
     user = ProtonWalletUser();
     dataUpdateController.close();
   }

@@ -5,7 +5,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/script_type.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -116,31 +116,42 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                   ),
                   const SizedBox(height: 4),
                   Underline(
-                      onTap: () {
-                        ExternalUrl.shared.launchBlogAddressType();
-                      },
-                      color: ProtonColors.protonBlue,
-                      child: Text(S.of(context).learn_more,
-                          style: ProtonStyles.body2Medium(
-                              color: ProtonColors.protonBlue))),
+                    onTap: () {
+                      ExternalUrl.shared.launchBlogAddressType();
+                    },
+                    color: ProtonColors.protonBlue,
+                    child: Text(
+                      S.of(context).learn_more,
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.protonBlue,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20),
-                  Text(S.of(context).wallet_account_index,
-                      style: ProtonStyles.body1Medium(
-                          color: ProtonColors.textNorm)),
+                  Text(
+                    S.of(context).wallet_account_index,
+                    style: ProtonStyles.body1Medium(
+                      color: ProtonColors.textNorm,
+                    ),
+                  ),
                   const SizedBox(height: 5),
                   Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding),
-                      child: Text(
-                        S.of(context).wallet_account_index_desc,
-                        style: ProtonStyles.body2Regular(
-                            color: ProtonColors.textWeak),
-                        textAlign: TextAlign.center,
-                      )),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: defaultPadding,
+                    ),
+                    child: Text(
+                      S.of(context).wallet_account_index_desc,
+                      style: ProtonStyles.body2Regular(
+                        color: ProtonColors.textWeak,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: defaultPadding),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: defaultPadding,
+                    ),
                     child: TextFieldTextV2(
                       labelText: S.of(context).wallet_account_index,
                       maxLength: maxWalletNameSize,
@@ -155,76 +166,85 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
                     ),
                   ),
                   Underline(
-                      onTap: () {
-                        ExternalUrl.shared.launchBlogAccountIndex();
-                      },
-                      color: ProtonColors.protonBlue,
-                      child: Text(S.of(context).learn_more,
-                          style: ProtonStyles.body2Medium(
-                              color: ProtonColors.protonBlue))),
+                    onTap: () {
+                      ExternalUrl.shared.launchBlogAccountIndex();
+                    },
+                    color: ProtonColors.protonBlue,
+                    child: Text(
+                      S.of(context).learn_more,
+                      style: ProtonStyles.body2Medium(
+                        color: ProtonColors.protonBlue,
+                      ),
+                    ),
+                  ),
                 ]),
             const SizedBox(height: 12),
             Container(
-                padding: const EdgeInsets.only(top: 20),
-                margin: const EdgeInsets.symmetric(
-                    horizontal: defaultButtonPadding),
-                child: Column(children: [
-                  ButtonV6(
-                      onPressed: () async {
-                        if (!viewModel.isAdding) {
-                          viewModel.isAdding = true;
-                          int newAccountIndex = 0;
-                          try {
-                            newAccountIndex = int.parse(
-                                viewModel.newAccountIndexController.text);
-                          } catch (e) {
-                            // parse newAccountIndex failed, use default one
-                          }
-                          const accountNameExists = false;
+              padding: const EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.symmetric(
+                horizontal: defaultButtonPadding,
+              ),
+              child: Column(children: [
+                ButtonV6(
+                  onPressed: () async {
+                    if (!viewModel.isAdding) {
+                      viewModel.isAdding = true;
+                      int newAccountIndex = 0;
+                      try {
+                        newAccountIndex = int.parse(
+                          viewModel.newAccountIndexController.text,
+                        );
+                      } catch (e) {
+                        // parse newAccountIndex failed, use default one
+                      }
+                      const accountNameExists = false;
+                      if (context.mounted) {
+                        if (!accountNameExists) {
+                          final isSuccess = await viewModel.addWalletAccount(
+                            viewModel.newAccountScriptTypeValueNotifier.value,
+                            viewModel.newAccountNameController.text.isNotEmpty
+                                ? viewModel.newAccountNameController.text
+                                : S.of(context).default_account,
+                            newAccountIndex,
+                          );
                           if (context.mounted) {
-                            if (!accountNameExists) {
-                              final isSuccess =
-                                  await viewModel.addWalletAccount(
-                                viewModel
-                                    .newAccountScriptTypeValueNotifier.value,
-                                viewModel.newAccountNameController.text
-                                        .isNotEmpty
-                                    ? viewModel.newAccountNameController.text
-                                    : S.of(context).default_account,
-                                newAccountIndex,
+                            if (isSuccess) {
+                              Navigator.of(context).pop();
+                              context.showSnackbar(
+                                S.of(context).account_created,
                               );
-                              if (context.mounted) {
-                                if (isSuccess) {
-                                  Navigator.of(context).pop();
-                                  CommonHelper.showSnackbar(
-                                      context, S.of(context).account_created);
-                                }
-                              }
                             }
                           }
-                          viewModel.isAdding = false;
                         }
-                      },
-                      backgroundColor: ProtonColors.protonBlue,
-                      text: S.of(context).create_wallet_account,
-                      width: MediaQuery.of(context).size.width,
-                      textStyle: ProtonStyles.body1Medium(
-                          color: ProtonColors.textInverted),
-                      height: 48),
-                  SizedBoxes.box8,
-                  ButtonV5(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                      text: S.of(context).cancel,
-                      width: MediaQuery.of(context).size.width,
-                      textStyle: ProtonStyles.body1Medium(
-                          color: ProtonColors.textNorm),
-                      backgroundColor: ProtonColors.interActionWeak,
-                      borderColor: ProtonColors.interActionWeak,
-                      height: 48),
-                  SizedBoxes.box8,
-                ])),
+                      }
+                      viewModel.isAdding = false;
+                    }
+                  },
+                  backgroundColor: ProtonColors.protonBlue,
+                  text: S.of(context).create_wallet_account,
+                  width: context.width,
+                  textStyle: ProtonStyles.body1Medium(
+                    color: ProtonColors.textInverted,
+                  ),
+                  height: 48,
+                ),
+                SizedBoxes.box8,
+                ButtonV5(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  text: S.of(context).cancel,
+                  width: context.width,
+                  textStyle: ProtonStyles.body1Medium(
+                    color: ProtonColors.textNorm,
+                  ),
+                  backgroundColor: ProtonColors.interActionWeak,
+                  borderColor: ProtonColors.interActionWeak,
+                  height: 48,
+                ),
+                SizedBoxes.box8,
+              ]),
+            ),
           ]),
         ]),
       );

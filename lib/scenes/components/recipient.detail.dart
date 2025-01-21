@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
@@ -78,7 +78,8 @@ class RecipientDetail extends StatelessWidget {
                       child: Text(
                         "B",
                         style: ProtonStyles.captionSemibold(
-                            color: avatarTextColor ?? ProtonColors.textInverted),
+                            color:
+                                avatarTextColor ?? ProtonColors.textInverted),
                       ),
                     )
                   : CircleAvatar(
@@ -92,7 +93,8 @@ class RecipientDetail extends StatelessWidget {
                                     .toUpperCase()
                                 : "",
                         style: ProtonStyles.captionSemibold(
-                            color: avatarTextColor ?? ProtonColors.textInverted),
+                            color:
+                                avatarTextColor ?? ProtonColors.textInverted),
                       ),
                     ),
             const SizedBox(width: 6),

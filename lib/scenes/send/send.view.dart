@@ -8,10 +8,10 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
-import 'package:wallet/helper/fiat.currency.helper.dart';
+import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -146,9 +146,12 @@ class SendView extends ViewBase<SendViewModel> {
                               const SizedBox(width: 8),
                               GestureDetector(
                                 onTap: viewModel.sendAll,
-                                child: Text(S.of(context).send_all,
-                                    style: ProtonStyles.captionMedium(
-                                        color: ProtonColors.protonBlue)),
+                                child: Text(
+                                  S.of(context).send_all,
+                                  style: ProtonStyles.captionMedium(
+                                    color: ProtonColors.protonBlue,
+                                  ),
+                                ),
                               )
                             ]),
                         Row(children: [
@@ -369,12 +372,13 @@ class SendView extends ViewBase<SendViewModel> {
                         child: Text(
                           S.of(context).edit_recipient,
                           style: ProtonStyles.body2Medium(
-                              color: ProtonColors.protonBlue),
+                            color: ProtonColors.protonBlue,
+                          ),
                         ),
                       ),
                     ]),
                   ),
-                for (ProtonRecipient protonRecipient in viewModel.recipients)
+                for (final protonRecipient in viewModel.recipients)
                   if (viewModel.bitcoinAddresses
                           .containsKey(protonRecipient.email) &&
                       viewModel.bitcoinAddresses[protonRecipient.email]! !=

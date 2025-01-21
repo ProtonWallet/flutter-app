@@ -158,6 +158,43 @@ void main() {
     );
   });
 
+  testSnapshot('Proton Text Wallet Style general', (tester) async {
+    final builder = GoldenBuilder.grid(
+        columns: 1, widthToHeightRatio: 1, bgColor: Colors.white)
+      ..addScenario(
+          '',
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'This is the text style example - New added',
+              style: ProtonWalletStyles.twoFACode(),
+            ),
+          ))
+      ..addScenario(
+          '',
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'This is the text style example - New added',
+              style: ProtonWalletStyles.textAmount(),
+            ),
+          ));
+    await tester.pumpWidgetBuilder(
+      builder.build(),
+      wrapper: materialAppWrapper(
+        theme: ThemeData(
+          fontFamily: FontFamily.inter,
+        ),
+      ),
+      surfaceSize: const Size(1200, 2500),
+      textScaleSize: 3.0,
+    );
+    await screenMatchesGolden(
+      tester,
+      "$testPath/font.style.wallet.grid",
+    );
+  });
+
   testSnapshot('Button v6 device sizes checks', (tester) async {
     final builder = GoldenBuilder.grid(columns: 1, widthToHeightRatio: 1)
       ..addScenario(

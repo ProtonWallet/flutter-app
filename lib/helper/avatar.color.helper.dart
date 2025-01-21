@@ -12,7 +12,7 @@ class AvatarColor {
 }
 
 class AvatarColorHelper {
-  static List<AvatarColor> colors = [
+  static final colors = [
     AvatarColor(
       ProtonColors.yellow1Text,
       ProtonColors.yellow1Background,
@@ -31,7 +31,7 @@ class AvatarColorHelper {
     ),
   ];
 
-  static List<AvatarColor> avatarColors = [
+  static final avatarColors = [
     AvatarColor(
       ProtonColors.avatarOrange1Text,
       ProtonColors.avatarOrange1Background,

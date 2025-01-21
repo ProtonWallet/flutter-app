@@ -36,8 +36,12 @@ class AppConfig {
     required this.stopGap,
   });
 
-  static void initAppEnv() {
-    const environment = String.fromEnvironment('appEnv', defaultValue: 'prod');
+  static void initAppEnv({String? customEnv}) {
+    final environment = customEnv ??
+        const String.fromEnvironment(
+          'appEnv',
+          defaultValue: 'prod',
+        );
     logger.i('App environment: $environment');
     if (environment == 'payment') {
       appConfig = appConfigForPayments;

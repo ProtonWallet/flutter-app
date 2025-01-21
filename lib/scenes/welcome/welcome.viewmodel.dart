@@ -49,7 +49,7 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
   }
 
   Future<void> handleStateChanges(NativeLoginState state) async {
-    if (state is NativeLoginSucess) {
+    if (state is NativeLoginSuccess) {
       isLoginToHomepage = true;
       sinkAddSafe();
       await userManager.nativeLogin(state.userInfo);
@@ -66,7 +66,8 @@ class WelcomeViewModelImpl extends WelcomeViewModel {
         if (mobile) {
           coordinator.showNativeSignin();
         } else {
-          final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
+          final apiServiceManager =
+              serviceManager.get<ProtonApiServiceManager>();
           await apiServiceManager.initalOldApiService();
           coordinator.showFlutterSignin(env);
         }

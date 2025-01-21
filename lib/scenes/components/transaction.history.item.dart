@@ -6,7 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/custom.tooltip.dart';
 
@@ -91,8 +91,7 @@ class TransactionHistoryItem extends StatelessWidget {
                               text: content.isNotEmpty ? content : memo ?? ""))
                           .then((_) {
                         if (context.mounted) {
-                          CommonHelper.showSnackbar(
-                              context, S.of(context).copied);
+                          context.showSnackbar(S.of(context).copied);
                         }
                       });
                     },
@@ -109,8 +108,7 @@ class TransactionHistoryItem extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: memo ?? ""))
                             .then((_) {
                           if (context.mounted) {
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).copied);
+                            context.showSnackbar(S.of(context).copied);
                           }
                         });
                       },
@@ -121,11 +119,10 @@ class TransactionHistoryItem extends StatelessWidget {
                   GestureDetector(
                       onLongPress: () {
                         Clipboard.setData(
-                                ClipboardData(text: walletAccountName ?? ""))
-                            .then((_) {
+                          ClipboardData(text: walletAccountName ?? ""),
+                        ).then((_) {
                           if (context.mounted) {
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).copied);
+                            context.showSnackbar(S.of(context).copied);
                           }
                         });
                       },
@@ -139,8 +136,7 @@ class TransactionHistoryItem extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: bitcoinAddress!))
                             .then((_) {
                           if (context.mounted) {
-                            CommonHelper.showSnackbar(
-                                context, S.of(context).copied_address);
+                            context.showSnackbar(S.of(context).copied_address);
                           }
                         });
                       }

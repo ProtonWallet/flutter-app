@@ -84,6 +84,11 @@ impl FrbAddressDetails {
     pub fn balance(&self) -> FrbBalance {
         self.balance.clone()
     }
+
+    #[frb(getter, sync)]
+    pub fn is_trans_empty(&self) -> bool {
+        self.transactions().is_empty()
+    }
 }
 
 impl From<AddressDetails> for FrbAddressDetails {

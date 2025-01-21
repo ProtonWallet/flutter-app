@@ -2,9 +2,22 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
 
 class ManagerFactory {
+  // Private singleton instance
   static final ManagerFactory _instance = ManagerFactory._internal();
-  factory ManagerFactory() => _instance;
+
+  // Static mock instance for testing
+  static ManagerFactory? mockInstance;
+
+  // Factory constructor to return either the mock or the real instance
+  factory ManagerFactory() => mockInstance ?? _instance;
+
+  // Private constructor
   ManagerFactory._internal();
+
+  // Reset the mock instance (useful for test cleanup)
+  static void resetMockInstance() {
+    mockInstance = null;
+  }
 
   final Map<Type, Manager> _managers = {};
 

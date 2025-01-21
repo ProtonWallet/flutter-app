@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/helper/common_helper.dart';
+import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/scenes/backup.seed/backup.introduce.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.mnemonic.view.dart';
 import 'package:wallet/scenes/backup.seed/backup.viewmodel.dart';
