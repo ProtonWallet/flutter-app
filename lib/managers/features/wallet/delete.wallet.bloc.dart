@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
@@ -94,11 +95,15 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
   /// wallet api
   final WalletClient walletClient;
 
+  /// app state manager
+  final AppStateManager appStateManager;
+
   /// initialize the bloc with the initial state
   DeleteWalletBloc(
     this.walletsDataProvider,
     this.walletClient,
     this.protonUsersApi,
+    this.appStateManager,
   ) : super(const DeleteWalletState()) {
     on<DeleteWalletEvent>((event, emit) async {
       emit(state.copyWith(
@@ -123,8 +128,9 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
             authInfo: authInfo,
           ));
         } on BridgeError catch (e, stacktrace) {
-          final errorMessage = parseSampleDisplayError(e);
+          appStateManager.updateStateFrom(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
+          final errorMessage = parseSampleDisplayError(e);
           Sentry.captureException(e, stackTrace: stacktrace);
           emit(state.copyWith(
               isLoading: false,
@@ -185,6 +191,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
               deleted: true,
               requireAuthModel: const DeleteWalletAuthModel()));
         } on BridgeError catch (e, stacktrace) {
+          appStateManager.updateStateFrom(e);
           final errorMessage = parseSampleDisplayError(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
           Sentry.captureException(e, stackTrace: stacktrace);

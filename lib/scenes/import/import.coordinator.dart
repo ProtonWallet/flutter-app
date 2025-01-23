@@ -1,5 +1,6 @@
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -40,6 +41,7 @@ class ImportCoordinator extends Coordinator {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final userManager = serviceManager.get<UserManager>();
     final walletManager = serviceManager.get<WalletManager>();
+    final appsStateManager = serviceManager.get<AppStateManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final bloc = CreateWalletBloc(
       userManager,
@@ -54,6 +56,7 @@ class ImportCoordinator extends Coordinator {
       bloc,
       apiServiceManager.getApiService(),
       walletManager,
+      appsStateManager,
       apiServiceManager.getApiService().getProtonEmailAddrClient(),
     );
     widget = ImportView(

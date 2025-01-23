@@ -1,3 +1,4 @@
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -27,12 +28,14 @@ class ReceiveCoordinator extends Coordinator {
     final userManager = serviceManager.get<UserManager>();
     final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
     final viewModel = ReceiveViewModelImpl(
       this,
       serverWalletID,
       serverAccountID,
       userManager,
       walletManager,
+      appStateManager,
       dataProviderManager.walletDataProvider,
       dataProviderManager.protonAddressProvider,
       dataProviderManager.walletKeysProvider,

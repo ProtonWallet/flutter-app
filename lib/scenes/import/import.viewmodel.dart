@@ -11,6 +11,7 @@ import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/path.helper.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
@@ -72,6 +73,7 @@ class ImportViewModelImpl extends ImportViewModel {
   final String preInputWalletName;
   final ProtonApiService apiService;
   final WalletManager walletManager;
+  final AppStateManager appStateManager;
   final ProtonEmailAddressClient protonEmailAddressClient;
 
   final CreateWalletBloc createWalletBloc;
@@ -83,6 +85,7 @@ class ImportViewModelImpl extends ImportViewModel {
     this.createWalletBloc,
     this.apiService,
     this.walletManager,
+    this.appStateManager,
     this.protonEmailAddressClient,
   );
 
@@ -222,12 +225,16 @@ class ImportViewModelImpl extends ImportViewModel {
     } on BridgeError catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
+
       final limitError = parseUserLimitationError(e);
       if (limitError != null) {
         hitWalletAccountLimit = true;
         limitErrorMessage = limitError;
         return true;
       } else {
+        if (appStateManager.updateStateFrom(e)) {
+          return false;
+        }
         errorMessage = parseSampleDisplayError(e);
       }
     } catch (e, stacktrace) {

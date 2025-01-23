@@ -6,6 +6,10 @@ class ResponseCode {
 
   /// missing locked scope
   static int missingLockedScope = 9101;
+
+  /// force upgrade
+  static int forceUpgrade5003 = 5003;
+  static int forceUpgrade5005 = 5005;
 }
 
 /// extensions
@@ -16,5 +20,10 @@ extension ResponseErrorExtension on ResponseError {
 
   bool isMissingLockedScope() {
     return code == ResponseCode.missingLockedScope;
+  }
+
+  bool isForceUpgrade() {
+    return code == ResponseCode.forceUpgrade5003 ||
+        code == ResponseCode.forceUpgrade5005;
   }
 }

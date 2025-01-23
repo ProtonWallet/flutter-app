@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -21,7 +22,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         const SizedBox(height: 10),
         Text(
-          viewModel.walletMenuModel.walletName,
+          viewModel.walletName,
           style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
         ),
         const SizedBox(height: 10),
@@ -51,37 +52,41 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
           ]),
         ),
         if (!viewModel.isWalletPassphraseMatch)
-          Text(S.of(context).wrong_passphrase,
-              style: ProtonStyles.body2Medium(color: ProtonColors.signalError)),
+          Text(
+            S.of(context).wrong_passphrase,
+            style: ProtonStyles.body2Medium(color: ProtonColors.signalError),
+          ),
         const SizedBox(height: 6),
         Container(
-            padding: const EdgeInsets.only(top: 20),
-            margin:
-                const EdgeInsets.symmetric(horizontal: defaultButtonPadding),
-            child: ButtonV6(
-                onPressed: () async {
-                  final String passphrase =
-                      viewModel.walletRecoverPassphraseController.text;
-                  final bool match = await viewModel.checkFingerprint(
-                    passphrase,
-                  );
+          padding: const EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.symmetric(
+            horizontal: defaultButtonPadding,
+          ),
+          child: ButtonV6(
+              onPressed: () async {
+                final passphrase =
+                    viewModel.walletRecoverPassphraseController.text;
+                final match = await viewModel.checkFingerprint(
+                  passphrase,
+                );
+                if (match) {
+                  await viewModel.savePassphrase(passphrase);
+                }
 
-                  if (match) {
-                    await viewModel.savePassphrase(passphrase);
-                  }
-
-                  /// reset passphrase text to empty
-                  viewModel.walletRecoverPassphraseController.text = "";
-                  if (context.mounted && match) {
-                    Navigator.of(context).pop();
-                  }
-                },
-                backgroundColor: ProtonColors.protonBlue,
-                text: S.of(context).submit,
-                width: MediaQuery.of(context).size.width,
-                textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.textInverted),
-                height: 48)),
+                /// reset passphrase text to empty
+                viewModel.walletRecoverPassphraseController.text = "";
+                if (context.mounted && match) {
+                  Navigator.of(context).pop();
+                }
+              },
+              backgroundColor: ProtonColors.protonBlue,
+              text: S.of(context).submit,
+              width: context.width,
+              textStyle: ProtonStyles.body1Medium(
+                color: ProtonColors.textInverted,
+              ),
+              height: 48),
+        ),
 
         /// avoid softkeyboard overlay on page
         SizedBox(

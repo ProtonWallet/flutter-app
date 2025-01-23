@@ -109,8 +109,9 @@ class EditBvEViewModelImpl extends EditBvEViewModel {
         selectedEmailID!,
       );
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
