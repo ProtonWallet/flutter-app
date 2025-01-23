@@ -1,4 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -14,7 +19,8 @@ void showLogoutErrorDialog(
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.of(context).session_expired_title),
+          backgroundColor: ProtonColors.backgroundNorm,
+          title: Center(child: Text(S.of(context).session_expired_title)),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -35,10 +41,12 @@ void showLogoutErrorDialog(
                     Navigator.of(context).pop();
                     onLogout();
                   },
-                  text: 'Logout',
-                  backgroundColor: Colors.red,
+                  text: context.local.logout,
+                  textStyle: ProtonStyles.body1Medium(
+                      color: ProtonColors.textInverted),
+                  backgroundColor: ProtonColors.signalError,
                   width: 300,
-                  height: 44,
+                  height: 48,
                 ),
               ),
             ),

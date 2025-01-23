@@ -19,6 +19,7 @@ void showUpgradeErrorDialog(
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: ProtonColors.backgroundNorm,
           title: Center(child: Text(S.of(context).force_upgrade)),
           content: SingleChildScrollView(
             child: ListBody(
@@ -32,36 +33,38 @@ void showUpgradeErrorDialog(
             ),
           ),
           actions: <Widget>[
-            ButtonV6(
-              onPressed: () async {
-                ExternalUrl.shared.lanuchStore();
-              },
-              text: S.of(context).upgrade,
-              textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-              backgroundColor: ProtonColors.protonBlue,
-              borderColor: ProtonColors.protonBlue,
-              height: 48,
-              width: max(
-                330,
-                MediaQuery.of(context).size.width - 110,
-              ),
-            ),
             SizedBox(
-              height: 56,
-              child: ButtonV6(
-                onPressed: () async {
-                  ExternalUrl.shared.lanuchForceUpgradeLearnMore();
-                },
-                text: S.of(context).learn_more,
-                backgroundColor: ProtonColors.interActionWeak,
-                borderColor: ProtonColors.interActionWeak,
-                textStyle:
-                    ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                height: 48,
-                width: max(
-                  330,
-                  MediaQuery.of(context).size.width - 110,
-                ),
+              width: 300,
+              child: Column(
+                children: [
+                  ButtonV6(
+                    onPressed: () async {
+                      ExternalUrl.shared.lanuchStore();
+                    },
+                    text: S.of(context).upgrade,
+                    textStyle: ProtonStyles.body1Medium(
+                        color: ProtonColors.textInverted),
+                    backgroundColor: ProtonColors.protonBlue,
+                    borderColor: ProtonColors.protonBlue,
+                    width: 300,
+                    height: 48,
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  ButtonV6(
+                    onPressed: () async {
+                      ExternalUrl.shared.lanuchForceUpgradeLearnMore();
+                    },
+                    text: S.of(context).learn_more,
+                    backgroundColor: ProtonColors.interActionWeak,
+                    borderColor: ProtonColors.interActionWeak,
+                    textStyle:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
+                    width: 300,
+                    height: 48,
+                  ),
+                ],
               ),
             ),
           ],
