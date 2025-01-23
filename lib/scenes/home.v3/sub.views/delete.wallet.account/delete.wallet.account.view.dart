@@ -35,11 +35,11 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
             offset: const Offset(0, -20),
             child: Column(children: [
               Assets.images.icon.deleteWarning.svg(
-                width: 72,
-                height: 72,
+                width: 48,
+                height: 48,
                 fit: BoxFit.fill,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: defaultPadding),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Column(

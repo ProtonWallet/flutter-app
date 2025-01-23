@@ -45,10 +45,10 @@ class ErrorBottomSheet {
                 child: Column(children: [
                   Assets.images.icon.errorMessage.svg(
                     fit: BoxFit.fill,
-                    width: 52,
-                    height: 52,
+                    width: 48,
+                    height: 48,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: defaultPadding),
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding),

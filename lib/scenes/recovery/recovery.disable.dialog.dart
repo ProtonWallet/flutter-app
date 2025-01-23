@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -8,23 +10,39 @@ Future<void> showDisableDialog(
   BuildContext context,
   VoidCallback onDisable,
 ) async {
-  return showDialog<void>(
+  return showModalBottomSheet<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    backgroundColor: ProtonColors.white,
+    constraints: BoxConstraints(
+      minWidth: MediaQuery.of(context).size.width,
+      maxHeight: MediaQuery.of(context).size.height - 60,
+    ),
+    isScrollControlled: true,
     builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: ProtonColors.white,
-        title: Center(
-          child: Text(
-            S.of(context).disable_recovery_phrase_title,
-            style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: ListBody(
+      return SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: ListView(
+            shrinkWrap: true,
             children: <Widget>[
+              const SizedBox(height: defaultPadding),
+              Assets.images.icon.deleteWarning.svg(
+                width: 48,
+                height: 48,
+                fit: BoxFit.scaleDown,
+              ),
+              const SizedBox(height: defaultPadding),
+              Center(
+                child: Text(
+                  S.of(context).disable_recovery_phrase_title,
+                  style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
               SizedBox(
-                width: 300,
+                width: MediaQuery.of(context).size.width,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content,
                   style:
@@ -34,7 +52,7 @@ Future<void> showDisableDialog(
               ),
               const SizedBox(height: 12),
               SizedBox(
-                width: 300,
+                width: MediaQuery.of(context).size.width,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content2,
                   style:
@@ -42,12 +60,9 @@ Future<void> showDisableDialog(
                   textAlign: TextAlign.center,
                 ),
               ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          Column(
-            children: [
+              const SizedBox(
+                height: 30,
+              ),
               ButtonV5(
                 onPressed: () {
                   onDisable();
@@ -55,9 +70,10 @@ Future<void> showDisableDialog(
                 },
                 text: S.of(context).disable_recovery_phrase_button,
                 backgroundColor: ProtonColors.signalError,
-                textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-                width: 300,
-                height: 44,
+                textStyle:
+                    ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                width: MediaQuery.of(context).size.width,
+                height: 48,
               ),
               const SizedBox(
                 height: 8,
@@ -71,12 +87,12 @@ Future<void> showDisableDialog(
                 backgroundColor: ProtonColors.interActionWeak,
                 textStyle:
                     ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                width: 300,
-                height: 44,
+                width: MediaQuery.of(context).size.width,
+                height: 48,
               ),
             ],
           ),
-        ],
+        ),
       );
     },
   );
