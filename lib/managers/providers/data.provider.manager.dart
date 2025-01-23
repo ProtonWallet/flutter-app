@@ -306,7 +306,7 @@ class DataProviderManager extends Manager {
     /// bdk transactions
     bdkTransactionDataProvider = BDKTransactionDataProvider(
       DBHelper.accountDao!,
-      apiServiceManager.getApiService(),
+      apiServiceManager.getApiService().getWalletClient(),
       shared,
       walletManager,
       userSettingsDataProvider,

@@ -200,6 +200,11 @@ impl FrbAccount {
         Ok(highest)
     }
 
+    pub fn get_stop_gap_range(&self, max_gap: u32) -> Result<u32, BridgeError> {
+        let ranged_stop_gap = self.inner.get_stop_gap_range(max_gap)?;
+        Ok(ranged_stop_gap)
+    }
+
     pub async fn get_address_from_graph(
         &self,
         network: Network,

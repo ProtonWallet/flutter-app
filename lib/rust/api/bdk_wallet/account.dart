@@ -57,6 +57,8 @@ abstract class FrbAccount implements RustOpaqueInterface {
 
   Future<FrbAddressInfo> getNextReceiveAddress();
 
+  Future<int> getStopGapRange({required int maxGap});
+
   Future<FrbTransactionDetails> getTransaction({required String txid});
 
   Future<List<FrbTransactionDetails>> getTransactions({SortOrder? sort});
