@@ -16,7 +16,7 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.dao.impl.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
-import 'package:wallet/rust/api/api_service/proton_api_service.dart';
+import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
@@ -74,7 +74,7 @@ class BDKTransactionDataProvider extends DataProvider {
   FrbBlockchainClient? blockchain;
 
   /// api services
-  final ProtonApiService apiService;
+  final WalletClient walletClient;
 
   /// shared preference
   final PreferencesManager shared;
@@ -85,7 +85,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
   BDKTransactionDataProvider(
     this.accountDao,
-    this.apiService,
+    this.walletClient,
     this.shared,
     this.walletManager,
     this.userSettingsDataProvider,
@@ -187,20 +187,6 @@ class BDKTransactionDataProvider extends DataProvider {
       WalletModel walletModel, AccountModel accountModel) async {
     final String syncCheckID =
         "${getSyncCheckID(walletModel, accountModel)}_ServerStopgap";
-    await shared.write(syncCheckID, true);
-  }
-
-  Future<bool> hasLogMaximumGap(
-      WalletModel walletModel, AccountModel accountModel) async {
-    final String syncCheckID =
-        "${getSyncCheckID(walletModel, accountModel)}_LogMaximumGap";
-    return await shared.read(syncCheckID) ?? false;
-  }
-
-  Future<void> setLogMaximumGap(
-      WalletModel walletModel, AccountModel accountModel) async {
-    final String syncCheckID =
-        "${getSyncCheckID(walletModel, accountModel)}_LogMaximumGap";
     await shared.write(syncCheckID, true);
   }
 
@@ -337,23 +323,28 @@ class BDKTransactionDataProvider extends DataProvider {
       }
     }
 
-    /// log maximum gap after sync if needed
-    final hasLoged = await hasLogMaximumGap(walletModel, accountModel);
-    if (!hasLoged) {
-      await setLogMaximumGap(walletModel, accountModel);
-
-      final FrbAccount? account = await walletManager.loadWalletWithID(
-        walletModel.walletID,
-        accountModel.accountID,
-        serverScriptType: accountModel.scriptType,
-      );
-      if (account != null) {
-        final int? maximumGapSize =
-            await account.getMaximumGapSize(keychain: KeychainKind.external_);
-        if (maximumGapSize != null && maximumGapSize > 20) {
-          final String msg =
-              "maximumGapSize log\nwalletID: ${accountModel.walletID}\naccountID: ${accountModel.accountID}\nmaximumGapSize: $maximumGapSize";
-          await Sentry.captureMessage(msg);
+    /// update stopgap after sync if needed
+    final FrbAccount? account = await walletManager.loadWalletWithID(
+      walletModel.walletID,
+      accountModel.accountID,
+      serverScriptType: accountModel.scriptType,
+    );
+    if (account != null) {
+      final int? maximumGapSize =
+          await account.getMaximumGapSize(keychain: KeychainKind.external_);
+      if (maximumGapSize != null) {
+        final int rangedStopgap =
+            await account.getStopGapRange(maxGap: maximumGapSize);
+        if (rangedStopgap != accountModel.stopGap) {
+          try {
+            final _ = await walletClient.updateWalletAccountStopGap(
+                walletId: walletModel.walletID,
+                walletAccountId: accountModel.accountID,
+                stopGap: rangedStopgap);
+          } catch (e, stacktrace) {
+            logger.e("Update stopgap error: $e stacktrace: $stacktrace");
+            Sentry.captureException(e, stackTrace: stacktrace);
+          }
         }
       }
     }

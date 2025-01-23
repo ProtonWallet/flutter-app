@@ -646,6 +646,7 @@ class WalletsDataProvider extends DataProvider {
       account.priority = priority;
       account.poolSize = poolSize;
       account.lastUsedIndex = lastUsedIndex;
+      account.stopGap = finalStopgap;
       await accountDao.update(account);
     } else {
       account = AccountModel(
