@@ -6,6 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -293,9 +294,16 @@ class BDKTransactionDataProvider extends DataProvider {
         final errorMessage = parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
         emitState(BDKSyncError(errorMessage));
-        CommonHelper.showErrorDialog(
-          errorMessage,
-        );
+
+        /// temp work around,
+        ///   showError should be here upper layer needs to handle it
+        ///   ignroe session errors until refactored this
+        final responseError = parseResponseError(e);
+        final isSessionExpired = parseSessionExpireError(e) != null;
+        final isForceUpgrade = responseError?.isForceUpgrade() ?? false;
+        if (!isSessionExpired && !isForceUpgrade) {
+          CommonHelper.showErrorDialog(errorMessage);
+        }
         if (!ifMuonClientError(e)) {
           Sentry.captureException(
             e,
@@ -309,6 +317,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final String errorMessage =
             "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
         logger.e(errorMessage);
+
         CommonHelper.showErrorDialog(
           errorMessage,
         );
@@ -333,8 +342,9 @@ class BDKTransactionDataProvider extends DataProvider {
       final int? maximumGapSize =
           await account.getMaximumGapSize(keychain: KeychainKind.external_);
       if (maximumGapSize != null) {
-        final int rangedStopgap =
-            await account.getStopGapRange(maxGap: maximumGapSize);
+        final int rangedStopgap = await account.getStopGapRange(
+          maxGap: maximumGapSize,
+        );
         if (rangedStopgap != accountModel.stopGap) {
           try {
             final _ = await walletClient.updateWalletAccountStopGap(

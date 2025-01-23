@@ -1,3 +1,4 @@
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -20,11 +21,14 @@ class PassphraseCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
+    final appStateManager = serviceManager.get<AppStateManager>();
     final viewModel = PassphraseViewModelImpl(
       this,
       walletManager,
-      dataProviderManager,
+      appStateManager,
       walletMenuModel,
+      dataProviderManager.walletPassphraseProvider,
+      dataProviderManager.bdkTransactionDataProvider,
     );
     widget = PassphraseView(
       viewModel,

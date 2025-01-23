@@ -350,9 +350,11 @@ class HomeCoordinator extends Coordinator {
     );
 
     final deleteWalletBloc = DeleteWalletBloc(
-        dataProviderManager.walletDataProvider,
-        apiServiceManager.getWalletClient(),
-        apiServiceManager.getProtonUsersApiClient());
+      dataProviderManager.walletDataProvider,
+      apiServiceManager.getWalletClient(),
+      apiServiceManager.getProtonUsersApiClient(),
+      appStateManager,
+    );
 
     final walletNameBloc = WalletNameBloc(
       dataProviderManager.walletKeysProvider,

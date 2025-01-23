@@ -1,4 +1,5 @@
 import 'package:wallet/managers/api.service.manager.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -50,8 +51,7 @@ class HistoryDetailCoordinator extends Coordinator {
   ViewBase<ViewModel> start() {
     final userManager = serviceManager.get<UserManager>();
     final walletManager = serviceManager.get<WalletManager>();
-    final serverTransactionDataProvider =
-        serviceManager.get<DataProviderManager>().serverTransactionDataProvider;
+    final appStateManager = serviceManager.get<AppStateManager>();
     final apiServiceManager = serviceManager.get<ProtonApiServiceManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
 
@@ -62,7 +62,8 @@ class HistoryDetailCoordinator extends Coordinator {
       frbTransactionDetails,
       userManager,
       walletManager,
-      serverTransactionDataProvider,
+      appStateManager,
+      dataProviderManager.serverTransactionDataProvider,
       apiServiceManager.getApiService().getWalletClient(),
       dataProviderManager.walletKeysProvider,
       dataProviderManager.userSettingsDataProvider,

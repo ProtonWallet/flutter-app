@@ -102,20 +102,21 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
         accountIndex,
       );
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      final responsError = parseResponseError(e);
-      if (responsError != null && responsError.isCreationLimition()) {
-        if (defaultTargetPlatform == TargetPlatform.iOS) {
-          CommonHelper.showInfoDialog(responsError.error);
+      if (!appStateManager.updateStateFrom(e)) {
+        final responsError = parseResponseError(e);
+        if (responsError != null && responsError.isCreationLimition()) {
+          if (defaultTargetPlatform == TargetPlatform.iOS) {
+            CommonHelper.showInfoDialog(responsError.error);
+            return false;
+          } else {
+            coordinator.showUpgrade();
+          }
           return false;
-        } else {
-          coordinator.showUpgrade();
         }
-        return false;
-      }
 
-      final msg = parseSampleDisplayError(e);
-      CommonHelper.showErrorDialog(msg);
+        final msg = parseSampleDisplayError(e);
+        CommonHelper.showErrorDialog(msg);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {

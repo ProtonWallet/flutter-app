@@ -8,6 +8,7 @@ import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
@@ -69,6 +70,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     super.serverAccountID,
     this.userManager,
     this.walletManager,
+    this.appStateManager,
     this.walletDataProvider,
     this.protonAddressProvider,
     this.walletKeysProvider,
@@ -79,8 +81,12 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
   late FrbAccount _frbAccount;
 
+  ///
   final UserManager userManager;
   final WalletManager walletManager;
+  final AppStateManager appStateManager;
+
+  ///
   final WalletsDataProvider walletDataProvider;
   final LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
   final ProtonAddressProvider protonAddressProvider;
@@ -90,8 +96,9 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   @override
   Future<void> loadData() async {
     try {
-      walletData =
-          await walletDataProvider.getWalletByServerWalletID(serverWalletID);
+      walletData = await walletDataProvider.getWalletByServerWalletID(
+        serverWalletID,
+      );
       walletModel = walletData?.wallet;
       for (AccountModel accModel in walletData?.accounts ?? []) {
         accModel.labelDecrypt =
@@ -116,8 +123,10 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
         await changeAccount(accountModel!);
       }
     } on BridgeError catch (e, stacktrace) {
-      errorMessage = parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -240,7 +249,9 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
 
       /// we need to init receive address to check if it's used on network
       await receiveAddressDataProvider.initReceiveAddressForAccount(
-          _frbAccount, accountModel!);
+        _frbAccount,
+        accountModel!,
+      );
       currentAddress = null;
       await getAddress();
     } catch (e) {

@@ -9,6 +9,7 @@ import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -116,6 +117,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     super.frbTransactionDetails,
     this.userManager,
     this.walletManager,
+    this.appStateManager,
     this.serverTransactionDataProvider,
     this.walletClient,
     this.walletKeysProvider,
@@ -128,6 +130,7 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   /// required data for this viewModel, and we don't need to expose for UI
   final UserManager userManager;
   final WalletManager walletManager;
+  final AppStateManager appStateManager;
   final ServerTransactionDataProvider serverTransactionDataProvider;
   final WalletClient walletClient;
   final WalletKeysProvider walletKeysProvider;
@@ -311,32 +314,33 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
         logger.e(
           "details.viewmodel error: $e stacktrace: $stacktrace",
         );
-
-        /// parse the server error code
-        final responseError = parseResponseError(e);
-        if (responseError != null) {
-          if (responseError.code == 2011) {
-            if (transactionModel == null) {
-              /// this will only happened when user open web app and mobile app in same time (race condition)
-              /// need to reload wallet transactions from server
-              /// throw exceptions if it's still happening
-              await serverTransactionDataProvider.reloadAccountTransactions(
-                walletID,
-                accountID,
-              );
-              serverTrans =
-                  await serverTransactionDataProvider.getTransByAccountID(
-                walletID,
-                accountID,
-              );
-              transactionModel = await findServerTransactionByTxID(
-                serverTrans,
-                frbTransactionDetails.txid,
-              );
+        if (!appStateManager.updateStateFrom(e)) {
+          /// parse the server error code
+          final responseError = parseResponseError(e);
+          if (responseError != null) {
+            if (responseError.code == 2011) {
               if (transactionModel == null) {
-                /// show hashedTXID has been used error
-                CommonHelper.showErrorDialog(responseError.error);
-                rethrow;
+                /// this will only happened when user open web app and mobile app in same time (race condition)
+                /// need to reload wallet transactions from server
+                /// throw exceptions if it's still happening
+                await serverTransactionDataProvider.reloadAccountTransactions(
+                  walletID,
+                  accountID,
+                );
+                serverTrans =
+                    await serverTransactionDataProvider.getTransByAccountID(
+                  walletID,
+                  accountID,
+                );
+                transactionModel = await findServerTransactionByTxID(
+                  serverTrans,
+                  frbTransactionDetails.txid,
+                );
+                if (transactionModel == null) {
+                  /// show hashedTXID has been used error
+                  CommonHelper.showErrorDialog(responseError.error);
+                  rethrow;
+                }
               }
             }
           }

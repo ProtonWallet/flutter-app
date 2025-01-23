@@ -201,22 +201,23 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
         }
       }
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      final responsError = parseResponseError(e);
-      if (responsError != null && responsError.isCreationLimition()) {
-        if (defaultTargetPlatform == TargetPlatform.iOS) {
-          CommonHelper.showInfoDialog(responsError.error);
-          errorMessage = "";
+      if (!appStateManager.updateStateFrom(e)) {
+        final responsError = parseResponseError(e);
+        if (responsError != null && responsError.isCreationLimition()) {
+          if (defaultTargetPlatform == TargetPlatform.iOS) {
+            CommonHelper.showInfoDialog(responsError.error);
+            errorMessage = "";
+            return false;
+          } else {
+            errorMessage = "";
+            coordinator.showUpgrade();
+          }
           return false;
-        } else {
-          errorMessage = "";
-          coordinator.showUpgrade();
         }
-        return false;
-      }
 
-      final msg = parseSampleDisplayError(e);
-      CommonHelper.showErrorDialog(msg);
+        final msg = parseSampleDisplayError(e);
+        CommonHelper.showErrorDialog(msg);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
       return false;
@@ -250,8 +251,9 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
         serverAddressID,
       );
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();

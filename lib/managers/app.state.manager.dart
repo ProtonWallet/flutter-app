@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
@@ -99,10 +100,15 @@ class AppStateManager extends DataProvider implements Manager {
     this.shared,
   );
 
-  void updateStateFrom(BridgeError exception) {
-    handleSessionError(exception);
-    handleForceUpgrade(exception);
+  bool updateStateFrom(BridgeError exception) {
     handleMuonClientError(exception);
+    if (handleSessionError(exception)) {
+      return true;
+    }
+    if (handleForceUpgrade(exception)) {
+      return true;
+    }
+    return false;
   }
 
   void handleMuonClientError(BridgeError exception) {
@@ -111,20 +117,22 @@ class AppStateManager extends DataProvider implements Manager {
     }
   }
 
-  void handleSessionError(BridgeError exception) {
+  bool handleSessionError(BridgeError exception) {
     final message = parseSessionExpireError(exception);
     if (message != null) {
       emitState(AppSessionFailed(message: message));
-      return;
+      return true;
     }
+    return false;
   }
 
-  void handleForceUpgrade(BridgeError exception) {
+  bool handleForceUpgrade(BridgeError exception) {
     final error = parseResponseError(exception);
-    if (error != null && (error.code == 5003 || error.code == 5005)) {
+    if (error != null && error.isForceUpgrade()) {
       emitState(AppForceUpgradeState(message: error.error));
-      return;
+      return true;
     }
+    return false;
   }
 
   Future<UnlockModel> getUnlockType() async {

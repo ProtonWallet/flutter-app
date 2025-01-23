@@ -28,9 +28,11 @@ class DeleteWalletAccountCoordinator extends Coordinator {
 
     /// build delete wallet feature bloc
     final deleteWalletBloc = DeleteWalletBloc(
-        dataProviderManager.walletDataProvider,
-        apiServiceManager.getWalletClient(),
-        apiServiceManager.getProtonUsersApiClient());
+      dataProviderManager.walletDataProvider,
+      apiServiceManager.getWalletClient(),
+      apiServiceManager.getProtonUsersApiClient(),
+      appStateManager,
+    );
 
     final viewModel = DeleteWalletAccountViewModelImpl(
       appStateManager,

@@ -4,9 +4,11 @@ import 'package:flutter/widgets.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
-import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart';
+import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -14,10 +16,6 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinator.dart';
 
 abstract class PassphraseViewModel extends ViewModel<PassphraseCoordinator> {
-  final WalletManager walletManager;
-  final DataProviderManager dataProviderManager;
-  final WalletMenuModel walletMenuModel;
-
   late FocusNode walletRecoverPassphraseFocusNode;
   late TextEditingController walletRecoverPassphraseController;
   bool isWalletPassphraseMatch = true;
@@ -27,20 +25,29 @@ abstract class PassphraseViewModel extends ViewModel<PassphraseCoordinator> {
 
   Future<void> savePassphrase(String passphrase);
 
+  String get walletName;
+
   PassphraseViewModel(
     super.coordinator,
-    this.walletManager,
-    this.dataProviderManager,
-    this.walletMenuModel,
   );
 }
 
 class PassphraseViewModelImpl extends PassphraseViewModel {
+  final WalletManager walletManager;
+  final WalletMenuModel walletMenuModel;
+  final AppStateManager appStateManager;
+
+  /// data providers
+  final WalletPassphraseProvider walletPassphraseProvider;
+  final BDKTransactionDataProvider bdkTransactionDataProvider;
+
   PassphraseViewModelImpl(
     super.coordinator,
-    super.walletManager,
-    super.dataProviderManager,
-    super.walletMenuModel,
+    this.walletManager,
+    this.appStateManager,
+    this.walletMenuModel,
+    this.walletPassphraseProvider,
+    this.bdkTransactionDataProvider,
   );
 
   @override
@@ -74,14 +81,16 @@ class PassphraseViewModelImpl extends PassphraseViewModel {
   Future<void> savePassphrase(String passphrase) async {
     errorMessage = "";
     try {
-      await dataProviderManager.walletPassphraseProvider.saveWalletPassphrase(
+      await walletPassphraseProvider.saveWalletPassphrase(
         WalletPassphrase(
           walletID: walletMenuModel.walletModel.walletID,
           passphrase: passphrase,
         ),
       );
     } on BridgeError catch (e, stacktrace) {
-      errorMessage = parseSampleDisplayError(e);
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
@@ -94,9 +103,8 @@ class PassphraseViewModelImpl extends PassphraseViewModel {
       /// since we pass walletMenuModel by reference, this operation
       /// will also update the hasValidPassword status for wallet list item in homepage
       walletMenuModel.hasValidPassword = true;
-
       for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
-        dataProviderManager.bdkTransactionDataProvider.syncWallet(
+        bdkTransactionDataProvider.syncWallet(
           walletMenuModel.walletModel,
           accountMenuModel.accountModel,
           forceSync: true,
@@ -105,4 +113,7 @@ class PassphraseViewModelImpl extends PassphraseViewModel {
       }
     }
   }
+
+  @override
+  String get walletName => walletMenuModel.walletName;
 }

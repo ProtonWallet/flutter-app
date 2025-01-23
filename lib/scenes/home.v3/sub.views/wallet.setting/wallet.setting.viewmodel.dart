@@ -159,8 +159,10 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       );
       walletListBloc.updateWalletName(walletMenuModel.walletModel, newName);
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
+
       logger.e("updateWalletName error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
@@ -191,9 +193,10 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
         newName,
       );
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
-      logger.e("updateAccountName error: $e, stacktrace: $stacktrace");
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+        logger.e("updateAccountName error: $e, stacktrace: $stacktrace");
+      }
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
       errorMessage = e.toString();
@@ -366,8 +369,9 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
         );
       }
     } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      if (!appStateManager.updateStateFrom(e)) {
+        errorMessage = parseSampleDisplayError(e);
+      }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {
       errorMessage = e.toString();
