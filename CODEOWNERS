@@ -1,0 +1,18 @@
+# ownership: loose
+*	@wallet 
+/.gitlab/	@wallet 
+/android/	@wallet 
+/assets/	@wallet 
+/ci-templates/	@wallet 
+/ci/	@wallet 
+/ios/	@wallet 
+/lib/	@wallet 
+/linux/	@wallet 
+/macos/	@wallet 
+/rust/	@wallet 
+/rust_builder/	@wallet 
+/test/	@wallet 
+/utilities/	@wallet 
+/vendor/	@wallet 
+/web/	@wallet 
+/windows/	@wallet 
