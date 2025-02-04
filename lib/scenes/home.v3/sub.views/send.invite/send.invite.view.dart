@@ -4,6 +4,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/email.autocomplete.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -60,7 +61,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
               ),
               const SizedBox(height: 16),
               Text(
-                S.of(context).invitation_success_content,
+                context.local.invitation_success_content,
                 style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
@@ -69,7 +70,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   onPressed: () async {
                     viewModel.updateState(SendInviteState.sendInvite);
                   },
-                  text: S.of(context).invite_another_friend,
+                  text: context.local.invite_another_friend,
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.white),
@@ -81,7 +82,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   onPressed: () async {
                     Navigator.of(context).pop();
                   },
-                  text: S.of(context).close,
+                  text: context.local.close,
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
@@ -106,13 +107,17 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                 height: 167,
               ),
               Text(
-                S.of(context).exclusive_invites,
+                viewModel.isWalletEarlyAccess()
+                    ? context.local.exclusive_invites
+                    : context.local.invites,
                 style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
               Text(
-                S.of(context).exclusive_invites_content,
+                viewModel.isWalletEarlyAccess()
+                    ? context.local.exclusive_invites_content
+                    : context.local.invites_content,
                 style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                 textAlign: TextAlign.center,
               ),
@@ -124,8 +129,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                     )
                   : DropdownButtonV2(
                       width: MediaQuery.of(context).size.width,
-                      labelText: S.of(context).send_from_email,
-                      title: S.of(context).choose_your_email,
+                      labelText: context.local.send_from_email,
+                      title: context.local.choose_your_email,
                       items: viewModel.userAddresses,
                       itemsText:
                           viewModel.userAddresses.map((e) => e.email).toList(),
@@ -168,10 +173,10 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                               color: ProtonColors.textNorm),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
-                            labelText: S.of(context).your_friend_email,
+                            labelText: context.local.your_friend_email,
                             labelStyle: ProtonStyles.body2Regular(
                                 color: ProtonColors.textWeak, fontSize: 15.0),
-                            hintText: S.of(context).you_can_invite_any,
+                            hintText: context.local.you_can_invite_any,
                             hintStyle: ProtonStyles.body2Regular(
                                 color: ProtonColors.textHint),
                             contentPadding: const EdgeInsets.only(
@@ -205,7 +210,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                           }
                         }
                       },
-                      text: S.of(context).send_invite_email,
+                      text: context.local.send_invite_email,
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
                           color: viewModel.emailController.text.isEmpty

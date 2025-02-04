@@ -10,7 +10,6 @@ import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.viewmode
 class SendInviteCoordinator extends Coordinator {
   late ViewBase widget;
 
-
   @override
   void end() {}
 
@@ -24,6 +23,7 @@ class SendInviteCoordinator extends Coordinator {
       apiServiceManager,
       dataProviderManager,
       appStateManager,
+      dataProviderManager.unleashDataProvider,
     );
     widget = SendInviteView(
       viewModel,

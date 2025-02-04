@@ -27,6 +27,7 @@ class UnleashDataProvider extends DataProvider {
       "WalletMempoolRecommendedFees";
   static const String walletMobileClientDebugMode =
       "WalletMobileClientDebugMode";
+  static const String walletEarlyAccess = "WalletEarlyAccess";
 
   /// timer for job guardian
   Timer? timer;
@@ -121,5 +122,9 @@ class UnleashDataProvider extends DataProvider {
 
   bool isMobileClientDebugMode() {
     return unleashClient.isEnabled(walletMobileClientDebugMode);
+  }
+
+  bool isWalletEarlyAccess() {
+    return unleashClient.isEnabled(walletEarlyAccess);
   }
 }

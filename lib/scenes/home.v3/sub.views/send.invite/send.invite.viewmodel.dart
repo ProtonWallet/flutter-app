@@ -7,6 +7,7 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/models/contacts.model.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
@@ -30,6 +31,8 @@ abstract class SendInviteViewModel extends ViewModel<SendInviteCoordinator> {
   bool initialized = false;
   SendInviteState state = SendInviteState.sendInvite;
 
+  bool isWalletEarlyAccess();
+
   Future<bool> sendExclusiveInvite(ProtonAddress protonAddress, String email);
 
   void updateState(SendInviteState state);
@@ -40,15 +43,20 @@ abstract class SendInviteViewModel extends ViewModel<SendInviteCoordinator> {
 }
 
 class SendInviteViewModelImpl extends SendInviteViewModel {
+  /// Managers
   final ProtonApiServiceManager apiServiceManager;
   final DataProviderManager dataProviderManager;
   final AppStateManager appStateManager;
+
+  /// Data providers
+  final UnleashDataProvider unleashDataProvider;
 
   SendInviteViewModelImpl(
     super.coordinator,
     this.apiServiceManager,
     this.dataProviderManager,
     this.appStateManager,
+    this.unleashDataProvider,
   );
 
   @override
@@ -120,5 +128,10 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
   void updateState(SendInviteState state) {
     this.state = state;
     sinkAddSafe();
+  }
+
+  @override
+  bool isWalletEarlyAccess() {
+    return unleashDataProvider.isWalletEarlyAccess();
   }
 }
