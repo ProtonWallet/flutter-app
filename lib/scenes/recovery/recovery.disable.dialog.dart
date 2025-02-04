@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 
@@ -14,8 +15,8 @@ Future<void> showDisableDialog(
     context: context,
     backgroundColor: ProtonColors.white,
     constraints: BoxConstraints(
-      minWidth: MediaQuery.of(context).size.width,
-      maxHeight: MediaQuery.of(context).size.height - 60,
+      minWidth: context.width,
+      maxHeight: context.height - 60,
     ),
     isScrollControlled: true,
     builder: (BuildContext context) {
@@ -35,18 +36,19 @@ Future<void> showDisableDialog(
               Center(
                 child: Text(
                   S.of(context).disable_recovery_phrase_title,
-                  style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                  style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: context.width,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content,
-                  style:
-                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+                  style: ProtonStyles.body2Regular(
+                    color: ProtonColors.textWeak,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -55,14 +57,13 @@ Future<void> showDisableDialog(
                 width: MediaQuery.of(context).size.width,
                 child: Text(
                   S.of(context).disable_recovery_phrase_content2,
-                  style:
-                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+                  style: ProtonStyles.body2Regular(
+                    color: ProtonColors.textWeak,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               ButtonV5(
                 onPressed: () {
                   onDisable();
@@ -70,14 +71,13 @@ Future<void> showDisableDialog(
                 },
                 text: S.of(context).disable_recovery_phrase_button,
                 backgroundColor: ProtonColors.signalError,
-                textStyle:
-                    ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-                width: MediaQuery.of(context).size.width,
-                height: 48,
+                textStyle: ProtonStyles.body1Medium(
+                  color: ProtonColors.textInverted,
+                ),
+                width: context.width,
+                height: 55,
               ),
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               ButtonV5(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -85,10 +85,11 @@ Future<void> showDisableDialog(
                 text: S.of(context).cancel,
                 borderColor: ProtonColors.interActionWeak,
                 backgroundColor: ProtonColors.interActionWeak,
-                textStyle:
-                    ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                width: MediaQuery.of(context).size.width,
-                height: 48,
+                textStyle: ProtonStyles.body1Medium(
+                  color: ProtonColors.textNorm,
+                ),
+                width: context.width,
+                height: 55,
               ),
             ],
           ),

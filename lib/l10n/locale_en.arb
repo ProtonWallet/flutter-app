@@ -471,7 +471,7 @@
   "error_you_can_not_send_to_self_account": "Sorry, you can not send bitcoin to your own account.",
   "set_passphrase": "Set passphrase",
   "setting_bitcoin_unit_label": "Bitcoin Unit",
-  "setting_fiat_currency_label": "Local Currency",
+  "setting_fiat_currency_label": "Local currency",
   "setting_email_integration_label": "Link your email to this account",
   "setting_email_integration_option_default": "Don't link to any email",
   "setting_hide_empty_used_address_label": "Hide Empty Used Addresses",

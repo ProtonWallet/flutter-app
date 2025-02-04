@@ -183,7 +183,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                           textStyle: ProtonStyles.body1Medium(
                             color: ProtonColors.white,
                           ),
-                          height: 48,
+                          height: 55,
                         ),
                         const SizedBox(height: 8),
                         ButtonV5(
@@ -198,7 +198,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                           textStyle: ProtonStyles.body1Medium(
                             color: ProtonColors.white,
                           ),
-                          height: 48,
+                          height: 55,
                         ),
                       ],
                     ),

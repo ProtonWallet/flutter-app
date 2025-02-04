@@ -44,7 +44,7 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
             const SizedBox(height: 20),
             Text(
               S.of(context).upgrade_intro_title,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
@@ -92,7 +92,7 @@ class UpgradeView extends ViewBase<UpgradeViewModel> {
                   ),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
-                  height: 48,
+                  height: 55,
                 ),
               ]),
             ),

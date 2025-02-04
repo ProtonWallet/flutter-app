@@ -408,7 +408,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 backgroundColor: ProtonColors.protonBlue,
                                 textStyle: ProtonStyles.body1Medium(
                                     color: ProtonColors.textInverted),
-                                height: 48),
+                                height: 55),
                             const SizedBox(height: 20),
                           ])
                     ],
@@ -442,7 +442,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
-            height: 48,
+            height: 55,
             alignment: Alignment.centerRight,
           ),
         ),

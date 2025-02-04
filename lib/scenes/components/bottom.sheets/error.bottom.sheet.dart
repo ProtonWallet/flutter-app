@@ -57,7 +57,7 @@ class ErrorBottomSheet {
                           children: [
                             Text(
                               S.of(context).something_went_wrong,
-                              style: ProtonStyles.subheadline(
+                              style: ProtonStyles.headline(
                                   color: ProtonColors.textNorm),
                               textAlign: TextAlign.center,
                             ),
@@ -87,7 +87,7 @@ class ErrorBottomSheet {
                                 textStyle: ProtonStyles.body1Medium(
                                   color: ProtonColors.textNorm,
                                 ),
-                                height: 48),
+                                height: 55),
                           ])),
                 ])),
           ],

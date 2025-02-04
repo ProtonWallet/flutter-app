@@ -34,7 +34,7 @@ class SeedPhraseTutorialSheet {
                   const SizedBox(height: 10),
                   Text(
                     S.of(context).what_is_seed_phrase,
-                    style: ProtonStyles.subheadline(
+                    style: ProtonStyles.headline(
                         color: ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   ),

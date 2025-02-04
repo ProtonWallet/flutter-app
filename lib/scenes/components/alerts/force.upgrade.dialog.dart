@@ -47,7 +47,7 @@ void showUpgradeErrorDialog(
                     backgroundColor: ProtonColors.protonBlue,
                     borderColor: ProtonColors.protonBlue,
                     width: 300,
-                    height: 48,
+                    height: 55,
                   ),
                   const SizedBox(
                     height: 6,
@@ -62,7 +62,7 @@ void showUpgradeErrorDialog(
                     textStyle:
                         ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     width: 300,
-                    height: 48,
+                    height: 55,
                   ),
                 ],
               ),

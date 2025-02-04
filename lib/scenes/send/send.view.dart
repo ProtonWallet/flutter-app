@@ -297,7 +297,7 @@ class SendView extends ViewBase<SendViewModel> {
                     backgroundColor: ProtonColors.protonBlue,
                     textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textInverted),
-                    height: 48)),
+                    height: 55)),
         ]));
   }
 
@@ -708,7 +708,7 @@ class SendView extends ViewBase<SendViewModel> {
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.white),
-                  height: 48),
+                  height: 55),
             ),
         ]));
   }
@@ -944,7 +944,7 @@ class SendView extends ViewBase<SendViewModel> {
                         backgroundColor: ProtonColors.protonBlue,
                         textStyle:
                             ProtonStyles.body1Medium(color: ProtonColors.white),
-                        height: 48),
+                        height: 55),
                   ),
               ]));
   }
@@ -1095,7 +1095,7 @@ class SendView extends ViewBase<SendViewModel> {
                         ),
                         Text(
                           S.of(context).send_success_title,
-                          style: ProtonStyles.subheadline(
+                          style: ProtonStyles.headline(
                               color: ProtonColors.textNorm),
                           textAlign: TextAlign.center,
                         ),
@@ -1121,7 +1121,7 @@ class SendView extends ViewBase<SendViewModel> {
                         ProtonStyles.body1Medium(color: ProtonColors.white),
                     backgroundColor: ProtonColors.protonBlue,
                     borderColor: ProtonColors.protonBlue,
-                    height: 48),
+                    height: 55),
                 const SizedBox(
                   height: 8,
                 ),
@@ -1135,7 +1135,7 @@ class SendView extends ViewBase<SendViewModel> {
                         ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     backgroundColor: ProtonColors.interActionWeak,
                     borderColor: ProtonColors.interActionWeak,
-                    height: 48),
+                    height: 55),
                 const SizedBox(height: 20),
               ])),
         ]));

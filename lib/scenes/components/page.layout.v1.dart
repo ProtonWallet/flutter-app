@@ -30,7 +30,7 @@ class PageLayoutV1 extends StatelessWidget {
     this.backgroundColor,
     this.scrollController,
     this.showHeader = true,
-    this.expanded = true,
+    @Deprecated('This parameter will be removed') this.expanded = true,
     this.initialized = true,
     this.height,
   });
@@ -48,10 +48,12 @@ class PageLayoutV1 extends StatelessWidget {
         child: SizedBox(
           height: height,
           child: Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            padding: const EdgeInsets.all(defaultPadding).copyWith(
+              top: 30,
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              controller: scrollController,
               children: [
                 if (showHeader)
                   headerWidget ??
@@ -68,12 +70,7 @@ class PageLayoutV1 extends StatelessWidget {
                       child: CustomLoading(size: 30),
                     ),
                   ),
-                if (initialized)
-                  expanded
-                      ? Expanded(
-                          child: _buildMain(context),
-                        )
-                      : _buildMain(context),
+                if (initialized) _buildMain(context),
                 if (bottomWidget != null) bottomWidget!,
               ],
             ),
@@ -84,20 +81,17 @@ class PageLayoutV1 extends StatelessWidget {
   }
 
   Widget _buildMain(BuildContext context) {
-    return SingleChildScrollView(
-      controller: scrollController,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(height: defaultPadding),
-        if (title != null)
-          Text(
-            title!,
-            style: ProtonStyles.headline(
-              color: ProtonColors.textNorm,
-              fontSize: 24.0,
-            ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: defaultPadding),
+      if (title != null)
+        Text(
+          title!,
+          style: ProtonStyles.headline(
+            color: ProtonColors.textNorm,
+            fontSize: 24.0,
           ),
-        if (child != null) child!,
-      ]),
-    );
+        ),
+      if (child != null) child!,
+    ]);
   }
 }

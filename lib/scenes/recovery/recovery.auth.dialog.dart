@@ -49,7 +49,7 @@ Future<void> showAuthBottomSheet(
                   offset: const Offset(0, -20),
                   child: Center(
                     child: Text(S.of(context).password,
-                        style: ProtonStyles.subheadline(
+                        style: ProtonStyles.headline(
                             color: ProtonColors.textNorm),
                         textAlign: TextAlign.center),
                   ),
@@ -70,7 +70,7 @@ Future<void> showAuthBottomSheet(
                   Center(
                     child: Text(
                       S.of(context).two_factor_code,
-                      style: ProtonStyles.subheadline(
+                      style: ProtonStyles.headline(
                           color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),
@@ -120,7 +120,7 @@ Future<void> showAuthBottomSheet(
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            height: 48,
+            height: 55,
             width: max(
               330,
               MediaQuery.of(context).size.width - 110,
@@ -138,7 +138,7 @@ Future<void> showAuthBottomSheet(
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
             width: max(
               330,
               MediaQuery.of(context).size.width - 110,

@@ -19,7 +19,7 @@ class ButtonV5 extends StatelessWidget {
       required this.height,
       super.key,
       this.onPressed,
-      this.radius = 24.0,
+      this.radius = 40.0,
       this.elevation = 0.0,
       this.backgroundColor = const Color(0xFF6D4AFF),
       this.borderColor = Colors.transparent,

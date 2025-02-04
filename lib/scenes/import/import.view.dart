@@ -202,7 +202,7 @@ class ImportView extends ViewBase<ImportViewModel> {
                             color: ProtonColors.textInverted,
                           ),
                           backgroundColor: ProtonColors.protonBlue,
-                          height: 48),
+                          height: 55),
                       if (viewModel.isFirstWallet)
                         Column(children: [
                           const SizedBox(height: defaultPadding),

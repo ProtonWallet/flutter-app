@@ -28,224 +28,219 @@ class AddWalletAccountView extends ViewBase<AddWalletAccountViewModel> {
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
         headerWidget: CustomHeader(
-          title: S.of(context).add_wallet_account,
+          title: context.local.add_wallet_account,
           buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.all(0.0),
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Column(mainAxisSize: MainAxisSize.min, children: [
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Text(
-                  S.of(context).add_wallet_account_desc,
-                  style:
-                      ProtonStyles.body2Regular(color: ProtonColors.textWeak),
-                  textAlign: TextAlign.center,
-                )),
-            const SizedBox(height: 20),
-            Padding(
+          Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: TextFieldTextV2(
-                labelText: S.of(context).name,
-                maxLength: maxWalletNameSize,
-                textController: viewModel.newAccountNameController,
-                myFocusNode: viewModel.newAccountNameFocusNode,
-                validation: (String newAccountName) {
-                  return "";
-                },
-              ),
+              child: Text(
+                S.of(context).add_wallet_account_desc,
+                style: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+                textAlign: TextAlign.center,
+              )),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+            child: TextFieldTextV2(
+              labelText: S.of(context).name,
+              maxLength: maxWalletNameSize,
+              textController: viewModel.newAccountNameController,
+              myFocusNode: viewModel.newAccountNameFocusNode,
+              validation: (String newAccountName) {
+                return "";
+              },
             ),
-            ExpansionTile(
-                shape: const Border(),
-                title: Text(S.of(context).advanced_settings,
+          ),
+          ExpansionTile(
+              shape: const Border(),
+              title: Text(S.of(context).advanced_settings,
+                  style:
+                      ProtonStyles.body2Medium(color: ProtonColors.textWeak)),
+              iconColor: ProtonColors.textHint,
+              collapsedIconColor: ProtonColors.textHint,
+              children: [
+                Text(S.of(context).script_type,
                     style:
-                        ProtonStyles.body2Medium(color: ProtonColors.textWeak)),
-                iconColor: ProtonColors.textHint,
-                collapsedIconColor: ProtonColors.textHint,
-                children: [
-                  Text(S.of(context).script_type,
-                      style: ProtonStyles.body1Medium(
-                          color: ProtonColors.textNorm)),
-                  const SizedBox(height: 5),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding),
-                      child: Text(
-                        S.of(context).wallet_account_script_type_desc,
-                        style: ProtonStyles.body2Regular(
-                            color: ProtonColors.textWeak),
-                        textAlign: TextAlign.center,
-                      )),
-                  const SizedBox(height: 20),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: defaultPadding,
-                    ),
-                    child: DropdownButtonV2(
-                      labelText: S.of(context).script_type,
-                      width: MediaQuery.of(context).size.width -
-                          defaultPadding * 4,
-                      items: ScriptTypeInfo.scripts,
-                      itemsText:
-                          ScriptTypeInfo.scripts.map((v) => v.name).toList(),
-                      itemsMoreDetail: ScriptTypeInfo.scripts.map((v) {
-                        switch (v.bipVersion) {
-                          case 44:
-                            return S
-                                .of(context)
-                                .wallet_account_script_type_desc_bip44;
-                          case 49:
-                            return S
-                                .of(context)
-                                .wallet_account_script_type_desc_bip49;
-                          case 84:
-                            return S
-                                .of(context)
-                                .wallet_account_script_type_desc_bip84;
-                          case 86:
-                            return S
-                                .of(context)
-                                .wallet_account_script_type_desc_bip86;
-                          default:
-                            return "TODO";
-                        }
-                      }).toList(),
-                      valueNotifier:
-                          viewModel.newAccountScriptTypeValueNotifier,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Underline(
-                    onTap: () {
-                      ExternalUrl.shared.launchBlogAddressType();
-                    },
-                    color: ProtonColors.protonBlue,
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm)),
+                const SizedBox(height: 5),
+                Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: defaultPadding),
                     child: Text(
-                      S.of(context).learn_more,
-                      style: ProtonStyles.body2Medium(
-                        color: ProtonColors.protonBlue,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    S.of(context).wallet_account_index,
-                    style: ProtonStyles.body1Medium(
-                      color: ProtonColors.textNorm,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: defaultPadding,
-                    ),
-                    child: Text(
-                      S.of(context).wallet_account_index_desc,
+                      S.of(context).wallet_account_script_type_desc,
                       style: ProtonStyles.body2Regular(
-                        color: ProtonColors.textWeak,
-                      ),
+                          color: ProtonColors.textWeak),
                       textAlign: TextAlign.center,
-                    ),
+                    )),
+                const SizedBox(height: 20),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
                   ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: defaultPadding,
-                    ),
-                    child: TextFieldTextV2(
-                      labelText: S.of(context).wallet_account_index,
-                      maxLength: maxWalletNameSize,
-                      textController: viewModel.newAccountIndexController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^[0-9]\d*')),
-                      ],
-                      myFocusNode: viewModel.newAccountIndexFocusNode,
-                      validation: (String newAccountName) {
-                        return "";
-                      },
-                    ),
-                  ),
-                  Underline(
-                    onTap: () {
-                      ExternalUrl.shared.launchBlogAccountIndex();
-                    },
-                    color: ProtonColors.protonBlue,
-                    child: Text(
-                      S.of(context).learn_more,
-                      style: ProtonStyles.body2Medium(
-                        color: ProtonColors.protonBlue,
-                      ),
-                    ),
-                  ),
-                ]),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.only(top: 20),
-              margin: const EdgeInsets.symmetric(
-                horizontal: defaultButtonPadding,
-              ),
-              child: Column(children: [
-                ButtonV6(
-                  onPressed: () async {
-                    if (!viewModel.isAdding) {
-                      viewModel.isAdding = true;
-                      int newAccountIndex = 0;
-                      try {
-                        newAccountIndex = int.parse(
-                          viewModel.newAccountIndexController.text,
-                        );
-                      } catch (e) {
-                        // parse newAccountIndex failed, use default one
+                  child: DropdownButtonV2(
+                    labelText: S.of(context).script_type,
+                    width:
+                        MediaQuery.of(context).size.width - defaultPadding * 4,
+                    items: ScriptTypeInfo.scripts,
+                    itemsText:
+                        ScriptTypeInfo.scripts.map((v) => v.name).toList(),
+                    itemsMoreDetail: ScriptTypeInfo.scripts.map((v) {
+                      switch (v.bipVersion) {
+                        case 44:
+                          return S
+                              .of(context)
+                              .wallet_account_script_type_desc_bip44;
+                        case 49:
+                          return S
+                              .of(context)
+                              .wallet_account_script_type_desc_bip49;
+                        case 84:
+                          return S
+                              .of(context)
+                              .wallet_account_script_type_desc_bip84;
+                        case 86:
+                          return S
+                              .of(context)
+                              .wallet_account_script_type_desc_bip86;
+                        default:
+                          return "TODO";
                       }
-                      const accountNameExists = false;
-                      if (context.mounted) {
-                        if (!accountNameExists) {
-                          final isSuccess = await viewModel.addWalletAccount(
-                            viewModel.newAccountScriptTypeValueNotifier.value,
-                            viewModel.newAccountNameController.text.isNotEmpty
-                                ? viewModel.newAccountNameController.text
-                                : S.of(context).default_account,
-                            newAccountIndex,
-                          );
-                          if (context.mounted) {
-                            if (isSuccess) {
-                              Navigator.of(context).pop();
-                              context.showSnackbar(
-                                S.of(context).account_created,
-                              );
-                            }
+                    }).toList(),
+                    valueNotifier: viewModel.newAccountScriptTypeValueNotifier,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Underline(
+                  onTap: () {
+                    ExternalUrl.shared.launchBlogAddressType();
+                  },
+                  color: ProtonColors.protonBlue,
+                  child: Text(
+                    S.of(context).learn_more,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.protonBlue,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  S.of(context).wallet_account_index,
+                  style: ProtonStyles.body1Medium(
+                    color: ProtonColors.textNorm,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                  ),
+                  child: Text(
+                    S.of(context).wallet_account_index_desc,
+                    style: ProtonStyles.body2Regular(
+                      color: ProtonColors.textWeak,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: defaultPadding,
+                  ),
+                  child: TextFieldTextV2(
+                    labelText: S.of(context).wallet_account_index,
+                    maxLength: maxWalletNameSize,
+                    textController: viewModel.newAccountIndexController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^[0-9]\d*')),
+                    ],
+                    myFocusNode: viewModel.newAccountIndexFocusNode,
+                    validation: (String newAccountName) {
+                      return "";
+                    },
+                  ),
+                ),
+                Underline(
+                  onTap: () {
+                    ExternalUrl.shared.launchBlogAccountIndex();
+                  },
+                  color: ProtonColors.protonBlue,
+                  child: Text(
+                    S.of(context).learn_more,
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.protonBlue,
+                    ),
+                  ),
+                ),
+              ]),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.symmetric(
+              horizontal: defaultButtonPadding,
+            ),
+            child: Column(children: [
+              ButtonV6(
+                onPressed: () async {
+                  if (!viewModel.isAdding) {
+                    viewModel.isAdding = true;
+                    int newAccountIndex = 0;
+                    try {
+                      newAccountIndex = int.parse(
+                        viewModel.newAccountIndexController.text,
+                      );
+                    } catch (e) {
+                      // parse newAccountIndex failed, use default one
+                    }
+                    const accountNameExists = false;
+                    if (context.mounted) {
+                      if (!accountNameExists) {
+                        final isSuccess = await viewModel.addWalletAccount(
+                          viewModel.newAccountScriptTypeValueNotifier.value,
+                          viewModel.newAccountNameController.text.isNotEmpty
+                              ? viewModel.newAccountNameController.text
+                              : S.of(context).default_account,
+                          newAccountIndex,
+                        );
+                        if (context.mounted) {
+                          if (isSuccess) {
+                            Navigator.of(context).pop();
+                            context.showSnackbar(
+                              S.of(context).account_created,
+                            );
                           }
                         }
                       }
-                      viewModel.isAdding = false;
                     }
-                  },
-                  backgroundColor: ProtonColors.protonBlue,
-                  text: S.of(context).create_wallet_account,
-                  width: context.width,
-                  textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.textInverted,
-                  ),
-                  height: 48,
+                    viewModel.isAdding = false;
+                  }
+                },
+                backgroundColor: ProtonColors.protonBlue,
+                text: S.of(context).create_wallet_account,
+                width: context.width,
+                textStyle: ProtonStyles.body1Medium(
+                  color: ProtonColors.textInverted,
                 ),
-                SizedBoxes.box8,
-                ButtonV5(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                  },
-                  text: S.of(context).cancel,
-                  width: context.width,
-                  textStyle: ProtonStyles.body1Medium(
-                    color: ProtonColors.textNorm,
-                  ),
-                  backgroundColor: ProtonColors.interActionWeak,
-                  borderColor: ProtonColors.interActionWeak,
-                  height: 48,
+                height: 55,
+              ),
+              SizedBoxes.box8,
+              ButtonV5(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+                text: S.of(context).cancel,
+                width: context.width,
+                textStyle: ProtonStyles.body1Medium(
+                  color: ProtonColors.textNorm,
                 ),
-                SizedBoxes.box8,
-              ]),
-            ),
-          ]),
+                backgroundColor: ProtonColors.interActionWeak,
+                borderColor: ProtonColors.interActionWeak,
+                height: 55,
+              ),
+            ]),
+          ),
         ]),
       );
     });

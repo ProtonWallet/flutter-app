@@ -21,13 +21,6 @@ class AcceptTermsConditionView extends ViewBase<AcceptTermsConditionViewModel> {
       showHeader: false,
       backgroundColor: ProtonColors.white,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Align(
-            alignment: Alignment.centerRight,
-            child: CloseButtonV1(
-                backgroundColor: ProtonColors.backgroundNorm,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })),
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
@@ -38,7 +31,7 @@ class AcceptTermsConditionView extends ViewBase<AcceptTermsConditionViewModel> {
               ),
               Text(
                 S.of(context).welcome_to,
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -80,11 +73,11 @@ class AcceptTermsConditionView extends ViewBase<AcceptTermsConditionViewModel> {
                         },
                         text: S.of(context).continue_buttion,
                         width: MediaQuery.of(context).size.width,
-                        textStyle:
-                            ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                        textStyle: ProtonStyles.body1Medium(
+                            color: ProtonColors.textInverted),
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
-                        height: 48),
+                        height: 55),
                   ])),
             ]))
       ]),

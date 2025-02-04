@@ -119,7 +119,7 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
-                labelStyle: ProtonStyles.body2Regular(
+                labelStyle: ProtonStyles.body2Medium(
                     color: ProtonColors.textWeak),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),

@@ -26,7 +26,7 @@ class LoginAndSignupBtn extends StatelessWidget {
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.clear,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            height: 48,
+            height: 55,
             maximumSize: const Size(560, 48)),
         const SizedBox(height: 4),
         CupertinoButton(

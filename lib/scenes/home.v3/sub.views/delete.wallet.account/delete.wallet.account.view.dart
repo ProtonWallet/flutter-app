@@ -48,7 +48,7 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                     Text(
                       S.of(context).confirm_to_delete_wallet_account(
                           viewModel.accountMenuModel.label),
-                      style: ProtonStyles.subheadline(
+                      style: ProtonStyles.headline(
                         color: ProtonColors.textNorm,
                       ),
                       textAlign: TextAlign.center,
@@ -101,7 +101,7 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                       textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textInverted,
                       ),
-                      height: 48,
+                      height: 55,
                     ),
                   ],
                 ),

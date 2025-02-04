@@ -36,7 +36,7 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
           Center(
             child: Text(
               S.of(context).email_integration,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
             ),
           ),
           const SizedBox(height: 10),
@@ -124,7 +124,7 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
                     width: MediaQuery.of(context).size.width,
                     textStyle:
                         ProtonStyles.body1Medium(color: ProtonColors.white),
-                    height: 48),
+                    height: 55),
               ])),
         ],
       ),

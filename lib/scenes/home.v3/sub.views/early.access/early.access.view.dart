@@ -33,7 +33,7 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
               ),
               Text(
                 S.of(context).early_access_title,
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -96,7 +96,7 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                               color: ProtonColors.white),
                           backgroundColor: ProtonColors.protonBlue,
                           borderColor: ProtonColors.protonBlue,
-                          height: 48),
+                          height: 55),
                     const SizedBox(
                       height: 12,
                     ),
@@ -110,7 +110,7 @@ class EarlyAccessView extends ViewBase<EarlyAccessViewModel> {
                             color: ProtonColors.textNorm),
                         backgroundColor: ProtonColors.interActionWeak,
                         borderColor: ProtonColors.interActionWeak,
-                        height: 48),
+                        height: 55),
                   ])),
             ]))
       ]),

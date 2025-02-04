@@ -3,10 +3,12 @@ import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
@@ -34,6 +36,15 @@ class OnboardingGuideCoordinator extends Coordinator {
     );
   }
 
+  void showWelcomeProtonWallet(String email) {
+    final view = AcceptTermsConditionCoordinator(email).start();
+    showInBottomSheet(
+      view,
+      enableDrag: false,
+      isDismissible: false,
+    );
+  }
+
   @override
   void end() {}
 
@@ -42,6 +53,7 @@ class OnboardingGuideCoordinator extends Coordinator {
     final walletManager = serviceManager.get<WalletManager>();
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
+    final userManager = serviceManager.get<UserManager>();
 
     final viewModel = OnboardingGuideViewModelImpl(
       this,
@@ -50,6 +62,7 @@ class OnboardingGuideCoordinator extends Coordinator {
       dataProviderManager,
       walletListBloc,
       createWalletBloc,
+      userManager,
     );
     widget = OnboardingGuideView(
       viewModel,

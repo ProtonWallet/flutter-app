@@ -34,7 +34,7 @@ class SendFlowInviteSuccessSheet {
               const SizedBox(height: 20),
               Text(
                 S.of(context).invitation_sent_to(email),
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -54,7 +54,7 @@ class SendFlowInviteSuccessSheet {
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   backgroundColor: ProtonColors.interActionWeak,
                   borderColor: ProtonColors.interActionWeak,
-                  height: 48),
+                  height: 55),
             ]))
       ]);
     }));

@@ -46,7 +46,7 @@ void showLogoutErrorDialog(
                       color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.signalError,
                   width: 300,
-                  height: 48,
+                  height: 55,
                 ),
               ),
             ),

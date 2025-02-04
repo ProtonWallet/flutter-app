@@ -236,8 +236,9 @@ class HomeCoordinator extends Coordinator {
 
   void showOnboardingGuide(
     WalletListBloc walletListBloc,
-    CreateWalletBloc createWalletBloc,
-  ) {
+    CreateWalletBloc createWalletBloc, {
+    bool firstWallet = false,
+  }) {
     final view = OnboardingGuideCoordinator(
       walletListBloc,
       createWalletBloc,
@@ -245,6 +246,8 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
+      enableDrag: !firstWallet,
+      isDismissible: !firstWallet,
     );
   }
 

@@ -46,7 +46,7 @@ class OnRampTCSheet {
               const SizedBox(height: 40),
               Text(
                 S.of(context).disclaimer,
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
@@ -148,7 +148,7 @@ class OnRampTCSheet {
                             ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
-                        height: 48),
+                        height: 55),
                     const SizedBox(
                       height: 12,
                     ),
@@ -163,7 +163,7 @@ class OnRampTCSheet {
                             color: ProtonColors.textNorm),
                         backgroundColor: ProtonColors.interActionWeak,
                         borderColor: ProtonColors.interActionWeak,
-                        height: 48),
+                        height: 55),
                     const SizedBox(
                       height: 12,
                     ),

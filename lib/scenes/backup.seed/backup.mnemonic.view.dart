@@ -33,7 +33,7 @@ class BackupMnemonicView extends StatelessWidget {
             height: 167,
           ),
           Text(S.of(context).mnemonic_backup_content_title,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm)),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm)),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 20,

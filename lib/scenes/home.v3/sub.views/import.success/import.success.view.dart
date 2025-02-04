@@ -42,7 +42,7 @@ class ImportSuccessView extends ViewBase<ImportSuccessViewModel> {
                 Text(
                   S.of(context).welcome_to,
                   style:
-                      ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                      ProtonStyles.headline(color: ProtonColors.textNorm),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
@@ -71,7 +71,7 @@ class ImportSuccessView extends ViewBase<ImportSuccessViewModel> {
                               color: ProtonColors.textInverted),
                           backgroundColor: ProtonColors.protonBlue,
                           borderColor: ProtonColors.protonBlue,
-                          height: 48),
+                          height: 55),
                     ])),
               ]))
         ]);

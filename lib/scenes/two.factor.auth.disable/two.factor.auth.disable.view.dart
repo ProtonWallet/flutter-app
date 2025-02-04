@@ -37,7 +37,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
       ),
       Text(
         S.of(context).setting_2fa_disable,
-        style: ProtonStyles.headline(color: ProtonColors.textNorm),
+        style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
         textAlign: TextAlign.center,
       ),
       const SizedBox(
@@ -82,8 +82,9 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
             width: context.width,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            height: 48,
+            textStyle:
+                ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -95,7 +96,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),

@@ -54,7 +54,7 @@ Future<void> showMnemonicDialog(
                   child: Text(
                     S.of(context).enable_recovery_title,
                     style:
-                        ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                        ProtonStyles.headline(color: ProtonColors.textNorm),
                   ),
                 ),
               ),
@@ -161,7 +161,7 @@ Future<void> showMnemonicDialog(
                   color: ProtonColors.textInverted,
                 ),
                 width: MediaQuery.of(context).size.width,
-                height: 48,
+                height: 55,
               ),
             ],
           ),

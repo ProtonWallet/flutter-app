@@ -47,7 +47,7 @@ class RbfView extends ViewBase<RbfViewModel> {
             ),
             Text(
               S.of(context).rbf_title,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
@@ -185,7 +185,7 @@ class RbfView extends ViewBase<RbfViewModel> {
                 color: ProtonColors.textInverted,
               ),
               borderColor: ProtonColors.protonBlue,
-              height: 48,
+              height: 55,
             ),
           ],
         ),
