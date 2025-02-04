@@ -24,7 +24,7 @@ class ButtonV6 extends StatefulWidget {
     required this.height,
     super.key,
     this.onPressed,
-    this.radius = 24.0,
+    this.radius = 40.0,
     this.backgroundColor = const Color(0xFF6D4AFF),
     this.borderColor = Colors.transparent,
     this.textStyle = const TextStyle(

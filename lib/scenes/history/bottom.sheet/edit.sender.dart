@@ -54,7 +54,7 @@ class EditSenderSheet {
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(S.of(context).unknown_sender,
-                    style: ProtonStyles.subheadline(
+                    style: ProtonStyles.headline(
                         color: ProtonColors.textNorm))),
             const SizedBox(height: 10),
             Padding(
@@ -136,7 +136,7 @@ class EditSenderSheet {
                     width: MediaQuery.of(context).size.width,
                     textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textInverted),
-                    height: 48)),
+                    height: 55)),
             SizedBox(
               height: MediaQuery.of(context).viewInsets.bottom,
             ),

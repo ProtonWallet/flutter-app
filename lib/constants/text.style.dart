@@ -16,13 +16,14 @@ class ProtonStyles {
 
   static TextStyle headline({
     Color? color,
-    double fontSize = 20.0,
+    double fontSize = 22.0,
+    double fontVariation = 600.0,
   }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
       fontSize: fontSize,
-      fontVariations: const <FontVariation>[FontVariation('wght', 700.0)],
-      height: 24 / 20,
+      fontVariations: <FontVariation>[FontVariation('wght', fontVariation)],
+      height: 24 / fontSize,
       letterSpacing: 0,
       color: color,
     );
@@ -30,13 +31,14 @@ class ProtonStyles {
 
   static TextStyle subheadline({
     Color? color,
+    double fontSize = 20.0,
     double fontVariation = 600.0,
   }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
-      fontSize: 20,
+      fontSize: fontSize,
       fontVariations: <FontVariation>[FontVariation('wght', fontVariation)],
-      height: 24 / 20,
+      height: 24 / fontSize,
       letterSpacing: 0,
       color: color,
     );
@@ -96,7 +98,7 @@ class ProtonStyles {
       fontFamily: FontFamily.inter,
       fontSize: fontSize,
       fontVariations: const <FontVariation>[FontVariation('wght', 500.0)],
-      height: 20 / 14,
+      height: 20 / fontSize,
       letterSpacing: 0,
       color: color,
     );
@@ -110,7 +112,7 @@ class ProtonStyles {
       fontFamily: FontFamily.inter,
       fontSize: fontSize,
       fontVariations: const <FontVariation>[FontVariation('wght', 400.0)],
-      height: 20 / 14,
+      height: 20 / fontSize,
       letterSpacing: 0,
       color: color,
     );

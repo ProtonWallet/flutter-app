@@ -98,7 +98,7 @@ class RecipientDetailSheet {
                           color: ProtonColors.textNorm),
                       backgroundColor: ProtonColors.backgroundNorm,
                       borderColor: ProtonColors.backgroundNorm,
-                      height: 48),
+                      height: 55),
                   const SizedBox(height: 8),
                 ],
               )

@@ -25,6 +25,7 @@ class WalletAccountAddressListView
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
+        height: MediaQuery.of(context).size.height - 60,
         headerWidget: CustomHeader(
           title: viewModel.addressListType == AddressListType.receiveAddress
               ? S.of(context).receive_addresses
@@ -47,7 +48,7 @@ class WalletAccountAddressListView
                   : S.of(context).view_receive_addresses,
               width: min(MediaQuery.of(context).size.width, 260),
               enable: viewModel.initialized && !viewModel.loadingAddress,
-              height: 48,
+              height: 55,
               backgroundColor: ProtonColors.protonBlue,
               textStyle: ProtonStyles.body1Medium(
                 color: ProtonColors.textInverted,

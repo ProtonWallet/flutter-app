@@ -43,7 +43,7 @@ class SendFlowInviteSheet {
               ),
               Text(
                 S.of(context).send_invite_to(email),
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -84,7 +84,7 @@ class SendFlowInviteSheet {
                       ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
-                  height: 48),
+                  height: 55),
             ]))
       ]);
     }));

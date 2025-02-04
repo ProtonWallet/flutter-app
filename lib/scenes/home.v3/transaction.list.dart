@@ -211,7 +211,9 @@ class TransactionList extends StatelessWidget {
                               child: Text(
                                 S.of(context).start_your_journey,
                                 style: ProtonStyles.subheadline(
-                                    color: ProtonColors.textNorm),
+                                  color: ProtonColors.textNorm,
+                                  fontSize: 18.0,
+                                ),
                                 textAlign: TextAlign.center,
                               )),
                           const SizedBox(

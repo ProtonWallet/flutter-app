@@ -46,7 +46,7 @@ class CustomHeader extends StatelessWidget {
               flex: 3,
               child: Text(
                 title ?? "",
-                style: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
             ),

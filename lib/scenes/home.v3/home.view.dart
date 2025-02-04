@@ -378,7 +378,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       ProtonStyles.body1Medium(
                                                           color: ProtonColors
                                                               .protonBlue),
-                                                  height: 48),
+                                                  height: 55),
                                               const SizedBox(
                                                 width: 10,
                                               ),
@@ -403,7 +403,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       ProtonStyles.body1Medium(
                                                           color: ProtonColors
                                                               .textInverted),
-                                                  height: 48),
+                                                  height: 55),
                                             ]),
                                         const SizedBox(
                                           height: 10,
@@ -482,18 +482,6 @@ class HomeView extends ViewBase<HomeViewModel> {
     WalletTransactionState walletTransactionState,
     WalletListState walletListState,
   ) {
-    if (walletListState.initialized && walletListState.walletsModel.isEmpty) {
-      // show onboarding
-      return Center(
-        child: Underline(
-          onTap: viewModel.setOnBoard,
-          child: Text(
-            S.of(context).wallet_setup,
-            style: ProtonStyles.subheadline(color: ProtonColors.protonBlue),
-          ),
-        ),
-      );
-    }
     if (accountName.isEmpty || walletTransactionState.syncedWithError) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(

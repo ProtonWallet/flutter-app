@@ -83,7 +83,7 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                         Text(
                             S.of(context).confirm_to_delete_wallet(
                                 viewModel.walletMenuModel.walletName),
-                            style: ProtonStyles.subheadline(
+                            style: ProtonStyles.headline(
                               color: ProtonColors.textNorm,
                             ),
                             textAlign: TextAlign.center),
@@ -131,7 +131,7 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             ),
                             backgroundColor: ProtonColors.interActionWeak,
                             borderColor: ProtonColors.interActionWeak,
-                            height: 48,
+                            height: 55,
                           );
                         }),
                         const SizedBox(height: 8),
@@ -157,7 +157,7 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                               textStyle: ProtonStyles.body1Medium(
                                 color: ProtonColors.white,
                               ),
-                              height: 48,
+                              height: 55,
                             );
                           },
                         ),

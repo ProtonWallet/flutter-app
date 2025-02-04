@@ -54,7 +54,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               S.of(context).buy_bitcoin,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -93,7 +93,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
                       ProtonStyles.body1Medium(color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
-                  height: 48,
+                  height: 55,
                 ),
                 const SizedBox(height: 24),
               ]),

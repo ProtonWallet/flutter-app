@@ -55,7 +55,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                 S
                     .of(context)
                     .invitation_sent_to(viewModel.emailController.text),
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -75,7 +75,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                       ProtonStyles.body1Medium(color: ProtonColors.white),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
-                  height: 48),
+                  height: 55),
               const SizedBox(height: 8),
               ButtonV5(
                   onPressed: () async {
@@ -87,7 +87,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                   backgroundColor: ProtonColors.interActionWeak,
                   borderColor: ProtonColors.interActionWeak,
-                  height: 48),
+                  height: 55),
             ]))
       ]);
     });
@@ -107,7 +107,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
               ),
               Text(
                 S.of(context).exclusive_invites,
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
@@ -218,7 +218,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                           ? ProtonColors.interActionWeak
                           : ProtonColors.protonBlue,
                       enable: viewModel.emailController.text.isNotEmpty,
-                      height: 48),
+                      height: 55),
             ]))
       ]);
     });

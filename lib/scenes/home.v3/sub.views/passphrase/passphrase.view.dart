@@ -23,7 +23,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
         const SizedBox(height: 10),
         Text(
           viewModel.walletName,
-          style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+          style: ProtonStyles.headline(color: ProtonColors.textNorm),
         ),
         const SizedBox(height: 10),
         Text(
@@ -85,7 +85,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
               textStyle: ProtonStyles.body1Medium(
                 color: ProtonColors.textInverted,
               ),
-              height: 48),
+              height: 55),
         ),
 
         /// avoid softkeyboard overlay on page

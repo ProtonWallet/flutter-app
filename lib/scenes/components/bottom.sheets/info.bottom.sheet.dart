@@ -71,7 +71,7 @@ class InfoBottomSheet {
                       textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textInverted,
                       ),
-                      height: 48,
+                      height: 55,
                     ),
                   ],
                 ),

@@ -26,6 +26,7 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
+import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -609,7 +610,19 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> setOnBoard() async {
-    coordinator.showOnboardingGuide(walletListBloc, createWalletBloc);
+    bool firstWallet = false;
+    final List<WalletData>? wallets =
+        await walletListBloc.walletsDataProvider.getWallets();
+    if (wallets == null) {
+      firstWallet = true;
+    } else if (wallets.isEmpty) {
+      firstWallet = true;
+    }
+    coordinator.showOnboardingGuide(
+      walletListBloc,
+      createWalletBloc,
+      firstWallet: firstWallet,
+    );
   }
 
   @override

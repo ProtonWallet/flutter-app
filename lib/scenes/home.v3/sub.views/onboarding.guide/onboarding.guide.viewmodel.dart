@@ -15,6 +15,7 @@ import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
+import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -29,18 +30,21 @@ import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guid
 
 abstract class OnboardingGuideViewModel
     extends ViewModel<OnboardingGuideCoordinator> {
+  /// Managers
   final WalletManager walletManager;
   final AppStateManager appStateManager;
   final DataProviderManager dataProviderManager;
+
+  /// blocs
   final WalletListBloc walletListBloc;
   final CreateWalletBloc createWalletBloc;
+
+  /// View flags and parameters
   bool firstWallet = false;
   bool initialized = false;
-
-  String errorMessage = "";
-
   bool passphraseMatched = true;
   bool isCreatingWallet = false;
+  String errorMessage = "";
 
   List<ProtonAddress> protonAddresses = [];
 
@@ -81,7 +85,11 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
     super.dataProviderManager,
     super.walletListBloc,
     super.createWalletBloc,
+    this.userManager,
   );
+
+  /// Managers
+  final UserManager userManager;
 
   Future<void> loadProtonAddresses() async {
     try {
@@ -118,7 +126,14 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
   }
 
   @override
-  Future<void> move(NavID to) async {}
+  Future<void> move(NavID to) async {
+    switch (to) {
+      case NavID.acceptTermsConditionDialog:
+        coordinator.showWelcomeProtonWallet(getUserEmail());
+      default:
+        break;
+    }
+  }
 
   @override
   void updateCreatingWalletStatus(creating) {
@@ -264,5 +279,11 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
       return false;
     }
     return true;
+  }
+
+  String getUserEmail() {
+    final userInfo = userManager.userInfo;
+    return dataProviderManager.userDataProvider.user.protonUser?.email ??
+        userInfo.userMail;
   }
 }

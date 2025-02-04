@@ -65,7 +65,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             borderColor: ProtonColors.protonBlue,
             textStyle:
                 ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            height: 48,
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -77,7 +77,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),
@@ -105,7 +105,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
         ),
         Text(
           S.of(context).setting_2fa_setup,
-          style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+          style: ProtonStyles.headline(color: ProtonColors.textNorm),
           textAlign: TextAlign.center,
         ),
         const SizedBox(
@@ -144,7 +144,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             borderColor: ProtonColors.protonBlue,
             textStyle:
                 ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            height: 48,
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -156,7 +156,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),
@@ -221,7 +221,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
-            height: 48,
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -233,7 +233,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),
@@ -383,7 +383,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
-            height: 48,
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -395,7 +395,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),
@@ -499,7 +499,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.white),
-            height: 48,
+            height: 55,
           ),
           SizedBoxes.box12,
           ButtonV5(
@@ -511,7 +511,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             backgroundColor: ProtonColors.interActionWeak,
             borderColor: ProtonColors.interActionWeak,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-            height: 48,
+            height: 55,
           ),
         ]),
       ),
@@ -521,7 +521,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
           children: [
             Text(
               S.of(context).setting_2fa_setup,
-              style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
               textAlign: TextAlign.center,
             ),
             const SizedBox(

@@ -91,7 +91,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
               Text(
                 S.of(context).buy,
                 textAlign: TextAlign.center,
-                style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+                style: ProtonStyles.headline(color: ProtonColors.textNorm),
               ),
 
               /// switch button [buy / sell]
@@ -624,7 +624,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                             backgroundColor: ProtonColors.protonBlue,
                             textStyle: ProtonStyles.body1Medium(
                                 color: ProtonColors.textInverted),
-                            height: 48);
+                            height: 55);
                       },
                     ),
                   ],

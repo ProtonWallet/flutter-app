@@ -36,7 +36,7 @@ class BackupIntroduceView extends StatelessWidget {
                     ),
                     Text(
                       S.of(context).backup_introduce_title,
-                      style: ProtonStyles.subheadline(
+                      style: ProtonStyles.headline(
                           color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),

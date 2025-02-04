@@ -196,6 +196,10 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
           walletsModel.add(walletModel);
         }
         emit(state.copyWith(initialized: true, walletsModel: walletsModel));
+        if (walletsModel.isNotEmpty) {
+          /// reset flag so we can pop onboarding dialog when no wallet
+          hasShowOnboard = false;
+        }
         if (!hasCheckFullSynced) {
           hasCheckFullSynced = true;
           for (WalletMenuModel walletMenuModel in walletsModel) {
