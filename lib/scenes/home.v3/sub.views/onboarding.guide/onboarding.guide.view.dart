@@ -45,9 +45,6 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
           padding: const EdgeInsets.all(0.0),
         ),
         initialized: viewModel.initialized,
-        expanded: viewModel.firstWallet
-            ? MediaQuery.of(context).size.height < 400
-            : MediaQuery.of(context).size.height < 1000, // need expansion
         child: BlocBuilder<WalletListBloc, WalletListState>(
             bloc: viewModel.walletListBloc,
             builder: (context, state) {

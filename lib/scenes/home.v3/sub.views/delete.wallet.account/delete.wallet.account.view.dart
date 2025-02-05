@@ -22,7 +22,6 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
-        expanded: context.height < 500,
         headerWidget: CustomHeader(
           buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.all(0.0),

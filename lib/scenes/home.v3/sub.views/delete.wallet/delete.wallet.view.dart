@@ -25,7 +25,6 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      expanded: MediaQuery.of(context).size.height < 500,
       headerWidget: CustomHeader(
         buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.all(0.0),

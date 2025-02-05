@@ -92,6 +92,11 @@ class PageLayoutV1 extends StatelessWidget {
           ),
         ),
       if (child != null) child!,
+
+      /// avoid softkeyboard overlay on page
+      SizedBox(
+        height: MediaQuery.of(context).viewInsets.bottom,
+      ),
     ]);
   }
 }

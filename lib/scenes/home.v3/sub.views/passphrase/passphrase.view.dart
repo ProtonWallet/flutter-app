@@ -18,7 +18,6 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
   Widget build(BuildContext context) {
     return PageLayoutV1(
       showHeader: false,
-      expanded: false,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         const SizedBox(height: 10),
         Text(
@@ -86,11 +85,6 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
                 color: ProtonColors.textInverted,
               ),
               height: 55),
-        ),
-
-        /// avoid softkeyboard overlay on page
-        SizedBox(
-          height: MediaQuery.of(context).viewInsets.bottom,
         ),
       ]),
     );

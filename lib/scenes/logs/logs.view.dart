@@ -18,7 +18,6 @@ class LogsView extends ViewBase<LogsViewModel> {
         title: "Application logs",
         buttonDirection: AxisDirection.right,
       ),
-      expanded: false,
       child: viewModel.files.isEmpty
           ? const Center(
               child: Text('No files found in the app logs directory.'))
