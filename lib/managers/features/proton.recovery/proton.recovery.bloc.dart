@@ -185,7 +185,15 @@ class ProtonRecoveryBloc
             loginPassword: loginPassword,
             twofa: loginTwoFa,
           );
-          userDataProvider.enabledRecovery(false);
+          bool enabledRecovery = false;
+
+          /// check if user has enable device recovery, which is consider as other recovery method
+          if (userDataProvider.user.protonUserSettings != null) {
+            if (userDataProvider.user.protonUserSettings!.deviceRecovery == 1) {
+              enabledRecovery = true;
+            }
+          }
+          userDataProvider.enabledRecovery(enabledRecovery);
           emit(state.copyWith(
             isLoading: false,
             isRecoveryEnabled: false,

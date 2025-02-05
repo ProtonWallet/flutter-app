@@ -26,7 +26,6 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
               Navigator.of(context).pop();
             }),
       ),
-      expanded: viewModel.userAddresses.length > 5,
       initialized: viewModel.initialized,
       backgroundColor: ProtonColors.white,
       child: Column(

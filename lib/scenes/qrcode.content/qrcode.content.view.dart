@@ -23,7 +23,6 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
-        expanded: false,
         headerWidget: CustomHeader(
           title: getTitle(context),
           buttonDirection: AxisDirection.left,

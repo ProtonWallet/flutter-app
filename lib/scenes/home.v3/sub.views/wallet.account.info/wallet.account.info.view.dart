@@ -14,7 +14,6 @@ class WalletAccountInfoView extends ViewBase<WalletAccountInfoViewModel> {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return PageLayoutV1(
-        expanded: false,
         showHeader: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
