@@ -79,18 +79,21 @@ class BackupMnemonicView extends StatelessWidget {
         ],
       ))),
       Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-          child: ButtonV5(
-              onPressed: () {
-                onPressed?.call();
-                Navigator.pop(context);
-              },
-              backgroundColor: ProtonColors.protonBlue,
-              text: S.of(context).done,
-              width: MediaQuery.of(context).size.width,
-              textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-              radius: 40,
-              height: 52)),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+        child: ButtonV5(
+          onPressed: () {
+            onPressed?.call();
+            Navigator.pop(context);
+          },
+          backgroundColor: ProtonColors.protonBlue,
+          text: S.of(context).done,
+          width: MediaQuery.of(context).size.width,
+          textStyle: ProtonStyles.body1Medium(
+            color: ProtonColors.textInverted,
+          ),
+          height: 52,
+        ),
+      ),
     ]));
   }
 }

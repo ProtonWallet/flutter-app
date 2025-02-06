@@ -8,34 +8,50 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/rust/api/api_service/unleash_client.dart';
 
-class UnleashDataProvider extends DataProvider {
-  /// unleash client
-  late UnleashClient unleashClient;
+/// Enum for feature flags
+enum UnleashFeature {
+  walletFlutterLogInternal,
+  walletMempoolRecommendedFees,
+  walletMobileClientDebugMode,
+  walletEarlyAccess,
+  disableBuyMobile,
+}
 
-  /// api client
+/// Extension to get feature names
+extension UnleashFeatureExt on UnleashFeature {
+  String get name {
+    switch (this) {
+      case UnleashFeature.walletFlutterLogInternal:
+        return "WalletFlutterLogInternal";
+      case UnleashFeature.walletMempoolRecommendedFees:
+        return "WalletMempoolRecommendedFees";
+      case UnleashFeature.walletMobileClientDebugMode:
+        return "WalletMobileClientDebugMode";
+      case UnleashFeature.walletEarlyAccess:
+        return "WalletEarlyAccess";
+      case UnleashFeature.disableBuyMobile:
+        return "DisableBuyMobile";
+    }
+  }
+}
+
+class UnleashDataProvider extends DataProvider {
+  /// Unleash client for feature toggles
+  late final UnleashClient unleashClient;
+
+  /// API client for feature flags
   final FrbUnleashClient frbUnleashClient;
 
-  /// api env
+  /// API environment configuration
   final ApiEnv apiEnv;
 
   /// refresh interval
   final duration = const Duration(minutes: 2).inSeconds;
 
-  /// const feature names
-  static const String walletFlutterLogInternal = "WalletFlutterLogInternal";
-  static const String walletMempoolRecommendedFees =
-      "WalletMempoolRecommendedFees";
-  static const String walletMobileClientDebugMode =
-      "WalletMobileClientDebugMode";
-  static const String walletEarlyAccess = "WalletEarlyAccess";
+  /// Timer for periodic refresh
+  Timer? _refreshTimer;
 
-  /// timer for job guardian
-  Timer? timer;
-
-  UnleashDataProvider(
-    this.apiEnv,
-    this.frbUnleashClient,
-  ) {
+  UnleashDataProvider(this.apiEnv, this.frbUnleashClient) {
     final hostApiPath = apiEnv.apiPath;
     const appName = 'ProtonWallet';
     unleashClient = UnleashClient(
@@ -52,7 +68,11 @@ class UnleashDataProvider extends DataProvider {
             response.statusCode,
           );
         });
+    _setupUnleashListeners();
+  }
 
+  /// Sets up Unleash event listeners
+  void _setupUnleashListeners() {
     unleashClient.on('ready', (value) {
       if (unleashClient.isEnabled('WalletFirstFlag')) {
         logger.i('WalletFirstFlag is enabled');
@@ -78,53 +98,47 @@ class UnleashDataProvider extends DataProvider {
     });
   }
 
+  /// Starts the Unleash client and sets up auto-refresh
   Future<void> start() async {
     await unleashClient.start();
-    if (timer == null || timer?.isActive == false) {
-      timer = Timer.periodic(Duration(seconds: duration), (timer) {
-        start();
-      });
+    _startPeriodicRefresh();
+  }
+
+  /// Starts periodic refresh if not already running
+  void _startPeriodicRefresh() {
+    if (_refreshTimer == null || !_refreshTimer!.isActive) {
+      _refreshTimer = Timer.periodic(
+        Duration(seconds: duration),
+        (_) => unleashClient.start(),
+      );
     }
   }
 
-  Future<void> getTest() async {
-    if (unleashClient.isEnabled('WalletFirstFlag')) {
-      logger.i('proxy.demo is enabled');
-    } else {
-      logger.i('proxy.demo is disabled');
-    }
-  }
-
+  /// Stops and cleans up resources
   @override
   Future<void> clear() async {
-    final Timer? timer = this.timer;
-    if (timer != null && timer.isActive) {
-      timer.cancel();
-      this.timer = null;
-    }
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
     unleashClient.stop();
   }
 
   @override
   Future<void> reload() async {}
 
-  bool isTraceLoggerEnabled() {
-    if (kDebugMode) {
-      return true;
-    }
-    final enableTrace = unleashClient.isEnabled(walletFlutterLogInternal);
-    return enableTrace;
+  /// Generic method to check if a feature flag is enabled
+  bool isFeatureEnabled(UnleashFeature feature) {
+    return unleashClient.isEnabled(feature.name);
   }
 
-  bool isUsingMempoolFees() {
-    return unleashClient.isEnabled(walletMempoolRecommendedFees);
-  }
-
-  bool isMobileClientDebugMode() {
-    return unleashClient.isEnabled(walletMobileClientDebugMode);
-  }
-
-  bool isWalletEarlyAccess() {
-    return unleashClient.isEnabled(walletEarlyAccess);
-  }
+  /// Check specific feature flags
+  bool isTraceLoggerEnabled() =>
+      kDebugMode || isFeatureEnabled(UnleashFeature.walletFlutterLogInternal);
+  bool isUsingMempoolFees() =>
+      isFeatureEnabled(UnleashFeature.walletMempoolRecommendedFees);
+  bool isMobileClientDebugMode() =>
+      isFeatureEnabled(UnleashFeature.walletMobileClientDebugMode);
+  bool isWalletEarlyAccess() =>
+      isFeatureEnabled(UnleashFeature.walletEarlyAccess);
+  bool isBuyMobileDisabled() =>
+      isFeatureEnabled(UnleashFeature.disableBuyMobile);
 }

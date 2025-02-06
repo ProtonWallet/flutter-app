@@ -224,8 +224,9 @@ class UserSettingsDataProvider extends DataProvider {
   Future<void> updateReceiveInviterNotification(isEnable) async {
     try {
       await settingsClient.receiveNotificationEmail(
-          emailType: UserReceiveNotificationEmailTypes.notificationToInviter,
-          isEnable: isEnable);
+        emailType: UserReceiveNotificationEmailTypes.notificationToInviter,
+        isEnable: isEnable,
+      );
     } catch (e, stacktrace) {
       Sentry.captureException(e, stackTrace: stacktrace);
     }

@@ -4,7 +4,6 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -53,8 +52,7 @@ Future<void> showMnemonicDialog(
                 child: Center(
                   child: Text(
                     S.of(context).enable_recovery_title,
-                    style:
-                        ProtonStyles.headline(color: ProtonColors.textNorm),
+                    style: ProtonStyles.headline(color: ProtonColors.textNorm),
                   ),
                 ),
               ),

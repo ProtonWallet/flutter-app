@@ -6,7 +6,6 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.viewmodel.dart';

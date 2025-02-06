@@ -36,8 +36,8 @@ class BackupIntroduceView extends StatelessWidget {
                     ),
                     Text(
                       S.of(context).backup_introduce_title,
-                      style: ProtonStyles.headline(
-                          color: ProtonColors.textNorm),
+                      style:
+                          ProtonStyles.headline(color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
@@ -82,8 +82,9 @@ class BackupIntroduceView extends StatelessWidget {
             backgroundColor: ProtonColors.protonBlue,
             text: S.of(context).view_wallet_mnemonic,
             width: MediaQuery.of(context).size.width,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
-            radius: 40,
+            textStyle: ProtonStyles.body1Medium(
+              color: ProtonColors.textInverted,
+            ),
             height: 52,
           ),
         ),

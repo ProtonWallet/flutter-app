@@ -14,12 +14,16 @@ class CloseButtonV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-        radius: 18,
-        backgroundColor: backgroundColor ?? ProtonColors.textInverted,
-        child: IconButton(
-          icon:
-              Icon(Icons.close_rounded, color: ProtonColors.textNorm, size: 16),
-          onPressed: onPressed,
-        ));
+      radius: 18,
+      backgroundColor: backgroundColor ?? ProtonColors.textInverted,
+      child: IconButton(
+        icon: Icon(
+          Icons.close_rounded,
+          color: ProtonColors.textNorm,
+          size: 16,
+        ),
+        onPressed: onPressed,
+      ),
+    );
   }
 }

@@ -11,6 +11,7 @@ class ProtonColors {
 
   /// text colors
   static Color textNorm = const Color(0xFF0C0C14);
+  static Color textDisable = const Color(0xffCED0DE);
   static Color textHint = const Color(0xFF9395A4);
   static Color textWeak = const Color(0xFF535964);
   static Color textInverted = const Color(0xFFFFFFFF);

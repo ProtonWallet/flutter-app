@@ -38,6 +38,7 @@ import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinato
 import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/transaction.addresses.switch.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/unavailable/buying.unavailable.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
 import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
@@ -299,6 +300,16 @@ class HomeCoordinator extends Coordinator {
     final view =
         TransactionAddressesSwitchCoordinator(accountMenuModel).start();
     showInBottomSheet(view);
+  }
+
+  void showBuyUnavailableAlert() {
+    final view = BuyingUnavailableCoordinator().start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.white,
+      enableDrag: false,
+      isDismissible: false,
+    );
   }
 
   @override

@@ -8,29 +8,36 @@ class ButtonV5 extends StatelessWidget {
   final Color backgroundColor;
   final Color borderColor;
   final TextStyle textStyle;
+  final TextStyle? textDisableStyle;
   final VoidCallback? onPressed;
+  final VoidCallback? onDisablePressed;
+  final bool disableWithAction;
   final bool enable;
   final double? elevation;
   final Size? maximumSize;
 
-  const ButtonV5(
-      {required this.text,
-      required this.width,
-      required this.height,
-      super.key,
-      this.onPressed,
-      this.radius = 40.0,
-      this.elevation = 0.0,
-      this.backgroundColor = const Color(0xFF6D4AFF),
-      this.borderColor = Colors.transparent,
-      this.textStyle = const TextStyle(
-        color: Colors.white,
-        fontSize: 14,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w400,
-      ),
-      this.enable = true,
-      this.maximumSize = Size.infinite});
+  const ButtonV5({
+    required this.text,
+    required this.width,
+    required this.height,
+    super.key,
+    this.onPressed,
+    this.onDisablePressed,
+    this.radius = 40.0,
+    this.elevation = 0.0,
+    this.backgroundColor = const Color(0xFF6D4AFF),
+    this.borderColor = Colors.transparent,
+    this.textStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontFamily: 'Inter',
+      fontWeight: FontWeight.w400,
+    ),
+    this.textDisableStyle,
+    this.enable = true,
+    this.disableWithAction = false,
+    this.maximumSize = Size.infinite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +55,11 @@ class ButtonV5 extends StatelessWidget {
           ),
           elevation: elevation,
         ),
-        onPressed: enable ? onPressed : () {},
+        onPressed:
+            enable ? (disableWithAction ? onDisablePressed : onPressed) : () {},
         child: Text(
           text,
-          style: textStyle,
+          style: disableWithAction ? textDisableStyle : textStyle,
         ),
       ),
       if (!enable)

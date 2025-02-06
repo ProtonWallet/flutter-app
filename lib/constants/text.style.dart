@@ -29,6 +29,21 @@ class ProtonStyles {
     );
   }
 
+  static TextStyle headingSmallSemiBold({
+    Color? color,
+    double fontSize = 22.0,
+    double fontVariation = 600.0,
+  }) {
+    return TextStyle(
+      fontFamily: FontFamily.inter,
+      fontSize: fontSize,
+      fontVariations: <FontVariation>[FontVariation('wght', fontVariation)],
+      height: 32 / fontSize,
+      letterSpacing: 0,
+      color: color,
+    );
+  }
+
   static TextStyle subheadline({
     Color? color,
     double fontSize = 20.0,
@@ -62,6 +77,17 @@ class ProtonStyles {
       fontSize: 16,
       fontVariations: const <FontVariation>[FontVariation('wght', 500.0)],
       height: 24 / 16,
+      letterSpacing: 0,
+      color: color,
+    );
+  }
+
+  static TextStyle bodySmallSemibold({Color? color}) {
+    return TextStyle(
+      fontFamily: FontFamily.inter,
+      fontSize: 14,
+      fontVariations: const <FontVariation>[FontVariation('wght', 500.0)],
+      height: 20 / 14,
       letterSpacing: 0,
       color: color,
     );

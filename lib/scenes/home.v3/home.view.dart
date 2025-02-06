@@ -15,6 +15,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
@@ -34,7 +35,6 @@ import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
 import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
 import 'package:wallet/scenes/components/home/btc.actions.view.dart';
-import 'package:wallet/scenes/components/underline.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -125,11 +125,16 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     BtcTitleActionsView(
                                         initialized:
                                             walletListState.initialized,
+                                        disableBuy:
+                                            viewModel.isBuyMobileDisabled,
                                         onSend: () {
                                           viewModel.move(NavID.send);
                                         },
                                         onBuy: () {
                                           viewModel.move(NavID.buy);
+                                        },
+                                        onDisabledBuy: () {
+                                          viewModel.move(NavID.buyUnavailable);
                                         },
                                         onReceive: () {
                                           move(context, NavID.receive);
@@ -357,6 +362,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               ButtonV5(
+                                                  enable: walletListState
+                                                      .initialized,
                                                   onPressed: () {
                                                     viewModel
                                                         .move(NavID.receive);
@@ -364,30 +371,41 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   backgroundColor:
                                                       ProtonColors.white,
                                                   text: S.of(context).receive,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width >
-                                                          424
+                                                  width: context.width > 424
                                                       ? 180
-                                                      : MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2 -
+                                                      : context.width / 2 -
                                                           defaultPadding * 2,
                                                   textStyle:
                                                       ProtonStyles.body1Medium(
-                                                          color: ProtonColors
-                                                              .protonBlue),
+                                                    color:
+                                                        ProtonColors.protonBlue,
+                                                  ),
                                                   height: 55),
                                               const SizedBox(
                                                 width: 10,
                                               ),
                                               ButtonV5(
+                                                  enable: walletListState
+                                                      .initialized,
                                                   onPressed: () {
                                                     viewModel.move(NavID.buy);
                                                   },
-                                                  backgroundColor:
-                                                      ProtonColors.black,
+                                                  onDisablePressed: () {
+                                                    viewModel.move(
+                                                        NavID.buyUnavailable);
+                                                  },
+                                                  textDisableStyle:
+                                                      ProtonStyles.body1Medium(
+                                                    color: ProtonColors
+                                                        .textDisable,
+                                                  ),
+                                                  disableWithAction: viewModel
+                                                      .isBuyMobileDisabled,
+                                                  backgroundColor: viewModel
+                                                          .isBuyMobileDisabled
+                                                      ? ProtonColors
+                                                          .homeActionButtonBackground
+                                                      : ProtonColors.black,
                                                   text: S.of(context).buy,
                                                   width: MediaQuery.of(context)
                                                               .size

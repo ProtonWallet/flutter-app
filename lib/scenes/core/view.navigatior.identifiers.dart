@@ -37,6 +37,7 @@ enum NavID {
   historyDetails,
   // buy
   buy,
+  buyUnavailable,
   rampExternal,
   banaxExternal,
   moonpayExternal,

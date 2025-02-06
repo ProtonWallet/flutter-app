@@ -228,6 +228,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   /// app version
   String appVersion = "";
+
+  bool get isBuyMobileDisabled;
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -740,6 +742,8 @@ class HomeViewModelImpl extends HomeViewModel {
           selectedWallet?.walletID ?? "",
           selectedAccount?.accountID ?? "",
         );
+      case NavID.buyUnavailable:
+        coordinator.showBuyUnavailableAlert();
       case NavID.nativeUpgrade:
         final session = await userManager.getChildSession();
         coordinator.showNativeUpgrade(session);
@@ -850,5 +854,11 @@ class HomeViewModelImpl extends HomeViewModel {
     final userInfo = userManager.userInfo;
     return dataProviderManager.userDataProvider.user.protonUser?.email ??
         userInfo.userMail;
+  }
+
+  @override
+  bool get isBuyMobileDisabled {
+    final check = dataProviderManager.unleashDataProvider.isBuyMobileDisabled();
+    return check;
   }
 }
