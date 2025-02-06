@@ -18,7 +18,9 @@ class PriceGraphDataProvider extends DataProvider {
     required Timeframe timeFrame,
   }) async {
     return priceClient?.getGraphData(
-        fiatCurrency: fiatCurrency, timeframe: timeFrame);
+      fiatCurrency: fiatCurrency,
+      timeframe: timeFrame,
+    );
   }
 
   @override

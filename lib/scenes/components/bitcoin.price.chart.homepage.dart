@@ -74,7 +74,9 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
 
     try {
       priceGraph = await widget.priceGraphDataProvider.getPriceGraph(
-          fiatCurrency: widget.exchangeRate.fiatCurrency, timeFrame: timeFrame);
+        fiatCurrency: widget.exchangeRate.fiatCurrency,
+        timeFrame: timeFrame,
+      );
     } catch (e) {
       logger.d(e.toString());
     }

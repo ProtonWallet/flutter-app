@@ -14,10 +14,11 @@ void main() {
   testSnapshot('Add button v1 checks', (tester) async {
     final builder = GoldenBuilder.grid(columns: 1, widthToHeightRatio: 1)
       ..addScenario(
-          'Sample add button v1',
-          Row(
-            children: [const AddButtonV1()],
-          ));
+        'Sample add button v1',
+        Row(
+          children: [const AddButtonV1()],
+        ),
+      );
     await testAcrossAllDevices(
       tester,
       builder.build,
