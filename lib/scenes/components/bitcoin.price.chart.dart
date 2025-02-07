@@ -7,6 +7,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
@@ -16,10 +17,12 @@ import 'package:wallet/rust/proton_api/price_graph.dart';
 class BitcoinPriceChart extends StatefulWidget {
   final ProtonExchangeRate exchangeRate;
   final PriceGraphDataProvider priceGraphDataProvider;
+  final Timeframe defaultTimeFrame;
 
   const BitcoinPriceChart({
     required this.exchangeRate,
     required this.priceGraphDataProvider,
+    this.defaultTimeFrame = Timeframe.oneDay,
     super.key,
   });
 
@@ -37,7 +40,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   double percentile75 = 0.0;
   String dataRangeString = "1D";
   Timeframe timeFrame = Timeframe.oneDay;
-  List<Timeframe> dataRangeOptions = [
+  final dataRangeOptions = [
     Timeframe.oneDay,
     Timeframe.oneWeek,
     Timeframe.oneMonth,
@@ -55,6 +58,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   @override
   void initState() {
     super.initState();
+    timeFrame = widget.defaultTimeFrame;
     fetchData();
   }
 
@@ -72,11 +76,13 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
       case Timeframe.unsupported:
         dataRangeString = "1D";
     }
-    PriceGraph? priceGraph;
 
+    PriceGraph? priceGraph;
     try {
       priceGraph = await widget.priceGraphDataProvider.getPriceGraph(
-          fiatCurrency: widget.exchangeRate.fiatCurrency, timeFrame: timeFrame);
+        fiatCurrency: widget.exchangeRate.fiatCurrency,
+        timeFrame: timeFrame,
+      );
     } catch (e) {
       logger.d(e.toString());
     }
@@ -84,13 +90,12 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     final List<FlSpot> spots = [];
     int index = 0;
     if (priceGraph != null) {
-      for (DataPoint dataPoint in priceGraph.graphData) {
-        final double price = dataPoint.exchangeRate / widget.exchangeRate.cents;
+      for (final dataPoint in priceGraph.graphData) {
+        final price = dataPoint.exchangeRate / widget.exchangeRate.cents;
         prices.add(price);
-        spots.add(FlSpot(
-          index.toDouble(),
-          price,
-        ));
+        spots.add(
+          FlSpot(index.toDouble(), price),
+        );
         index++;
       }
     }
@@ -115,11 +120,9 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
     return SizedBox(
       height: 220,
       child: Column(children: [
-        const SizedBox(
-          height: 6,
-        ),
+        const SizedBox(height: 6),
         Container(
-          width: MediaQuery.of(context).size.width,
+          width: context.width,
           padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
           height: 140,
           child: Center(
@@ -226,11 +229,9 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                   ),
           ),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: context.width,
           height: 40,
           child: Center(
             child: ChipsChoice<Timeframe>.single(
@@ -276,23 +277,24 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         style: ProtonStyles.body2Regular(color: ProtonColors.textHint),
         textAlign: TextAlign.left,
       ),
-      const SizedBox(
-        height: 2,
-      ),
+      const SizedBox(height: 2),
       AnimatedFlipCounter(
-          duration: const Duration(milliseconds: 500),
-          thousandSeparator: ",",
-          prefix: CommonHelper.getFiatCurrencySign(
-              widget.exchangeRate.fiatCurrency),
-          value: ExchangeCalculator.getNotionalInFiatCurrency(
-              widget.exchangeRate, btc2satoshi),
-          // value: price,
-          fractionDigits:
-              ExchangeCalculator.getDisplayDigit(widget.exchangeRate),
-          textStyle: ProtonStyles.subheadline(color: ProtonColors.textNorm)),
-      const SizedBox(
-        height: 2,
+        duration: const Duration(milliseconds: 500),
+        thousandSeparator: ",",
+        prefix: CommonHelper.getFiatCurrencySign(
+          widget.exchangeRate.fiatCurrency,
+        ),
+        value: ExchangeCalculator.getNotionalInFiatCurrency(
+          widget.exchangeRate,
+          btc2satoshi,
+        ),
+        // value: price,
+        fractionDigits: ExchangeCalculator.getDisplayDigit(
+          widget.exchangeRate,
+        ),
+        textStyle: ProtonStyles.subheadline(color: ProtonColors.textNorm),
       ),
+      const SizedBox(height: 2),
       priceChange > 0
           ? AnimatedFlipCounter(
               duration: const Duration(milliseconds: 500),
@@ -300,23 +302,21 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle:
-                  ProtonStyles.body2Regular(color: ProtonColors.signalSuccess))
+              textStyle: ProtonStyles.body2Regular(
+                color: ProtonColors.signalSuccess,
+              ))
           : AnimatedFlipCounter(
               duration: const Duration(milliseconds: 500),
               prefix: "",
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle:
-                  ProtonStyles.body2Regular(color: ProtonColors.signalError)),
-      const SizedBox(
-        height: 8,
-      ),
+              textStyle: ProtonStyles.body2Regular(
+                color: ProtonColors.signalError,
+              )),
+      const SizedBox(height: 8),
       buildChart(context),
-      const SizedBox(
-        height: 8,
-      ),
+      const SizedBox(height: 8),
     ]);
   }
 }

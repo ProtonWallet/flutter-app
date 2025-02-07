@@ -23,13 +23,23 @@ void main() {
         ]),
       )
       ..addScenario(
-          'Sample with background color',
-          Row(children: [
-            BackButtonV1(
-              backgroundColor: ProtonColors.backgroundNorm,
-              onPressed: () {},
-            ),
-          ]));
+        'Sample with background color',
+        Row(children: [
+          BackButtonV1(
+            backgroundColor: ProtonColors.backgroundNorm,
+            onPressed: () {},
+          ),
+        ]),
+      )
+      ..addScenario(
+        'Sample with background color',
+        Row(children: [
+          BackButtonV1(
+            backgroundColor: ProtonColors.blue1Background,
+            onPressed: () {},
+          ),
+        ]),
+      );
 
     await testAcrossAllDevices(
       tester,

@@ -14,12 +14,16 @@ class BackButtonV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-        radius: 18,
-        backgroundColor: backgroundColor ?? ProtonColors.white,
-        child: IconButton(
-          icon:
-          Icon(Icons.arrow_back_rounded, color: ProtonColors.textNorm, size: 16),
-          onPressed: onPressed,
-        ));
+      radius: 18,
+      backgroundColor: backgroundColor ?? ProtonColors.white,
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back_rounded,
+          color: ProtonColors.textNorm,
+          size: 16,
+        ),
+        onPressed: onPressed,
+      ),
+    );
   }
 }
