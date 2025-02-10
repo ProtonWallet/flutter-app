@@ -1270,10 +1270,11 @@ class SendViewModelImpl extends SendViewModel {
     if (recipientCount > 0) {
       double amount = totalAmount / recipientCount;
 
-      /// floor value, so it won't have issue when sum up > original value
-      /// this will help for send all feature
-      final int base = pow(10, displayDigit).toInt();
-      amount = (amount * base).floor() / base;
+      if (recipientCount > 1) {
+        /// floor value, so it won't have issue when sum up > original value
+        final int base = pow(10, displayDigit).toInt();
+        amount = (amount * base).floor() / base;
+      }
 
       for (ProtonRecipient recipient in recipients) {
         if (bitcoinBase) {
