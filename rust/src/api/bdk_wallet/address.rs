@@ -1,5 +1,7 @@
 // address.rs
-pub use andromeda_bitcoin::{address::AddressDetails, transactions::TransactionDetails, Balance};
+pub use andromeda_bitcoin::{
+    address::AddressDetails, transactions::TransactionDetails, Balance, KeychainKind,
+};
 use andromeda_bitcoin::{Address as BdkAddress, ConsensusParams};
 use andromeda_common::Network;
 use flutter_rust_bridge::frb;
@@ -62,6 +64,7 @@ pub struct FrbAddressDetails {
     pub(crate) address: String,
     pub(crate) transactions: Vec<FrbTransactionDetails>,
     pub(crate) balance: FrbBalance,
+    pub(crate) keychain: KeychainKind,
 }
 
 impl FrbAddressDetails {
@@ -86,6 +89,11 @@ impl FrbAddressDetails {
     }
 
     #[frb(getter, sync)]
+    pub fn keychain(&self) -> KeychainKind {
+        self.keychain.clone()
+    }
+
+    #[frb(getter, sync)]
     pub fn is_trans_empty(&self) -> bool {
         self.transactions().is_empty()
     }
@@ -102,6 +110,7 @@ impl From<AddressDetails> for FrbAddressDetails {
                 .map(|element| element.into())
                 .collect(),
             balance: address_details.balance.into(),
+            keychain: address_details.keychain,
         }
     }
 }
