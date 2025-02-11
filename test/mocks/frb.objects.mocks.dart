@@ -9,12 +9,13 @@ import 'package:wallet/rust/api/bdk_wallet/address.dart' as _i5;
 import 'package:wallet/rust/api/bdk_wallet/amount.dart' as _i3;
 import 'package:wallet/rust/api/bdk_wallet/balance.dart' as _i2;
 import 'package:wallet/rust/api/bdk_wallet/derivation_path.dart' as _i4;
-import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart' as _i7;
+import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart' as _i8;
 import 'package:wallet/rust/api/bdk_wallet/transaction_details_txin.dart'
-    as _i8;
-import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart'
     as _i9;
-import 'package:wallet/rust/common/transaction_time.dart' as _i10;
+import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart'
+    as _i10;
+import 'package:wallet/rust/common/keychain_kind.dart' as _i7;
+import 'package:wallet/rust/common/transaction_time.dart' as _i11;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -99,10 +100,16 @@ class MockFrbAddressDetails extends _i1.Mock implements _i5.FrbAddressDetails {
       ) as bool);
 
   @override
-  List<_i7.FrbTransactionDetails> get transactions => (super.noSuchMethod(
+  _i7.KeychainKind get keychain => (super.noSuchMethod(
+        Invocation.getter(#keychain),
+        returnValue: _i7.KeychainKind.external_,
+      ) as _i7.KeychainKind);
+
+  @override
+  List<_i8.FrbTransactionDetails> get transactions => (super.noSuchMethod(
         Invocation.getter(#transactions),
-        returnValue: <_i7.FrbTransactionDetails>[],
-      ) as List<_i7.FrbTransactionDetails>);
+        returnValue: <_i8.FrbTransactionDetails>[],
+      ) as List<_i8.FrbTransactionDetails>);
 
   @override
   bool get isDisposed => (super.noSuchMethod(
@@ -226,7 +233,7 @@ class MockFrbBalance extends _i1.Mock implements _i2.FrbBalance {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFrbTransactionDetails extends _i1.Mock
-    implements _i7.FrbTransactionDetails {
+    implements _i8.FrbTransactionDetails {
   MockFrbTransactionDetails() {
     _i1.throwOnMissingStub(this);
   }
@@ -241,16 +248,16 @@ class MockFrbTransactionDetails extends _i1.Mock
       ) as _i4.FrbDerivationPath);
 
   @override
-  List<_i8.FrbDetailledTxIn> get inputs => (super.noSuchMethod(
+  List<_i9.FrbDetailledTxIn> get inputs => (super.noSuchMethod(
         Invocation.getter(#inputs),
-        returnValue: <_i8.FrbDetailledTxIn>[],
-      ) as List<_i8.FrbDetailledTxIn>);
+        returnValue: <_i9.FrbDetailledTxIn>[],
+      ) as List<_i9.FrbDetailledTxIn>);
 
   @override
-  List<_i9.FrbDetailledTxOutput> get outputs => (super.noSuchMethod(
+  List<_i10.FrbDetailledTxOutput> get outputs => (super.noSuchMethod(
         Invocation.getter(#outputs),
-        returnValue: <_i9.FrbDetailledTxOutput>[],
-      ) as List<_i9.FrbDetailledTxOutput>);
+        returnValue: <_i10.FrbDetailledTxOutput>[],
+      ) as List<_i10.FrbDetailledTxOutput>);
 
   @override
   BigInt get received => (super.noSuchMethod(
@@ -271,13 +278,13 @@ class MockFrbTransactionDetails extends _i1.Mock
       ) as BigInt);
 
   @override
-  _i10.TransactionTime get time => (super.noSuchMethod(
+  _i11.TransactionTime get time => (super.noSuchMethod(
         Invocation.getter(#time),
-        returnValue: _i6.dummyValue<_i10.TransactionTime>(
+        returnValue: _i6.dummyValue<_i11.TransactionTime>(
           this,
           Invocation.getter(#time),
         ),
-      ) as _i10.TransactionTime);
+      ) as _i11.TransactionTime);
 
   @override
   String get txid => (super.noSuchMethod(

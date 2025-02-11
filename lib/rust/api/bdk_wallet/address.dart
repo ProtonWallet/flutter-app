@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../common/keychain_kind.dart';
 import '../../common/network.dart';
 import '../../frb_generated.dart';
 import '../errors.dart';
@@ -39,6 +40,8 @@ abstract class FrbAddressDetails implements RustOpaqueInterface {
   int get index;
 
   bool get isTransEmpty;
+
+  KeychainKind get keychain;
 
   List<FrbTransactionDetails> get transactions;
 }

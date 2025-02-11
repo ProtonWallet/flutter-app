@@ -458,6 +458,7 @@
   "receive_to": "Receive to",
   "add_amount": "Add amount",
   "receive_address": "Receive Address",
+  "change_address": "Change Address",
   "share_button": "Share",
   "warn_you_create_too_many_unused_address": "Warning, you already have many unused addresses.",
   "you_can_not_create_too_many_unused_address": "Sorry, you already have too many unused addresses.",
