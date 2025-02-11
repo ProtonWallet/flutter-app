@@ -27,7 +27,6 @@ import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
-import 'package:wallet/managers/request.queue.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/account.model.dart';
@@ -401,41 +400,8 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<bool> eligibleCheck() async {
-    try {
-      final cachedEligible = await appStateManager.getEligible();
-      if (cachedEligible != 1) {
-        /// Check if user is eligible from API
-        final int eligible = await retry(
-          () => apiServiceManager
-              .getApiService()
-              .getSettingsClient()
-              .getUserWalletEligibility(),
-        );
-        appStateManager.loadingSuccess(LoadingTask.eligible);
-        if (eligible == 0) {
-          move(NavID.earlyAccess);
-          eventLoop.stop();
-          return false;
-        } else {
-          await appStateManager.setEligible();
-        }
-      }
-    } on BridgeError catch (e, stacktrace) {
-      appStateManager.updateStateFrom(e);
-      appStateManager.loadingFailed(LoadingTask.eligible);
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      Sentry.captureException(e, stackTrace: stacktrace);
-      CommonHelper.showErrorDialog(parseSampleDisplayError(e));
-      eventLoop.start();
-      return false;
-    } catch (e, stacktrace) {
-      logger.e("importWallet error: $e, stacktrace: $stacktrace");
-      appStateManager.loadingFailed(LoadingTask.eligible);
-      CommonHelper.showErrorDialog(e.toString());
-      eventLoop.start();
-      return false;
-    }
-
+    appStateManager.loadingSuccess(LoadingTask.eligible);
+    await appStateManager.setEligible();
     return true;
   }
 
@@ -754,13 +720,9 @@ class HomeViewModelImpl extends HomeViewModel {
       case NavID.settings:
         coordinator.showSettings();
       case NavID.addWalletAccount:
-        coordinator.showAddWalletAccount(
-          walletIDtoAddAccount,
-        );
+        coordinator.showAddWalletAccount(walletIDtoAddAccount);
       case NavID.acceptTermsConditionDialog:
         coordinator.showAcceptTermsAndCondition(getUserEmail());
-      case NavID.earlyAccess:
-        coordinator.showEarlyAccess(logout, getUserEmail());
       case NavID.sendInvite:
         coordinator.showSendInvite();
       case NavID.secureYourWallet:

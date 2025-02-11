@@ -32,7 +32,6 @@ import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.coordinator.dart';
-import 'package:wallet/scenes/home.v3/sub.views/early.access/early.access.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/secure.your.wallet/secure.your.wallet.coordinator.dart';
@@ -202,22 +201,6 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
-    );
-  }
-
-  void showEarlyAccess(
-    VoidCallback logoutFunction,
-    String email,
-  ) {
-    final view = EarlyAccessCoordinator(
-      logoutFunction,
-      email,
-    ).start();
-    showInBottomSheet(
-      view,
-      backgroundColor: ProtonColors.white,
-      enableDrag: false,
-      isDismissible: false,
     );
   }
 
