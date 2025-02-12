@@ -170,38 +170,15 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       .spaceBetween,
                                               children: [
                                                 Expanded(
-                                                  child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          S
-                                                              .of(context)
-                                                              .invite_friends,
-                                                          style: ProtonStyles
-                                                              .body2Medium(
-                                                                  color: ProtonColors
-                                                                      .textInverted),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  right: 8),
-                                                          child: Text(
-                                                            S.of(context).n_left(
-                                                                viewModel
-                                                                        .remainingMonthlyInvitations
-                                                                        ?.available ??
-                                                                    0),
-                                                            style: ProtonStyles
-                                                                .body2Medium(
-                                                                    color: ProtonColors
-                                                                        .textInverted),
-                                                          ),
-                                                        ),
-                                                      ]),
+                                                  child: Text(
+                                                    S
+                                                        .of(context)
+                                                        .invite_friends,
+                                                    style: ProtonStyles
+                                                        .body2Medium(
+                                                            color: ProtonColors
+                                                                .textInverted),
+                                                  ),
                                                 ),
                                                 Transform.translate(
                                                   offset: const Offset(6, 0),
