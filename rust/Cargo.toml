@@ -79,6 +79,7 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
+features = []
 
 [package.metadata.ios]
 # Required
@@ -90,3 +91,6 @@ build_targets = ["aarch64-apple-ios"]
 default = []
 mocking = ["andromeda-api/mocking"]
 test = ["andromeda-api/allow-dangerous-env", "mocking"]
+
+[profile.dev]
+features = ["andromeda-api/allow-dangerous-env"]

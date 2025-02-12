@@ -1,7 +1,7 @@
 //proton_api_service.rs
 use andromeda_api::{
     wallet::ApiWalletData, wallet_ext::WalletClientExt, ApiConfig, Auth, ProtonWalletApiClient,
-    Tokens,
+    ProxyConfig, Tokens,
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flutter_rust_bridge::frb;
@@ -53,6 +53,11 @@ impl ProtonAPIService {
             url_prefix: None,
             env: Some(env),
             store: Some(box_store),
+            // proxy: Some(ProxyConfig {
+            //     host: "192.168.1.138".into(),
+            //     port: 9090,
+            // }),
+            proxy: None,
         };
 
         let inner_api = ProtonWalletApiClient::from_config(config)?;
