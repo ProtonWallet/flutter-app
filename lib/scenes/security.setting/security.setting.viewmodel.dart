@@ -3,6 +3,7 @@ import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
+import 'package:wallet/models/unlock.timer.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/errors.dart';
@@ -15,7 +16,12 @@ abstract class SecuritySettingViewModel
   SecuritySettingViewModel(super.coordinator);
 
   UnlockType selectedType = UnlockType.none;
+  LockTimer lockTimer = LockTimer.immediately;
+
   Future<String> updateType(UnlockType newType);
+
+  Future<void> updateLockTimer(LockTimer newTimer);
+
   bool isLoading = true;
   bool hadSetup2FA = false;
   String error = "";
@@ -38,6 +44,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
   final UserDataProvider userDataProvider;
 
   StreamSubscription? protonUserDataSubscription;
+
   @override
   void dispose() {
     protonUserDataSubscription?.cancel();
@@ -55,6 +62,8 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
     final unlock = await appStateManager.getUnlockType();
     selectedType = unlock.type;
+
+    lockTimer = await appStateManager.getLockTimer();
 
     isLoading = true;
 
@@ -107,5 +116,12 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
       default:
         break;
     }
+  }
+
+  @override
+  Future<void> updateLockTimer(LockTimer newTimer) async {
+    lockTimer = newTimer;
+    await appStateManager.saveLockTimer(newTimer);
+    sinkAddSafe();
   }
 }

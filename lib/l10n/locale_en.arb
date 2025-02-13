@@ -567,6 +567,12 @@
   "address_list_use_for": "Use for",
   "bve_address_tooltip": "This address is for Bitcoin via Email",
   "flip_camera": "Flip camera",
+  "unlock_app": "Unlock app",
+  "lock_timer": "Lock timer",
+  "lock_timer_immediately": "Immediately",
+  "lock_timer_5_minutes": "5 minutes inactivity",
+  "lock_timer_15_minutes": "15 minutes inactivity",
+  "lock_timer_1_hour": "1 hour inactivity",
   "syncing_new_data": "Syncing new data",
   "buying_unavailable": "Buying is temporarily unavailable",
   "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later."

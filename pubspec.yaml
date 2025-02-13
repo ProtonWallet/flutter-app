@@ -92,6 +92,7 @@ dependencies:
   chips_choice: ^3.0.1
   just_the_tooltip: ^0.0.12
   country_flags: ^3.0.0
+  system_boot_time: ^0.0.1
 
   ### database
   drift: ^2.19.1

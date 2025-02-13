@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/constants.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/lock/lock.overlay.viewmodel.dart';
@@ -17,42 +22,85 @@ class LockOverlayView extends ViewBase<LockViewModel> {
             : child;
       },
       child: viewModel.isLocked
-          ? ColoredBox(
-              /// Key is necessary to identify the widget uniquely
-              key: const ValueKey(
-                'locked',
-              ),
-              color: Colors.grey,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      viewModel.error,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    const SizedBox(height: 20),
-                    ButtonV5(
-                      text: "Try again",
-                      width: 200,
-                      height: 44,
-                      onPressed: () async {
-                        await viewModel.unlock();
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    ButtonV5(
-                      text: "Logout",
-                      width: 200,
-                      height: 44,
-                      onPressed: () async {
-                        await viewModel.logout();
-                      },
-                    )
-                  ],
+          ? SizedBox.expand(
+              child: ColoredBox(
+                /// Key is necessary to identify the widget uniquely
+                key: const ValueKey(
+                  'locked',
+                ),
+                color: ProtonColors.white,
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 264,
+                        height: 54,
+                        child: Assets
+                            .images.walletCreation.protonWalletLogoLight
+                            .svg(
+                          fit: BoxFit.fitHeight,
+                        ),
+                      ),
+                      Assets.images.icon.lock.image(
+                        fit: BoxFit.fitHeight,
+                        width: 240,
+                        height: 167,
+                      ),
+                      Text(
+                        viewModel.error,
+                        style: ProtonStyles.body2Medium(
+                            color: ProtonColors.signalError),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: defaultPadding),
+                        child: Visibility(
+                          visible: viewModel.isLockTimerNeedUnlock,
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          child: ButtonV5(
+                            text: context.local.unlock_app,
+                            width: context.width,
+                            height: 55,
+                            backgroundColor: ProtonColors.protonBlue,
+                            textStyle: ProtonStyles.body1Medium(
+                              color: ProtonColors.white,
+                            ),
+                            onPressed: () async {
+                              await viewModel.unlock();
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: defaultPadding),
+                        child: Visibility(
+                          visible: viewModel.isLockTimerNeedUnlock,
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          child: ButtonV5(
+                            text: context.local.logout,
+                            width: context.width,
+                            height: 55,
+                            backgroundColor: ProtonColors.interActionWeak,
+                            borderColor: ProtonColors.interActionWeak,
+                            textStyle: ProtonStyles.body1Medium(
+                              color: ProtonColors.textNorm,
+                            ),
+                            onPressed: () async {
+                              await viewModel.logout();
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
