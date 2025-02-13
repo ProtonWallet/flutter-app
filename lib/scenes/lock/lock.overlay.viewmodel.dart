@@ -5,13 +5,13 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
 
 enum UnlockState {
   locked,
-
   unlocked,
 }
 
@@ -19,14 +19,21 @@ abstract class LockViewModel extends ViewModel<LockCoordinator> {
   LockViewModel(super.coordinator);
 
   bool isLocked = false;
+  bool isLockTimerNeedUnlock = false;
   String error = "";
+
   Future<void> unlock();
+
   Future<void> logout();
 }
 
 class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
   final AppStateManager appStateManager;
   final LocalAuthManager localAuthManager;
+
+  /// Used to prevent the biometric unlock from being called
+  /// multiple times when the app is resumed
+  bool lastUnlockFailed = false;
 
   LockViewModelImpl(
     super.coordinator,
@@ -45,7 +52,7 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     final type = await appStateManager.getUnlockType();
     isLocked = type.type == UnlockType.biometrics;
-    // check last lock timmer
+
     sinkAddSafe();
     if (isLocked) {
       await unlock();
@@ -55,31 +62,40 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
   @override
   Future<void> unlock() async {
     final type = await appStateManager.getUnlockType();
-    if (type.type == UnlockType.none) {
-      // lock the app
+    switch (type.type) {
+      case UnlockType.biometrics:
+        // lock the app
+        isLocked = true;
+      case UnlockType.none:
+        isLocked = false;
+        sinkAddSafe();
+        return;
+    }
+
+    /// check last lock timer
+    isLockTimerNeedUnlock = await appStateManager.isLockTimerNeedUnlock();
+    if (!isLockTimerNeedUnlock) {
+      /// still in lock timer range, we don't need to ask user to unlock
       isLocked = false;
       sinkAddSafe();
-
       return;
     }
-    // lock the app
-    isLocked = true;
     sinkAddSafe();
 
     final count = await appStateManager.getErrorCount();
-    if (count.count != 0) {
-      error = "You will be locked out after ${5 - count.count} failed attempts";
-    } else {
-      error = "";
-    }
     final result = await localAuthManager.authenticate("Unlock Proton Wallet");
     if (result) {
       isLocked = false;
       error = "";
+      lastUnlockFailed = true;
       await appStateManager.updateCount(UnlockErrorCount.zero());
     } else {
       isLocked = true;
-      await appStateManager.updateCount(count.plus());
+      lastUnlockFailed = false;
+      final newCount = count.plus();
+      await appStateManager.updateCount(newCount);
+      error =
+          "You will be locked out after ${5 - newCount.count} failed attempts";
     }
     sinkAddSafe();
   }
@@ -98,12 +114,13 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         logger.d("App is in foreground");
-        if (isLocked) {
+        if (isLocked && lastUnlockFailed) {
           unlock();
         }
       // App comes to foreground
       case AppLifecycleState.inactive:
         logger.d("App is inactive");
+        lockIfNeeded();
       // App is inactive
       case AppLifecycleState.paused:
         logger.d("App is in background");
@@ -118,4 +135,32 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
 
   @override
   Future<void> logout() async {}
+
+  Future<void> lockIfNeeded() async {
+    final type = await appStateManager.getUnlockType();
+    switch (type.type) {
+      case UnlockType.biometrics:
+
+        /// update app last activate time only when app is unlocked
+        if (!isLocked) {
+          await appStateManager.saveAppLastActivateTime();
+          isLockTimerNeedUnlock = await appStateManager.isLockTimerNeedUnlock();
+
+          if (isLockTimerNeedUnlock) {
+            /// popup to home page so we can show lock overlay correctly
+            final BuildContext? context =
+                Coordinator.rootNavigatorKey.currentContext;
+            if (context != null && context.mounted) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
+          }
+        }
+
+        /// lock the app
+        isLocked = true;
+      case UnlockType.none:
+        isLocked = false;
+    }
+    sinkAddSafe();
+  }
 }

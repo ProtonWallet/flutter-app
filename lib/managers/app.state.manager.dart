@@ -2,6 +2,8 @@
 
 import 'dart:math';
 
+import 'package:sentry/sentry.dart';
+import 'package:system_boot_time/system_boot_time.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/response.error.extension.dart';
 import 'package:wallet/managers/manager.dart';
@@ -9,6 +11,7 @@ import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
+import 'package:wallet/models/unlock.timer.dart';
 import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/rust/api/errors.dart';
 
@@ -80,6 +83,9 @@ class AppStateManager extends DataProvider implements Manager {
   /// const key
   final unlockKey = "proton_wallet_app_k_unlock_type";
   final unlockErrorKey = "proton_wallet_app_k_unlock_error_count";
+  final lockTimerKey = "proton_wallet_app_k_lock_timer";
+  final lockTimerAppLastActivateTimeKey =
+      "proton_wallet_app_k_lock_timer_app_last_activate_time";
 
   /// user eligible
   final userEligible = "proton_wallet_app_k_is_user_eligible";
@@ -146,6 +152,63 @@ class AppStateManager extends DataProvider implements Manager {
   Future<void> saveUnlockType(UnlockModel model) async {
     final save = model.toString();
     await secureStore.set(unlockKey, save);
+  }
+
+  Future<LockTimer> getLockTimer() async {
+    final saved = await secureStore.get(lockTimerKey);
+    LockTimer lockTimer = LockTimer.immediately;
+    try {
+      lockTimer = LockTimer.values.byName(saved);
+    } catch (e) {
+      /// can not find lock timer with given saved name
+    }
+    return lockTimer;
+  }
+
+  Future<void> saveLockTimer(LockTimer lockTimer) async {
+    await secureStore.set(lockTimerKey, lockTimer.name);
+  }
+
+  Future<void> saveAppLastActivateTime() async {
+    /// get seconds since boot, including time spent in sleep.
+    try {
+      final seconds = await SystemBootTime().second();
+      await secureStore.set(
+          lockTimerAppLastActivateTimeKey, seconds.toString());
+    } catch (e, stacktrace) {
+      /// unexpected error, log on sentry
+      Sentry.captureException(e, stackTrace: stacktrace);
+    }
+  }
+
+  /// Determines whether the app requires user unlocking based on the lock timer.
+  ///
+  /// Returns `true` if the gap time exceeds the lock timer range, indicating that
+  /// the user must unlock the app.
+  /// Returns `false` if the gap time is within the lock timer range, allowing
+  /// the user to skip the unlock process.
+  Future<bool> isLockTimerNeedUnlock() async {
+    try {
+      final currentSeconds = await SystemBootTime().second();
+      final saved = await secureStore.get(lockTimerAppLastActivateTimeKey);
+      final appLastActivatedSeconds = int.parse(saved);
+      final secondsDiff = currentSeconds - appLastActivatedSeconds;
+      final lockTimer = await getLockTimer();
+      switch (lockTimer) {
+        case LockTimer.immediately:
+          return true;
+        case LockTimer.lockTimer5Minutes:
+          return secondsDiff > 60 * 5;
+        case LockTimer.lockTimer15Minutes:
+          return secondsDiff > 60 * 15;
+        case LockTimer.lockTimer1Hour:
+          return secondsDiff > 60 * 60;
+      }
+    } catch (e, stacktrace) {
+      /// unexpected error, log on sentry and force user to unlock
+      Sentry.captureException(e, stackTrace: stacktrace);
+      return true;
+    }
   }
 
   Future<UnlockErrorCount> getErrorCount() async {
@@ -264,10 +327,13 @@ class AppStateManager extends DataProvider implements Manager {
 
   @override
   Future<void> login(String userID) async {}
+
   @override
   Future<void> init() async {}
+
   @override
   Future<void> logout() async {}
+
   @override
   Future<void> reload() async {}
 
