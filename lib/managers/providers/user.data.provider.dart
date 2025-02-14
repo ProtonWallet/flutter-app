@@ -47,8 +47,7 @@ class UserDataProvider extends DataProvider {
   final UserKeysQueries userKeysQueries;
 
   /// stream
-  final StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>();
+  final dataUpdateController = StreamController<DataUpdated>();
 
   UserDataProvider(
     this.protonUsersClient,
@@ -133,8 +132,17 @@ class UserDataProvider extends DataProvider {
     return [];
   }
 
-  Future<DriftProtonUser> getUser() async {
-    throw UnimplementedError('getUserData is not implemented');
+  Future<DriftProtonUser?> getUser(String userID) async {
+    var user = await userQueries.getUser(userID);
+    if (user != null) {
+      return user;
+    }
+    await fetchFromServer(userID);
+    user = await userQueries.getUser(userID);
+    if (user != null) {
+      return user;
+    }
+    return null;
   }
 
   Future<void> fetchFromServer(String userID) async {

@@ -86,15 +86,14 @@ class UserSettingsDataProvider extends DataProvider {
   );
 
   /// streams
-  StreamController<UserSettingDataUpdated> dataUpdateController =
-      StreamController<UserSettingDataUpdated>();
-  StreamController<ExchangeRateDataUpdated> exchangeRateUpdateController =
+  final dataUpdateController = StreamController<UserSettingDataUpdated>();
+  final exchangeRateUpdateController =
       StreamController<ExchangeRateDataUpdated>();
-  StreamController<FiatCurrencyDataUpdated> fiatCurrencyUpdateController =
+  final fiatCurrencyUpdateController =
       StreamController<FiatCurrencyDataUpdated>();
-  StreamController<BitcoinUnitDataUpdated> bitcoinUnitUpdateController =
+  final bitcoinUnitUpdateController =
       StreamController<BitcoinUnitDataUpdated>();
-  StreamController<DisplayBalanceUpdated> displayBalanceUpdateController =
+  final displayBalanceUpdateController =
       StreamController<DisplayBalanceUpdated>();
 
   Future<WalletUserSettings?> _getFromDB() async {
@@ -104,8 +103,7 @@ class UserSettingsDataProvider extends DataProvider {
 
   Future<void> loadFromServer() async {
     try {
-      final ApiWalletUserSettings apiSettings =
-          await settingsClient.getUserSettings();
+      final apiSettings = await settingsClient.getUserSettings();
       insertUpdate(apiSettings);
     } catch (e, stacktrace) {
       logger.e("error: $e, stacktrace: $stacktrace");

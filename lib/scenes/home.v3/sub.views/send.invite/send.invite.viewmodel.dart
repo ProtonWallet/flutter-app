@@ -74,7 +74,7 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
       dataProviderManager.exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      final errMsg = parseSampleDisplayError(e);
+      final errMsg = parseMuonError(e) ?? parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);

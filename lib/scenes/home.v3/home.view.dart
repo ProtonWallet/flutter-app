@@ -457,8 +457,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                             width: MediaQuery.of(context).size.width,
                             child: BitcoinPriceBox(
                               title: S.of(context).btc_price,
-                              priceGraphDataProvider: viewModel
-                                  .dataProviderManager.priceGraphDataProvider,
+                              priceGraphDataProvider:
+                                  viewModel.priceGraphDataProvider,
                               exchangeRate: viewModel.currentExchangeRate,
                             ),
                           ),
@@ -553,11 +553,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                 )
               : viewModel.displayBalance
                   ? AnimatedFlipCounter(
-                      prefix: viewModel
-                          .dataProviderManager.userSettingsDataProvider
-                          .getFiatCurrencySign(
-                              fiatCurrency:
-                                  viewModel.currentExchangeRate.fiatCurrency),
+                      prefix: viewModel.getFiatCurrencySign(
+                          fiatCurrency:
+                              viewModel.currentExchangeRate.fiatCurrency),
                       thousandSeparator: ",",
                       value: ExchangeCalculator.getNotionalInFiatCurrency(
                         viewModel.currentExchangeRate,
@@ -570,7 +568,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                         height: 1.0,
                       ))
                   : Text(
-                      "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}$hidedBalanceString",
+                      "${viewModel.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}$hidedBalanceString",
                       style: ProtonWalletStyles.textAmount(
                         color: ProtonColors.textNorm,
                         fontVariation: 400.0,
@@ -973,7 +971,8 @@ Widget showUpdateWalletPassphraseDialog(
                 walletModel.walletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
           } on BridgeError catch (e, stacktrace) {
-            viewModel.errorMessage = parseSampleDisplayError(e);
+            viewModel.errorMessage =
+                parseMuonError(e) ?? parseSampleDisplayError(e);
             logger.e("importWallet error: $e, stacktrace: $stacktrace");
           } catch (e) {
             viewModel.errorMessage = e.toString();
@@ -1008,7 +1007,7 @@ Widget getWalletAccountBalanceWidget(
   }
   return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
     Text(
-        "${viewModel.dataProviderManager.userSettingsDataProvider.getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
+        "${viewModel.getFiatCurrencyName(fiatCurrency: fiatCurrency)}${estimateValue.toStringAsFixed(defaultDisplayDigits)}",
         style: ProtonStyles.captionSemibold(color: textColor)),
     Text(
         ExchangeCalculator.getBitcoinUnitLabel(

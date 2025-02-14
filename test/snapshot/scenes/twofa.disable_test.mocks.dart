@@ -235,6 +235,30 @@ class MockTwoFactorAuthDisableViewModel extends _i1.Mock
       ) as bool);
 
   @override
+  bool get android => (super.noSuchMethod(
+        Invocation.getter(#android),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get iOS => (super.noSuchMethod(
+        Invocation.getter(#iOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get macOS => (super.noSuchMethod(
+        Invocation.getter(#macOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get apple => (super.noSuchMethod(
+        Invocation.getter(#apple),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get screenSizeState => (super.noSuchMethod(
         Invocation.getter(#screenSizeState),
         returnValue: false,
@@ -369,14 +393,14 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
       ) as List<_i2.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i9.Future<bool> showInBottomSheet(
     _i2.Widget? view, {
     _i12.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -387,8 +411,8 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
   void pushReplacement(

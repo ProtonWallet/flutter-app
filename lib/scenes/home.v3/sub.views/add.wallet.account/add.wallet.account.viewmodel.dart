@@ -114,7 +114,7 @@ class AddWalletAccountViewModelImpl extends AddWalletAccountViewModel {
           return false;
         }
 
-        final msg = parseSampleDisplayError(e);
+        final msg = parseMuonError(e) ?? parseSampleDisplayError(e);
         CommonHelper.showErrorDialog(msg);
       }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");

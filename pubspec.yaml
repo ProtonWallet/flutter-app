@@ -138,6 +138,8 @@ dependencies:
       url: https://github.com/ProtonWallet/no_screenshot.git
       ref: fix_0.3.2_ios_build
 
+  in_app_review: ^2.0.10
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

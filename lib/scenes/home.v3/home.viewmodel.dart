@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -23,9 +25,17 @@ import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
-import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/preferences/preferences.keys.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
+import 'package:wallet/managers/providers/address.keys.provider.dart';
+import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
+import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
+import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
+import 'package:wallet/managers/providers/price.graph.data.provider.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
+import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -63,10 +73,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     this.walletListBloc,
     this.walletTransactionBloc,
     this.walletBalanceBloc,
-    this.dataProviderManager,
     this.createWalletBloc,
     this.deleteWalletBloc,
     this.walletNameBloc,
+    this.priceGraphDataProvider,
   );
 
   int selectedPage = 0;
@@ -167,12 +177,17 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     coordinator.showTransactionAddressSwitch(accountMenuModel);
   }
 
-  void showHistoryDetails(
+  Future<void> showHistoryDetails(
     String walletID,
     String accountID,
     FrbTransactionDetails frbTransactionDetails,
-  ) {
-    coordinator.showHistoryDetails(walletID, accountID, frbTransactionDetails);
+  ) async {
+    await coordinator.showHistoryDetails(
+      walletID,
+      accountID,
+      frbTransactionDetails,
+    );
+    inAppReviewCheck();
   }
 
   int totalTodoSteps = 3;
@@ -219,16 +234,22 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   final WalletListBloc walletListBloc;
   final WalletTransactionBloc walletTransactionBloc;
   final WalletBalanceBloc walletBalanceBloc;
-  final DataProviderManager dataProviderManager;
   final CreateWalletBloc createWalletBloc;
   final DeleteWalletBloc deleteWalletBloc;
   BitcoinUnit bitcoinUnit = BitcoinUnit.btc;
   ProtonExchangeRate currentExchangeRate = defaultExchangeRate;
 
+  final PriceGraphDataProvider priceGraphDataProvider;
+
   /// app version
   String appVersion = "";
 
   bool get isBuyMobileDisabled;
+
+  Future<void> inAppReviewCheck({bool fromSend = false});
+
+  String getFiatCurrencyName({FiatCurrency? fiatCurrency});
+  String getFiatCurrencySign({FiatCurrency? fiatCurrency});
 }
 
 class HomeViewModelImpl extends HomeViewModel {
@@ -237,7 +258,6 @@ class HomeViewModelImpl extends HomeViewModel {
     super.walletListBloc,
     super.walletTransactionBloc,
     super.walletBalanceBloc,
-    super.dataProviderManager,
     super.createWalletBloc,
     super.deleteWalletBloc,
     super.walletNameBloc,
@@ -247,7 +267,21 @@ class HomeViewModelImpl extends HomeViewModel {
     this.apiServiceManager,
     this.channel,
     this.appStateManager,
+    this.userDataProvider,
+    this.userSettingsDataProvider,
+    super.priceGraphDataProvider,
+    this.blockInfoDataProvider,
+    this.exclusiveInviteDataProvider,
+    this.contactsDataProvider,
+    this.addressKeyProvider,
+    this.walletDataProvider,
+    this.unleashDataProvider,
+    this.bdkTransactionDataProvider,
+    this.shared,
   );
+
+  /// cache
+  final PreferencesManager shared;
 
   /// Managers
   final UserManager userManager;
@@ -267,6 +301,17 @@ class HomeViewModelImpl extends HomeViewModel {
   StreamSubscription? _exclusiveInviteDataSubscription;
 
   final selectedSectionChangedController = StreamController<int>.broadcast();
+
+  /// data providers
+  final UserDataProvider userDataProvider;
+  final UserSettingsDataProvider userSettingsDataProvider;
+  final BlockInfoDataProvider blockInfoDataProvider;
+  final ExclusiveInviteDataProvider exclusiveInviteDataProvider;
+  final ContactsDataProvider contactsDataProvider;
+  final AddressKeyProvider addressKeyProvider;
+  final WalletsDataProvider walletDataProvider;
+  final UnleashDataProvider unleashDataProvider;
+  final BDKTransactionDataProvider bdkTransactionDataProvider;
 
   @override
   void dispose() {
@@ -311,18 +356,18 @@ class HomeViewModelImpl extends HomeViewModel {
     /// since app will sync automatically when it's open
     Future.delayed(const Duration(seconds: 180), () {
       if (!isLogout) {
-        _blockInfoDataSubscription = dataProviderManager
-            .blockInfoDataProvider.dataUpdateController.stream
-            .listen((onData) {
+        _blockInfoDataSubscription =
+            blockInfoDataProvider.dataUpdateController.stream.listen((onData) {
           walletTransactionBloc.syncWallet(
-              forceSync: false, heightChanged: true);
+            forceSync: false,
+            heightChanged: true,
+          );
         });
       }
     });
 
     /// user data
-    _userDataSubscription =
-        dataProviderManager.userDataProvider.stream.listen((state) {
+    _userDataSubscription = userDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
         hadSetup2FA = state.updatedData;
         checkPreference();
@@ -337,7 +382,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
     /// exclusive invite
     _exclusiveInviteDataSubscription =
-        dataProviderManager.exclusiveInviteDataProvider.stream.listen((state) {
+        exclusiveInviteDataProvider.stream.listen((state) {
       if (state is AvailableUpdated) {
         remainingMonthlyInvitations = state.updatedData;
         loadInviteState();
@@ -364,7 +409,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> loadContacts() async {
-    await dataProviderManager.contactsDataProvider.preLoad();
+    await contactsDataProvider.preLoad();
   }
 
   Future<void> loadInviteState() async {
@@ -391,12 +436,11 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> preloadSettings() async {
-    await dataProviderManager.userSettingsDataProvider.preLoad();
+    await userSettingsDataProvider.preLoad();
     loadUserSettings();
 
     // load local cached displayBalance setting
-    displayBalance =
-        await dataProviderManager.userSettingsDataProvider.getDisplayBalance();
+    displayBalance = await userSettingsDataProvider.getDisplayBalance();
   }
 
   Future<bool> eligibleCheck() async {
@@ -431,18 +475,15 @@ class HomeViewModelImpl extends HomeViewModel {
         Coordinator.rootNavigatorKey.currentContext!,
         listen: false);
 
-    dataProviderManager
-        .userSettingsDataProvider.exchangeRateUpdateController.stream
+    userSettingsDataProvider.exchangeRateUpdateController.stream
         .listen((onData) {
-      currentExchangeRate =
-          dataProviderManager.userSettingsDataProvider.exchangeRate;
+      currentExchangeRate = userSettingsDataProvider.exchangeRate;
       datasourceStreamSinkAdd();
     });
 
-    dataProviderManager
-        .userSettingsDataProvider.bitcoinUnitUpdateController.stream
+    userSettingsDataProvider.bitcoinUnitUpdateController.stream
         .listen((onData) {
-      bitcoinUnit = dataProviderManager.userSettingsDataProvider.bitcoinUnit;
+      bitcoinUnit = userSettingsDataProvider.bitcoinUnit;
       datasourceStreamSinkAdd();
     });
 
@@ -452,8 +493,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
     /// workaround, load addressKey to memory first, or it will need to wait until other api call finish
     /// will need to prioritize api calls in other MR
-    final _ =
-        await dataProviderManager.addressKeyProvider.getAddressKeysForTL();
+    final _ = await addressKeyProvider.getAddressKeysForTL();
 
     /// preload data
     preLoadHomeData();
@@ -474,7 +514,7 @@ class HomeViewModelImpl extends HomeViewModel {
       );
       walletListBloc.stream.listen((state) {
         for (final walletMenuModel in state.walletsModel) {
-          if (dataProviderManager.walletDataProvider.selectedServerWalletID ==
+          if (walletDataProvider.selectedServerWalletID ==
               walletMenuModel.walletModel.walletID) {
             showWalletRecovery =
                 walletMenuModel.walletModel.showWalletRecovery == 1;
@@ -482,8 +522,8 @@ class HomeViewModelImpl extends HomeViewModel {
           }
         }
       });
-      dataProviderManager.exclusiveInviteDataProvider.preLoad();
-      dataProviderManager.userDataProvider.preLoad();
+      exclusiveInviteDataProvider.preLoad();
+      userDataProvider.preLoad();
 
       /// lagLoad unnecessary data to improve homepage loading speed
       Future.delayed(const Duration(seconds: 5), () {
@@ -498,7 +538,7 @@ class HomeViewModelImpl extends HomeViewModel {
       });
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
@@ -517,7 +557,7 @@ class HomeViewModelImpl extends HomeViewModel {
   void selectDefaultWallet() {
     for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.hasValidPassword) {
-        dataProviderManager.walletDataProvider.updateSelected(
+        walletDataProvider.updateSelected(
           walletMenuModel.walletModel.walletID,
           null,
         );
@@ -547,7 +587,7 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> selectWallet(WalletMenuModel walletMenuModel) async {
-    dataProviderManager.walletDataProvider.updateSelected(
+    walletDataProvider.updateSelected(
       walletMenuModel.walletModel.walletID,
       null,
     );
@@ -561,9 +601,11 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   @override
-  Future<void> selectAccount(WalletMenuModel walletMenuModel,
-      AccountMenuModel accountMenuModel) async {
-    dataProviderManager.walletDataProvider.updateSelected(
+  Future<void> selectAccount(
+    WalletMenuModel walletMenuModel,
+    AccountMenuModel accountMenuModel,
+  ) async {
+    walletDataProvider.updateSelected(
       walletMenuModel.walletModel.walletID,
       accountMenuModel.accountModel.accountID,
     );
@@ -606,8 +648,7 @@ class HomeViewModelImpl extends HomeViewModel {
   }
 
   Future<void> loadUserSettings() async {
-    final settings =
-        await dataProviderManager.userSettingsDataProvider.getSettings();
+    final settings = await userSettingsDataProvider.getSettings();
     if (settings != null) {
       hideEmptyUsedAddresses = settings.hideEmptyUsedAddresses;
       twoFactorAmountThresholdController.text =
@@ -643,7 +684,7 @@ class HomeViewModelImpl extends HomeViewModel {
       await DBHelper.reset();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      errorMessage = parseSampleDisplayError(e);
+      errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {
@@ -664,14 +705,14 @@ class HomeViewModelImpl extends HomeViewModel {
     WalletModel? selectedWallet;
     AccountModel? selectedAccount;
     bool isWalletView = false;
-    for (WalletMenuModel walletMenuModel in walletListBloc.state.walletsModel) {
+    for (final walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
         /// walletView
         selectedWallet = walletMenuModel.walletModel;
         selectedAccount = null;
         isWalletView = true;
       }
-      for (AccountMenuModel accountMenuModel in walletMenuModel.accounts) {
+      for (final accountMenuModel in walletMenuModel.accounts) {
         if (accountMenuModel.isSelected) {
           /// wallet account view
           selectedWallet = walletMenuModel.walletModel;
@@ -683,10 +724,13 @@ class HomeViewModelImpl extends HomeViewModel {
 
     switch (to) {
       case NavID.send:
-        coordinator.showSend(
+        if (await coordinator.showSend(
           selectedWallet?.walletID ?? "",
           selectedAccount?.accountID ?? "",
-        );
+        )) {
+          inAppReviewCheck(fromSend: true);
+        }
+
       case NavID.receive:
         coordinator.showReceive(
           selectedWallet?.walletID ?? "",
@@ -784,17 +828,15 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> setDisplayBalance({required bool display}) async {
-    await dataProviderManager.userSettingsDataProvider
-        .setDisplayBalance(display);
+    await userSettingsDataProvider.setDisplayBalance(display);
     displayBalance = display;
     datasourceStreamSinkAdd();
   }
 
   Future<void> setupLogger() async {
     try {
-      final unleash = dataProviderManager.unleashDataProvider;
-      await unleash.start();
-      if (unleash.isTraceLoggerEnabled()) {
+      await unleashDataProvider.start();
+      if (unleashDataProvider.isTraceLoggerEnabled()) {
         await LoggerService.initDartLogger();
         await LoggerService.initRustLogger();
       }
@@ -807,20 +849,87 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   String getDisplayName() {
     final userInfo = userManager.userInfo;
-    return dataProviderManager.userDataProvider.user.protonUser?.displayName ??
+    return userDataProvider.user.protonUser?.displayName ??
         userInfo.userDisplayName;
   }
 
   @override
   String getUserEmail() {
     final userInfo = userManager.userInfo;
-    return dataProviderManager.userDataProvider.user.protonUser?.email ??
-        userInfo.userMail;
+    return userDataProvider.user.protonUser?.email ?? userInfo.userMail;
   }
 
   @override
   bool get isBuyMobileDisabled {
-    final check = dataProviderManager.unleashDataProvider.isBuyMobileDisabled();
+    final check = unleashDataProvider.isBuyMobileDisabled();
     return check;
+  }
+
+  @override
+  String getFiatCurrencyName({FiatCurrency? fiatCurrency}) {
+    return userSettingsDataProvider.getFiatCurrencyName(
+      fiatCurrency: fiatCurrency,
+    );
+  }
+
+  @override
+  String getFiatCurrencySign({FiatCurrency? fiatCurrency}) {
+    return userSettingsDataProvider.getFiatCurrencySign(
+      fiatCurrency: fiatCurrency,
+    );
+  }
+
+  @override
+  Future<void> inAppReviewCheck({bool fromSend = false}) async {
+    final currentTime = DateTime.now().secondsSinceEpoch();
+    int detailClicked =
+        await shared.read(PreferenceKeys.inAppReviewDetailCounter) ?? 0;
+    if (!fromSend) {
+      detailClicked += 1;
+      await shared.write(
+        PreferenceKeys.inAppReviewDetailCounter,
+        detailClicked,
+      );
+    }
+    final userInfo = userManager.userInfo;
+
+    if (apple) {
+      // check if in app review is showed before
+      final int lastSeen =
+          await shared.read(PreferenceKeys.inAppReviewTimmer) ?? 0;
+      if (currentTime - lastSeen < thirtyDaysInSeconds) {
+        return;
+      }
+    }
+
+    /// check if user paid user
+    final user = await userDataProvider.getUser(userInfo.userId);
+    if (user == null || user.subscribed == 0) {
+      return;
+    }
+
+    /// check if wallet synced
+    if (!bdkTransactionDataProvider.anyFullSyncedDone()) {
+      return;
+    }
+
+    /// check if there balance
+    if (walletBalanceBloc.state.balanceInSatoshi <= 0) {
+      return;
+    }
+
+    /// show in app review
+    final InAppReview inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      if (fromSend ||
+          (android && detailClicked > 3) ||
+          apple && detailClicked > 1) {
+        await inAppReview.requestReview();
+        await shared.write(PreferenceKeys.inAppReviewDetailCounter, 0);
+        if (apple) {
+          await shared.write(PreferenceKeys.inAppReviewTimmer, currentTime);
+        }
+      }
+    }
   }
 }

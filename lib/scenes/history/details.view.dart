@@ -78,7 +78,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               button: CloseButtonV1(
                   backgroundColor: ProtonColors.backgroundNorm,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(true);
                   }),
             ),
             Expanded(

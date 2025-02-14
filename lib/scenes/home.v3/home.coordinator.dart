@@ -14,6 +14,7 @@ import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.da
 import 'package:wallet/managers/features/wallet/create.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/managers/features/wallet/wallet.name.bloc.dart';
+import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
@@ -84,10 +85,13 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(view);
   }
 
-  void showSend(String walletID, String accountID) {
-    final view =
-        SendCoordinator(nativeViewChannel, walletID, accountID).start();
-    showInBottomSheet(
+  Future<bool> showSend(String walletID, String accountID) {
+    final view = SendCoordinator(
+      nativeViewChannel,
+      walletID,
+      accountID,
+    ).start();
+    return showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
     );
@@ -154,17 +158,17 @@ class HomeCoordinator extends Coordinator {
     showInBottomSheet(view);
   }
 
-  void showHistoryDetails(
+  Future<bool> showHistoryDetails(
     String walletID,
     String accountID,
     FrbTransactionDetails frbTransactionDetails,
-  ) {
+  ) async {
     final view = HistoryDetailCoordinator(
       walletID,
       accountID,
       frbTransactionDetails,
     ).start();
-    showInBottomSheet(
+    return showInBottomSheet(
       view,
       backgroundColor: ProtonColors.white,
     );
@@ -304,6 +308,7 @@ class HomeCoordinator extends Coordinator {
     final dataProviderManager = serviceManager.get<DataProviderManager>();
     final channelManager = serviceManager.get<PlatformChannelManager>();
     final appStateManager = serviceManager.get<AppStateManager>();
+    final shared = serviceManager.get<PreferencesManager>();
 
     /// build wallet list feature bloc
     final walletBloc = WalletListBloc(
@@ -367,7 +372,6 @@ class HomeCoordinator extends Coordinator {
       walletBloc,
       walletTransactionBloc,
       walletBalanceBloc,
-      dataProviderManager,
       createWalletBloc,
       deleteWalletBloc,
       walletNameBloc,
@@ -379,7 +383,20 @@ class HomeCoordinator extends Coordinator {
       ///
       channelManager,
       appStateManager,
+      //
+      dataProviderManager.userDataProvider,
+      dataProviderManager.userSettingsDataProvider,
+      dataProviderManager.priceGraphDataProvider,
+      dataProviderManager.blockInfoDataProvider,
+      dataProviderManager.exclusiveInviteDataProvider,
+      dataProviderManager.contactsDataProvider,
+      dataProviderManager.addressKeyProvider,
+      dataProviderManager.walletDataProvider,
+      dataProviderManager.unleashDataProvider,
+      dataProviderManager.bdkTransactionDataProvider,
+      shared,
     );
+
     widget = HomeView(
       viewModel,
       locker: overlayView,

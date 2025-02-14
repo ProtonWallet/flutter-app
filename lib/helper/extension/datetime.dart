@@ -5,3 +5,7 @@ extension UnixTimestampExtension on DateTime {
     return millisecondsSinceEpoch ~/ Duration.millisecondsPerSecond;
   }
 }
+
+const int thirtyDaysInMilliseconds =
+    30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+const int thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds

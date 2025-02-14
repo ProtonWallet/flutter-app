@@ -235,7 +235,7 @@ class ImportViewModelImpl extends ImportViewModel {
         if (appStateManager.updateStateFrom(e)) {
           return false;
         }
-        errorMessage = parseSampleDisplayError(e);
+        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       }
     } catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");

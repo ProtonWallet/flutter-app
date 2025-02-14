@@ -3,19 +3,19 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i11;
-import 'dart:ui' as _i8;
+import 'dart:async' as _i8;
+import 'dart:ui' as _i9;
 
 import 'package:flutter/material.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i3;
 import 'package:wallet/managers/manager.factory.dart' as _i6;
-import 'package:wallet/scenes/components/discover/proton.feeditem.dart' as _i10;
+import 'package:wallet/scenes/components/discover/proton.feeditem.dart' as _i11;
 import 'package:wallet/scenes/core/coordinator.dart' as _i2;
 import 'package:wallet/scenes/core/view.dart' as _i4;
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart' as _i12;
 import 'package:wallet/scenes/core/viewmodel.dart' as _i1;
 import 'package:wallet/scenes/discover/discover.coordinator.dart' as _i7;
-import 'package:wallet/scenes/discover/discover.viewmodel.dart' as _i9;
+import 'package:wallet/scenes/discover/discover.viewmodel.dart' as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -159,14 +159,14 @@ class MockDiscoverCoordinator extends _i3.Mock
       ) as List<_i5.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i8.Future<bool> showInBottomSheet(
     _i5.Widget? view, {
-    _i8.Color? backgroundColor,
+    _i9.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -177,8 +177,8 @@ class MockDiscoverCoordinator extends _i3.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
 
   @override
   void pushReplacement(
@@ -272,7 +272,7 @@ class MockDiscoverCoordinator extends _i3.Mock
 /// A class which mocks [DiscoverViewModel].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
+class MockDiscoverViewModel extends _i3.Mock implements _i10.DiscoverViewModel {
   MockDiscoverViewModel() {
     _i3.throwOnMissingStub(this);
   }
@@ -293,13 +293,13 @@ class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
       );
 
   @override
-  List<_i10.ProtonFeedItem> get protonFeedItems => (super.noSuchMethod(
+  List<_i11.ProtonFeedItem> get protonFeedItems => (super.noSuchMethod(
         Invocation.getter(#protonFeedItems),
-        returnValue: <_i10.ProtonFeedItem>[],
-      ) as List<_i10.ProtonFeedItem>);
+        returnValue: <_i11.ProtonFeedItem>[],
+      ) as List<_i11.ProtonFeedItem>);
 
   @override
-  set protonFeedItems(List<_i10.ProtonFeedItem>? _protonFeedItems) =>
+  set protonFeedItems(List<_i11.ProtonFeedItem>? _protonFeedItems) =>
       super.noSuchMethod(
         Invocation.setter(
           #protonFeedItems,
@@ -327,11 +327,11 @@ class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
       );
 
   @override
-  _i11.Stream<_i1.ViewModel<_i2.Coordinator>> get datasourceChanged =>
+  _i8.Stream<_i1.ViewModel<_i2.Coordinator>> get datasourceChanged =>
       (super.noSuchMethod(
         Invocation.getter(#datasourceChanged),
-        returnValue: _i11.Stream<_i1.ViewModel<_i2.Coordinator>>.empty(),
-      ) as _i11.Stream<_i1.ViewModel<_i2.Coordinator>>);
+        returnValue: _i8.Stream<_i1.ViewModel<_i2.Coordinator>>.empty(),
+      ) as _i8.Stream<_i1.ViewModel<_i2.Coordinator>>);
 
   @override
   bool get isMobileSize => (super.noSuchMethod(
@@ -358,6 +358,30 @@ class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
       ) as bool);
 
   @override
+  bool get android => (super.noSuchMethod(
+        Invocation.getter(#android),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get iOS => (super.noSuchMethod(
+        Invocation.getter(#iOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get macOS => (super.noSuchMethod(
+        Invocation.getter(#macOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get apple => (super.noSuchMethod(
+        Invocation.getter(#apple),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get screenSizeState => (super.noSuchMethod(
         Invocation.getter(#screenSizeState),
         returnValue: false,
@@ -373,14 +397,14 @@ class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
       );
 
   @override
-  _i11.Future<void> loadData() => (super.noSuchMethod(
+  _i8.Future<void> loadData() => (super.noSuchMethod(
         Invocation.method(
           #loadData,
           [],
         ),
-        returnValue: _i11.Future<void>.value(),
-        returnValueForMissingStub: _i11.Future<void>.value(),
-      ) as _i11.Future<void>);
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -392,12 +416,12 @@ class MockDiscoverViewModel extends _i3.Mock implements _i9.DiscoverViewModel {
       );
 
   @override
-  _i11.Future<void> move(_i12.NavID? to) => (super.noSuchMethod(
+  _i8.Future<void> move(_i12.NavID? to) => (super.noSuchMethod(
         Invocation.method(
           #move,
           [to],
         ),
-        returnValue: _i11.Future<void>.value(),
-        returnValueForMissingStub: _i11.Future<void>.value(),
-      ) as _i11.Future<void>);
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
 }

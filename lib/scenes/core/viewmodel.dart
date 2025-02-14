@@ -47,5 +47,9 @@ abstract class ViewModel<T extends Coordinator>
   bool get keepAlive => false;
   bool get mobile => pf_ext.mobile;
   bool get desktop => pf_ext.desktop;
+  bool get android => pf_ext.android;
+  bool get iOS => pf_ext.iOS;
+  bool get macOS => pf_ext.macOS;
+  bool get apple => iOS || macOS;
   bool get screenSizeState => false;
 }

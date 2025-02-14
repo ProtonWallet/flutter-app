@@ -155,11 +155,10 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
       ));
       lastEvent = event;
       int balance = 0;
-      final WalletModel walletModel = event.walletMenuModel.walletModel;
-      for (AccountMenuModel accountMenuModel
-          in event.walletMenuModel.accounts) {
+      final walletModel = event.walletMenuModel.walletModel;
+      for (final accountMenuModel in event.walletMenuModel.accounts) {
         // update account balance
-        final BDKBalanceData bdkBalanceData =
+        final bdkBalanceData =
             await walletManager.getBDKBalanceDataByWalletAccount(
           walletModel,
           accountMenuModel.accountModel,
@@ -212,19 +211,12 @@ class WalletBalanceBloc extends Bloc<WalletBalanceEvent, WalletBalanceState> {
   }
 
   void selectWallet(WalletMenuModel walletMenuModel) {
-    add(SelectWallet(
-      walletMenuModel,
-    ));
+    add(SelectWallet(walletMenuModel));
   }
 
   void selectAccount(
-    WalletMenuModel walletMenuModel,
-    AccountMenuModel accountMenuModel,
-  ) {
-    add(SelectAccount(
-      walletMenuModel,
-      accountMenuModel,
-    ));
+      WalletMenuModel walletMenuModel, AccountMenuModel accountMenuModel, F) {
+    add(SelectAccount(walletMenuModel, accountMenuModel));
   }
 
   @override
