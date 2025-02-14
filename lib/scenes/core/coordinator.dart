@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.factory.dart';
 import 'package:wallet/scenes/components/page_route.dart';
 import 'package:wallet/scenes/core/responsive.dart';
@@ -40,43 +41,44 @@ abstract class Coordinator implements ViewNavigator {
     throw UnimplementedError();
   }
 
-  void showInBottomSheet(
+  Future<bool> showInBottomSheet(
     Widget view, {
     Color? backgroundColor,
     bool fullScreen = false,
     bool enableDrag = true,
     bool isDismissible = true,
-  }) {
-    Future.delayed(Duration.zero, () {
-      if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
-        _showMobileBottomSheet(
-          view,
-          enableDrag,
-          isDismissible: isDismissible,
-          backgroundColor: backgroundColor,
-          fullScreen: fullScreen,
-        );
-      } else {
-        // desktop and tablet
-        _showDesktopBottomSheet(
-          view,
-          enableDrag,
-          isDismissible: isDismissible,
-          backgroundColor: backgroundColor,
-        );
-      }
-    });
+  }) async {
+    await Future.delayed(Duration.zero);
+    final bool result;
+    if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
+      result = await _showMobileBottomSheet(
+        view,
+        enableDrag,
+        isDismissible: isDismissible,
+        backgroundColor: backgroundColor,
+        fullScreen: fullScreen,
+      );
+    } else {
+      // desktop and tablet
+      result = await _showDesktopBottomSheet(
+        view,
+        enableDrag,
+        isDismissible: isDismissible,
+        backgroundColor: backgroundColor,
+      );
+    }
+    return result;
   }
 
-  void _showMobileBottomSheet(
+  Future<bool> _showMobileBottomSheet(
     Widget view,
     bool enableDrag, {
     Color? backgroundColor,
     bool fullScreen = false,
     bool isDismissible = true,
-  }) {
-    final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
-    showModalBottomSheet(
+  }) async {
+    final context = Coordinator.rootNavigatorKey.currentContext!;
+    final result = await showModalBottomSheet<bool>(
       context: context,
       enableDrag: enableDrag,
       isDismissible: isDismissible,
@@ -90,16 +92,18 @@ abstract class Coordinator implements ViewNavigator {
         return view;
       },
     );
+    logger.i("Bottom sheet closed with result: ${result ?? false}");
+    return result ?? false;
   }
 
-  void _showDesktopBottomSheet(
+  Future<bool> _showDesktopBottomSheet(
     Widget view,
     bool enableDrag, {
     Color? backgroundColor,
     bool isDismissible = true,
-  }) {
-    final BuildContext context = Coordinator.rootNavigatorKey.currentContext!;
-    showModalBottomSheet(
+  }) async {
+    final context = Coordinator.rootNavigatorKey.currentContext!;
+    final result = await showModalBottomSheet<bool>(
       context: context,
       enableDrag: enableDrag,
       isDismissible: isDismissible,
@@ -124,6 +128,8 @@ abstract class Coordinator implements ViewNavigator {
         );
       },
     );
+    logger.i("Desktop bottom sheet closed with result: ${result ?? false}");
+    return result ?? false;
   }
 
   void pushReplacement(Widget view, {bool fullscreenDialog = false}) {

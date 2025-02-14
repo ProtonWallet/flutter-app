@@ -90,7 +90,8 @@ class ProtonRecoveryBloc
                 requireAuthModel: const RequireAuthModel(),
                 mnemonic: mnemonicWords.join(" ")));
           } on BridgeError catch (e) {
-            final errorMessage = parseSampleDisplayError(e);
+            final errorMessage =
+                parseMuonError(e) ?? parseSampleDisplayError(e);
             appStateManager.updateStateFrom(e);
             emit(state.copyWith(
                 isLoading: false,
@@ -149,7 +150,7 @@ class ProtonRecoveryBloc
           }
         } on BridgeError catch (e) {
           appStateManager.updateStateFrom(e);
-          final errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
           emit(state.copyWith(
             isLoading: false,
             requireAuthModel: const RequireAuthModel(),
@@ -201,7 +202,7 @@ class ProtonRecoveryBloc
           ));
         } on BridgeError catch (e) {
           appStateManager.updateStateFrom(e);
-          final errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
           emit(state.copyWith(
             isLoading: false,
             requireAuthModel: const RequireAuthModel(),

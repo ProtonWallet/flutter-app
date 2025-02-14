@@ -43,6 +43,13 @@ String? parseSessionExpireError(BridgeError exception) {
   );
 }
 
+String? parseMuonError(BridgeError exception) {
+  return exception.maybeMap(
+    muonClient: (e) => "Connection error. Please try again.",
+    orElse: () => null,
+  );
+}
+
 String? parseUserLimitationError(BridgeError exception) {
   final responseError = parseResponseError(exception);
   if (responseError != null && responseError.isCreationLimition()) {

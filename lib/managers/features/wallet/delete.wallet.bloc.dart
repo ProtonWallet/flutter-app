@@ -130,7 +130,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
         } on BridgeError catch (e, stacktrace) {
           appStateManager.updateStateFrom(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
-          final errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
           Sentry.captureException(e, stackTrace: stacktrace);
           emit(state.copyWith(
               isLoading: false,
@@ -192,7 +192,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
               requireAuthModel: const DeleteWalletAuthModel()));
         } on BridgeError catch (e, stacktrace) {
           appStateManager.updateStateFrom(e);
-          final errorMessage = parseSampleDisplayError(e);
+          final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
           logger.e("Delete wallet BridgeError: $e, stacktrace: $stacktrace");
           Sentry.captureException(e, stackTrace: stacktrace);
           emit(state.copyWith(

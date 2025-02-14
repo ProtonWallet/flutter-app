@@ -163,6 +163,30 @@ class MockWelcomeViewModel extends _i1.Mock implements _i9.WelcomeViewModel {
       ) as bool);
 
   @override
+  bool get android => (super.noSuchMethod(
+        Invocation.getter(#android),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get iOS => (super.noSuchMethod(
+        Invocation.getter(#iOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get macOS => (super.noSuchMethod(
+        Invocation.getter(#macOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get apple => (super.noSuchMethod(
+        Invocation.getter(#apple),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get screenSizeState => (super.noSuchMethod(
         Invocation.getter(#screenSizeState),
         returnValue: false,
@@ -333,14 +357,14 @@ class MockWelcomeCoordinator extends _i1.Mock
       ) as List<_i6.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i10.Future<bool> showInBottomSheet(
     _i6.Widget? view, {
     _i13.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -351,8 +375,8 @@ class MockWelcomeCoordinator extends _i1.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i10.Future<bool>.value(false),
+      ) as _i10.Future<bool>);
 
   @override
   void pushReplacement(

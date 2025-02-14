@@ -143,6 +143,30 @@ class MockBuyingUnavailableViewModel extends _i1.Mock
       ) as bool);
 
   @override
+  bool get android => (super.noSuchMethod(
+        Invocation.getter(#android),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get iOS => (super.noSuchMethod(
+        Invocation.getter(#iOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get macOS => (super.noSuchMethod(
+        Invocation.getter(#macOS),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool get apple => (super.noSuchMethod(
+        Invocation.getter(#apple),
+        returnValue: false,
+      ) as bool);
+
+  @override
   bool get screenSizeState => (super.noSuchMethod(
         Invocation.getter(#screenSizeState),
         returnValue: false,
@@ -268,14 +292,14 @@ class MockBuyingUnavailableCoordinator extends _i1.Mock
       ) as List<_i5.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i8.Future<bool> showInBottomSheet(
     _i5.Widget? view, {
     _i11.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -286,8 +310,8 @@ class MockBuyingUnavailableCoordinator extends _i1.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
 
   @override
   void pushReplacement(

@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.event.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
 import 'package:wallet/managers/providers/gateway.data.provider.dart';
+import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/buybitcoin.view.dart';
 
@@ -256,6 +259,20 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
             provider: provider,
           ),
           received: received,
+        ));
+      } on BridgeError catch (e, stacktrace) {
+        final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+        logger.e("Get quote error: $e, stacktrace: $stacktrace");
+        emit(state.copyWith(
+          isQuoteLoaded: true,
+          isQuoteFailed: true,
+          quotes: [],
+          selectedModel: state.selectedModel.copyWith(
+            supportedPayments: [],
+            provider: provider,
+          ),
+          received: {},
+          error: errorMessage,
         ));
       } catch (e) {
         emit(state.copyWith(

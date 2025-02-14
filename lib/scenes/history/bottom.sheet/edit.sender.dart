@@ -54,8 +54,8 @@ class EditSenderSheet {
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
                 child: Text(S.of(context).unknown_sender,
-                    style: ProtonStyles.headline(
-                        color: ProtonColors.textNorm))),
+                    style:
+                        ProtonStyles.headline(color: ProtonColors.textNorm))),
             const SizedBox(height: 10),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -121,7 +121,8 @@ class EditSenderSheet {
                           );
                         }
                       } on BridgeError catch (e, stacktrace) {
-                        final msg = parseSampleDisplayError(e);
+                        final msg =
+                            parseMuonError(e) ?? parseSampleDisplayError(e);
                         logger.e("error: $e, stacktrace: $stacktrace");
                         CommonHelper.showErrorDialog(msg);
                       } catch (e) {

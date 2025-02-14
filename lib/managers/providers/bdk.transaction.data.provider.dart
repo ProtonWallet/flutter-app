@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/constants.dart';
-import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/extension/response.error.extension.dart';
@@ -291,7 +290,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final timeEnd = DateTime.now().secondsSinceEpoch();
         logger.i("Bdk wallet partial sync end with error time: $timeEnd");
         await updateErrorCount();
-        final errorMessage = parseSampleDisplayError(e);
+        final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
         emitState(BDKSyncError(errorMessage));
 
@@ -302,7 +301,7 @@ class BDKTransactionDataProvider extends DataProvider {
         final isSessionExpired = parseSessionExpireError(e) != null;
         final isForceUpgrade = responseError?.isForceUpgrade() ?? false;
         if (!isSessionExpired && !isForceUpgrade) {
-          CommonHelper.showErrorDialog(errorMessage);
+          // CommonHelper.showErrorDialog(errorMessage);
         }
         if (!ifMuonClientError(e)) {
           Sentry.captureException(
@@ -314,13 +313,8 @@ class BDKTransactionDataProvider extends DataProvider {
         final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
         await shared.write(PreferenceKeys.syncErrorCount, count + 1);
         emitState(BDKSyncError(e.toString()));
-        final String errorMessage =
-            "Bdk wallet full sync error: $e \nstacktrace: $stacktrace";
-        logger.e(errorMessage);
-
-        CommonHelper.showErrorDialog(
-          errorMessage,
-        );
+        logger.e("Bdk wallet full sync error: $e \nstacktrace: $stacktrace");
+        Sentry.captureException(e, stackTrace: stacktrace);
       } finally {
         logger.i("Bdk wallet sync end finally");
         isWalletSyncing[accountModel.accountID] = false;

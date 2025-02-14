@@ -230,7 +230,7 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
           return false;
         }
 
-        final msg = parseSampleDisplayError(e);
+        final msg = parseMuonError(e) ?? parseSampleDisplayError(e);
         CommonHelper.showErrorDialog(msg);
       }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
@@ -267,7 +267,7 @@ class OnboardingGuideViewModelImpl extends OnboardingGuideViewModel {
       );
     } on BridgeError catch (e, stacktrace) {
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseSampleDisplayError(e);
+        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {

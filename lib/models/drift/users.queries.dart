@@ -10,9 +10,9 @@ class UserQueries extends DatabaseAccessor<AppDatabase>
     with _$UserQueriesMixin {
   UserQueries(super.attachedDatabase);
 
-  Future<DriftProtonUser> getUser(String userId) {
+  Future<DriftProtonUser?> getUser(String userId) {
     return (select(usersTable)..where((tbl) => tbl.userId.equals(userId)))
-        .getSingle();
+        .getSingleOrNull();
   }
 
   Stream<DriftProtonUser> watchUser(String userId) {

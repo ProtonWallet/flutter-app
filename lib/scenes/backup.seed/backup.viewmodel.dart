@@ -139,7 +139,7 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
       }
       flowState = SetupBackupState.done;
     } on BridgeError catch (e, stacktrace) {
-      error = parseSampleDisplayError(e);
+      error = parseMuonError(e) ?? parseSampleDisplayError(e);
       logger.e("viewSeed BridgeError: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
       reset();

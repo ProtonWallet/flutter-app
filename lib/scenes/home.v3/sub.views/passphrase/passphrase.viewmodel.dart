@@ -89,7 +89,7 @@ class PassphraseViewModelImpl extends PassphraseViewModel {
       );
     } on BridgeError catch (e, stacktrace) {
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseSampleDisplayError(e);
+        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {

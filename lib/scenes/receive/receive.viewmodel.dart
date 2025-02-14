@@ -125,7 +125,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     } on BridgeError catch (e, stacktrace) {
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseSampleDisplayError(e);
+        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
       }
     } catch (e) {
       errorMessage = e.toString();

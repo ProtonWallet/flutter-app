@@ -668,7 +668,7 @@ class SendViewModelImpl extends SendViewModel {
         } on BridgeError catch (e, stacktrace) {
           appStateManager.updateStateFrom(e);
           final err = parseResponseError(e);
-          final msg = parseSampleDisplayError(e);
+          final msg = parseMuonError(e) ?? parseSampleDisplayError(e);
           if (err != null) {
             if (err.code == 2001) {
               /// cannot find the email address in BvE pool
@@ -1310,7 +1310,7 @@ class SendViewModelImpl extends SendViewModel {
       exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      final errMsg = parseSampleDisplayError(e);
+      final errMsg = parseMuonError(e) ?? parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);
@@ -1339,7 +1339,7 @@ class SendViewModelImpl extends SendViewModel {
       exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      final errMsg = parseSampleDisplayError(e);
+      final errMsg = parseMuonError(e) ?? parseSampleDisplayError(e);
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
       if (context != null && context.mounted) {
         CommonHelper.showErrorDialog(errMsg);
@@ -1359,7 +1359,8 @@ class SendViewModelImpl extends SendViewModel {
     logger.e(
       "Send sendCoin() error: $error stacktrace: $stacktrace",
     );
-    final msg = "Send error process: ${parseSampleDisplayError(error)}";
+    final msg =
+        "Send error process: ${parseMuonError(error) ?? parseSampleDisplayError(error)}";
     if (msg.isNotEmpty) {
       // TODO(fix): improve logic here
       final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;

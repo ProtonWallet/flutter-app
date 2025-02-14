@@ -1113,7 +1113,7 @@ class SendView extends ViewBase<SendViewModel> {
               child: Column(children: [
                 ButtonV5(
                     onPressed: () async {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(true);
                     },
                     text: S.of(context).done,
                     width: MediaQuery.of(context).size.width,

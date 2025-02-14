@@ -278,14 +278,14 @@ class MockWelcomeCoordinator extends _i3.Mock
       ) as List<_i5.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i9.Future<bool> showInBottomSheet(
     _i5.Widget? view, {
     _i13.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -296,8 +296,8 @@ class MockWelcomeCoordinator extends _i3.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
   void pushReplacement(
@@ -496,14 +496,14 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
       ) as List<_i5.Widget>);
 
   @override
-  void showInBottomSheet(
+  _i9.Future<bool> showInBottomSheet(
     _i5.Widget? view, {
     _i13.Color? backgroundColor,
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
   }) =>
-      super.noSuchMethod(
+      (super.noSuchMethod(
         Invocation.method(
           #showInBottomSheet,
           [view],
@@ -514,8 +514,8 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
             #isDismissible: isDismissible,
           },
         ),
-        returnValueForMissingStub: null,
-      );
+        returnValue: _i9.Future<bool>.value(false),
+      ) as _i9.Future<bool>);
 
   @override
   void pushReplacement(

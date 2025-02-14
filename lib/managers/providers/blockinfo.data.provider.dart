@@ -14,8 +14,7 @@ class BlockInfoDataProvider extends DataProvider {
     this.blockClient,
   );
 
-  StreamController<DataUpdated> dataUpdateController =
-      StreamController<DataUpdated>();
+  final dataUpdateController = StreamController<DataUpdated>();
 
   Future<void> syncBlockHeight() async {
     final int newHeight = await blockClient.getTipHeight();
