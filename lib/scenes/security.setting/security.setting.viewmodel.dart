@@ -90,9 +90,11 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
     final currentType = await appStateManager.getUnlockType();
     if (currentType.type != newValue) {
+      appStateManager.isAuthenticating = true;
       final authenticated = await localAuthManager.authenticate(
         "Changing unlock type",
       );
+      appStateManager.isAuthenticating = false;
       if (authenticated) {
         selectedType = newValue;
         await appStateManager.saveUnlockType(UnlockModel(type: newValue));

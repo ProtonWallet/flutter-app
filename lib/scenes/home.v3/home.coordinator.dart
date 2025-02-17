@@ -41,7 +41,7 @@ import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/tra
 import 'package:wallet/scenes/home.v3/sub.views/unavailable/buying.unavailable.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
-import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
+import 'package:wallet/scenes/lock.core/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
 import 'package:wallet/scenes/recovery/recovery.coordinator.dart';
 import 'package:wallet/scenes/security.setting/security.setting.coordinator.dart';

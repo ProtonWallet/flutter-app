@@ -684,6 +684,7 @@ class HomeViewModelImpl extends HomeViewModel {
       }
       await walletManager.cleanSharedPreference();
       await DBHelper.reset();
+      await appStateManager.logout();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
       errorMessage = e.localizedString;

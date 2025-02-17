@@ -8,18 +8,18 @@ import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
-import 'package:wallet/scenes/lock/lock.overlay.coordinator.dart';
+import 'package:wallet/scenes/lock.overlay/lock.overlay.coordinator.dart';
 
 enum UnlockState {
   locked,
   unlocked,
 }
 
-abstract class LockViewModel extends ViewModel<LockCoordinator> {
-  LockViewModel(super.coordinator);
+abstract class LockOverlayViewModel extends ViewModel<LockOverlayCoordinator> {
+  LockOverlayViewModel(super.coordinator);
 
-  bool isLocked = false;
   bool isLockTimerNeedUnlock = false;
+  bool needUnlock = true;
   String error = "";
 
   Future<void> unlock();
@@ -27,21 +27,22 @@ abstract class LockViewModel extends ViewModel<LockCoordinator> {
   Future<void> logout();
 }
 
-class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
+class LockOverlayViewModelImpl extends LockOverlayViewModel
+    with WidgetsBindingObserver {
   final AppStateManager appStateManager;
   final LocalAuthManager localAuthManager;
 
   /// Used to prevent the biometric unlock from being called
   /// multiple times when the app is resumed
-  bool lastUnlockFailed = false;
-
+  bool lastUnlockFailed = true;
+  bool isUnlocking = false;
+  bool isLocked = false;
   bool hadLogout = false;
+  bool askUnlockWhenOnload = false;
 
-  LockViewModelImpl(
-    super.coordinator,
-    this.appStateManager,
-    this.localAuthManager,
-  );
+  LockOverlayViewModelImpl(
+      super.coordinator, this.appStateManager, this.localAuthManager,
+      {required this.askUnlockWhenOnload});
 
   @override
   void dispose() {
@@ -52,25 +53,34 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
   @override
   Future<void> loadData() async {
     WidgetsBinding.instance.addObserver(this);
-    final type = await appStateManager.getUnlockType();
-    isLocked = type.type == UnlockType.biometrics;
-
-    sinkAddSafe();
-    if (isLocked) {
-      await unlock();
+    if (askUnlockWhenOnload) {
+      unlock();
     }
+
+    /// check last lock timer
+    isLockTimerNeedUnlock = await appStateManager.isLockTimerNeedUnlock();
+
+    /// we don't need to ask user unlock if UnlockType is none
+    final type = await appStateManager.getUnlockType();
+    if (type.type == UnlockType.none) {
+      needUnlock = false;
+    }
+    sinkAddSafe();
   }
 
   @override
   Future<void> unlock() async {
+    isUnlocking = true;
     final type = await appStateManager.getUnlockType();
     switch (type.type) {
       case UnlockType.biometrics:
         // lock the app
         isLocked = true;
       case UnlockType.none:
-        isLocked = false;
-        sinkAddSafe();
+
+        /// wait 0.25s to make UI transform more smoothly
+        await Future.delayed(const Duration(milliseconds: 250));
+        unlockSuccess();
         return;
     }
 
@@ -78,27 +88,29 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     isLockTimerNeedUnlock = await appStateManager.isLockTimerNeedUnlock();
     if (!isLockTimerNeedUnlock) {
       /// still in lock timer range, we don't need to ask user to unlock
-      isLocked = false;
-      sinkAddSafe();
+      /// wait 0.25s to make UI transform more smoothly
+      await Future.delayed(const Duration(milliseconds: 250));
+      unlockSuccess();
       return;
     }
     sinkAddSafe();
 
     final count = await appStateManager.getErrorCount();
+    appStateManager.isAuthenticating = true;
     final result = await localAuthManager.authenticate("Unlock Proton Wallet");
+    appStateManager.isAuthenticating = false;
     if (result) {
-      isLocked = false;
-      error = "";
-      lastUnlockFailed = true;
       await appStateManager.updateCount(UnlockErrorCount.zero());
+      unlockSuccess();
+      return;
     } else {
-      isLocked = true;
       lastUnlockFailed = false;
       final newCount = count.plus();
       await appStateManager.updateCount(newCount);
       error =
           "You will be locked out after ${5 - newCount.count} failed attempts";
     }
+    isUnlocking = false;
     sinkAddSafe();
   }
 
@@ -116,21 +128,16 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         logger.d("App is in foreground");
-        if (isLocked && lastUnlockFailed) {
+        if (lastUnlockFailed && !isUnlocking) {
           unlock();
         }
         sinkAddSafe();
-      // App comes to foreground
       case AppLifecycleState.inactive:
         logger.d("App is inactive");
-        lockIfNeeded();
-      // App is inactive
       case AppLifecycleState.paused:
         logger.d("App is in background");
-      // App goes to background
       case AppLifecycleState.detached:
         logger.d("App is detached");
-      // App is detached
       case AppLifecycleState.hidden:
         logger.d("App is hidden");
     }
@@ -144,31 +151,15 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
     }
   }
 
-  Future<void> lockIfNeeded() async {
-    final type = await appStateManager.getUnlockType();
-    switch (type.type) {
-      case UnlockType.biometrics:
+  void unlockSuccess() {
+    appStateManager.isLocked = false;
 
-        /// update app last activate time only when app is unlocked
-        if (!isLocked) {
-          await appStateManager.saveAppLastActivateTime();
-          isLockTimerNeedUnlock = await appStateManager.isLockTimerNeedUnlock();
-
-          if (isLockTimerNeedUnlock) {
-            /// popup to home page so we can show lock overlay correctly
-            final BuildContext? context =
-                Coordinator.rootNavigatorKey.currentContext;
-            if (context != null && context.mounted) {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            }
-          }
-        }
-
-        /// lock the app
-        isLocked = true;
-      case UnlockType.none:
-        isLocked = false;
+    /// pop this lock overlay
+    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+    if (context != null && context.mounted) {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
     }
-    sinkAddSafe();
   }
 }
