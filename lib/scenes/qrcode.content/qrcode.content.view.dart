@@ -36,7 +36,7 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: ProtonColors.white,
+            color: ProtonColors.backgroundSecondary,
             // border: Border.all(color: Colors.black, width: 1.0),
             borderRadius: BorderRadius.circular(24.0),
           ),
@@ -45,11 +45,19 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
             children: [
               const SizedBox(height: defaultPadding),
               Container(
-                  color: ProtonColors.white,
+                  color: ProtonColors.backgroundSecondary,
                   padding: const EdgeInsets.all(10),
                   child: QrImageView(
                     size: min(MediaQuery.of(context).size.width, 200),
                     data: viewModel.data,
+                    eyeStyle: QrEyeStyle(
+                      eyeShape: QrEyeShape.square,
+                      color: ProtonColors.textNorm,
+                    ),
+                    dataModuleStyle: QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.square,
+                      color: ProtonColors.textNorm,
+                    ),
                   )),
               if (viewModel.qRcodeType == QRcodeType.bitcoinAddress)
                 GestureDetector(
