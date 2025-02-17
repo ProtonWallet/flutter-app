@@ -88,6 +88,11 @@ abstract class WalletClient implements RustOpaqueInterface {
       required String walletAccountId,
       required String addressId});
 
+  Future<void> sendWalletAccountMetrics(
+      {required String walletId,
+      required String walletAccountId,
+      required bool hasPositiveBalance});
+
   Future<WalletTransaction> setWalletTransactionPrivateFlag(
       {required String walletId,
       required String walletAccountId,

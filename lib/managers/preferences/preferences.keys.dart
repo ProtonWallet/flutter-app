@@ -5,6 +5,7 @@ class PreferenceKeys {
   static const String syncErrorTimer = "proton_wallet_app_k_sync_error_timmer";
 
   static const String bdkFullSyncedPrefix = "is_bdk_wallet_full_synced";
+  static const String bdkPositiveBalancePrefix = "is_bdk_wallet_positive_balance";
   static const String latestEventId = "latest_event_id";
   static const String appDatabaseVersion = "appDatabaseVersion";
 

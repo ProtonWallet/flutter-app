@@ -148,6 +148,28 @@ class BDKTransactionDataProvider extends DataProvider {
     return isWalletSyncing[accountModel.accountID] ?? false;
   }
 
+  String getPositiveBalanceCheckID(
+      WalletModel walletModel, AccountModel accountModel) {
+    final String serverWalletID = walletModel.walletID;
+    final String serverAccountID = accountModel.accountID;
+    final String checkID =
+        "${PreferenceKeys.bdkPositiveBalancePrefix}_${serverWalletID}_$serverAccountID";
+    return checkID;
+  }
+
+  Future<bool> getHasPositiveBalance(
+      WalletModel walletModel, AccountModel accountModel) async {
+    final String checkID = getPositiveBalanceCheckID(walletModel, accountModel);
+    return await shared.read(checkID) ?? false;
+  }
+
+  Future<void> setHasPositiveBalance(
+      WalletModel walletModel, AccountModel accountModel,
+      {required bool hasPositiveBalance}) async {
+    final String checkID = getPositiveBalanceCheckID(walletModel, accountModel);
+    await shared.write(checkID, hasPositiveBalance);
+  }
+
   String getSyncCheckID(WalletModel walletModel, AccountModel accountModel) {
     final String serverWalletID = walletModel.walletID;
     final String serverAccountID = accountModel.accountID;
@@ -349,6 +371,31 @@ class BDKTransactionDataProvider extends DataProvider {
             Sentry.captureException(e, stackTrace: stacktrace);
           }
         }
+      }
+    }
+
+    /// check metrics after sync
+    if (account != null) {
+      try {
+        final balance = await account.getBalance();
+        final hasPositiveBalance =
+            balance.trustedSpendable().toSat().toInt() > 0;
+        final hasPositiveBalanceInCache =
+            await getHasPositiveBalance(walletModel, accountModel);
+        if (hasPositiveBalance != hasPositiveBalanceInCache) {
+          /// update cache to avoid spam
+          await setHasPositiveBalance(walletModel, accountModel,
+              hasPositiveBalance: hasPositiveBalance);
+          await walletClient.sendWalletAccountMetrics(
+            walletId: walletModel.walletID,
+            walletAccountId: accountModel.accountID,
+            hasPositiveBalance: hasPositiveBalance,
+          );
+        }
+      } catch (e, stacktrace) {
+        logger
+            .e("Send Wallet Account Metrics error: $e stacktrace: $stacktrace");
+        Sentry.captureException(e, stackTrace: stacktrace);
       }
     }
   }
