@@ -35,7 +35,7 @@ class SecureYourWalletCoordinator extends Coordinator {
   void showSetupBackup() {
     showInBottomSheet(
       SetupBackupCoordinator(walletID).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

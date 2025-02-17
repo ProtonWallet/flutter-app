@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -12,9 +13,10 @@ class SendFlowInviteSuccessSheet {
     BuildContext context,
     String email,
   ) {
-    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
-        child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+    HomeModalBottomSheet.show(context,
+        backgroundColor: ProtonColors.backgroundSecondary, child:
+            StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Align(
             alignment: Alignment.centerLeft,
@@ -26,11 +28,11 @@ class SendFlowInviteSuccessSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.paperPlane.image(
-                fit: BoxFit.fill,
-                width: 240,
-                height: 167,
-              ),
+              Assets.images.icon.paperPlane.applyThemeIfNeeded(context).image(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 167,
+                  ),
               const SizedBox(height: 20),
               Text(
                 S.of(context).invitation_sent_to(email),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 
 import 'payment.dropdown.item.dart';
 
@@ -8,6 +9,7 @@ class PaymentDropdownItem extends StatelessWidget {
   final Widget? icon;
   final bool selected;
   final VoidCallback? onTap;
+
   const PaymentDropdownItem({
     required this.item,
     required this.icon,
@@ -58,23 +60,13 @@ class PaymentDropdownItem extends StatelessWidget {
             Text(
               // 'Credit Card',
               item.title,
-              style: const TextStyle(
-                color: Color(0xFF0C0C14),
-                fontSize: 14,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-              ),
+              style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
             ),
             Expanded(
               child: Text(
                 item.subtitle,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
-                  color: Color(0xFF191C32),
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                ),
+                style: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
               ),
             ),
           ],

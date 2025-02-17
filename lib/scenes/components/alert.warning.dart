@@ -24,21 +24,21 @@ class AlertWarning extends StatelessWidget {
           left: 20,
         ),
         decoration: BoxDecoration(
-            color: ProtonColors.alertWaningBackground,
+            color: ProtonColors.notificationWaningBackground,
             borderRadius: BorderRadius.circular(10.0),
             border: Border.all(
-              color: ProtonColors.alertWaning,
+              color: ProtonColors.notificationWaning,
             )),
         child: Column(
           children: [
             Row(
               children: [
-                Icon(Icons.warning, color: ProtonColors.alertWaning),
+                Icon(Icons.warning, color: ProtonColors.notificationWaning),
                 SizedBoxes.box8,
                 Expanded(
                     child: Text(content,
                         style:
-                            ProtonStyles.body2Regular(color:ProtonColors.alertWaning)))
+                            ProtonStyles.body2Regular(color:ProtonColors.notificationWaning)))
               ],
             )
           ],

@@ -45,7 +45,8 @@ class RecipientDetail extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 6.0),
       padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
       decoration: BoxDecoration(
-          color: ProtonColors.white, borderRadius: BorderRadius.circular(12.0)),
+          color: ProtonColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(12.0)),
       child: buildContent(
         context,
         isBitcoinAddress: CommonHelper.isBitcoinAddress(email ?? ""),
@@ -168,12 +169,12 @@ class RecipientDetail extends StatelessWidget {
                     //           },
                     //           child: Row(children: [
                     //             Icon(Icons.info_rounded,
-                    //                 color: ProtonColors.signalError, size: 14),
+                    //                 color: ProtonColors.notificationError, size: 14),
                     //             const SizedBox(width: 1),
                     //             Text(
                     //               S.of(context).no_wallet_found,
                     //               style: ProtonStyles.captionRegular(
-                    //                   color: ProtonColors.signalError),
+                    //                   color: ProtonColors.notificationError),
                     //             ),
                     //             const SizedBox(width: 16),
                     //             Text(S.of(context).send_invite,
@@ -186,7 +187,7 @@ class RecipientDetail extends StatelessWidget {
                     if (isSelfBitcoinAddress)
                       Row(children: [
                         Icon(Icons.info_rounded,
-                            color: ProtonColors.signalError, size: 14),
+                            color: ProtonColors.notificationError, size: 14),
                         const SizedBox(width: 1),
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 200,
@@ -195,14 +196,14 @@ class RecipientDetail extends StatelessWidget {
                                 .of(context)
                                 .error_you_can_not_send_to_self_account,
                             style: ProtonStyles.captionSemibold(
-                                color: ProtonColors.signalError),
+                                color: ProtonColors.notificationError),
                           ),
                         )
                       ]),
                     if (isSignatureInvalid)
                       Row(children: [
                         Icon(Icons.info_rounded,
-                            color: ProtonColors.signalError, size: 14),
+                            color: ProtonColors.notificationError, size: 14),
                         const SizedBox(width: 1),
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 200,
@@ -211,21 +212,21 @@ class RecipientDetail extends StatelessWidget {
                                 .of(context)
                                 .error_this_bitcoin_address_signature_is_invalid,
                             style: ProtonStyles.captionSemibold(
-                                color: ProtonColors.signalError),
+                                color: ProtonColors.notificationError),
                           ),
                         )
                       ]),
                     if (isBlocked)
                       Row(children: [
                         Icon(Icons.info_rounded,
-                            color: ProtonColors.signalError, size: 14),
+                            color: ProtonColors.notificationError, size: 14),
                         const SizedBox(width: 1),
                         SizedBox(
                           width: MediaQuery.of(context).size.width - 200,
                           child: Text(
                             S.of(context).error_this_bitcoin_address_is_blocked,
                             style: ProtonStyles.captionSemibold(
-                                color: ProtonColors.signalError),
+                                color: ProtonColors.notificationError),
                           ),
                         )
                       ]),

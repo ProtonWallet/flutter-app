@@ -3,6 +3,7 @@ import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/tag.v2.dart';
@@ -27,11 +28,11 @@ class BackupMnemonicView extends StatelessWidget {
           child: SingleChildScrollView(
               child: Column(
         children: [
-          Assets.images.icon.key.image(
-            fit: BoxFit.fill,
-            width: 240,
-            height: 167,
-          ),
+          Assets.images.icon.key.applyThemeIfNeeded(context).image(
+                fit: BoxFit.fill,
+                width: 240,
+                height: 167,
+              ),
           Text(S.of(context).mnemonic_backup_content_title,
               style: ProtonStyles.headline(color: ProtonColors.textNorm)),
           Padding(

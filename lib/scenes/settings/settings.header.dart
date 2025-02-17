@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 
 class SectionHeader extends StatelessWidget {
@@ -19,7 +20,7 @@ class SectionHeader extends StatelessWidget {
             child: Text(
               title,
               style: ProtonStyles.body2Semibold(
-                color: const Color(0xFF848993),
+                color: ProtonColors.textWeak,
               ),
             ),
           ),

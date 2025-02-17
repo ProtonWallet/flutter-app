@@ -26,7 +26,7 @@ class TagV2 extends StatelessWidget {
             const EdgeInsets.only(
                 left: 20.0, right: 20.0, top: 2.0, bottom: 2.0),
         decoration: BoxDecoration(
-            color: ProtonColors.white,
+            color: ProtonColors.backgroundSecondary,
             borderRadius: BorderRadius.circular(40.0)),
         child: Row(children: [
           SizedBox(

@@ -6,6 +6,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
@@ -30,11 +31,11 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
 
   Widget buildHeader(BuildContext context, String body) {
     return Column(children: [
-      Assets.images.icon.lock.image(
-        fit: BoxFit.fill,
-        width: 240,
-        height: 167,
-      ),
+      Assets.images.icon.lock.applyThemeIfNeeded(context).image(
+            fit: BoxFit.fill,
+            width: 240,
+            height: 167,
+          ),
       Text(
         S.of(context).setting_2fa_disable,
         style: ProtonStyles.subheadline(color: ProtonColors.textNorm),
@@ -54,7 +55,7 @@ class TwoFactorAuthDisableView extends ViewBase<TwoFactorAuthDisableViewModel> {
   /// build 2fa confirm Widget
   Widget build2FAConfirm(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(

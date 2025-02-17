@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,6 +17,7 @@ import 'package:wallet/models/transaction.info.model.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/textfield.text.v2.dart';
 import 'package:wallet/scenes/components/transaction.history.item.dart';
@@ -67,7 +67,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
       height: double.infinity,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
       ),
       child: SafeArea(
         child: Column(
@@ -91,12 +91,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       !viewModel.initialized
-                          ? const CardLoading(
+                          ? const CustomCardLoadingBuilder(
                               height: 50,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
                               margin: EdgeInsets.only(top: 4),
-                            )
+                            ).build(context)
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -178,7 +178,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           title: S.of(context).trans_date,
                           content: CommonHelper.formatLocaleTime(
                               context, viewModel.transactionTime!),
-                          backgroundColor: ProtonColors.white,
+                          backgroundColor: ProtonColors.backgroundSecondary,
                           isLoading: !viewModel.initialized,
                         ),
                       const Divider(
@@ -197,7 +197,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                 ? S.of(context).trans_message_to_recipient
                                 : S.of(context).trans_message_from_sender,
                             content: viewModel.body,
-                            backgroundColor: ProtonColors.white,
+                            backgroundColor: ProtonColors.backgroundSecondary,
                             isLoading: !viewModel.initialized,
                           ),
                           const Divider(
@@ -206,12 +206,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                           ),
                         ]),
                       !viewModel.initialized
-                          ? const CardLoading(
+                          ? const CustomCardLoadingBuilder(
                               height: 50,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
                               margin: EdgeInsets.only(top: 4),
-                            )
+                            ).build(context)
                           : !viewModel.isEditing
                               ? GestureDetector(
                                   onTap: () {
@@ -347,7 +347,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                             viewModel.userSettingsDataProvider
                                                 .bitcoinUnit,
                                             viewModel.fee.toInt()),
-                                    backgroundColor: ProtonColors.white,
+                                    backgroundColor:
+                                        ProtonColors.backgroundSecondary,
                                     isLoading: !viewModel.initialized,
                                   )
                                 : TransactionHistoryItem(
@@ -357,7 +358,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                     content:
                                         "$fiatCurrencyName $hidedBalanceString",
                                     memo: getHidedBitcoinAmountString(),
-                                    backgroundColor: ProtonColors.white,
+                                    backgroundColor:
+                                        ProtonColors.backgroundSecondary,
                                     isLoading: !viewModel.initialized,
                                   ),
                             const Divider(
@@ -386,7 +388,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                                     .bitcoinUnit,
                                                 viewModel.amount.toInt() +
                                                     viewModel.fee.toInt()),
-                                    backgroundColor: ProtonColors.white,
+                                    backgroundColor:
+                                        ProtonColors.backgroundSecondary,
                                     isLoading: !viewModel.initialized,
                                   )
                                 : TransactionHistoryItem(
@@ -394,7 +397,8 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                     content:
                                         "$fiatCurrencyName $hidedBalanceString",
                                     memo: getHidedBitcoinAmountString(),
-                                    backgroundColor: ProtonColors.white,
+                                    backgroundColor:
+                                        ProtonColors.backgroundSecondary,
                                     isLoading: !viewModel.initialized,
                                   ),
                             const SizedBox(height: 20),
@@ -462,9 +466,9 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
               ? S.of(context).in_progress_broadcasted
               : S.of(context).in_progress_waiting_for_confirm,
       contentColor: viewModel.transactionTime != null
-          ? ProtonColors.signalSuccess
-          : ProtonColors.signalError,
-      backgroundColor: ProtonColors.white,
+          ? ProtonColors.notificationSuccess
+          : ProtonColors.notificationError,
+      backgroundColor: ProtonColors.backgroundSecondary,
       isLoading: !viewModel.initialized,
     );
   }
@@ -503,13 +507,13 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 title: S.of(context).trans_from,
                 content: "$yourEmail (You)",
                 memo: "${viewModel.walletName} - ${viewModel.accountName}",
-                backgroundColor: ProtonColors.white,
+                backgroundColor: ProtonColors.backgroundSecondary,
                 isLoading: !viewModel.initialized,
               )
             : TransactionHistoryItem(
                 title: S.of(context).trans_from,
                 content: "${viewModel.walletName} - ${viewModel.accountName}",
-                backgroundColor: ProtonColors.white,
+                backgroundColor: ProtonColors.backgroundSecondary,
                 isLoading: !viewModel.initialized,
               ),
       ],
@@ -558,7 +562,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 : viewModel.isInternalTransaction
                     ? "Anonymous sender"
                     : "Unknown",
-            backgroundColor: ProtonColors.white,
+            backgroundColor: ProtonColors.backgroundSecondary,
             isLoading: !viewModel.initialized,
           ),
           if (!viewModel.isInternalTransaction && viewModel.initialized)

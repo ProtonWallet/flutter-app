@@ -1,4 +1,3 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -7,6 +6,7 @@ import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 
 class EstimationWidget extends StatelessWidget {
   const EstimationWidget({
@@ -34,11 +34,11 @@ class EstimationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (!state.isQuoteLoaded)
-                          const CardLoading(
+                          const CustomCardLoadingBuilder(
                             margin: EdgeInsets.only(top: 4),
                             height: 15,
                             width: 300,
-                          ),
+                          ).build(context),
                         if (state.isQuoteLoaded)
                           Text(
                             "${state.selectedModel.amount} ${state.selectedModel.fiatCurrency.symbol} is all you need to pay",
@@ -55,7 +55,7 @@ class EstimationWidget extends StatelessWidget {
                             S.of(context).quote_failed_warning,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: ProtonColors.signalError,
+                              color: ProtonColors.notificationError,
                               fontSize: 12,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w500,
@@ -74,11 +74,11 @@ class EstimationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (!state.isQuoteLoaded)
-                          const CardLoading(
+                          const CustomCardLoadingBuilder(
                             margin: EdgeInsets.only(top: 4),
                             height: 15,
                             width: 300,
-                          ),
+                          ).build(context),
                         if (state.isQuoteLoaded && !state.isQuoteFailed)
                           Text(
                             "${state.selectedModel.provider.enumToString()} fee",
@@ -113,11 +113,11 @@ class EstimationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (!state.isQuoteLoaded)
-                          const CardLoading(
+                          const CustomCardLoadingBuilder(
                             margin: EdgeInsets.only(top: 4),
                             height: 15,
                             width: 300,
-                          ),
+                          ).build(context),
                         if (state.isQuoteLoaded && !state.isQuoteFailed)
                           Text(
                             S.of(context).trans_metwork_fee,

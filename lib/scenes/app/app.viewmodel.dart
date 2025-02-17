@@ -22,21 +22,28 @@ import 'package:wallet/managers/secure.storage/secure.storage.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
+import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/app/app.coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
 abstract class AppViewModel extends ViewModel<AppCoordinator> {
+  ThemeProvider get themeProvider;
+
   AppViewModel(super.coordinator);
 }
 
 class AppViewModelImpl extends AppViewModel {
   final ManagerFactory serviceManager;
+  @override
+  final ThemeProvider themeProvider = ThemeProvider();
 
   AppViewModelImpl(super.coordinator, this.serviceManager);
 
   @override
   Future<void> loadData() async {
+    await themeProvider.loadFromPreferences();
+
     /// read env
     final AppConfig config = appConfig;
     final apiEnv = config.apiEnv;

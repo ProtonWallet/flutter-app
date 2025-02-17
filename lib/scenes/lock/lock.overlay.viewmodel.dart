@@ -35,6 +35,8 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
   /// multiple times when the app is resumed
   bool lastUnlockFailed = false;
 
+  bool hadLogout = false;
+
   LockViewModelImpl(
     super.coordinator,
     this.appStateManager,
@@ -117,6 +119,7 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
         if (isLocked && lastUnlockFailed) {
           unlock();
         }
+        sinkAddSafe();
       // App comes to foreground
       case AppLifecycleState.inactive:
         logger.d("App is inactive");
@@ -134,7 +137,12 @@ class LockViewModelImpl extends LockViewModel with WidgetsBindingObserver {
   }
 
   @override
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    if (!hadLogout) {
+      hadLogout = true;
+      appStateManager.logoutFromLock();
+    }
+  }
 
   Future<void> lockIfNeeded() async {
     final type = await appStateManager.getUnlockType();

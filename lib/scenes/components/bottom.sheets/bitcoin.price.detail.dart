@@ -14,7 +14,7 @@ class BitcoinPriceDetailSheet {
     PriceGraphDataProvider priceGraphDataProvider,
   ) {
     HomeModalBottomSheet.show(context,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(
           children: [
             Align(

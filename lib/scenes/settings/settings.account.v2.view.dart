@@ -26,7 +26,7 @@ class AccountInfoV2 extends StatelessWidget {
           children: [
             Text(
               displayName,
-              style: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+              style: ProtonStyles.body1Medium(color: ProtonColors.white),
             ),
             Text(
               userEmail,

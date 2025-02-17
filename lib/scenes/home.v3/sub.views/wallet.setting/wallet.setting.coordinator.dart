@@ -46,7 +46,7 @@ class WalletSettingCoordinator extends Coordinator {
         SetupBackupCoordinator(walletMenuModel.walletModel.walletID).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -70,7 +70,7 @@ class WalletSettingCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -79,7 +79,7 @@ class WalletSettingCoordinator extends Coordinator {
   }) {
     showInBottomSheet(
       BvEPrivacyCoordinator(isPrimaryAccount: isPrimaryAccount).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

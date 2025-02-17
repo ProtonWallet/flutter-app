@@ -56,7 +56,7 @@ class RecoveryEmailView extends ViewBase<RecoveryEmailViewModel> {
                     Text(
                       state.error,
                       style: ProtonStyles.body2Regular(
-                          color: ProtonColors.signalError),
+                          color: ProtonColors.notificationError),
                     ),
                   RecoverySection(
                     title: 'Recovery phrase',
@@ -85,7 +85,7 @@ class RecoveryEmailView extends ViewBase<RecoveryEmailViewModel> {
                     ),
                     warning: Icon(
                       Icons.info_outline_rounded,
-                      color: ProtonColors.signalError,
+                      color: ProtonColors.notificationError,
                       size: 16,
                     ),
                     isLoading: false,
@@ -102,7 +102,7 @@ class RecoveryEmailView extends ViewBase<RecoveryEmailViewModel> {
                     ),
                     warning: Icon(
                       Icons.info_outline_rounded,
-                      color: ProtonColors.signalError,
+                      color: ProtonColors.notificationError,
                       size: 16,
                     ),
                     isLoading: false,

@@ -1,11 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/bitcoin.address.info.box.dart';
 
 import '../../mocks/frb.objects.mocks.dart';
 import '../../mocks/proton.exchange.rate.mocks.dart';
+import '../../mocks/theme.provider.mocks.dart';
 import '../helper/comparator.config.dart';
 import '../helper/test.wrapper.dart';
 
@@ -20,6 +24,10 @@ void main() {
 
   testSnapshot('Bitcoin address info box tests', (tester) async {
     setGoldenFileComparatorWithThreshold(0.0006);
+
+    final mockThemeProvider = MockThemeProvider();
+    ProtonColors.updateLightTheme();
+    when(mockThemeProvider.isDarkMode()).thenReturn(false);
 
     ///
     final amount = MockFrbAmount();
@@ -104,9 +112,15 @@ void main() {
         showTransactions: true,
       ),
     );
+
+    final widget = ChangeNotifierProvider<ThemeProvider>.value(
+      value: mockThemeProvider,
+      child: builder.build(),
+    );
+
     await testAcrossAllDevices(
       tester,
-      builder.build,
+      () => widget,
       "$testPath/bitcoin.address.info.grid",
     );
   });

@@ -9,12 +9,14 @@ class CustomHeader extends StatelessWidget {
   final AxisDirection buttonDirection;
   final Widget? button;
   final EdgeInsets? padding;
+  final TextStyle? titleStyle;
 
   const CustomHeader({
     required this.buttonDirection,
     this.title,
     this.button,
     this.padding,
+    this.titleStyle,
     super.key,
   });
 
@@ -46,7 +48,8 @@ class CustomHeader extends StatelessWidget {
               flex: 3,
               child: Text(
                 title ?? "",
-                style: ProtonStyles.headline(color: ProtonColors.textNorm),
+                style: titleStyle ??
+                    ProtonStyles.headline(color: ProtonColors.textNorm),
                 textAlign: TextAlign.center,
               ),
             ),

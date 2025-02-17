@@ -53,10 +53,10 @@ class AlertCustomState extends State<AlertCustom> {
                 margin: widget.margin,
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ??
-                        ProtonColors.alertWaningBackground,
+                        ProtonColors.notificationWaningBackground,
                     borderRadius: BorderRadius.circular(10.0),
                     border: widget.border ??
-                        Border.all(color: ProtonColors.alertWaning)),
+                        Border.all(color: ProtonColors.notificationWaning)),
                 child: Stack(children: [
                   Padding(
                       padding: const EdgeInsets.only(
@@ -80,15 +80,15 @@ class AlertCustomState extends State<AlertCustom> {
                             widget.onTap != null
                                 ? Underline(
                                     color: widget.color ??
-                                        ProtonColors.alertWaning,
+                                        ProtonColors.notificationWaning,
                                     child: Text(widget.content,
                                         style: ProtonStyles.body2Regular(
                                             color: widget.color ??
-                                                ProtonColors.alertWaning)))
+                                                ProtonColors.notificationWaning)))
                                 : Text(widget.content,
                                     style: ProtonStyles.body2Regular(
                                         color: widget.color ??
-                                            ProtonColors.alertWaning)),
+                                            ProtonColors.notificationWaning)),
                             if (widget.learnMore != null)
                               Padding(
                                   padding: const EdgeInsets.only(top: 4),

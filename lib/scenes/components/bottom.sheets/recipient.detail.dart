@@ -21,7 +21,7 @@ class RecipientDetailSheet {
     Color? avatarTextColor,
   }) {
     HomeModalBottomSheet.show(context,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

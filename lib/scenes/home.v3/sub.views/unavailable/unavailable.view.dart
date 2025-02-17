@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
@@ -19,7 +20,7 @@ class UnavailableView extends ViewBase<UnavailableViewModel> {
   @override
   Widget build(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: CustomHeader(
         buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.all(0.0),
@@ -34,11 +35,11 @@ class UnavailableView extends ViewBase<UnavailableViewModel> {
         Transform.translate(
           offset: const Offset(0, -2),
           child: Column(children: [
-            Assets.images.icon.earlyAccess.image(
-              fit: BoxFit.fill,
-              width: 240,
-              height: 167,
-            ),
+            Assets.images.icon.earlyAccess.applyThemeIfNeeded(context).image(
+                  fit: BoxFit.fill,
+                  width: 240,
+                  height: 167,
+                ),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(10.0),

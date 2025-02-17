@@ -42,7 +42,7 @@ void showLogoutErrorDialog(
                   text: context.local.logout,
                   textStyle: ProtonStyles.body1Medium(
                       color: ProtonColors.textInverted),
-                  backgroundColor: ProtonColors.signalError,
+                  backgroundColor: ProtonColors.notificationError,
                   width: 300,
                   height: 55,
                 ),

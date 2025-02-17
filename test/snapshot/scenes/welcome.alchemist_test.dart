@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/fonts.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/welcome/welcome.view.dart';
 
+import '../../mocks/theme.provider.mocks.dart';
 import '../../mocks/welcome.mocks.dart';
 import '../helper/alchemist.device.dart';
 import '../helper/alchemist.device.scenario.dart';
@@ -18,6 +22,9 @@ import '../helper/comparator.config.dart';
 void main() {
   group('MyApp Golden Test', () {
     Widget buildMyApp() {
+      final mockThemeProvider = MockThemeProvider();
+      ProtonColors.updateLightTheme();
+      when(mockThemeProvider.isDarkMode()).thenReturn(false);
       final viewModel = MockWelcomeViewModel();
       when(viewModel.keepAlive).thenAnswer((_) => true);
       when(viewModel.isLoginToHomepage).thenAnswer((_) => false);
@@ -28,8 +35,9 @@ void main() {
       );
       when(viewModel.currentSize).thenAnswer((_) => ViewSize.mobile);
 
-      final widget = WelcomeView(
-        viewModel,
+      final widget = ChangeNotifierProvider<ThemeProvider>.value(
+        value: mockThemeProvider,
+        child: WelcomeView(viewModel),
       );
 
       final app = MaterialApp(

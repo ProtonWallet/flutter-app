@@ -27,7 +27,7 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
                 Navigator.of(context).pop();
               }),
         ),
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Transform.translate(
             offset: const Offset(0, -2),

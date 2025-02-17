@@ -22,7 +22,7 @@ class EmailAutoCompleteSheet {
     Future.delayed(
         const Duration(milliseconds: 200), emailFocusNode.requestFocus);
     HomeModalBottomSheet.show(context,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         useIntrinsicHeight: false,
         maxHeight: MediaQuery.of(context).size.height - 60,
         // need to set false otherwise it will raise error since auto complete conflict with IntrinsicHeight
@@ -60,7 +60,7 @@ class EmailAutoCompleteSheet {
                   labelText: S.of(context).email_address,
                   hintText: S.of(context).you_can_invite_any,
                   emails: contactsEmails,
-                  color: ProtonColors.white,
+                  color: ProtonColors.backgroundSecondary,
                   focusNode: emailFocusNode,
                   textEditingController: emailController,
                   showQRcodeScanner: false,

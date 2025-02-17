@@ -15,7 +15,7 @@ class BackButtonV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 18,
-      backgroundColor: backgroundColor ?? ProtonColors.white,
+      backgroundColor: backgroundColor ?? ProtonColors.backgroundSecondary,
       child: IconButton(
         icon: Icon(
           Icons.arrow_back_rounded,

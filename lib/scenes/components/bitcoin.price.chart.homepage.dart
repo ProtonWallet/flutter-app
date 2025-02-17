@@ -144,8 +144,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
                             show: false,
                           ),
                           color: widget.priceChange >= 0
-                              ? ProtonColors.signalSuccess
-                              : ProtonColors.signalError,
+                              ? ProtonColors.notificationSuccess
+                              : ProtonColors.notificationError,
                         ),
                       ],
                       borderData: FlBorderData(

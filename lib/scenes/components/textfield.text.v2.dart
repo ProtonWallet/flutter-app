@@ -114,12 +114,12 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                 padding: EdgeInsets.symmetric(
                     horizontal: 4, vertical: widget.paddingSize ?? 12),
                 decoration: BoxDecoration(
-                    color: widget.backgroundColor ?? ProtonColors.white,
+                    color: widget.backgroundColor ?? ProtonColors.backgroundSecondary,
                     borderRadius:
                         BorderRadius.all(Radius.circular(widget.radius)),
                     border: Border.all(
                       color: isError
-                          ? ProtonColors.signalError
+                          ? ProtonColors.notificationError
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
@@ -189,7 +189,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                     labelText: widget.labelText,
                     labelStyle: isError
                         ? ProtonStyles.body2Regular(
-                            color: ProtonColors.signalError, fontSize: 15.0)
+                            color: ProtonColors.notificationError, fontSize: 15.0)
                         : ProtonStyles.body2Regular(
                             color: ProtonColors.textWeak, fontSize: 15.0),
                     prefixIcon: widget.prefixIcon,
@@ -217,7 +217,7 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                   child: Text(
                     errorString,
                     style: ProtonStyles.body2Regular(
-                        color: ProtonColors.signalError),
+                        color: ProtonColors.notificationError),
                   ))),
         ],
       ),

@@ -72,6 +72,13 @@ class AppForceUpgradeState extends AppState {
   List<Object?> get props => [message];
 }
 
+class AppUnlockForceLogoutState extends AppState {
+  AppUnlockForceLogoutState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class AppStateManager extends DataProvider implements Manager {
   final bool appInBetaState = true;
   bool isHomeInitialed = false;
@@ -229,7 +236,7 @@ class AppStateManager extends DataProvider implements Manager {
   }
 
   void logoutFromLock() {
-    // emitState(AppUnlockLogoutState(message: "Logout from lock"));
+    emitState(AppUnlockForceLogoutState());
   }
 
   Future<int> getSyncErrorCoount() async {

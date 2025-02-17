@@ -1,5 +1,4 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/constants.dart';
@@ -13,6 +12,7 @@ import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.homepage.dart';
 import 'package:wallet/scenes/components/bottom.sheets/bitcoin.price.detail.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 
 class BitcoinPriceBox extends StatefulWidget {
   final String title;
@@ -93,7 +93,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
               vertical: 24,
             ),
             decoration: BoxDecoration(
-              color: ProtonColors.white,
+              color: ProtonColors.backgroundSecondary,
               border: Border(
                 top: BorderSide(
                   color: ProtonColors.textHint,
@@ -127,14 +127,14 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                               )),
                           (widget.exchangeRate.id == defaultExchangeRate.id &&
                                   !initialized)
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 160,
-                                  child: CardLoading(
+                                  child: CustomCardLoadingBuilder(
                                     height: 16,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(4)),
                                     margin: EdgeInsets.only(top: 4),
-                                  ),
+                                  ).build(context),
                                 )
                               : Align(
                                   alignment: Alignment.centerLeft,
@@ -174,7 +174,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                             textStyle:
                                                 ProtonStyles.body2Regular(
                                                     color: ProtonColors
-                                                        .signalSuccess))
+                                                        .notificationSuccess))
                                         : AnimatedFlipCounter(
                                             duration: const Duration(
                                                 milliseconds: 500),
@@ -185,7 +185,7 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
                                             textStyle:
                                                 ProtonStyles.body2Regular(
                                                     color: ProtonColors
-                                                        .signalError)),
+                                                        .notificationError)),
                                   ]),
                                 )
                         ],

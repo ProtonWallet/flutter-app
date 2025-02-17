@@ -61,8 +61,9 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
             ),
           ]),
           mobile: Column(children: [
-            SizedBox(
+            Container(
               height: max((context.height - 900) / 2, 0),
+              color: ProtonColors.backgroundWelcomePage,
             ),
             const WelcomeImage(),
             Padding(

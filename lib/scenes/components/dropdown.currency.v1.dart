@@ -84,7 +84,7 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: ProtonColors.white,
+          color: ProtonColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(18.0),
         ),
         child: Container(
@@ -97,7 +97,7 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                   bottom: 4,
                 ),
             decoration: BoxDecoration(
-              color: widget.backgroundColor ?? ProtonColors.white,
+              color: widget.backgroundColor ?? ProtonColors.backgroundSecondary,
               borderRadius: BorderRadius.circular(18.0),
             ),
             child: TextField(
@@ -151,7 +151,7 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
     String keyWord = "";
     showModalBottomSheet(
       context: context,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
         maxHeight: MediaQuery.of(context).size.height * 0.8,

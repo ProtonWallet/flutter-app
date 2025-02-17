@@ -1,15 +1,16 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/email.autocomplete.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -32,7 +33,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
               Navigator.of(context).pop();
             }),
       ),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       child: viewModel.state == SendInviteState.sendInvite
           ? buildSendInvite(context)
           : buildSendInviteSuccess(context),
@@ -46,11 +47,11 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.paperPlane.image(
-                fit: BoxFit.fill,
-                width: 240,
-                height: 167,
-              ),
+              Assets.images.icon.paperPlane.applyThemeIfNeeded(context).image(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 167,
+                  ),
               const SizedBox(height: 20),
               Text(
                 S
@@ -101,11 +102,11 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.user.image(
-                fit: BoxFit.fill,
-                width: 240,
-                height: 167,
-              ),
+              Assets.images.icon.user.applyThemeIfNeeded(context).image(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 167,
+                  ),
               Text(
                 viewModel.isWalletEarlyAccess()
                     ? context.local.exclusive_invites
@@ -123,9 +124,10 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
               ),
               const SizedBox(height: 10),
               !viewModel.initialized
-                  ? const Padding(
+                  ? Padding(
                       padding: EdgeInsets.symmetric(vertical: 5),
-                      child: CardLoading(height: 74),
+                      child:
+                          CustomCardLoadingBuilder(height: 74).build(context),
                     )
                   : DropdownButtonV2(
                       width: MediaQuery.of(context).size.width,
@@ -140,9 +142,10 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                           left: defaultPadding, right: 8, top: 12, bottom: 12),
                     ),
               !viewModel.initialized
-                  ? const Padding(
+                  ? Padding(
                       padding: EdgeInsets.symmetric(vertical: 5),
-                      child: CardLoading(height: 74),
+                      child:
+                          CustomCardLoadingBuilder(height: 74).build(context),
                     )
                   : GestureDetector(
                       onTap: () {
@@ -159,7 +162,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                           horizontal: 4,
                         ),
                         decoration: BoxDecoration(
-                            color: ProtonColors.white,
+                            color: ProtonColors.backgroundSecondary,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(18.0)),
                             border: Border.all(
@@ -194,7 +197,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                     ),
               const SizedBox(height: 20),
               !viewModel.initialized
-                  ? const CardLoading(height: 50)
+                  ? const CustomCardLoadingBuilder(height: 50).build(context)
                   : ButtonV6(
                       onPressed: () async {
                         final email = viewModel.emailController.text;

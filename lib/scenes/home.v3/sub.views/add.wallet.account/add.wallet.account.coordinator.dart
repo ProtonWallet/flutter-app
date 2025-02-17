@@ -25,7 +25,7 @@ class AddWalletAccountCoordinator extends Coordinator {
   void showUpgrade() {
     showInBottomSheet(
       UpgradeCoordinator(isWalletAccountExceedLimit: true).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

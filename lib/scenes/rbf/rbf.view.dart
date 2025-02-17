@@ -1,14 +1,15 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.slider.v1.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -32,7 +33,7 @@ class RbfView extends ViewBase<RbfViewModel> {
             }),
       ),
       height: context.height * 0.8,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       child: Transform.translate(
         offset: const Offset(0, -30),
         child: Column(
@@ -40,11 +41,11 @@ class RbfView extends ViewBase<RbfViewModel> {
             SizedBox(
               width: context.width,
             ),
-            Assets.images.icon.earlyAccess.image(
-              fit: BoxFit.fill,
-              width: 240,
-              height: 167,
-            ),
+            Assets.images.icon.earlyAccess.applyThemeIfNeeded(context).image(
+                  fit: BoxFit.fill,
+                  width: 240,
+                  height: 167,
+                ),
             Text(
               S.of(context).rbf_title,
               style: ProtonStyles.headline(color: ProtonColors.textNorm),
@@ -79,7 +80,7 @@ class RbfView extends ViewBase<RbfViewModel> {
                       ),
                     ],
                   )
-                : const CardLoading(height: 50),
+                : const CustomCardLoadingBuilder(height: 50).build(context),
             if (viewModel.initialized)
               Align(
                 alignment: Alignment.centerRight,
@@ -137,7 +138,7 @@ class RbfView extends ViewBase<RbfViewModel> {
                       maxValue: viewModel.maxNewFee,
                       controller: viewModel.newFeeController,
                     )
-                  : const CardLoading(height: 50);
+                  : const CustomCardLoadingBuilder(height: 50).build(context);
             }),
             const SizedBox(
               height: 6,
@@ -164,7 +165,7 @@ class RbfView extends ViewBase<RbfViewModel> {
                           textAlign: TextAlign.center,
                         ),
                       ])
-                : const CardLoading(height: 30),
+                : const CustomCardLoadingBuilder(height: 30).build(context),
             const SizedBox(
               height: 26,
             ),

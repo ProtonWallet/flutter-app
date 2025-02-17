@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
+import 'package:wallet/provider/theme.provider.dart';
 
 extension BuildContextExtension on BuildContext {
   /// Returns the maximum of the current screen width or a given [value].
@@ -28,7 +30,7 @@ extension BuildContextExtension on BuildContext {
   /// Show snackbar
   void showSnackbar(String message, {bool isError = false}) {
     final snackBar = SnackBar(
-      backgroundColor: isError ? ProtonColors.signalError : null,
+      backgroundColor: isError ? ProtonColors.notificationError : null,
       content: Center(
           child: Text(
         message,
@@ -39,4 +41,7 @@ extension BuildContextExtension on BuildContext {
     );
     ScaffoldMessenger.of(this).showSnackBar(snackBar);
   }
+
+  ThemeProvider get themeProvider => Provider.of<ThemeProvider>(this);
+  bool get isDarkMode => themeProvider.isDarkMode();
 }

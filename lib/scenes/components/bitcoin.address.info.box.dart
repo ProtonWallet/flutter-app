@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/app.config.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
@@ -38,7 +37,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(0),
       padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-      color: ProtonColors.white,
+      color: ProtonColors.backgroundSecondary,
       child: Column(children: [
         const SizedBox(height: 10),
         GestureDetector(
@@ -97,10 +96,10 @@ class BitcoinAddressInfoBox extends StatelessWidget {
           CustomTooltip(
             preferredDirection: AxisDirection.down,
             message: S.of(context).bve_address_tooltip,
-            child: Assets.images.icon.icInfoCircleDark.svg(
-              fit: BoxFit.fill,
-              width: 20,
-              height: 20,
+            child: Icon(
+              Icons.info_outline_rounded,
+              size: 20,
+              color: ProtonColors.textNorm,
             ),
           ),
         const SizedBox(height: 4),
@@ -129,13 +128,13 @@ class BitcoinAddressInfoBox extends StatelessWidget {
               ? Text(
                   S.of(context).address_list_status_used,
                   style: ProtonStyles.body2Regular(
-                    color: ProtonColors.signalSuccess,
+                    color: ProtonColors.notificationSuccess,
                   ),
                 )
               : Text(
                   S.of(context).address_list_status_not_used,
                   style: ProtonStyles.body2Regular(
-                    color: ProtonColors.signalError,
+                    color: ProtonColors.notificationError,
                   ),
                 ),
         ]),

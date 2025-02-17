@@ -22,7 +22,7 @@ class CustomTodos extends StatelessWidget {
         child: Container(
             padding: const EdgeInsets.all(defaultPadding),
             decoration: BoxDecoration(
-              color: ProtonColors.white,
+              color: ProtonColors.backgroundSecondary,
               borderRadius: BorderRadius.circular(24.0),
             ),
             child: ListTile(

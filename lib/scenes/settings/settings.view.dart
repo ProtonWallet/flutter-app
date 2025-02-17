@@ -69,11 +69,6 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 ),
                 SettingsItem(
                   title: context.local.account,
-                  logo: Assets.images.icon.icArrowOutSquare.svg(
-                    height: 20,
-                    width: 20,
-                    fit: BoxFit.fill,
-                  ),
                   onTap: () {
                     ExternalUrl.shared.launchProtonAccount();
                   },
@@ -87,22 +82,34 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
             SettingsGroup(
               children: [
                 SettingsItem(
-                  title: context.local.theme,
-                  subtitle: 'System default / Light / Dark',
+                  title: context.local.theme_mode,
+                  logo: !viewModel.loadedWalletUserSettings
+                      ? const CustomLoading()
+                      : DropdownButtonV2(
+                          title: context.local.theme_mode,
+                          width: 160,
+                          maxSuffixIconWidth: 10,
+                          items: [
+                            ThemeMode.system,
+                            ThemeMode.light,
+                            ThemeMode.dark
+                          ],
+                          itemsText: [
+                            context.local.system_default_mode,
+                            context.local.light_mode,
+                            context.local.dark_mode
+                          ],
+                          valueNotifier: viewModel.themeModeValueNotifier,
+                        ),
                   onTap: () {},
-                  hidden: true,
                 ),
-                SettingsItem(
-                  title: context.local.default_browser,
-                  subtitle: 'System default',
-                  hidden: true,
-                  onTap: () {},
-                ),
-                SettingsItem(
-                  title: context.local.languages,
-                  hidden: true,
-                  onTap: () {},
-                ),
+              ],
+            ),
+
+            SizedBoxes.box12,
+            SectionHeader(title: context.local.wallet_settings),
+            SettingsGroup(
+              children: [
                 SettingsItem(
                   title: context.local.setting_receive_inviter_notification,
                   logo: !viewModel.loadedWalletUserSettings
@@ -150,7 +157,6 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 ),
               ],
             ),
-
             if (viewModel.isTraceLoggerEnabled()) ...[
               /// Section: Logs
               const SizedBox(height: 12),
@@ -212,22 +218,12 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                       ),
                       SettingsItem(
                         title: context.local.privacy_policy,
-                        logo: Assets.images.icon.icArrowOutSquare.svg(
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
                         onTap: () {
                           ExternalUrl.shared.lanuchPrivacy();
                         },
                       ),
                       SettingsItem(
                         title: context.local.terms_of_service,
-                        logo: Assets.images.icon.icArrowOutSquare.svg(
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
                         onTap: () {
                           ExternalUrl.shared.lanuchTerms();
                         },
@@ -235,30 +231,15 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                       SettingsItem(
                         title: context.local.how_to_import_wallet_,
                         hidden: true,
-                        logo: Assets.images.icon.icArrowOutSquare.svg(
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
                         onTap: () {},
                       ),
                       SettingsItem(
                         title: context.local.feedback,
                         hidden: true,
-                        logo: Assets.images.icon.icArrowOutSquare.svg(
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
                         onTap: () {},
                       ),
                       SettingsItem(
                         title: context.local.help_center_knowledge_base,
-                        logo: Assets.images.icon.icArrowOutSquare.svg(
-                          height: 20,
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
                         onTap: () {
                           ExternalUrl.shared.launchProtonHelpCenter();
                         },
@@ -295,11 +276,11 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                 children: [
                   SettingsItem(
                     title: S.of(context).delete_proton_account,
-                    color: ProtonColors.signalError,
+                    color: ProtonColors.notificationError,
                     logo: Icon(
                       Icons.delete_rounded,
                       size: 20,
-                      color: ProtonColors.signalError,
+                      color: ProtonColors.notificationError,
                     ),
                     onTap: viewModel.deleteAccount,
                   ),

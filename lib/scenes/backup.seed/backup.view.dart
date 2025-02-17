@@ -24,7 +24,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
       body: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          color: ProtonColors.white,
+          color: ProtonColors.backgroundSecondary,
         ),
         child: SafeArea(
           child: Column(children: [

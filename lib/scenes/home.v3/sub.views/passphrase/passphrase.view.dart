@@ -53,7 +53,7 @@ class PassphraseView extends ViewBase<PassphraseViewModel> {
         if (!viewModel.isWalletPassphraseMatch)
           Text(
             S.of(context).wrong_passphrase,
-            style: ProtonStyles.body2Medium(color: ProtonColors.signalError),
+            style: ProtonStyles.body2Medium(color: ProtonColors.notificationError),
           ),
         const SizedBox(height: 6),
         Container(

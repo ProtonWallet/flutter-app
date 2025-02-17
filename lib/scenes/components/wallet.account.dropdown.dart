@@ -74,7 +74,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
             const EdgeInsets.only(
                 left: defaultPadding, right: 8, top: 12, bottom: 12),
         decoration: BoxDecoration(
-          color: widget.backgroundColor ?? ProtonColors.white,
+          color: widget.backgroundColor ?? ProtonColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(18.0),
         ),
         child: TextField(
@@ -151,7 +151,7 @@ class WalletAccountDropdownState extends State<WalletAccountDropdown> {
   void showOptionsInBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
         maxHeight: MediaQuery.of(context).size.height / 3,

@@ -93,7 +93,7 @@ class HomeCoordinator extends Coordinator {
     ).start();
     return showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -111,7 +111,7 @@ class HomeCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -149,7 +149,7 @@ class HomeCoordinator extends Coordinator {
     final view = SetupBackupCoordinator(walletID).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -170,7 +170,7 @@ class HomeCoordinator extends Coordinator {
     ).start();
     return showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -192,7 +192,7 @@ class HomeCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -204,21 +204,21 @@ class HomeCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
   void showSendInvite() {
     showInBottomSheet(
       SendInviteCoordinator().start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
   void showImportWalletPassphrase(WalletMenuModel walletMenuModel) {
     showInBottomSheet(
       PassphraseCoordinator(walletMenuModel).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -233,7 +233,7 @@ class HomeCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       enableDrag: !firstWallet,
       isDismissible: !firstWallet,
     );
@@ -277,7 +277,7 @@ class HomeCoordinator extends Coordinator {
       UpgradeCoordinator(
         isWalletAccountExceedLimit: isWalletAccountExceedLimit,
       ).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -293,7 +293,7 @@ class HomeCoordinator extends Coordinator {
     final view = BuyingUnavailableCoordinator().start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       enableDrag: false,
       isDismissible: false,
     );

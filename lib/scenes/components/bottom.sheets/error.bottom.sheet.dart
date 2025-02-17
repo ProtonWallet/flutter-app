@@ -67,7 +67,7 @@ class ErrorBottomSheet {
                               child: Text(
                                 errorMessage,
                                 style: ProtonStyles.body2Medium(
-                                    color: ProtonColors.signalError,
+                                    color: ProtonColors.notificationError,
                                     fontSize: 15.0),
                                 maxLines: 10,
                                 overflow: TextOverflow.ellipsis,

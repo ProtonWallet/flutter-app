@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
@@ -29,11 +30,11 @@ class BackupIntroduceView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Assets.images.icon.key.image(
-                      fit: BoxFit.fill,
-                      width: 240,
-                      height: 167,
-                    ),
+                    Assets.images.icon.key.applyThemeIfNeeded(context).image(
+                          fit: BoxFit.fill,
+                          width: 240,
+                          height: 167,
+                        ),
                     Text(
                       S.of(context).backup_introduce_title,
                       style:

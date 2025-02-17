@@ -66,7 +66,7 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                     Text(
                       state.error,
                       style: ProtonStyles.body2Regular(
-                          color: ProtonColors.signalError),
+                          color: ProtonColors.notificationError),
                     ),
 
                   RecoverySection(
@@ -98,7 +98,7 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                       ),
                       warning: Icon(
                         Icons.info_outline_rounded,
-                        color: ProtonColors.signalError,
+                        color: ProtonColors.notificationError,
                         size: 16,
                       ),
                       isLoading: false,
@@ -118,7 +118,7 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
                       ),
                       warning: Icon(
                         Icons.info_outline_rounded,
-                        color: ProtonColors.signalError,
+                        color: ProtonColors.notificationError,
                         size: 16,
                       ),
                       isLoading: false,

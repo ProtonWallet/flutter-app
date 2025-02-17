@@ -13,7 +13,7 @@ Future<void> showDisableDialog(
 ) async {
   return showModalBottomSheet<void>(
     context: context,
-    backgroundColor: ProtonColors.white,
+    backgroundColor: ProtonColors.backgroundSecondary,
     constraints: BoxConstraints(
       minWidth: context.width,
       maxHeight: context.height - 60,
@@ -70,9 +70,9 @@ Future<void> showDisableDialog(
                   Navigator.of(context).pop();
                 },
                 text: S.of(context).disable_recovery_phrase_button,
-                backgroundColor: ProtonColors.signalError,
+                backgroundColor: ProtonColors.notificationError,
                 textStyle: ProtonStyles.body1Medium(
-                  color: ProtonColors.textInverted,
+                  color: ProtonColors.white,
                 ),
                 width: context.width,
                 height: 55,

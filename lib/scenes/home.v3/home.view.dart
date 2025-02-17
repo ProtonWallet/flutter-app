@@ -2,11 +2,11 @@
 import 'dart:math';
 
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -16,6 +16,7 @@ import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
@@ -26,10 +27,12 @@ import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.da
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
+import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.expansion.dart';
 import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
@@ -220,7 +223,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 top: defaultPadding,
                                                 bottom: defaultPadding),
                                             decoration: BoxDecoration(
-                                                color: ProtonColors.white,
+                                                color: ProtonColors
+                                                    .backgroundSecondary,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         24.0)),
@@ -345,8 +349,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     viewModel
                                                         .move(NavID.receive);
                                                   },
-                                                  backgroundColor:
-                                                      ProtonColors.white,
+                                                  backgroundColor: ProtonColors
+                                                      .backgroundSecondary,
                                                   text: S.of(context).receive,
                                                   width: context.width > 424
                                                       ? 180
@@ -381,7 +385,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   backgroundColor: viewModel
                                                           .isBuyMobileDisabled
                                                       ? ProtonColors
-                                                          .homeActionButtonBackground
+                                                          .interActionWeak
                                                       : ProtonColors.black,
                                                   text: S.of(context).buy,
                                                   width: MediaQuery.of(context)
@@ -487,12 +491,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                 ? Text(accountName,
                     style:
                         ProtonStyles.body1Regular(color: ProtonColors.textHint))
-                : const CardLoading(
+                : const CustomCardLoadingBuilder(
                     width: 200,
                     height: 16,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     margin: EdgeInsets.only(top: 4),
-                  ),
+                  ).build(context),
             const SizedBox(
               width: 30,
             ),
@@ -507,28 +511,28 @@ class HomeView extends ViewBase<HomeViewModel> {
                   child: Icon(
                     Icons.warning_amber_rounded,
                     size: 24,
-                    color: ProtonColors.alertWaning,
+                    color: ProtonColors.notificationWaning,
                   )),
           ],
         ),
         const SizedBox(
           height: 2,
         ),
-        const CardLoading(
+        const CustomCardLoadingBuilder(
           width: 200,
           height: 36,
           borderRadius: BorderRadius.all(Radius.circular(4)),
           margin: EdgeInsets.only(top: 4),
-        ),
+        ).build(context),
         const SizedBox(
           height: 2,
         ),
-        const CardLoading(
+        const CustomCardLoadingBuilder(
           width: 200,
           height: 16,
           borderRadius: BorderRadius.all(Radius.circular(4)),
           margin: EdgeInsets.only(top: 4),
-        ),
+        ).build(context),
       ]);
     }
     return Column(
@@ -548,12 +552,12 @@ class HomeView extends ViewBase<HomeViewModel> {
             walletTransactionState,
             needExchangeRate: true,
           )
-              ? const CardLoading(
+              ? const CustomCardLoadingBuilder(
                   width: 200,
                   height: 36,
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   margin: EdgeInsets.only(top: 4),
-                )
+                ).build(context)
               : viewModel.displayBalance
                   ? AnimatedFlipCounter(
                       prefix: viewModel.getFiatCurrencySign(
@@ -608,12 +612,12 @@ class HomeView extends ViewBase<HomeViewModel> {
           walletTransactionState,
           needExchangeRate: false,
         )
-            ? const CardLoading(
+            ? const CustomCardLoadingBuilder(
                 width: 200,
                 height: 16,
                 borderRadius: BorderRadius.all(Radius.circular(4)),
                 margin: EdgeInsets.only(top: 4),
-              )
+              ).build(context)
             : viewModel.displayBalance
                 ? Text(
                     ExchangeCalculator.getBitcoinUnitLabel(
@@ -658,11 +662,11 @@ class HomeView extends ViewBase<HomeViewModel> {
     if (listStatus == BodyListStatus.transactionList) {
       return walletTransactionState.historyTransaction.isEmpty
           ? ProtonColors.backgroundNorm
-          : ProtonColors.white;
+          : ProtonColors.backgroundSecondary;
     } else {
       return walletTransactionState.bitcoinAddresses.isEmpty
           ? ProtonColors.backgroundNorm
-          : ProtonColors.white;
+          : ProtonColors.backgroundSecondary;
     }
   }
 
@@ -678,15 +682,19 @@ class HomeView extends ViewBase<HomeViewModel> {
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            viewModel.walletDrawerStatus == WalletDrawerStatus.close
-                ? Brightness.dark
-                : Brightness.light,
-        // For Android (dark icons)
-        statusBarBrightness:
-            viewModel.walletDrawerStatus == WalletDrawerStatus.close
+        statusBarIconBrightness: viewModel.walletDrawerStatus ==
+                WalletDrawerStatus.close
+            ? Provider.of<ThemeProvider>(context, listen: false).isDarkMode()
                 ? Brightness.light
-                : Brightness.dark,
+                : Brightness.dark
+            : Brightness.light,
+        // For Android (dark icons)
+        statusBarBrightness: viewModel.walletDrawerStatus ==
+                WalletDrawerStatus.close
+            ? Provider.of<ThemeProvider>(context, listen: false).isDarkMode()
+                ? Brightness.dark
+                : Brightness.light
+            : Brightness.dark,
       ),
       backgroundColor: ProtonColors.backgroundNorm,
       title: BlocBuilder<WalletListBloc, WalletListState>(
@@ -718,11 +726,13 @@ class HomeView extends ViewBase<HomeViewModel> {
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return IconButton(
-                icon: Assets.images.icon.walletEdit.svg(
-                  fit: BoxFit.fill,
-                  width: 40,
-                  height: 40,
-                ),
+                icon: Assets.images.icon.walletEdit
+                    .applyThemeIfNeeded(context)
+                    .svg(
+                      fit: BoxFit.fill,
+                      width: 40,
+                      height: 40,
+                    ),
                 onPressed: () {
                   /// temperay
                   final context = Coordinator.rootNavigatorKey.currentContext;
@@ -764,6 +774,7 @@ class HomeView extends ViewBase<HomeViewModel> {
           if (viewModel.currentSize == ViewSize.mobile) {
             return IconButton(
               icon: Assets.images.icon.drawerMenu
+                  .applyThemeIfNeeded(context)
                   .svg(fit: BoxFit.fill, width: 40, height: 40),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
