@@ -435,7 +435,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               Column(children: [
                                                 DiscoverFeedsView(
                                                   onTap: (String link) {
-                                                    launchUrl(Uri.parse(link));
+                                                    launchUrl(Uri.parse(link),
+                                                        mode: LaunchMode
+                                                            .externalApplication);
                                                   },
                                                   protonFeedItems:
                                                       viewModel.protonFeedItems,

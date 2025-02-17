@@ -209,9 +209,11 @@ class BitcoinAddressInfoBox extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             child: GestureDetector(
               onTap: () {
-                launchUrl(Uri.parse(
-                  "${appConfig.esploraWebpageUrl}address/${bitcoinAddressDetail.address}",
-                ));
+                launchUrl(
+                    Uri.parse(
+                      "${appConfig.esploraWebpageUrl}address/${bitcoinAddressDetail.address}",
+                    ),
+                    mode: LaunchMode.externalApplication);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

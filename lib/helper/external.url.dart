@@ -76,7 +76,7 @@ class ExternalUrl {
 
   // Method to launch a URL
   void launchString(String strUrl) {
-    launchUrl(Uri.parse(strUrl));
+    launchUrl(Uri.parse(strUrl), mode: LaunchMode.externalApplication);
   }
 
   void lanuchMainSite() {
