@@ -538,7 +538,7 @@ class HomeViewModelImpl extends HomeViewModel {
       });
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+      errorMessage = e.localizedString;
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e) {
@@ -684,7 +684,7 @@ class HomeViewModelImpl extends HomeViewModel {
       await DBHelper.reset();
     } on BridgeError catch (e, stacktrace) {
       appStateManager.updateStateFrom(e);
-      errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+      errorMessage = e.localizedString;
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
       Sentry.captureException(e, stackTrace: stacktrace);
     } catch (e, stacktrace) {

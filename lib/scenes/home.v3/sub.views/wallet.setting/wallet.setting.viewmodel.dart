@@ -160,7 +160,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       walletListBloc.updateWalletName(walletMenuModel.walletModel, newName);
     } on BridgeError catch (e, stacktrace) {
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+        errorMessage = e.localizedString;
       }
 
       logger.e("updateWalletName error: $e, stacktrace: $stacktrace");
@@ -168,7 +168,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("updateWalletName failed: $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
   }
@@ -194,7 +194,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       );
     } on BridgeError catch (e, stacktrace) {
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+        errorMessage = e.localizedString;
         logger.e("updateAccountName error: $e, stacktrace: $stacktrace");
       }
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -202,7 +202,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("updateAccountName failed: $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
     }
   }
@@ -370,7 +370,7 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
       }
     } on BridgeError catch (e, stacktrace) {
       if (!appStateManager.updateStateFrom(e)) {
-        errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+        errorMessage = e.localizedString;
       }
       logger.e("importWallet error: $e, stacktrace: $stacktrace");
     } catch (e) {

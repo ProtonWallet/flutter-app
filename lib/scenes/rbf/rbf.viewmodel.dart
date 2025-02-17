@@ -249,7 +249,7 @@ class RbfViewModelImpl extends RbfViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("RBF error: $errorMessage");
+      CommonHelper.showErrorDialog(errorMessage);
       errorMessage = "";
       return false;
     }

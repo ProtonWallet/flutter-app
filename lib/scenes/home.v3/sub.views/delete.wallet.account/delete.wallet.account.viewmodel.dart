@@ -55,7 +55,7 @@ class DeleteWalletAccountViewModelImpl extends DeleteWalletAccountViewModel {
         );
       } on BridgeError catch (e, stacktrace) {
         if (!appStateManager.updateStateFrom(e)) {
-          errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
+          errorMessage = e.localizedString;
         }
         logger.e("importWallet BridgeError: $e, stacktrace: $stacktrace");
       } catch (e, stacktrace) {

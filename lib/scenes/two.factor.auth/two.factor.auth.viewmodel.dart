@@ -95,7 +95,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       userDataProvider.enabled2FA(response.code == 1000);
       return true;
     } on BridgeError catch (exception, stacktrace) {
-      error = parseMuonError(exception) ?? parseSampleDisplayError(exception);
+      error = exception.localizedString;
       Sentry.captureException(exception, stackTrace: stacktrace);
       logger.e(exception.toString());
       return false;

@@ -499,7 +499,8 @@ class HomeView extends ViewBase<HomeViewModel> {
               GestureDetector(
                   onTap: () {
                     CommonHelper.showErrorDialog(
-                        walletTransactionState.errorMessage);
+                      walletTransactionState.errorMessage,
+                    );
                   },
                   child: Icon(
                     Icons.warning_amber_rounded,
@@ -971,8 +972,7 @@ Widget showUpdateWalletPassphraseDialog(
                 walletModel.walletID, textEditingController.text);
             await Future.delayed(const Duration(seconds: 1));
           } on BridgeError catch (e, stacktrace) {
-            viewModel.errorMessage =
-                parseMuonError(e) ?? parseSampleDisplayError(e);
+            viewModel.errorMessage = e.localizedString;
             logger.e("importWallet error: $e, stacktrace: $stacktrace");
           } catch (e) {
             viewModel.errorMessage = e.toString();

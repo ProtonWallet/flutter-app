@@ -42,6 +42,12 @@ pub enum BridgeError {
     #[error("An error occurred in andromeda api response: {0}")]
     ApiResponse(ResponseError),
 
+    #[error("Api response deserialize error: {0}")]
+    ApiDeserialize(String),
+
+    #[error("Bitcoin response deserialize error: {0}")]
+    BitcoinDeserialize(String),
+
     /// srp errors
     #[error("An error occurred in api srp: {0}")]
     ApiSrp(String),
@@ -68,6 +74,12 @@ pub enum BridgeError {
 
     #[error("Wallet database error: {0}")]
     Database(String),
+
+    #[error("SessionStore error: {0}")]
+    SessionStore(String),
+
+    #[error("String encoding error: {0}")]
+    Encoding(String),
 }
 
 impl From<DatabaseError> for BridgeError {
@@ -90,32 +102,34 @@ impl From<FeaturesError> for BridgeError {
 
 impl From<RusqlitError> for BridgeError {
     fn from(value: RusqlitError) -> Self {
-        BridgeError::Generic(format!("Rusqlite Error occurred: {:?}", value.source()))
+        BridgeError::Database(format!("Rusqlite Error occurred: {:?}", value.source()))
     }
 }
 
 /// rclock mutex lock error
 impl<T> From<PoisonError<T>> for BridgeError {
     fn from(_: PoisonError<T>) -> Self {
-        BridgeError::ApiLock("Proton api service read error, please try to restart app".to_string())
+        BridgeError::ApiLock(
+            "Proton api service read lock error, please try to restart app".to_string(),
+        )
     }
 }
 
-impl From<String> for BridgeError {
-    fn from(value: String) -> Self {
-        BridgeError::Generic(value)
-    }
-}
+// impl From<String> for BridgeError {
+//     fn from(value: String) -> Self {
+//         BridgeError::Encoding(value)
+//     }
+// }
 
 impl From<serde_json::Error> for BridgeError {
     fn from(value: serde_json::Error) -> Self {
-        BridgeError::Generic(format!("serde_json::Error occurred: {:?}", value.source()))
+        BridgeError::Encoding(format!("serde_json::Error occurred: {:?}", value.source()))
     }
 }
 
 impl From<andromeda_api::StoreFailure> for BridgeError {
     fn from(value: andromeda_api::StoreFailure) -> Self {
-        BridgeError::Generic(format!(
+        BridgeError::SessionStore(format!(
             "andromeda_api::StoreFailure occurred: {:?}",
             value.source()
         ))
@@ -124,25 +138,25 @@ impl From<andromeda_api::StoreFailure> for BridgeError {
 
 impl From<std::str::Utf8Error> for BridgeError {
     fn from(value: std::str::Utf8Error) -> Self {
-        BridgeError::Generic(format!("Utf8Error occurred: {:?}", value.source()))
+        BridgeError::Encoding(format!("Utf8Error occurred: {:?}", value.source()))
     }
 }
 
 impl From<proton_srp::MailboxHashError> for BridgeError {
     fn from(value: proton_srp::MailboxHashError) -> Self {
-        BridgeError::Generic(format!("MailboxHashError occurred: {:?}", value.source()))
+        BridgeError::ApiSrp(format!("MailboxHashError occurred: {:?}", value.source()))
     }
 }
 
 impl From<proton_srp::SRPError> for BridgeError {
     fn from(value: proton_srp::SRPError) -> Self {
-        BridgeError::Generic(format!("SRPError occurred: {:?}", value.source()))
+        BridgeError::ApiSrp(format!("SRPError occurred: {:?}", value.source()))
     }
 }
 
 impl From<proton_crypto::CryptoError> for BridgeError {
     fn from(value: proton_crypto::CryptoError) -> Self {
-        BridgeError::Generic(format!(
+        BridgeError::WalletCrypto(format!(
             "Proton crypto error occurred: {:?}",
             value.source()
         ))
@@ -196,21 +210,21 @@ impl From<AndromedaApiError> for BridgeError {
                 "MuonError: {me} (caused by: {source:?})",
                 source = me.source(),
             )),
-            AndromedaApiError::BitcoinDeserialize(bde) => BridgeError::Generic(format!(
+            AndromedaApiError::BitcoinDeserialize(bde) => BridgeError::BitcoinDeserialize(format!(
                 "BitcoinDeserializeError occurred: {:?}",
                 bde.source()
             )),
-            AndromedaApiError::HexToArrayDecoding(hde) => BridgeError::Generic(format!(
+            AndromedaApiError::HexToArrayDecoding(hde) => BridgeError::Encoding(format!(
                 "HexToArrayDecoding error occurred: {:?}",
                 hde.source()
             )),
-            AndromedaApiError::HexToBytesErrorDecoding(hde) => BridgeError::Generic(format!(
+            AndromedaApiError::HexToBytesErrorDecoding(hde) => BridgeError::Encoding(format!(
                 "HexToBytesErrorDecoding error occurred: {:?}",
                 hde.source()
             )),
             AndromedaApiError::Http => BridgeError::Generic("HTTP error occurred".to_string()),
             AndromedaApiError::ErrorCode(_, error) => BridgeError::ApiResponse(error.into()),
-            AndromedaApiError::Deserialize(err) => BridgeError::Generic(err),
+            AndromedaApiError::Deserialize(err) => BridgeError::ApiDeserialize(err),
             AndromedaApiError::MuonAppVersion(err) => BridgeError::MuonSession(format!(
                 "Muon MuonAppVersion occurred: {:?}",
                 err.source()
@@ -220,7 +234,7 @@ impl From<AndromedaApiError> for BridgeError {
                 err.source()
             )),
             AndromedaApiError::Utf8Error(err) => {
-                BridgeError::Generic(format!("Utf8Error error occurred: {:?}", err.source()))
+                BridgeError::Encoding(format!("Utf8Error error occurred: {:?}", err.source()))
             }
             AndromedaApiError::ForkAuthSession => {
                 BridgeError::Fork("ForkAuthSession error occurred".to_string())
@@ -232,7 +246,7 @@ impl From<AndromedaApiError> for BridgeError {
                 BridgeError::Login("LoginError error occurred".to_string())
             }
             AndromedaApiError::UnsupportedTwoFactor => {
-                BridgeError::Generic("UnsupportedTwoFactor error occurred".to_string())
+                BridgeError::Login("UnsupportedTwoFactor error occurred".to_string())
             }
         }
     }

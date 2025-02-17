@@ -1640,6 +1640,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  system_boot_time:
+    dependency: "direct main"
+    description:
+      name: system_boot_time
+      sha256: "4f90a5c1bd50e0375d4f77c30e1b5decd3ea7a131c5a4066cd53ed0dbd7101bc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:

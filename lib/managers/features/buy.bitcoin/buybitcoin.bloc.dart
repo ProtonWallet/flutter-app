@@ -261,7 +261,6 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
           received: received,
         ));
       } on BridgeError catch (e, stacktrace) {
-        final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
         logger.e("Get quote error: $e, stacktrace: $stacktrace");
         emit(state.copyWith(
           isQuoteLoaded: true,
@@ -272,7 +271,7 @@ class BuyBitcoinBloc extends Bloc<BuyBitcoinEvent, BuyBitcoinState> {
             provider: provider,
           ),
           received: {},
-          error: errorMessage,
+          error: e.localizedString,
         ));
       } catch (e) {
         emit(state.copyWith(

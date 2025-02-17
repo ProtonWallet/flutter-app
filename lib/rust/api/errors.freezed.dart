@@ -27,6 +27,8 @@ mixin _$BridgeError {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -34,6 +36,8 @@ mixin _$BridgeError {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,6 +50,8 @@ mixin _$BridgeError {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -53,6 +59,8 @@ mixin _$BridgeError {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -65,6 +73,8 @@ mixin _$BridgeError {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -72,6 +82,8 @@ mixin _$BridgeError {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -88,6 +100,9 @@ mixin _$BridgeError {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -95,6 +110,8 @@ mixin _$BridgeError {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -107,6 +124,8 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -114,6 +133,8 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -126,6 +147,8 @@ mixin _$BridgeError {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -133,6 +156,8 @@ mixin _$BridgeError {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -236,6 +261,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -243,6 +270,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return apiLock(field0);
   }
@@ -258,6 +287,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -265,6 +296,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return apiLock?.call(field0);
   }
@@ -280,6 +313,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -287,6 +322,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -309,6 +346,9 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -316,6 +356,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return apiLock(this);
   }
@@ -331,6 +373,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -338,6 +382,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return apiLock?.call(this);
   }
@@ -353,6 +399,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -360,6 +408,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -461,6 +511,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -468,6 +520,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return generic(field0);
   }
@@ -483,6 +537,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -490,6 +546,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return generic?.call(field0);
   }
@@ -505,6 +563,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -512,6 +572,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -534,6 +596,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -541,6 +606,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return generic(this);
   }
@@ -556,6 +623,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -563,6 +632,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return generic?.call(this);
   }
@@ -578,6 +649,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -585,6 +658,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -688,6 +763,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -695,6 +772,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return muonAuthSession(field0);
   }
@@ -710,6 +789,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -717,6 +798,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return muonAuthSession?.call(field0);
   }
@@ -732,6 +815,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -739,6 +824,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -761,6 +848,9 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -768,6 +858,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return muonAuthSession(this);
   }
@@ -783,6 +875,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -790,6 +884,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return muonAuthSession?.call(this);
   }
@@ -805,6 +901,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -812,6 +910,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -915,6 +1015,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -922,6 +1024,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return muonAuthRefresh(field0);
   }
@@ -937,6 +1041,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -944,6 +1050,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return muonAuthRefresh?.call(field0);
   }
@@ -959,6 +1067,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -966,6 +1076,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -988,6 +1100,9 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -995,6 +1110,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return muonAuthRefresh(this);
   }
@@ -1010,6 +1127,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1017,6 +1136,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return muonAuthRefresh?.call(this);
   }
@@ -1032,6 +1153,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1039,6 +1162,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -1142,6 +1267,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -1149,6 +1276,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return muonClient(field0);
   }
@@ -1164,6 +1293,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -1171,6 +1302,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return muonClient?.call(field0);
   }
@@ -1186,6 +1319,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -1193,6 +1328,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1215,6 +1352,9 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -1222,6 +1362,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return muonClient(this);
   }
@@ -1237,6 +1379,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1244,6 +1388,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return muonClient?.call(this);
   }
@@ -1259,6 +1405,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1266,6 +1414,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1369,6 +1519,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -1376,6 +1528,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return muonSession(field0);
   }
@@ -1391,6 +1545,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -1398,6 +1554,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return muonSession?.call(field0);
   }
@@ -1413,6 +1571,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -1420,6 +1580,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1442,6 +1604,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -1449,6 +1614,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return muonSession(this);
   }
@@ -1464,6 +1631,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1471,6 +1640,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return muonSession?.call(this);
   }
@@ -1486,6 +1657,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1493,6 +1666,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1597,6 +1772,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -1604,6 +1781,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return andromedaBitcoin(field0);
   }
@@ -1619,6 +1798,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -1626,6 +1807,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return andromedaBitcoin?.call(field0);
   }
@@ -1641,6 +1824,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -1648,6 +1833,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1670,6 +1857,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -1677,6 +1867,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return andromedaBitcoin(this);
   }
@@ -1692,6 +1884,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1699,6 +1893,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return andromedaBitcoin?.call(this);
   }
@@ -1714,6 +1910,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1721,6 +1919,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -1825,6 +2025,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -1832,6 +2034,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return apiResponse(field0);
   }
@@ -1847,6 +2051,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -1854,6 +2060,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return apiResponse?.call(field0);
   }
@@ -1869,6 +2077,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -1876,6 +2086,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -1898,6 +2110,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -1905,6 +2120,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return apiResponse(this);
   }
@@ -1920,6 +2137,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1927,6 +2146,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return apiResponse?.call(this);
   }
@@ -1942,6 +2163,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -1949,6 +2172,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -1970,6 +2195,514 @@ abstract class BridgeError_ApiResponse extends BridgeError {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_ApiResponseImplCopyWith<_$BridgeError_ApiResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_ApiDeserializeImplCopyWith<$Res> {
+  factory _$$BridgeError_ApiDeserializeImplCopyWith(
+          _$BridgeError_ApiDeserializeImpl value,
+          $Res Function(_$BridgeError_ApiDeserializeImpl) then) =
+      __$$BridgeError_ApiDeserializeImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_ApiDeserializeImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_ApiDeserializeImpl>
+    implements _$$BridgeError_ApiDeserializeImplCopyWith<$Res> {
+  __$$BridgeError_ApiDeserializeImplCopyWithImpl(
+      _$BridgeError_ApiDeserializeImpl _value,
+      $Res Function(_$BridgeError_ApiDeserializeImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_ApiDeserializeImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
+  const _$BridgeError_ApiDeserializeImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.apiDeserialize(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_ApiDeserializeImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_ApiDeserializeImplCopyWith<_$BridgeError_ApiDeserializeImpl>
+      get copyWith => __$$BridgeError_ApiDeserializeImplCopyWithImpl<
+          _$BridgeError_ApiDeserializeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+  }) {
+    return apiDeserialize(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+  }) {
+    return apiDeserialize?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    required TResult orElse(),
+  }) {
+    if (apiDeserialize != null) {
+      return apiDeserialize(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+  }) {
+    return apiDeserialize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+  }) {
+    return apiDeserialize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    required TResult orElse(),
+  }) {
+    if (apiDeserialize != null) {
+      return apiDeserialize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_ApiDeserialize extends BridgeError {
+  const factory BridgeError_ApiDeserialize(final String field0) =
+      _$BridgeError_ApiDeserializeImpl;
+  const BridgeError_ApiDeserialize._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_ApiDeserializeImplCopyWith<_$BridgeError_ApiDeserializeImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_BitcoinDeserializeImplCopyWith<$Res> {
+  factory _$$BridgeError_BitcoinDeserializeImplCopyWith(
+          _$BridgeError_BitcoinDeserializeImpl value,
+          $Res Function(_$BridgeError_BitcoinDeserializeImpl) then) =
+      __$$BridgeError_BitcoinDeserializeImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_BitcoinDeserializeImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res,
+        _$BridgeError_BitcoinDeserializeImpl>
+    implements _$$BridgeError_BitcoinDeserializeImplCopyWith<$Res> {
+  __$$BridgeError_BitcoinDeserializeImplCopyWithImpl(
+      _$BridgeError_BitcoinDeserializeImpl _value,
+      $Res Function(_$BridgeError_BitcoinDeserializeImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_BitcoinDeserializeImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_BitcoinDeserializeImpl
+    extends BridgeError_BitcoinDeserialize {
+  const _$BridgeError_BitcoinDeserializeImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.bitcoinDeserialize(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_BitcoinDeserializeImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_BitcoinDeserializeImplCopyWith<
+          _$BridgeError_BitcoinDeserializeImpl>
+      get copyWith => __$$BridgeError_BitcoinDeserializeImplCopyWithImpl<
+          _$BridgeError_BitcoinDeserializeImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+  }) {
+    return bitcoinDeserialize(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+  }) {
+    return bitcoinDeserialize?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    required TResult orElse(),
+  }) {
+    if (bitcoinDeserialize != null) {
+      return bitcoinDeserialize(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+  }) {
+    return bitcoinDeserialize(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+  }) {
+    return bitcoinDeserialize?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    required TResult orElse(),
+  }) {
+    if (bitcoinDeserialize != null) {
+      return bitcoinDeserialize(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_BitcoinDeserialize extends BridgeError {
+  const factory BridgeError_BitcoinDeserialize(final String field0) =
+      _$BridgeError_BitcoinDeserializeImpl;
+  const BridgeError_BitcoinDeserialize._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_BitcoinDeserializeImplCopyWith<
+          _$BridgeError_BitcoinDeserializeImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -2050,6 +2783,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -2057,6 +2792,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return apiSrp(field0);
   }
@@ -2072,6 +2809,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -2079,6 +2818,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return apiSrp?.call(field0);
   }
@@ -2094,6 +2835,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -2101,6 +2844,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -2123,6 +2868,9 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -2130,6 +2878,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return apiSrp(this);
   }
@@ -2145,6 +2895,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2152,6 +2904,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return apiSrp?.call(this);
   }
@@ -2167,6 +2921,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2174,6 +2930,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -2275,6 +3033,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -2282,6 +3042,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return aesGcm(field0);
   }
@@ -2297,6 +3059,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -2304,6 +3068,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return aesGcm?.call(field0);
   }
@@ -2319,6 +3085,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -2326,6 +3094,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -2348,6 +3118,9 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -2355,6 +3128,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return aesGcm(this);
   }
@@ -2370,6 +3145,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2377,6 +3154,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return aesGcm?.call(this);
   }
@@ -2392,6 +3171,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2399,6 +3180,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -2502,6 +3285,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -2509,6 +3294,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return walletCrypto(field0);
   }
@@ -2524,6 +3311,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -2531,6 +3320,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return walletCrypto?.call(field0);
   }
@@ -2546,6 +3337,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -2553,6 +3346,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -2575,6 +3370,9 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -2582,6 +3380,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return walletCrypto(this);
   }
@@ -2597,6 +3397,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2604,6 +3406,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return walletCrypto?.call(this);
   }
@@ -2619,6 +3423,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2626,6 +3432,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -2729,6 +3537,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -2736,6 +3546,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return walletFeature(field0);
   }
@@ -2751,6 +3563,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -2758,6 +3572,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return walletFeature?.call(field0);
   }
@@ -2773,6 +3589,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -2780,6 +3598,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -2802,6 +3622,9 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -2809,6 +3632,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return walletFeature(this);
   }
@@ -2824,6 +3649,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2831,6 +3658,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return walletFeature?.call(this);
   }
@@ -2846,6 +3675,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -2853,6 +3684,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -2954,6 +3787,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -2961,6 +3796,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return login(field0);
   }
@@ -2976,6 +3813,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -2983,6 +3822,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return login?.call(field0);
   }
@@ -2998,6 +3839,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -3005,6 +3848,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -3027,6 +3872,9 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -3034,6 +3882,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return login(this);
   }
@@ -3049,6 +3899,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3056,6 +3908,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return login?.call(this);
   }
@@ -3071,6 +3925,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3078,6 +3934,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -3179,6 +4037,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -3186,6 +4046,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return fork(field0);
   }
@@ -3201,6 +4063,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -3208,6 +4072,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return fork?.call(field0);
   }
@@ -3223,6 +4089,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -3230,6 +4098,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -3252,6 +4122,9 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -3259,6 +4132,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return fork(this);
   }
@@ -3274,6 +4149,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3281,6 +4158,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return fork?.call(this);
   }
@@ -3296,6 +4175,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3303,6 +4184,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -3404,6 +4287,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(String field0) muonSession,
     required TResult Function(String field0) andromedaBitcoin,
     required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
@@ -3411,6 +4296,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
     required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
   }) {
     return database(field0);
   }
@@ -3426,6 +4313,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(String field0)? muonSession,
     TResult? Function(String field0)? andromedaBitcoin,
     TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
@@ -3433,6 +4322,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
     TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
   }) {
     return database?.call(field0);
   }
@@ -3448,6 +4339,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(String field0)? muonSession,
     TResult Function(String field0)? andromedaBitcoin,
     TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
@@ -3455,6 +4348,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
     TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
     required TResult orElse(),
   }) {
     if (database != null) {
@@ -3477,6 +4372,9 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(BridgeError_AndromedaBitcoin value)
         andromedaBitcoin,
     required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
@@ -3484,6 +4382,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
     required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
   }) {
     return database(this);
   }
@@ -3499,6 +4399,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(BridgeError_MuonSession value)? muonSession,
     TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3506,6 +4408,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
     TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
   }) {
     return database?.call(this);
   }
@@ -3521,6 +4425,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(BridgeError_MuonSession value)? muonSession,
     TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
     TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
@@ -3528,6 +4434,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
     TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
     required TResult orElse(),
   }) {
     if (database != null) {
@@ -3549,5 +4457,508 @@ abstract class BridgeError_Database extends BridgeError {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_DatabaseImplCopyWith<_$BridgeError_DatabaseImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_SessionStoreImplCopyWith<$Res> {
+  factory _$$BridgeError_SessionStoreImplCopyWith(
+          _$BridgeError_SessionStoreImpl value,
+          $Res Function(_$BridgeError_SessionStoreImpl) then) =
+      __$$BridgeError_SessionStoreImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_SessionStoreImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_SessionStoreImpl>
+    implements _$$BridgeError_SessionStoreImplCopyWith<$Res> {
+  __$$BridgeError_SessionStoreImplCopyWithImpl(
+      _$BridgeError_SessionStoreImpl _value,
+      $Res Function(_$BridgeError_SessionStoreImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_SessionStoreImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
+  const _$BridgeError_SessionStoreImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.sessionStore(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_SessionStoreImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_SessionStoreImplCopyWith<_$BridgeError_SessionStoreImpl>
+      get copyWith => __$$BridgeError_SessionStoreImplCopyWithImpl<
+          _$BridgeError_SessionStoreImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+  }) {
+    return sessionStore(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+  }) {
+    return sessionStore?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    required TResult orElse(),
+  }) {
+    if (sessionStore != null) {
+      return sessionStore(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+  }) {
+    return sessionStore(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+  }) {
+    return sessionStore?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    required TResult orElse(),
+  }) {
+    if (sessionStore != null) {
+      return sessionStore(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_SessionStore extends BridgeError {
+  const factory BridgeError_SessionStore(final String field0) =
+      _$BridgeError_SessionStoreImpl;
+  const BridgeError_SessionStore._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_SessionStoreImplCopyWith<_$BridgeError_SessionStoreImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_EncodingImplCopyWith<$Res> {
+  factory _$$BridgeError_EncodingImplCopyWith(_$BridgeError_EncodingImpl value,
+          $Res Function(_$BridgeError_EncodingImpl) then) =
+      __$$BridgeError_EncodingImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_EncodingImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_EncodingImpl>
+    implements _$$BridgeError_EncodingImplCopyWith<$Res> {
+  __$$BridgeError_EncodingImplCopyWithImpl(_$BridgeError_EncodingImpl _value,
+      $Res Function(_$BridgeError_EncodingImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_EncodingImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
+  const _$BridgeError_EncodingImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.encoding(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_EncodingImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_EncodingImplCopyWith<_$BridgeError_EncodingImpl>
+      get copyWith =>
+          __$$BridgeError_EncodingImplCopyWithImpl<_$BridgeError_EncodingImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+  }) {
+    return encoding(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+  }) {
+    return encoding?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    required TResult orElse(),
+  }) {
+    if (encoding != null) {
+      return encoding(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+  }) {
+    return encoding(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+  }) {
+    return encoding?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    required TResult orElse(),
+  }) {
+    if (encoding != null) {
+      return encoding(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_Encoding extends BridgeError {
+  const factory BridgeError_Encoding(final String field0) =
+      _$BridgeError_EncodingImpl;
+  const BridgeError_Encoding._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_EncodingImplCopyWith<_$BridgeError_EncodingImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
