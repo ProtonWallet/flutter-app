@@ -104,9 +104,9 @@ class SigninContentForm extends StatelessWidget {
           CupertinoTextField.borderless(
             keyboardType: TextInputType.emailAddress,
             controller: usernameController,
-            style: ProtonStyles.body1Regular(),
+            style: ProtonStyles.body1Regular(color: ProtonColors.textNorm),
             decoration: BoxDecoration(
-              color: CupertinoColors.white,
+              color: ProtonColors.backgroundSecondary,
               borderRadius: BorderRadius.circular(14.0),
             ),
             padding: const EdgeInsets.symmetric(
@@ -125,9 +125,9 @@ class SigninContentForm extends StatelessWidget {
             keyboardType: TextInputType.visiblePassword,
             obscureText: true,
             controller: passwordController,
-            style: ProtonStyles.body1Regular(),
+            style: ProtonStyles.body1Regular(color: ProtonColors.textNorm),
             decoration: BoxDecoration(
-              color: CupertinoColors.white,
+              color: ProtonColors.backgroundSecondary,
               borderRadius: BorderRadius.circular(14.0),
             ),
             padding: const EdgeInsets.symmetric(

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/constants/fonts.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 
+import '../../mocks/theme.provider.mocks.dart';
 import '../helper/test.wrapper.dart';
 
 void main() {
@@ -13,6 +18,10 @@ void main() {
   });
 
   testSnapshot('Button v6 general checks', (tester) async {
+    final mockThemeProvider = MockThemeProvider();
+    ProtonColors.updateLightTheme();
+    when(mockThemeProvider.isDarkMode()).thenReturn(false);
+
     final builder = GoldenBuilder.grid(columns: 1, widthToHeightRatio: 1)
       ..addScenario(
           'Sample 300 x 80',
@@ -61,8 +70,13 @@ void main() {
             height: 60,
             backgroundColor: Colors.red,
           ));
+
+    final widget = ChangeNotifierProvider<ThemeProvider>.value(
+      value: mockThemeProvider,
+      child: builder.build(),
+    );
     await tester.pumpWidgetBuilder(
-      builder.build(),
+      widget,
       wrapper: materialAppWrapper(
         theme: ThemeData(
           fontFamily: FontFamily.inter,
@@ -77,6 +91,10 @@ void main() {
   });
 
   testSnapshot('Button v6 device sizes checks', (tester) async {
+    final mockThemeProvider = MockThemeProvider();
+    ProtonColors.updateLightTheme();
+    when(mockThemeProvider.isDarkMode()).thenReturn(false);
+
     final builder = GoldenBuilder.grid(columns: 1, widthToHeightRatio: 1)
       ..addScenario(
           'Sample 300 x 80',
@@ -125,10 +143,13 @@ void main() {
             height: 60,
             backgroundColor: Colors.red,
           ));
-
+    final widget = ChangeNotifierProvider<ThemeProvider>.value(
+      value: mockThemeProvider,
+      child: builder.build(),
+    );
     await testAcrossAllDevices(
       tester,
-      builder.build,
+      () => widget,
       "$testPath/button.v6.grid",
     );
   });

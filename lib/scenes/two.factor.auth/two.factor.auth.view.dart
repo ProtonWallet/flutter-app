@@ -8,6 +8,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -42,7 +43,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildMain(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
@@ -98,11 +99,11 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
   Widget buildHeader(BuildContext context, String body) {
     return Column(
       children: [
-        Assets.images.icon.lock.image(
-          fit: BoxFit.fill,
-          width: 240,
-          height: 167,
-        ),
+        Assets.images.icon.lock.applyThemeIfNeeded(context).image(
+              fit: BoxFit.fill,
+              width: 240,
+              height: 167,
+            ),
         Text(
           S.of(context).setting_2fa_setup,
           style: ProtonStyles.headline(color: ProtonColors.textNorm),
@@ -122,7 +123,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildQRcodeForSecret(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
@@ -200,7 +201,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildTextViewForSecret(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
@@ -350,7 +351,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget build2FAConfirm(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(
@@ -469,7 +470,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
 
   Widget buildBackupPage(BuildContext context) {
     return PageLayoutV1(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       headerWidget: Align(
         alignment: Alignment.centerRight,
         child: CloseButtonV1(

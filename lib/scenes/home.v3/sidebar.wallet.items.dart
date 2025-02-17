@@ -48,25 +48,25 @@ class SidebarWalletItems extends StatelessWidget {
   Widget getWalletLeadingIcon(int index) {
     switch (index) {
       case 1:
-        return Assets.images.icon.wallet1.svg(
+        return Assets.images.icon.wallet1Dark.svg(
           fit: BoxFit.fill,
           width: 18,
           height: 18,
         );
       case 2:
-        return Assets.images.icon.wallet2.svg(
+        return Assets.images.icon.wallet2Dark.svg(
           fit: BoxFit.fill,
           width: 18,
           height: 18,
         );
       case 3:
-        return Assets.images.icon.wallet3.svg(
+        return Assets.images.icon.wallet3Dark.svg(
           fit: BoxFit.fill,
           width: 18,
           height: 18,
         );
       default:
-        return Assets.images.icon.wallet0.svg(
+        return Assets.images.icon.wallet0Dark.svg(
           fit: BoxFit.fill,
           width: 18,
           height: 18,
@@ -175,7 +175,8 @@ class SidebarWalletItems extends StatelessWidget {
                                 );
                               },
                               child: Icon(Icons.delete_forever_rounded,
-                                  size: 24, color: ProtonColors.signalError),
+                                  size: 24,
+                                  color: ProtonColors.notificationError),
                             ),
                             iconColor: ProtonColors.textHint,
                           ),
@@ -266,7 +267,7 @@ class SidebarWalletItems extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 4),
                     child: Icon(
                       Icons.lock_rounded,
-                      color: ProtonColors.signalSuccess,
+                      color: ProtonColors.notificationSuccess,
                       size: 22,
                     ),
                   ),

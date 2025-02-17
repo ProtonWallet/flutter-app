@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/settings/settings.item.dart';
 
 /// group
@@ -13,9 +14,9 @@ class SettingsGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      decoration: BoxDecoration(
+        color: ProtonColors.backgroundSecondary,
         borderRadius: BorderRadius.all(
           Radius.circular(20),
         ),

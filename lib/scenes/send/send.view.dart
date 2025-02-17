@@ -1,5 +1,4 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wallet/constants/assets.gen.dart';
@@ -10,6 +9,7 @@ import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -18,6 +18,7 @@ import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/back.button.v1.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
@@ -45,7 +46,7 @@ class SendView extends ViewBase<SendViewModel> {
       body: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          color: ProtonColors.white,
+          color: ProtonColors.backgroundSecondary,
         ),
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -119,7 +120,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildEditAmount(BuildContext context) {
     return ColoredBox(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -158,7 +159,7 @@ class SendView extends ViewBase<SendViewModel> {
                           Expanded(
                             child: TextFieldSendBTCV2(
                               bitcoinBase: viewModel.bitcoinBase,
-                              backgroundColor: ProtonColors.white,
+                              backgroundColor: ProtonColors.backgroundSecondary,
                               labelText: S.of(context).amount,
                               hintText: 0.toStringAsFixed(
                                   viewModel.amountDisplayDigit),
@@ -277,7 +278,7 @@ class SendView extends ViewBase<SendViewModel> {
                           Text(
                             viewModel.errorMessage,
                             style: ProtonStyles.body2Medium(
-                                color: ProtonColors.signalError),
+                                color: ProtonColors.notificationError),
                           ),
                       ]))))),
           if (MediaQuery.of(context).viewInsets.bottom < 80)
@@ -336,7 +337,7 @@ class SendView extends ViewBase<SendViewModel> {
         estimatedFee = viewModel.estimatedFeeInSATLowPriority;
     }
     return ColoredBox(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -546,7 +547,7 @@ class SendView extends ViewBase<SendViewModel> {
                     titleOptionsCallback: () {
                       showSelectTransactionFeeMode(context, viewModel);
                     },
-                    backgroundColor: ProtonColors.white,
+                    backgroundColor: ProtonColors.backgroundSecondary,
                     content: AnimatedFlipCounter(
                       duration: const Duration(milliseconds: 500),
                       value: ExchangeCalculator.getNotionalInFiatCurrency(
@@ -761,7 +762,7 @@ class SendView extends ViewBase<SendViewModel> {
     final int displayDigit =
         ExchangeCalculator.getDisplayDigit(viewModel.exchangeRate);
     return TransactionHistoryItemV2(
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       title: S.of(context).trans_total,
       content: AnimatedFlipCounter(
         duration: const Duration(milliseconds: 500),
@@ -785,36 +786,36 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildAddRecipient(BuildContext context) {
     return ColoredBox(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: !viewModel.initialized
-            ? const Column(children: [
+            ? Column(children: [
                 SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-                  child: CardLoading(
+                  child: CustomCardLoadingBuilder(
                     height: 50,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     margin: EdgeInsets.only(top: 4),
-                  ),
+                  ).build(context),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-                  child: CardLoading(
+                  child: CustomCardLoadingBuilder(
                     height: 20,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     margin: EdgeInsets.only(top: 4),
-                  ),
+                  ).build(context),
                 ),
                 Expanded(
                   child: SizedBox(),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: defaultPadding),
-                  child: CardLoading(
+                  child: CustomCardLoadingBuilder(
                     height: 50,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     margin: EdgeInsets.only(top: 4),
-                  ),
+                  ).build(context),
                 ),
                 SizedBox(height: 20),
               ])
@@ -854,7 +855,7 @@ class SendView extends ViewBase<SendViewModel> {
                                     labelText:
                                         S.of(context).send_to_recipient_s,
                                     emails: viewModel.contactsEmails,
-                                    color: ProtonColors.white,
+                                    color: ProtonColors.backgroundSecondary,
                                     focusNode: viewModel.addressFocusNode,
                                     textEditingController:
                                         viewModel.recipientTextController,
@@ -951,7 +952,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildBroadcastingContent(BuildContext context) {
     return ColoredBox(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -1079,7 +1080,7 @@ class SendView extends ViewBase<SendViewModel> {
 
   Widget buildSuccessContent(BuildContext context) {
     return ColoredBox(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: Column(children: [
           Expanded(
               child: SingleChildScrollView(
@@ -1088,11 +1089,13 @@ class SendView extends ViewBase<SendViewModel> {
                           horizontal: defaultPadding),
                       child: Center(
                           child: Column(children: [
-                        Assets.images.icon.bitcoinBigIcon.image(
-                          fit: BoxFit.fill,
-                          width: 240,
-                          height: 167,
-                        ),
+                        Assets.images.icon.bitcoinBigIcon
+                            .applyThemeIfNeeded(context)
+                            .image(
+                              fit: BoxFit.fill,
+                              width: 240,
+                              height: 167,
+                            ),
                         Text(
                           S.of(context).send_success_title,
                           style: ProtonStyles.headline(

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 
@@ -27,8 +26,8 @@ class RecoverySection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: ProtonColors.backgroundSecondary,
         borderRadius: BorderRadius.all(
           Radius.circular(20),
         ),
@@ -48,8 +47,8 @@ class RecoverySection extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        color: Color(0xFF0E0E0E),
+                      style: TextStyle(
+                        color: ProtonColors.textNorm,
                         fontSize: 17,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
@@ -88,8 +87,8 @@ class RecoverySection extends StatelessWidget {
               Expanded(
                 child: Text(
                   description,
-                  style: const TextStyle(
-                    color: Color(0xFF6F7B8F),
+                  style: TextStyle(
+                    color: ProtonColors.textHint,
                     fontSize: 12,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,

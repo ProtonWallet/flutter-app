@@ -27,7 +27,7 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
             }),
       ),
       initialized: viewModel.initialized,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +92,7 @@ class EditBvEView extends ViewBase<EditBvEViewModel> {
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: 50,
-                      color: Colors.white.withOpacity(0.5),
+                      color: ProtonColors.backgroundSecondary.withOpacity(0.5),
                     ),
                 ])),
           const SizedBox(height: 20),

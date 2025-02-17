@@ -139,8 +139,8 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
                               show: false,
                             ),
                             color: priceChange >= 0
-                                ? ProtonColors.signalSuccess
-                                : ProtonColors.signalError,
+                                ? ProtonColors.notificationSuccess
+                                : ProtonColors.notificationError,
                           ),
                         ],
                         borderData: FlBorderData(
@@ -303,7 +303,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
               textStyle: ProtonStyles.body2Regular(
-                color: ProtonColors.signalSuccess,
+                color: ProtonColors.notificationSuccess,
               ))
           : AnimatedFlipCounter(
               duration: const Duration(milliseconds: 500),
@@ -312,7 +312,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
               textStyle: ProtonStyles.body2Regular(
-                color: ProtonColors.signalError,
+                color: ProtonColors.notificationError,
               )),
       const SizedBox(height: 8),
       buildChart(context),

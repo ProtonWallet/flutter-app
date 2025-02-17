@@ -70,7 +70,7 @@ class EditSenderSheet {
                     labelText: S.of(context).sender_name,
                     hintText: S.of(context).sender_name_hint,
                     emails: viewModel.contactsEmails,
-                    color: ProtonColors.white,
+                    color: ProtonColors.backgroundSecondary,
                     focusNode: nameFocusNode,
                     textEditingController: nameController,
                     showBorder: false,

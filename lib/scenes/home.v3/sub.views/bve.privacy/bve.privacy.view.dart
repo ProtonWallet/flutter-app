@@ -26,7 +26,7 @@ class BvEPrivacyView extends ViewBase<BvEPrivacyViewModel> {
               }),
         ),
         height: context.height / 3 * 2,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Column(children: [
             Text(

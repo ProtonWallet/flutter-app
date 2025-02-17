@@ -4,6 +4,7 @@ import 'package:wallet/l10n/generated/locale.dart';
 
 class InputDoneView extends StatelessWidget {
   final VoidCallback? onTap;
+
   const InputDoneView({super.key, this.onTap});
 
   @override
@@ -23,7 +24,7 @@ class InputDoneView extends StatelessWidget {
             },
             child: Text(S.of(context).done,
                 style: TextStyle(
-                    color: ProtonColors.blue1Text,
+                    color: ProtonColors.avatarBlue1Text,
                     fontWeight: FontWeight.bold)),
           ),
         ),

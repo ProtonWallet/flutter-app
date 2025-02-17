@@ -24,7 +24,7 @@ class DeleteWalletCoordinator extends Coordinator {
   void showSetupBackup() {
     showInBottomSheet(
       SetupBackupCoordinator(walletMenuModel.walletModel.walletID).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

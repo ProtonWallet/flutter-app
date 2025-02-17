@@ -32,7 +32,7 @@ class ImportCoordinator extends Coordinator {
   void showUpgrade() {
     showInBottomSheet(
       UpgradeCoordinator(isWalletAccountExceedLimit: false).start(),
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

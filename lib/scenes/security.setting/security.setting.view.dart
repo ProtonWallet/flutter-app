@@ -37,7 +37,7 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
           if (viewModel.error.isNotEmpty)
             Text(
               viewModel.error,
-              style: ProtonStyles.body2Regular(color: ProtonColors.signalError),
+              style: ProtonStyles.body2Regular(color: ProtonColors.notificationError),
             ),
           const SizedBox(height: 10),
           RecoverySection(

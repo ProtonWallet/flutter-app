@@ -21,14 +21,14 @@ class SectionUserInfo extends StatelessWidget {
             displayName,
             textAlign: TextAlign.center,
             style: ProtonStyles.body1Semibold(
-              color: const Color(0xFF0F0F0F),
+              color: ProtonColors.textNorm,
             ),
           ),
           Text(
             displayEmail,
             textAlign: TextAlign.center,
             style: ProtonStyles.body2Medium(
-              color: ProtonColors.textHint,
+              color: ProtonColors.textWeak,
             ),
           ),
         ],

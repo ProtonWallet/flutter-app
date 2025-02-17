@@ -1,8 +1,8 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.dart';
@@ -11,11 +11,13 @@ import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/scenes/buy/dropdown.dialog.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.dart';
 import 'package:wallet/scenes/buy/payment.dropdown.item.view.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 
 typedef PaymentCallback = void Function(PaymentMethod wallet);
 
 class PaymentSelector extends StatelessWidget {
   final PaymentCallback? onSelect;
+
   const PaymentSelector({
     super.key,
     this.onSelect,
@@ -66,14 +68,14 @@ class PaymentSelector extends StatelessWidget {
               bottom: 16,
             ),
             decoration: ShapeDecoration(
-              color: Colors.white,
+              color: ProtonColors.backgroundSecondary,
               shape: RoundedRectangleBorder(
                 side: const BorderSide(color: Color(0xFFE6E8EC)),
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
             child: !state.isQuoteLoaded
-                ? const CardLoading(height: 44)
+                ? const CustomCardLoadingBuilder(height: 44).build(context)
                 : Row(
                     children: [
                       /// payment type icon
@@ -105,12 +107,8 @@ class PaymentSelector extends StatelessWidget {
                             SizedBox(
                               child: Text(
                                 S.of(context).pay_with,
-                                style: const TextStyle(
-                                  color: Color(0xFF535964),
-                                  fontSize: 14,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: ProtonStyles.body2Medium(
+                                    color: ProtonColors.textHint),
                               ),
                             ),
                             Text(
@@ -118,12 +116,8 @@ class PaymentSelector extends StatelessWidget {
                                   ? "-------"
                                   : state.selectedModel.paymentMethod
                                       .enumToString(),
-                              style: TextStyle(
-                                color: ProtonColors.textNorm,
-                                fontSize: 16,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: ProtonStyles.body1Medium(
+                                  color: ProtonColors.textNorm),
                             ),
                           ],
                         ),

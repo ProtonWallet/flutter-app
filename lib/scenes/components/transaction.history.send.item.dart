@@ -1,4 +1,3 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
@@ -6,6 +5,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/recipient.detail.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 
 class TransactionHistorySendItem extends StatelessWidget {
   final String content;
@@ -39,13 +39,13 @@ class TransactionHistorySendItem extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: defaultPadding),
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         child: isLoading
-            ? const CardLoading(
+            ? const CustomCardLoadingBuilder(
                 height: 50,
                 borderRadius: BorderRadius.all(Radius.circular(4)),
                 margin: EdgeInsets.only(top: 4),
-              )
+              ).build(context)
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

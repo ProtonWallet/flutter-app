@@ -4,7 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/provider/locale.provider.dart';
@@ -26,7 +28,7 @@ class AppView extends ViewBase<AppViewModel> {
           create: (context) => UserSettingProvider(),
         ),
         ChangeNotifierProvider<ThemeProvider>(
-            create: (context) => ThemeProvider()),
+            create: (context) => viewModel.themeProvider),
         ChangeNotifierProvider<LocaleProvider>(
             create: (context) => LocaleProvider()),
       ],
@@ -61,15 +63,15 @@ class AppView extends ViewBase<AppViewModel> {
           // },
           locale: Provider.of<LocaleProvider>(context, listen: false).locale,
           theme: ThemeData(
-            colorScheme:
-                ThemeData(brightness: Brightness.light).colorScheme.copyWith(
-                      primary: ProtonColors.textNorm,
-                    ),
+            colorScheme: ThemeData(
+              brightness: Brightness.light,
+            ).colorScheme.copyWith(primary: ProtonColors.textNorm),
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           themeMode: themeProvider.getThemeMode(
-              Provider.of<ThemeProvider>(context, listen: false).themeMode),
+            Provider.of<ThemeProvider>(context, listen: false).themeMode,
+          ),
           darkTheme: ThemeData(brightness: Brightness.dark),
           initialRoute: '/',
           routes: <String, WidgetBuilder>{
@@ -89,11 +91,18 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: ProtonColors.launchBackground,
-      child: const Center(
-          child: CircularProgressIndicator(
-        color: Colors.white,
-      )),
+      /// use system themed background before protonColor initialized
+      color: ProtonColors.initialized
+          ? ProtonColors.backgroundSecondary
+          : context.isDarkMode
+              ? ProtonColors.defaultLoadBackgroundDark
+              : ProtonColors.defaultLoadBackgroundLight,
+      child: Center(
+        child: Assets.images.welcome.protonWalletLogoMark.svg(
+          fit: BoxFit.fitWidth,
+          width: MediaQuery.of(context).size.width / 3,
+        ),
+      ),
     );
   }
 }

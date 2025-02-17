@@ -1,4 +1,3 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
@@ -21,6 +20,7 @@ import 'package:wallet/managers/features/buy.bitcoin/buybitcoin.bloc.state.dart'
 import 'package:wallet/scenes/buy/buybitcoin.terms.dart';
 import 'package:wallet/scenes/buy/widgets/payment.selector.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
+import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/core/view.dart';
 
@@ -161,7 +161,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                               bottom: 16,
                             ),
                             decoration: ShapeDecoration(
-                              color: Colors.white,
+                              color: ProtonColors.backgroundSecondary,
                               shape: RoundedRectangleBorder(
                                 side:
                                     const BorderSide(color: Color(0xFFE6E8EC)),
@@ -177,33 +177,25 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                     children: [
                                       Text(
                                         S.of(context).country,
-                                        style: const TextStyle(
-                                          color: Color(0xFF535964),
-                                          fontSize: 14,
-                                          fontFamily: 'Inter',
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        style: ProtonStyles.body2Medium(
+                                            color: ProtonColors.textHint),
                                       ),
                                       if (state.isCountryLoaded)
                                         Text(
                                           state.selectedModel.country.name,
-                                          style: const TextStyle(
-                                            color: Color(0xFF191C32),
-                                            fontSize: 16,
-                                            fontFamily: 'Inter',
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                          style: ProtonStyles.body1Medium(
+                                              color: ProtonColors.textNorm),
                                         ),
 
                                       /// country loading
                                       if (!state.isCountryLoaded)
-                                        const CardLoading(
+                                        const CustomCardLoadingBuilder(
                                           height: 26,
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(4),
                                           ),
                                           margin: EdgeInsets.only(top: 4),
-                                        ),
+                                        ).build(context),
                                     ],
                                   ),
                                 ),
@@ -242,8 +234,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                 left: 24,
                                 right: 16,
                               ),
-                              decoration: const ShapeDecoration(
-                                color: Colors.white,
+                              decoration: ShapeDecoration(
+                                color: ProtonColors.backgroundSecondary,
                                 shape: RoundedRectangleBorder(
                                   side: BorderSide(color: Color(0xFFE6E8EC)),
                                   borderRadius: BorderRadius.only(
@@ -267,12 +259,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                           children: [
                                             Text(
                                               S.of(context).you_pay,
-                                              style: const TextStyle(
-                                                color: Color(0xFF535964),
-                                                fontSize: 14,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                              style: ProtonStyles.body2Medium(
+                                                  color: ProtonColors.textHint),
                                             ),
                                             const SizedBox(height: 2),
                                             if (state.isCurrencyLoaded)
@@ -294,6 +282,9 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                   disabledBorder:
                                                       InputBorder.none,
                                                 ),
+                                                style: ProtonStyles.body1Medium(
+                                                    color:
+                                                        ProtonColors.textNorm),
                                                 controller:
                                                     viewModel.controller,
                                                 focusNode: viewModel.focusNode,
@@ -315,12 +306,12 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                     TextInputType.number,
                                               ),
                                             if (!state.isCurrencyLoaded)
-                                              const CardLoading(
+                                              const CustomCardLoadingBuilder(
                                                 height: 26,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(4)),
                                                 margin: EdgeInsets.only(top: 4),
-                                              ),
+                                              ).build(context),
                                           ],
                                         ),
                                       ),
@@ -377,7 +368,7 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                             bottom: 10,
                                           ),
                                           decoration: ShapeDecoration(
-                                            color: const Color(0xFFF3F5F6),
+                                            color: ProtonColors.backgroundNorm,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(200),
@@ -392,12 +383,10 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                 Text(
                                                   state.selectedModel
                                                       .fiatCurrency.symbol,
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF191C32),
-                                                    fontSize: 15,
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
+                                                  style:
+                                                      ProtonStyles.body2Medium(
+                                                          color: ProtonColors
+                                                              .textNorm),
                                                 ),
                                               Assets
                                                   .images.icon.icChevronTinyDown
@@ -466,8 +455,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   right: 16,
                                   bottom: 16,
                                 ),
-                                decoration: const ShapeDecoration(
-                                  color: Colors.white,
+                                decoration: ShapeDecoration(
+                                  color: ProtonColors.backgroundSecondary,
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(color: Color(0xFFE6E8EC)),
                                     borderRadius: BorderRadius.only(
@@ -477,7 +466,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                   ),
                                 ),
                                 child: !state.isQuoteLoaded
-                                    ? const CardLoading(height: 44)
+                                    ? const CustomCardLoadingBuilder(height: 44)
+                                        .build(context)
                                     : Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -490,39 +480,31 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 if (!state.isQuoteLoaded)
-                                                  const CardLoading(height: 50),
+                                                  const CustomCardLoadingBuilder(
+                                                          height: 50)
+                                                      .build(context),
                                                 Text(
                                                   S.of(context).you_receive,
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF535964),
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter',
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
+                                                  style:
+                                                      ProtonStyles.body2Medium(
+                                                          color: ProtonColors
+                                                              .textHint),
                                                 ),
                                                 const SizedBox(height: 2),
                                                 state.isQuoteFailed
-                                                    ? const Text(
+                                                    ? Text(
                                                         '----------',
-                                                        style: TextStyle(
-                                                          color:
-                                                              Color(0xFF191C32),
-                                                          fontSize: 16,
-                                                          fontFamily: 'Inter',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
+                                                        style: ProtonStyles
+                                                            .body1Medium(
+                                                                color: ProtonColors
+                                                                    .textNorm),
                                                       )
                                                     : Text(
                                                         '${state.selectedModel.selectedQuote.bitcoinAmount} BTC',
-                                                        style: const TextStyle(
-                                                          color:
-                                                              Color(0xFF191C32),
-                                                          fontSize: 16,
-                                                          fontFamily: 'Inter',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
+                                                        style: ProtonStyles
+                                                            .body1Medium(
+                                                                color: ProtonColors
+                                                                    .textNorm),
                                                       ),
                                               ],
                                             ),
@@ -550,8 +532,8 @@ class BuyBitcoinView extends ViewBase<BuyBitcoinViewModel> {
                                                             .enumToString(),
                                                     style: ProtonStyles
                                                         .body2Medium(
-                                                            color: const Color(
-                                                                0xFF191C32)),
+                                                            color: ProtonColors
+                                                                .textNorm),
                                                   ),
                                                   const SizedBox(width: 8),
                                                   Assets.images.icon

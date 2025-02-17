@@ -339,6 +339,8 @@ class HomeViewModelImpl extends HomeViewModel {
       } else if (state is AppUnlockFailedState) {
         LocalAuthManager.auth.stopAuthentication();
         logout();
+      } else if (state is AppUnlockForceLogoutState) {
+        logout();
       } else if (state is AppForceUpgradeState) {
         showUpgradeErrorDialog(state.message, logout);
       }

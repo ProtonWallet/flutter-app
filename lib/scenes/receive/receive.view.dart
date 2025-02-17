@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
@@ -46,7 +45,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               width: context.width,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: ProtonColors.white,
+                color: ProtonColors.backgroundSecondary,
                 borderRadius: BorderRadius.circular(24.0),
               ),
               child: Column(
@@ -67,12 +66,20 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                       ),
                     ]),
                   Container(
-                    color: ProtonColors.white,
+                    color: ProtonColors.backgroundSecondary,
                     padding: const EdgeInsets.all(10),
                     child: viewModel.initialized && !viewModel.loadingAddress
                         ? QrImageView(
                             size: min(context.width, 200),
                             data: viewModel.currentAddress?.address ?? "",
+                            eyeStyle: QrEyeStyle(
+                              eyeShape: QrEyeShape.square,
+                              color: ProtonColors.textNorm,
+                            ),
+                            dataModuleStyle: QrDataModuleStyle(
+                              dataModuleShape: QrDataModuleShape.square,
+                              color: ProtonColors.textNorm,
+                            ),
                           )
                         : CircularProgressIndicator(
                             color: ProtonColors.protonBlue,
@@ -91,10 +98,10 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Assets.images.icon.icInfoCircleDark.svg(
-                          fit: BoxFit.fill,
-                          width: 20,
-                          height: 20,
+                        Icon(
+                          Icons.info_outline_rounded,
+                          size: 20,
+                          color: ProtonColors.textNorm,
                         ),
                       ],
                     ),
@@ -142,7 +149,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     Text(
                       context.local.warn_you_create_too_many_unused_address,
                       style: ProtonStyles.body2Regular(
-                        color: ProtonColors.signalError,
+                        color: ProtonColors.notificationError,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -152,7 +159,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     Text(
                       context.local.you_can_not_create_too_many_unused_address,
                       style: ProtonStyles.body2Regular(
-                        color: ProtonColors.signalError,
+                        color: ProtonColors.notificationError,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

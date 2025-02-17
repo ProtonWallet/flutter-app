@@ -71,7 +71,7 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                             width: 0,
                           ),
                           backgroundColor: ProtonColors.errorBackground,
-                          color: ProtonColors.signalError,
+                          color: ProtonColors.notificationError,
                         ),
                       ),
                     Text(
@@ -94,11 +94,11 @@ class DeleteWalletAccountView extends ViewBase<DeleteWalletAccountViewModel> {
                           viewModel.isDeleting = false;
                         }
                       },
-                      backgroundColor: ProtonColors.signalError,
+                      backgroundColor: ProtonColors.notificationError,
                       text: S.of(context).delete_account,
                       width: context.width,
                       textStyle: ProtonStyles.body1Medium(
-                        color: ProtonColors.textInverted,
+                        color: ProtonColors.white,
                       ),
                       height: 55,
                     ),

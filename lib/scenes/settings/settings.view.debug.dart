@@ -11,11 +11,6 @@ mixin SettingsViewMixin {
           children: [
             SettingsItem(
               title: "Test Sentry crashes",
-              logo: Assets.images.icon.icArrowOutSquare.svg(
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
               onTap: () {
                 /// Trigger a crash for testing
                 throw Exception(
@@ -24,11 +19,6 @@ mixin SettingsViewMixin {
             ),
             SettingsItem(
               title: "Sentry send exception",
-              logo: Assets.images.icon.icArrowOutSquare.svg(
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
               onTap: () {
                 try {
                   throw Exception(
@@ -43,11 +33,6 @@ mixin SettingsViewMixin {
             ),
             SettingsItem(
               title: "Debug Button",
-              logo: Assets.images.icon.icArrowOutSquare.svg(
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
               onTap: () {},
             ),
           ],

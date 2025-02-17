@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -12,7 +13,7 @@ import 'package:wallet/scenes/components/underline.dart';
 class PassphraseTutorialSheet {
   static void show(BuildContext context) {
     HomeModalBottomSheet.show(context,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -26,16 +27,15 @@ class PassphraseTutorialSheet {
             Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  Assets.images.icon.lock.image(
-                    fit: BoxFit.fill,
-                    width: 240,
-                    height: 167,
-                  ),
+                  Assets.images.icon.lock.applyThemeIfNeeded(context).image(
+                        fit: BoxFit.fill,
+                        width: 240,
+                        height: 167,
+                      ),
                   const SizedBox(height: 10),
                   Text(
                     S.of(context).what_is_wallet_passphrase,
-                    style: ProtonStyles.headline(
-                        color: ProtonColors.textNorm),
+                    style: ProtonStyles.headline(color: ProtonColors.textNorm),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 
 class AccountDropdown extends StatelessWidget {
@@ -18,7 +19,7 @@ class AccountDropdown extends StatelessWidget {
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
-          color: Colors.white,
+          color: ProtonColors.backgroundSecondary,
           shape: RoundedRectangleBorder(
             side: const BorderSide(color: Color(0xFFE6E8EC)),
             borderRadius: BorderRadius.circular(16),

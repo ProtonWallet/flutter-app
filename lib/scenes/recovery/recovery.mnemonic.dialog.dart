@@ -4,6 +4,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -18,7 +19,7 @@ Future<void> showMnemonicDialog(
     context: context,
     isDismissible: false,
     enableDrag: false,
-    backgroundColor: ProtonColors.white,
+    backgroundColor: ProtonColors.backgroundSecondary,
     constraints: BoxConstraints(
       minWidth: MediaQuery.of(context).size.width,
       maxHeight: MediaQuery.of(context).size.height - 60,
@@ -41,11 +42,12 @@ Future<void> showMnemonicDialog(
                       })),
               Transform.translate(
                 offset: const Offset(0, -20),
-                child: Assets.images.icon.lock.image(
-                  fit: BoxFit.fitHeight,
-                  width: 240,
-                  height: 167,
-                ),
+                child:
+                    Assets.images.icon.lock.applyThemeIfNeeded(context).image(
+                          fit: BoxFit.fitHeight,
+                          width: 240,
+                          height: 167,
+                        ),
               ),
               Transform.translate(
                 offset: const Offset(0, -30),
@@ -72,7 +74,7 @@ Future<void> showMnemonicDialog(
                 child: Text(
                   S.of(context).enable_recovery_remind,
                   style: ProtonStyles.body2Regular(
-                    color: ProtonColors.signalError,
+                    color: ProtonColors.notificationError,
                   ),
                   textAlign: TextAlign.center,
                 ),

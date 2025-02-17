@@ -37,8 +37,9 @@ class OnRampTCSheet {
     HomeModalBottomSheet.show(context,
         isDismissible: false,
         enableDrag: false,
-        backgroundColor: ProtonColors.white, child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+        backgroundColor: ProtonColors.backgroundSecondary, child:
+            StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Transform.translate(
             offset: const Offset(0, -20),
@@ -144,8 +145,8 @@ class OnRampTCSheet {
                         },
                         text: "Agree and confirm",
                         width: MediaQuery.of(context).size.width,
-                        textStyle:
-                            ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                        textStyle: ProtonStyles.body1Medium(
+                            color: ProtonColors.textInverted),
                         backgroundColor: ProtonColors.protonBlue,
                         borderColor: ProtonColors.protonBlue,
                         height: 55),

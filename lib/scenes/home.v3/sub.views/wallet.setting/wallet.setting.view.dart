@@ -10,6 +10,7 @@ import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/bitcoin.unit.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.dart';
@@ -30,32 +31,32 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
   const WalletSettingView(WalletSettingViewModel viewModel)
       : super(viewModel, const Key("WalletSettingView"));
 
-  Widget getWalletLeadingIcon(int index) {
+  Widget getWalletLeadingIcon(BuildContext context, int index) {
     switch (index) {
       case 1:
-        return Assets.images.icon.wallet1.svg(
-          fit: BoxFit.fill,
-          width: 16,
-          height: 16,
-        );
+        return Assets.images.icon.wallet1.applyThemeIfNeeded(context).svg(
+              fit: BoxFit.fill,
+              width: 16,
+              height: 16,
+            );
       case 2:
-        return Assets.images.icon.wallet2.svg(
-          fit: BoxFit.fill,
-          width: 16,
-          height: 16,
-        );
+        return Assets.images.icon.wallet2.applyThemeIfNeeded(context).svg(
+              fit: BoxFit.fill,
+              width: 16,
+              height: 16,
+            );
       case 3:
-        return Assets.images.icon.wallet3.svg(
-          fit: BoxFit.fill,
-          width: 16,
-          height: 16,
-        );
+        return Assets.images.icon.wallet3.applyThemeIfNeeded(context).svg(
+              fit: BoxFit.fill,
+              width: 16,
+              height: 16,
+            );
       default:
-        return Assets.images.icon.wallet0.svg(
-          fit: BoxFit.fill,
-          width: 16,
-          height: 16,
-        );
+        return Assets.images.icon.wallet0.applyThemeIfNeeded(context).svg(
+              fit: BoxFit.fill,
+              width: 16,
+              height: 16,
+            );
     }
   }
 
@@ -64,6 +65,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
     return PageLayoutV1(
       headerWidget: CustomHeader(
         title: S.of(context).wallet_preference,
+        titleStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
         buttonDirection: AxisDirection.left,
         padding: const EdgeInsets.only(bottom: 10),
       ),
@@ -80,44 +82,59 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFieldTextV2(
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: CircleAvatar(
-                        backgroundColor: AvatarColorHelper.getBackgroundColor(
-                          viewModel.walletMenuModel.currentIndex % 4,
-                        ),
-                        radius: 10,
-                        child: getWalletLeadingIcon(
-                          viewModel.walletMenuModel.currentIndex % 4,
-                        ),
-                      ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: ProtonColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(18.0),
                     ),
-                    labelText: S.of(context).name,
-                    hintText: S.of(context).wallet_name_hint,
-                    alwaysShowHint: true,
-                    textController: viewModel.walletNameController,
-                    myFocusNode: viewModel.walletNameFocusNode,
-                    maxLength: maxWalletNameSize,
-                    onFinish: () async {
-                      viewModel.updateWalletName(
-                        viewModel.walletNameController.text,
-                      );
-                    },
-                    validation: (String value) {
-                      if (value.isEmpty) {
-                        return "Required";
-                      }
-                      return "";
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownButtonV2(
-                    labelText: S.of(context).setting_bitcoin_unit_label,
-                    width: context.width - defaultPadding * 2,
-                    items: bitcoinUnits,
-                    itemsText: bitcoinUnits.toUpperCaseList,
-                    valueNotifier: viewModel.bitcoinUnitNotifier,
+                    child: Column(children: [
+                      TextFieldTextV2(
+                        prefixIcon:
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          CircleAvatar(
+                            backgroundColor:
+                                AvatarColorHelper.getBackgroundColor(
+                              viewModel.walletMenuModel.currentIndex % 4,
+                            ),
+                            radius: 18,
+                            child: getWalletLeadingIcon(
+                              context,
+                              viewModel.walletMenuModel.currentIndex % 4,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                        ]),
+                        labelText: S.of(context).name,
+                        hintText: S.of(context).wallet_name_hint,
+                        alwaysShowHint: true,
+                        textController: viewModel.walletNameController,
+                        myFocusNode: viewModel.walletNameFocusNode,
+                        maxLength: maxWalletNameSize,
+                        onFinish: () async {
+                          viewModel.updateWalletName(
+                            viewModel.walletNameController.text,
+                          );
+                        },
+                        validation: (String value) {
+                          if (value.isEmpty) {
+                            return "Required";
+                          }
+                          return "";
+                        },
+                      ),
+                      DropdownButtonV2(
+                        labelText: S.of(context).setting_bitcoin_unit_label,
+                        width: context.width - defaultPadding * 2,
+                        items: bitcoinUnits,
+                        itemsText: bitcoinUnits.toUpperCaseList,
+                        valueNotifier: viewModel.bitcoinUnitNotifier,
+                      ),
+                    ]),
                   ),
                   const SizedBox(height: defaultPadding),
                   Text(
@@ -194,7 +211,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                           },
                           text: S.of(context).delete_wallet,
                           width: context.width,
-                          backgroundColor: ProtonColors.signalError,
+                          backgroundColor: ProtonColors.notificationError,
                           textStyle: ProtonStyles.body1Medium(
                             color: ProtonColors.white,
                           ),
@@ -234,7 +251,7 @@ class AccountRow extends StatelessWidget {
       width: context.width,
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: ProtonColors.white,
+        color: ProtonColors.backgroundSecondary,
         borderRadius: BorderRadius.circular(18.0),
       ),
       child: Column(children: [

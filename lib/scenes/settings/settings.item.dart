@@ -28,10 +28,10 @@ class SettingsItem extends StatelessWidget {
       ),
       subtitle: subtitle != null ? Text(subtitle!) : null,
       trailing: logo ??
-          const Icon(
+          Icon(
             Icons.arrow_forward_ios_rounded,
             size: 20,
-            color: Color(0xFF848993),
+            color: ProtonColors.textHint,
           ),
       onTap: onTap,
     );

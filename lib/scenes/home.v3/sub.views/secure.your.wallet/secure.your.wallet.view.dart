@@ -14,7 +14,7 @@ class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
   Widget build(BuildContext context) {
     return PageLayoutV1(
         showHeader: false,
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(S.of(context).secure_your_wallet,
               style: ProtonStyles.body2Medium(color: ProtonColors.textNorm)),

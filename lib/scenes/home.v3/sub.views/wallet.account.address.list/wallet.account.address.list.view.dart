@@ -38,7 +38,7 @@ class WalletAccountAddressListView
                 Navigator.of(context).pop();
               }),
         ),
-        backgroundColor: ProtonColors.white,
+        backgroundColor: ProtonColors.backgroundSecondary,
         child: Transform.translate(
           offset: const Offset(0, -10),
           child: Column(children: [

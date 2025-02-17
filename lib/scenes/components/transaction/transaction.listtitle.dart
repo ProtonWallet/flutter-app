@@ -126,11 +126,11 @@ class TransactionListTitle extends StatelessWidget {
                         bitcoinAmount.toFiatCurrencySignString(
                             displayBalance: displayBalance),
                         style: ProtonStyles.captionRegular(
-                            color: ProtonColors.signalError))
+                            color: ProtonColors.notificationError))
                     : Text(
                         "+${bitcoinAmount.toFiatCurrencySignString(displayBalance: displayBalance)}",
                         style: ProtonStyles.captionRegular(
-                            color: ProtonColors.signalSuccess)),
+                            color: ProtonColors.notificationSuccess)),
               ],
             ),
           ]),

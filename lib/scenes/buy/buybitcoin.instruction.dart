@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
@@ -22,7 +23,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
       body: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          color: ProtonColors.white,
+          color: ProtonColors.backgroundSecondary,
         ),
         child: SafeArea(
           child: Column(children: [
@@ -47,10 +48,10 @@ class BuyBitcoinInstruction extends StatelessWidget {
         Transform.translate(
           offset: const Offset(0, -20),
           child: Column(children: [
-            Assets.images.icon.bitcoinBigIcon.image(
-              width: 240,
-              height: 200,
-            ),
+            Assets.images.icon.bitcoinBigIcon.applyThemeIfNeeded(context).image(
+                  width: 240,
+                  height: 200,
+                ),
             const SizedBox(height: 10),
             Text(
               S.of(context).buy_bitcoin,
@@ -89,8 +90,8 @@ class BuyBitcoinInstruction extends StatelessWidget {
                   },
                   text: S.of(context).continue_buttion,
                   width: MediaQuery.of(context).size.width,
-                  textStyle:
-                      ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                  textStyle: ProtonStyles.body1Medium(
+                      color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 55,

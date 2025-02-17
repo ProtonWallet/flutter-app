@@ -32,7 +32,7 @@ class SendCoordinator extends Coordinator {
     final view = SendInviteCoordinator().start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

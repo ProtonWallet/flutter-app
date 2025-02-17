@@ -3,6 +3,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -22,7 +23,7 @@ class SendFlowInviteSheet {
   ) {
     final ValueNotifier userAddressValueNotifier =
         ValueNotifier(userAddresses.firstOrNull);
-    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.white,
+    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.backgroundSecondary,
         child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -36,11 +37,11 @@ class SendFlowInviteSheet {
         Transform.translate(
             offset: const Offset(0, -20),
             child: Column(children: [
-              Assets.images.icon.user.image(
-                fit: BoxFit.fill,
-                width: 240,
-                height: 167,
-              ),
+              Assets.images.icon.user.applyThemeIfNeeded(context).image(
+                    fit: BoxFit.fill,
+                    width: 240,
+                    height: 167,
+                  ),
               Text(
                 S.of(context).send_invite_to(email),
                 style: ProtonStyles.headline(color: ProtonColors.textNorm),
@@ -80,8 +81,8 @@ class SendFlowInviteSheet {
                   },
                   text: S.of(context).send_invite_email,
                   width: MediaQuery.of(context).size.width,
-                  textStyle:
-                      ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+                  textStyle: ProtonStyles.body1Medium(
+                      color: ProtonColors.textInverted),
                   backgroundColor: ProtonColors.protonBlue,
                   borderColor: ProtonColors.protonBlue,
                   height: 55),

@@ -50,7 +50,7 @@ class CustomSliderV1State extends State<CustomSliderV1> {
         min: widget.minValue.toDouble(),
         activeColor: ProtonColors.sliderActiveColor,
         inactiveColor: ProtonColors.sliderInactiveColor,
-        thumbColor: ProtonColors.white,
+        thumbColor: ProtonColors.backgroundSecondary,
         label: value.toString(),
         onChanged: (double value) {
           setState(() {
@@ -88,7 +88,7 @@ class CustomSliderV1ThumbShape extends SliderComponentShape {
 
     const double radius = 16.0;
     final Paint paint = Paint()
-      ..color = ProtonColors.white
+      ..color = ProtonColors.backgroundSecondary
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:mockito/mockito.dart';
 import 'package:wallet/constants/fonts.gen.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 
+import '../../mocks/theme.provider.mocks.dart';
 import '../helper/test.wrapper.dart';
 
 void main() {
@@ -14,6 +17,10 @@ void main() {
   });
 
   testSnapshot('Proton Text style general checks x3 scale', (tester) async {
+    final mockThemeProvider = MockThemeProvider();
+    ProtonColors.updateLightTheme();
+    when(mockThemeProvider.isDarkMode()).thenReturn(false);
+
     final builder = GoldenBuilder.grid(
         columns: 1, widthToHeightRatio: 1, bgColor: Colors.white)
       ..addScenario(
@@ -152,6 +159,7 @@ void main() {
       surfaceSize: const Size(1200, 2500),
       textScaleSize: 3.0,
     );
+
     await screenMatchesGolden(
       tester,
       "$testPath/font.style.grid",

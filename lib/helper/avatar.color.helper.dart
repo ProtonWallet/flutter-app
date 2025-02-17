@@ -12,47 +12,47 @@ class AvatarColor {
 }
 
 class AvatarColorHelper {
-  static final colors = [
-    AvatarColor(
-      ProtonColors.yellow1Text,
-      ProtonColors.yellow1Background,
-    ),
-    AvatarColor(
-      ProtonColors.pink1Text,
-      ProtonColors.pink1Background,
-    ),
-    AvatarColor(
-      ProtonColors.blue1Text,
-      ProtonColors.blue1Background,
-    ),
-    AvatarColor(
-      ProtonColors.green1Text,
-      ProtonColors.green1Background,
-    ),
-  ];
+  static List<AvatarColor> get colors => [
+        AvatarColor(
+          ProtonColors.drawerWalletOrange1Text,
+          ProtonColors.avatarOrange1Background,
+        ),
+        AvatarColor(
+          ProtonColors.drawerWalletPink1Text,
+          ProtonColors.avatarPink1Background,
+        ),
+        AvatarColor(
+          ProtonColors.drawerWalletBlue1Text,
+          ProtonColors.avatarBlue1Background,
+        ),
+        AvatarColor(
+          ProtonColors.drawerWalletGreen1Text,
+          ProtonColors.avatarGreen1Background,
+        ),
+      ];
 
-  static final avatarColors = [
-    AvatarColor(
-      ProtonColors.avatarOrange1Text,
-      ProtonColors.avatarOrange1Background,
-    ),
-    AvatarColor(
-      ProtonColors.avatarPink1Text,
-      ProtonColors.avatarPink1Background,
-    ),
-    AvatarColor(
-      ProtonColors.avatarPurple1Text,
-      ProtonColors.avatarPurple1Background,
-    ),
-    AvatarColor(
-      ProtonColors.avatarBlue1Text,
-      ProtonColors.avatarBlue1Background,
-    ),
-    AvatarColor(
-      ProtonColors.avatarGreen1Text,
-      ProtonColors.avatarGreen1Background,
-    ),
-  ];
+  static List<AvatarColor> get avatarColors => [
+        AvatarColor(
+          ProtonColors.avatarOrange1Text,
+          ProtonColors.avatarOrange1Background,
+        ),
+        AvatarColor(
+          ProtonColors.avatarPink1Text,
+          ProtonColors.avatarPink1Background,
+        ),
+        AvatarColor(
+          ProtonColors.avatarPurple1Text,
+          ProtonColors.avatarPurple1Background,
+        ),
+        AvatarColor(
+          ProtonColors.avatarBlue1Text,
+          ProtonColors.avatarBlue1Background,
+        ),
+        AvatarColor(
+          ProtonColors.avatarGreen1Text,
+          ProtonColors.avatarGreen1Background,
+        ),
+      ];
 
   static Color getAvatarBackgroundColor(int index) {
     return avatarColors[index % max(avatarColors.length, 1)].backgroundColor;

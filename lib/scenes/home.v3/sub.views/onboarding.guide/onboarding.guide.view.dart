@@ -9,6 +9,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/avatar.color.helper.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -69,11 +70,13 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                               backgroundColor:
                                   AvatarColorHelper.getBackgroundColor(1),
                               radius: 10,
-                              child: Assets.images.icon.wallet1.svg(
-                                fit: BoxFit.scaleDown,
-                                width: 16,
-                                height: 16,
-                              ))),
+                              child: Assets.images.icon.wallet1
+                                  .applyThemeIfNeeded(context)
+                                  .svg(
+                                    fit: BoxFit.scaleDown,
+                                    width: 16,
+                                    height: 16,
+                                  ))),
                       alwaysShowHint: true,
                       textController: viewModel.nameTextController,
                       myFocusNode: viewModel.walletNameFocusNode,

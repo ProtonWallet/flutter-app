@@ -91,7 +91,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: ProtonColors.white,
+          color: ProtonColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(18.0),
         ),
         child: Container(
@@ -100,7 +100,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
                 const EdgeInsets.only(
                     left: defaultPadding, right: 8, top: 4, bottom: 4),
             decoration: BoxDecoration(
-              color: widget.backgroundColor ?? ProtonColors.white,
+              color: widget.backgroundColor ?? ProtonColors.backgroundSecondary,
               border: widget.border,
               borderRadius: BorderRadius.circular(18.0),
             ),
@@ -158,7 +158,7 @@ class DropdownButtonV2State extends State<DropdownButtonV2> {
     String keyWord = "";
     showModalBottomSheet(
       context: context,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
         maxHeight: MediaQuery.of(context).size.height * 0.8,

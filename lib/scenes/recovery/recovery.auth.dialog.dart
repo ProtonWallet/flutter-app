@@ -26,7 +26,7 @@ Future<void> showAuthBottomSheet(
       const Duration(milliseconds: 200), passwordFocusNode.requestFocus);
   return HomeModalBottomSheet.show(context,
       isDismissible: false, // user must tap button!
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       header: CustomHeader(
         buttonDirection: AxisDirection.right,
         button: CloseButtonV1(

@@ -112,22 +112,22 @@ class ProtonColorsWidget extends StatelessWidget {
 
           /// alert colors
           ColorText(
-            ProtonColors.alertWaning,
-            "alertWaning",
+            ProtonColors.notificationWaning,
+            "notificationWaning",
           ),
           ColorText(
-            ProtonColors.alertWaningBackground,
-            "alertWaningBackground",
+            ProtonColors.notificationWaningBackground,
+            "notificationWaningBackground",
           ),
 
           /// signal colors, used for btc price chart, status code
           ColorText(
-            ProtonColors.signalSuccess,
-            "signalSuccess",
+            ProtonColors.notificationSuccess,
+            "notificationSuccess",
           ),
           ColorText(
-            ProtonColors.signalError,
-            "signalError",
+            ProtonColors.notificationError,
+            "notificationError",
           ),
 
           /// other one-time custom colors styles for widgets
@@ -136,8 +136,8 @@ class ProtonColorsWidget extends StatelessWidget {
             "launchBackground",
           ),
           ColorText(
-            ProtonColors.homeActionButtonBackground,
-            "homeActionButtonBackground",
+            ProtonColors.interActionWeak,
+            "interActionWeak",
           ),
           ColorText(
             ProtonColors.black,
@@ -174,40 +174,6 @@ class ProtonColorsWidget extends StatelessWidget {
           ColorText(
             ProtonColors.drawerBackgroundHighlight,
             "drawerBackgroundHighlight",
-          ),
-
-          /// bitcoin wallet avatar text and background colors
-          ColorText(
-            ProtonColors.pink1Text,
-            "pink1Text",
-          ),
-          ColorText(
-            ProtonColors.pink1Background,
-            "pink1Background",
-          ),
-          ColorText(
-            ProtonColors.blue1Text,
-            "blue1Text",
-          ),
-          ColorText(
-            ProtonColors.blue1Background,
-            "blue1Background",
-          ),
-          ColorText(
-            ProtonColors.yellow1Text,
-            "yellow1Text",
-          ),
-          ColorText(
-            ProtonColors.yellow1Background,
-            "yellow1Background",
-          ),
-          ColorText(
-            ProtonColors.green1Text,
-            "green1Text",
-          ),
-          ColorText(
-            ProtonColors.green1Background,
-            "green1Background",
           ),
 
           /// recipient avatar text and background colors
@@ -260,6 +226,7 @@ class ProtonColorsWidget extends StatelessWidget {
 class ColorText extends StatelessWidget {
   final Color color;
   final String colorString;
+
   const ColorText(
     this.color,
     this.colorString, {

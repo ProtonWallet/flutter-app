@@ -74,7 +74,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
               bottom: 4,
             ),
         decoration: BoxDecoration(
-          color: backgroundColor ?? ProtonColors.white,
+          color: backgroundColor ?? ProtonColors.backgroundSecondary,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: TextField(
@@ -110,7 +110,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
   void showOptionsInBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
         maxHeight: MediaQuery.of(context).size.height * 0.8,

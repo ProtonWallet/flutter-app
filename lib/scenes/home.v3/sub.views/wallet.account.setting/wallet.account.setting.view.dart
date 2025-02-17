@@ -54,12 +54,12 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
             ),
             ListTile(
                 leading: Icon(Icons.delete_rounded,
-                    size: 18, color: ProtonColors.signalError),
+                    size: 18, color: ProtonColors.notificationError),
                 title: Transform.translate(
                     offset: const Offset(-8, 0),
                     child: Text(S.of(context).delete_account,
                         style: ProtonStyles.body2Regular(
-                          color: ProtonColors.signalError,
+                          color: ProtonColors.notificationError,
                         ))),
                 onTap: () {
                   Navigator.of(context).pop();

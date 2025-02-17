@@ -32,7 +32,7 @@ class WalletAccountAddressListCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 
@@ -43,7 +43,7 @@ class WalletAccountAddressListCoordinator extends Coordinator {
     ).start();
     showInBottomSheet(
       view,
-      backgroundColor: ProtonColors.white,
+      backgroundColor: ProtonColors.backgroundSecondary,
     );
   }
 

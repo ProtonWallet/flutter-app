@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
+import 'package:wallet/scenes/core/responsive.dart';
 
 class WelcomeImage extends StatelessWidget {
   const WelcomeImage({
@@ -15,33 +20,47 @@ class WelcomeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
+        Container(
+          decoration: Responsive.isDesktop(context)
+              ? null
+              : BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      ProtonColors.backgroundWelcomePage,
+                      ProtonColors.backgroundSecondary,
+                    ],
+                  ),
+                ),
           height: context.multHeight(0.4),
           child: Stack(
             children: [
               Column(
                 children: [
-                  const Expanded(child: SizedBox()),
+                  Expanded(child: (SizedBox())),
                   Center(
-                    child: Assets.images.welcome.walletWelcomeHeadPng.image(
-                      fit: BoxFit.fill,
-                    ),
+                    child: Assets.images.welcome.walletWelcomeHeadPng
+                        .applyThemeIfNeeded(context)
+                        .image(
+                          fit: BoxFit.fitWidth,
+                          width: min(context.width, 610),
+                        ),
                   ),
                   SizedBoxes.box2,
                 ],
               ),
-
-              /// Gradient overlay
+              // Gradient overlay
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 110,
+                  height: 160,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        const Color(0xFFFFFFFF).withOpacity(0.0),
-                        const Color(0xFFFFFFFF).withOpacity(1.0),
-                        const Color(0xFFFFFFFF).withOpacity(0.0),
+                        ProtonColors.backgroundSecondary.withOpacity(0.0),
+                        ProtonColors.backgroundSecondary.withOpacity(1.0),
+                        ProtonColors.backgroundSecondary.withOpacity(0.0),
                       ],
                       stops: const [0.0, 0.0, 1.0],
                       begin: Alignment.bottomCenter,
@@ -57,9 +76,11 @@ class WelcomeImage extends StatelessWidget {
         SizedBox(
           width: 264,
           height: 54,
-          child: Assets.images.walletCreation.protonWalletLogoLight.svg(
-            fit: BoxFit.fitHeight,
-          ),
+          child: Assets.images.walletCreation.protonWalletLogoLight
+              .applyThemeIfNeeded(context)
+              .svg(
+                fit: BoxFit.fitHeight,
+              ),
         ),
         SizedBoxes.box24,
         SizedBox(
