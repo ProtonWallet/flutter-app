@@ -400,8 +400,10 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                             const SizedBox(height: 20),
                             ButtonV5(
                                 onPressed: () {
-                                  launchUrl(Uri.parse(
-                                      "${appConfig.esploraWebpageUrl}search?q=${viewModel.frbTransactionDetails.txid}"));
+                                  launchUrl(
+                                      Uri.parse(
+                                          "${appConfig.esploraWebpageUrl}search?q=${viewModel.frbTransactionDetails.txid}"),
+                                      mode: LaunchMode.externalApplication);
                                 },
                                 text: S.of(context).view_on_blockstream,
                                 width: MediaQuery.of(context).size.width,
