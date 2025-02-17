@@ -33,7 +33,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
             Expanded(
               child: Column(children: [
                 SizedBox(
-                  height: max((context.height - 600) / 2, 0),
+                  height: max((context.height - 500) / 2, 0),
                 ),
                 const WelcomeImage(),
               ]),
@@ -63,7 +63,7 @@ class WelcomeView extends ViewBase<WelcomeViewModel> {
           mobile: Column(children: [
             Container(
               height: max((context.height - 900) / 2, 0),
-              color: ProtonColors.backgroundWelcomePage,
+              color: Colors.transparent,
             ),
             const WelcomeImage(),
             Padding(

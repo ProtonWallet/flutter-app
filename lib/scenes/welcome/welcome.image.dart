@@ -20,32 +20,26 @@ class WelcomeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          decoration: Responsive.isDesktop(context)
-              ? null
-              : BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      ProtonColors.backgroundWelcomePage,
-                      ProtonColors.backgroundSecondary,
-                    ],
-                  ),
-                ),
+        SizedBox(
           height: context.multHeight(0.4),
           child: Stack(
             children: [
               Column(
                 children: [
-                  Expanded(child: (SizedBox())),
-                  Center(
-                    child: Assets.images.welcome.walletWelcomeHeadPng
-                        .applyThemeIfNeeded(context)
-                        .image(
-                          fit: BoxFit.fitWidth,
-                          width: min(context.width, 610),
-                        ),
+                  const Expanded(child: SizedBox()),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: context.multHeight(0.4) - defaultPadding,
+                    ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Assets.images.welcome.walletWelcomeHeadPng
+                          .applyThemeIfNeeded(context)
+                          .image(
+                            fit: BoxFit.contain,
+                            width: min(context.width, 450),
+                          ),
+                    ),
                   ),
                   SizedBoxes.box2,
                 ],
@@ -54,7 +48,7 @@ class WelcomeImage extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 160,
+                  height: 110,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
