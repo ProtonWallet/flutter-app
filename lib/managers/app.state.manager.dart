@@ -85,6 +85,8 @@ class AppStateManager extends DataProvider implements Manager {
   bool isHomeLoading = false;
   bool isConnectivityOK = true;
   bool exponentialBackoffForConcurrentlyMode = false;
+  bool isLocked = false;
+  bool isAuthenticating = false;
   List<LoadingTask> failedTask = [];
 
   /// const key
@@ -339,7 +341,10 @@ class AppStateManager extends DataProvider implements Manager {
   Future<void> init() async {}
 
   @override
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    isLocked = false;
+    isAuthenticating = false;
+  }
 
   @override
   Future<void> reload() async {}

@@ -47,6 +47,7 @@ abstract class Coordinator implements ViewNavigator {
     bool fullScreen = false,
     bool enableDrag = true,
     bool isDismissible = true,
+    bool canPop = true,
   }) async {
     await Future.delayed(Duration.zero);
     final bool result;
@@ -57,6 +58,7 @@ abstract class Coordinator implements ViewNavigator {
         isDismissible: isDismissible,
         backgroundColor: backgroundColor,
         fullScreen: fullScreen,
+        canPop: canPop,
       );
     } else {
       // desktop and tablet
@@ -65,6 +67,7 @@ abstract class Coordinator implements ViewNavigator {
         enableDrag,
         isDismissible: isDismissible,
         backgroundColor: backgroundColor,
+        canPop: canPop,
       );
     }
     return result;
@@ -76,6 +79,7 @@ abstract class Coordinator implements ViewNavigator {
     Color? backgroundColor,
     bool fullScreen = false,
     bool isDismissible = true,
+    bool canPop = true,
   }) async {
     final context = Coordinator.rootNavigatorKey.currentContext!;
     final result = await showModalBottomSheet<bool>(
@@ -85,11 +89,11 @@ abstract class Coordinator implements ViewNavigator {
       backgroundColor: Colors.transparent,
       constraints: BoxConstraints(
         minWidth: context.width,
-        maxHeight: fullScreen ? context.height : context.height - 60,
+        maxHeight: fullScreen ? double.infinity : context.height - 60,
       ),
       isScrollControlled: true,
       builder: (context) {
-        return view;
+        return PopScope(canPop: canPop, child: view);
       },
     );
     logger.i("Bottom sheet closed with result: ${result ?? false}");
@@ -101,6 +105,7 @@ abstract class Coordinator implements ViewNavigator {
     bool enableDrag, {
     Color? backgroundColor,
     bool isDismissible = true,
+    bool canPop = true,
   }) async {
     final context = Coordinator.rootNavigatorKey.currentContext!;
     final result = await showModalBottomSheet<bool>(
@@ -110,20 +115,25 @@ abstract class Coordinator implements ViewNavigator {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       constraints: BoxConstraints(
-        maxWidth: max(maxDeskTopSheetWidth, context.width / 3),
-        maxHeight: context.height,
+        maxWidth: canPop
+            ? max(maxDeskTopSheetWidth, context.width / 3)
+            : double.infinity,
         minHeight: context.height,
       ),
       builder: (BuildContext context) {
-        return Align(
-          child: Container(
-            decoration: BoxDecoration(
-              color: backgroundColor ?? ProtonColors.backgroundNorm,
-              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+        return PopScope(
+          canPop: canPop,
+          child: Align(
+            child: Container(
+              decoration: BoxDecoration(
+                color: backgroundColor ?? ProtonColors.backgroundNorm,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(canPop ? 24.0 : 0)),
+              ),
+              margin: EdgeInsets.symmetric(vertical: canPop ? 30 : 0),
+              padding: const EdgeInsets.all(10),
+              child: view,
             ),
-            margin: const EdgeInsets.symmetric(vertical: 30),
-            padding: const EdgeInsets.all(10),
-            child: view,
           ),
         );
       },
