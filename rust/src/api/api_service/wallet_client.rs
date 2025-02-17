@@ -380,4 +380,16 @@ impl WalletClient {
         let result = self.inner.disable_show_wallet_recovery(wallet_id).await?;
         Ok(result)
     }
+
+    pub async fn send_wallet_account_metrics(
+        &self,
+        wallet_id: String,
+        wallet_account_id: String,
+        has_positive_balance: bool,
+    ) -> Result<(), BridgeError> {
+        Ok(self
+            .inner
+            .send_wallet_account_metrics(wallet_id, wallet_account_id, has_positive_balance)
+            .await?)
+    }
 }
