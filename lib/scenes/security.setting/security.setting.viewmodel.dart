@@ -77,7 +77,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
       isLoading = false;
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      error = parseMuonError(e) ?? parseSampleDisplayError(e);
+      error = e.localizedString;
     } catch (e) {
       error = e.toString();
     }

@@ -63,11 +63,12 @@ class TwoFactorAuthDisableViewModelImpl extends TwoFactorAuthDisableViewModel {
       userDataProvider.enabled2FA(false);
       return true;
     } on BridgeError catch (exception, stacktrace) {
-      error = parseMuonError(exception) ?? parseSampleDisplayError(exception);
+      error = exception.localizedString;
       Sentry.captureException(exception, stackTrace: stacktrace);
       logger.e(exception.toString());
       return false;
     } catch (e) {
+      error = e.toString();
       logger.e(e.toString());
       return false;
     }

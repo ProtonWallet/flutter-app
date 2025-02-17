@@ -121,10 +121,8 @@ class EditSenderSheet {
                           );
                         }
                       } on BridgeError catch (e, stacktrace) {
-                        final msg =
-                            parseMuonError(e) ?? parseSampleDisplayError(e);
                         logger.e("error: $e, stacktrace: $stacktrace");
-                        CommonHelper.showErrorDialog(msg);
+                        CommonHelper.showErrorDialog(e.localizedString);
                       } catch (e) {
                         CommonHelper.showErrorDialog(e.toString());
                       }

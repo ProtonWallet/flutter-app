@@ -1,7 +1,7 @@
 //proton_api_service.rs
 use andromeda_api::{
     wallet::ApiWalletData, wallet_ext::WalletClientExt, ApiConfig, Auth, ProtonWalletApiClient,
-    ProxyConfig, Tokens,
+    Tokens,
 };
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flutter_rust_bridge::frb;
@@ -86,7 +86,7 @@ impl ProtonAPIService {
         let login_result = self.inner.login(&username, &password).await;
         let user_data = match login_result {
             Ok(res) => Ok(res),
-            Err(err) => Err(BridgeError::Generic(err.to_string())),
+            Err(err) => Err(BridgeError::Login(err.to_string())),
         }?;
         let user_key = user_data.user.keys.first().unwrap();
         let key_id = user_key.id.clone();

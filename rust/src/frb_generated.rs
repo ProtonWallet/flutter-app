@@ -14565,31 +14565,47 @@ impl SseDecode for crate::api::errors::BridgeError {
             }
             8 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::ApiSrp(var_field0);
+                return crate::api::errors::BridgeError::ApiDeserialize(var_field0);
             }
             9 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::AesGcm(var_field0);
+                return crate::api::errors::BridgeError::BitcoinDeserialize(var_field0);
             }
             10 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::WalletCrypto(var_field0);
+                return crate::api::errors::BridgeError::ApiSrp(var_field0);
             }
             11 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::WalletFeature(var_field0);
+                return crate::api::errors::BridgeError::AesGcm(var_field0);
             }
             12 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Login(var_field0);
+                return crate::api::errors::BridgeError::WalletCrypto(var_field0);
             }
             13 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Fork(var_field0);
+                return crate::api::errors::BridgeError::WalletFeature(var_field0);
             }
             14 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::Login(var_field0);
+            }
+            15 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::Fork(var_field0);
+            }
+            16 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::api::errors::BridgeError::Database(var_field0);
+            }
+            17 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::SessionStore(var_field0);
+            }
+            18 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::Encoding(var_field0);
             }
             _ => {
                 unimplemented!("");
@@ -19153,26 +19169,38 @@ impl flutter_rust_bridge::IntoDart for crate::api::errors::BridgeError {
             crate::api::errors::BridgeError::ApiResponse(field0) => {
                 [7.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::ApiSrp(field0) => {
+            crate::api::errors::BridgeError::ApiDeserialize(field0) => {
                 [8.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::AesGcm(field0) => {
+            crate::api::errors::BridgeError::BitcoinDeserialize(field0) => {
                 [9.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::WalletCrypto(field0) => {
+            crate::api::errors::BridgeError::ApiSrp(field0) => {
                 [10.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::WalletFeature(field0) => {
+            crate::api::errors::BridgeError::AesGcm(field0) => {
                 [11.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Login(field0) => {
+            crate::api::errors::BridgeError::WalletCrypto(field0) => {
                 [12.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Fork(field0) => {
+            crate::api::errors::BridgeError::WalletFeature(field0) => {
                 [13.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Database(field0) => {
+            crate::api::errors::BridgeError::Login(field0) => {
                 [14.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::Fork(field0) => {
+                [15.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::Database(field0) => {
+                [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::SessionStore(field0) => {
+                [17.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::Encoding(field0) => {
+                [18.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -22622,32 +22650,48 @@ impl SseEncode for crate::api::errors::BridgeError {
                 <i32>::sse_encode(7, serializer);
                 <crate::api::errors::ResponseError>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::ApiSrp(field0) => {
+            crate::api::errors::BridgeError::ApiDeserialize(field0) => {
                 <i32>::sse_encode(8, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::AesGcm(field0) => {
+            crate::api::errors::BridgeError::BitcoinDeserialize(field0) => {
                 <i32>::sse_encode(9, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::WalletCrypto(field0) => {
+            crate::api::errors::BridgeError::ApiSrp(field0) => {
                 <i32>::sse_encode(10, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::WalletFeature(field0) => {
+            crate::api::errors::BridgeError::AesGcm(field0) => {
                 <i32>::sse_encode(11, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Login(field0) => {
+            crate::api::errors::BridgeError::WalletCrypto(field0) => {
                 <i32>::sse_encode(12, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Fork(field0) => {
+            crate::api::errors::BridgeError::WalletFeature(field0) => {
                 <i32>::sse_encode(13, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Database(field0) => {
+            crate::api::errors::BridgeError::Login(field0) => {
                 <i32>::sse_encode(14, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::Fork(field0) => {
+                <i32>::sse_encode(15, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::Database(field0) => {
+                <i32>::sse_encode(16, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::SessionStore(field0) => {
+                <i32>::sse_encode(17, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::Encoding(field0) => {
+                <i32>::sse_encode(18, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             _ => {

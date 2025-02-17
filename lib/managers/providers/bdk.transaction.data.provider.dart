@@ -290,9 +290,8 @@ class BDKTransactionDataProvider extends DataProvider {
         final timeEnd = DateTime.now().secondsSinceEpoch();
         logger.i("Bdk wallet partial sync end with error time: $timeEnd");
         await updateErrorCount();
-        final errorMessage = parseMuonError(e) ?? parseSampleDisplayError(e);
         logger.e("Bdk wallet full sync error: $e, stacktrace: $stacktrace");
-        emitState(BDKSyncError(errorMessage));
+        emitState(BDKSyncError(e.localizedString));
 
         /// temp work around,
         ///   showError should be here upper layer needs to handle it

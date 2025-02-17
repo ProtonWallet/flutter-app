@@ -9,7 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'errors.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `find_error_type`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
 
 @freezed
 sealed class BridgeError with _$BridgeError implements FrbException {
@@ -53,6 +53,12 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.apiResponse(
     ResponseError field0,
   ) = BridgeError_ApiResponse;
+  const factory BridgeError.apiDeserialize(
+    String field0,
+  ) = BridgeError_ApiDeserialize;
+  const factory BridgeError.bitcoinDeserialize(
+    String field0,
+  ) = BridgeError_BitcoinDeserialize;
 
   /// srp errors
   const factory BridgeError.apiSrp(
@@ -86,6 +92,12 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.database(
     String field0,
   ) = BridgeError_Database;
+  const factory BridgeError.sessionStore(
+    String field0,
+  ) = BridgeError_SessionStore;
+  const factory BridgeError.encoding(
+    String field0,
+  ) = BridgeError_Encoding;
 }
 
 class ResponseError {

@@ -668,7 +668,7 @@ class SendViewModelImpl extends SendViewModel {
         } on BridgeError catch (e, stacktrace) {
           appStateManager.updateStateFrom(e);
           final err = parseResponseError(e);
-          final msg = parseMuonError(e) ?? parseSampleDisplayError(e);
+          final msg = parseSampleDisplayError(e);
           if (err != null) {
             if (err.code == 2001) {
               /// cannot find the email address in BvE pool
@@ -929,7 +929,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog(
-            "buildTransactionScript error: $errorMessage");
+            "BuildTransactionScript error: $errorMessage");
         errorMessage = "";
       }
       return false;
@@ -1055,7 +1055,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
       if (errorMessage.isNotEmpty) {
         CommonHelper.showErrorDialog(
-          "buildTransactionScript error: $errorMessage",
+          "BuildTransactionScript error: $errorMessage",
         );
         errorMessage = "";
       }
@@ -1159,7 +1159,7 @@ class SendViewModelImpl extends SendViewModel {
       errorMessage = e.toString();
     }
     if (errorMessage.isNotEmpty) {
-      CommonHelper.showErrorDialog("sendCoin() error: $errorMessage");
+      CommonHelper.showErrorDialog("SendCoin error: $errorMessage");
       errorMessage = "";
       return false;
     }
@@ -1310,17 +1310,10 @@ class SendViewModelImpl extends SendViewModel {
       exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      final errMsg = parseMuonError(e) ?? parseSampleDisplayError(e);
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(errMsg);
-      }
+      CommonHelper.showErrorDialog(e.localizedString);
       return false;
     } catch (e) {
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(e.toString());
-      }
+      CommonHelper.showErrorDialog(e.toString());
       return false;
     }
     return true;
@@ -1339,62 +1332,41 @@ class SendViewModelImpl extends SendViewModel {
       exclusiveInviteDataProvider.updateData();
     } on BridgeError catch (e) {
       appStateManager.updateStateFrom(e);
-      final errMsg = parseMuonError(e) ?? parseSampleDisplayError(e);
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(errMsg);
-      }
+      CommonHelper.showErrorDialog(e.localizedString);
       return false;
     } catch (e) {
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (context != null && context.mounted) {
-        CommonHelper.showErrorDialog(e.toString());
-      }
+      CommonHelper.showErrorDialog(e.toString());
       return false;
     }
     return true;
   }
 
   bool _processError(BridgeError error, Object stacktrace) {
-    logger.e(
-      "Send sendCoin() error: $error stacktrace: $stacktrace",
-    );
-    final msg =
-        "Send error process: ${parseMuonError(error) ?? parseSampleDisplayError(error)}";
-    if (msg.isNotEmpty) {
-      // TODO(fix): improve logic here
-      final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-      if (msg.toLowerCase().contains("outputbelowdustlimit")) {
-        if (context != null) {
-          context.showSnackbar(
-            S.of(context).error_you_dont_have_sufficient_balance_hint_fee,
-            isError: true,
-          );
-        } else {
-          CommonHelper.showErrorDialog(
-            msg,
-            callback: () {},
-          );
-        }
-      } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
-        if (context != null) {
-          context.showSnackbar(
-            S.of(context).error_this_bitcoin_address_incorrect_checksum,
-            isError: true,
-          );
-        } else {
-          CommonHelper.showErrorDialog(
-            msg,
-            callback: () {},
-          );
-        }
-      } else {
-        Sentry.captureException(error, stackTrace: stacktrace);
-        CommonHelper.showErrorDialog(
-          msg,
-          callback: () {},
+    logger.e("Send sendCoin() error: $error stacktrace: $stacktrace");
+    final msg = error.localizedString;
+    // TODO(fix): improve logic here
+    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+    if (msg.toLowerCase().contains("outputbelowdustlimit")) {
+      if (context != null) {
+        context.showSnackbar(
+          S.of(context).error_you_dont_have_sufficient_balance_hint_fee,
+          isError: true,
         );
+      } else {
+        CommonHelper.showErrorDialog(msg, callback: () {});
       }
+    } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
+      if (context != null) {
+        context.showSnackbar(
+          S.of(context).error_this_bitcoin_address_incorrect_checksum,
+          isError: true,
+        );
+      } else {
+        CommonHelper.showErrorDialog(msg, callback: () {});
+      }
+    } else {
+      Sentry.captureException(error, stackTrace: stacktrace);
+      CommonHelper.showErrorDialog(msg, callback: () {});
     }
     return false;
   }

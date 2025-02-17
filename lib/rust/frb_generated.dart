@@ -14932,31 +14932,47 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_box_autoadd_response_error(raw[1]),
         );
       case 8:
-        return BridgeError_ApiSrp(
+        return BridgeError_ApiDeserialize(
           dco_decode_String(raw[1]),
         );
       case 9:
-        return BridgeError_AesGcm(
+        return BridgeError_BitcoinDeserialize(
           dco_decode_String(raw[1]),
         );
       case 10:
-        return BridgeError_WalletCrypto(
+        return BridgeError_ApiSrp(
           dco_decode_String(raw[1]),
         );
       case 11:
-        return BridgeError_WalletFeature(
+        return BridgeError_AesGcm(
           dco_decode_String(raw[1]),
         );
       case 12:
-        return BridgeError_Login(
+        return BridgeError_WalletCrypto(
           dco_decode_String(raw[1]),
         );
       case 13:
-        return BridgeError_Fork(
+        return BridgeError_WalletFeature(
           dco_decode_String(raw[1]),
         );
       case 14:
+        return BridgeError_Login(
+          dco_decode_String(raw[1]),
+        );
+      case 15:
+        return BridgeError_Fork(
+          dco_decode_String(raw[1]),
+        );
+      case 16:
         return BridgeError_Database(
+          dco_decode_String(raw[1]),
+        );
+      case 17:
+        return BridgeError_SessionStore(
+          dco_decode_String(raw[1]),
+        );
+      case 18:
+        return BridgeError_Encoding(
           dco_decode_String(raw[1]),
         );
       default:
@@ -19027,25 +19043,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return BridgeError_ApiResponse(var_field0);
       case 8:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_ApiSrp(var_field0);
+        return BridgeError_ApiDeserialize(var_field0);
       case 9:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_AesGcm(var_field0);
+        return BridgeError_BitcoinDeserialize(var_field0);
       case 10:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_WalletCrypto(var_field0);
+        return BridgeError_ApiSrp(var_field0);
       case 11:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_WalletFeature(var_field0);
+        return BridgeError_AesGcm(var_field0);
       case 12:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Login(var_field0);
+        return BridgeError_WalletCrypto(var_field0);
       case 13:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Fork(var_field0);
+        return BridgeError_WalletFeature(var_field0);
       case 14:
         var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_Login(var_field0);
+      case 15:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_Fork(var_field0);
+      case 16:
+        var var_field0 = sse_decode_String(deserializer);
         return BridgeError_Database(var_field0);
+      case 17:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_SessionStore(var_field0);
+      case 18:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_Encoding(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -23744,26 +23772,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case BridgeError_ApiResponse(field0: final field0):
         sse_encode_i_32(7, serializer);
         sse_encode_box_autoadd_response_error(field0, serializer);
-      case BridgeError_ApiSrp(field0: final field0):
+      case BridgeError_ApiDeserialize(field0: final field0):
         sse_encode_i_32(8, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_AesGcm(field0: final field0):
+      case BridgeError_BitcoinDeserialize(field0: final field0):
         sse_encode_i_32(9, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_WalletCrypto(field0: final field0):
+      case BridgeError_ApiSrp(field0: final field0):
         sse_encode_i_32(10, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_WalletFeature(field0: final field0):
+      case BridgeError_AesGcm(field0: final field0):
         sse_encode_i_32(11, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Login(field0: final field0):
+      case BridgeError_WalletCrypto(field0: final field0):
         sse_encode_i_32(12, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Fork(field0: final field0):
+      case BridgeError_WalletFeature(field0: final field0):
         sse_encode_i_32(13, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Database(field0: final field0):
+      case BridgeError_Login(field0: final field0):
         sse_encode_i_32(14, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_Fork(field0: final field0):
+        sse_encode_i_32(15, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_Database(field0: final field0):
+        sse_encode_i_32(16, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_SessionStore(field0: final field0):
+        sse_encode_i_32(17, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_Encoding(field0: final field0):
+        sse_encode_i_32(18, serializer);
         sse_encode_String(field0, serializer);
       default:
         throw UnimplementedError('');
