@@ -34,7 +34,7 @@ class SetupBackupView extends ViewBase<SetupBackupViewModel> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
-              buttonDirection: AxisDirection.left,
+              buttonDirection: AxisDirection.right,
             ),
             Expanded(
               child: viewModel.inIntroduce

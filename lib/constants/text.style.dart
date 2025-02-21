@@ -119,6 +119,7 @@ class ProtonStyles {
   static TextStyle body2Medium({
     Color? color,
     double fontSize = 14.0,
+    TextDecoration? decoration,
   }) {
     return TextStyle(
       fontFamily: FontFamily.inter,
@@ -127,6 +128,8 @@ class ProtonStyles {
       height: 20 / fontSize,
       letterSpacing: 0,
       color: color,
+      decoration: decoration,
+      decorationColor: decoration != null ? color : null,
     );
   }
 

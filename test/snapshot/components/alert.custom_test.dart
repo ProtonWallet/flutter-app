@@ -30,7 +30,7 @@ void main() {
     await testAcrossAllDevices(
       tester,
       () => widget,
-      "$testPath/alert.custom.grid",
+      "$testPath/$testPath",
     );
   });
 
@@ -47,7 +47,7 @@ void main() {
     await testAcrossAllDevices(
       tester,
       () => widget,
-      "$testPath/dark.grid",
+      "$testPath/$testPath.dark",
     );
   });
 }
@@ -69,7 +69,7 @@ GoldenBuilder buildContent() {
           color: Colors.transparent,
           width: 0,
         ),
-        backgroundColor: ProtonColors.errorBackground,
+        backgroundColor: ProtonColors.notificationErrorBackground,
         color: ProtonColors.notificationError,
       ),
     )
@@ -88,7 +88,7 @@ GoldenBuilder buildContent() {
             color: Colors.transparent,
             width: 0,
           ),
-          backgroundColor: ProtonColors.errorBackground,
+          backgroundColor: ProtonColors.notificationErrorBackground,
           color: ProtonColors.notificationError,
         ))
     ..addScenario(
@@ -103,7 +103,7 @@ GoldenBuilder buildContent() {
             height: 22,
             fit: BoxFit.fill,
           ),
-          backgroundColor: ProtonColors.errorBackground,
+          backgroundColor: ProtonColors.notificationErrorBackground,
           onTap: () {},
         ))
     ..addScenario(

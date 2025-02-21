@@ -31,7 +31,7 @@ void main() {
     );
     await screenMatchesGolden(
       tester,
-      "$testPath/colors.wbg.grid",
+      "$testPath/$testPath.wbg",
     );
   });
 
@@ -55,7 +55,7 @@ void main() {
     );
     await screenMatchesGolden(
       tester,
-      "$testPath/colors.bbg.grid",
+      "$testPath/$testPath.bbg.grid",
     );
   });
 }
@@ -74,8 +74,8 @@ class ProtonColorsWidget extends StatelessWidget {
         children: [
           /// error dialog background color, used when deleting wallet/account has balance
           ColorText(
-            ProtonColors.errorBackground,
-            "errorBackground",
+            ProtonColors.notificationErrorBackground,
+            "notificationErrorBackground",
           ),
 
           /// text colors

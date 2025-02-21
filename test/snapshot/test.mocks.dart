@@ -284,6 +284,7 @@ class MockWelcomeCoordinator extends _i3.Mock
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
+    bool? canPop = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -294,6 +295,7 @@ class MockWelcomeCoordinator extends _i3.Mock
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
             #isDismissible: isDismissible,
+            #canPop: canPop,
           },
         ),
         returnValue: _i9.Future<bool>.value(false),
@@ -502,6 +504,7 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
+    bool? canPop = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -512,6 +515,7 @@ class MockBuyBitcoinCoordinator extends _i3.Mock
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
             #isDismissible: isDismissible,
+            #canPop: canPop,
           },
         ),
         returnValue: _i9.Future<bool>.value(false),

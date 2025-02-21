@@ -82,6 +82,10 @@ class $AssetsImagesIconGen {
   SvgGenImage get creditCard =>
       const SvgGenImage('assets/images/icon/credit_card.svg');
 
+  /// File path: assets/images/icon/delete_warning-dark.svg
+  SvgGenImage get deleteWarningDark =>
+      const SvgGenImage('assets/images/icon/delete_warning-dark.svg');
+
   /// File path: assets/images/icon/delete_warning.svg
   SvgGenImage get deleteWarning =>
       const SvgGenImage('assets/images/icon/delete_warning.svg');
@@ -269,6 +273,10 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/ramp.svg
   SvgGenImage get ramp => const SvgGenImage('assets/images/icon/ramp.svg');
 
+  /// File path: assets/images/icon/receive-dark.svg
+  SvgGenImage get receiveDark =>
+      const SvgGenImage('assets/images/icon/receive-dark.svg');
+
   /// File path: assets/images/icon/receive.svg
   SvgGenImage get receive =>
       const SvgGenImage('assets/images/icon/receive.svg');
@@ -279,6 +287,10 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/icon/search.svg');
+
+  /// File path: assets/images/icon/send-dark.svg
+  SvgGenImage get sendDark =>
+      const SvgGenImage('assets/images/icon/send-dark.svg');
 
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
@@ -385,6 +397,7 @@ class $AssetsImagesIconGen {
         bitcoinBigIcon,
         bitcoinBigIconDark,
         creditCard,
+        deleteWarningDark,
         deleteWarning,
         discoverBitcoinGuide,
         discoverBve,
@@ -433,9 +446,11 @@ class $AssetsImagesIconGen {
         protonMail,
         protonPass,
         ramp,
+        receiveDark,
         receive,
         searchDark,
         search,
+        sendDark,
         send,
         send1,
         setupPreferenceDark,

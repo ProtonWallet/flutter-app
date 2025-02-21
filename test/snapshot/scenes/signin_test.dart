@@ -73,6 +73,6 @@ void main() {
       child: SigninView(viewModel),
     );
 
-    await testAcrossAllDevices(tester, () => widget, 'signin/dark_view');
+    await testAcrossAllDevices(tester, () => widget, 'signin/signin.dark_view');
   });
 }

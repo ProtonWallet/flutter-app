@@ -72,7 +72,7 @@ class TransactionList extends StatelessWidget {
                               /// only display address list option in account view
                               if (!viewModel.isWalletView)
                                 Icon(Icons.arrow_drop_down,
-                                    color: ProtonColors.textNorm, size: 18),
+                                    color: ProtonColors.textWeak, size: 18),
                             ]),
                           ),
                           Row(children: [

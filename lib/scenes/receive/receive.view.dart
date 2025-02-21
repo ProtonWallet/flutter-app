@@ -9,6 +9,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
@@ -26,13 +27,18 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
   Widget build(BuildContext context) {
     return PageLayoutV1(
       headerWidget: CustomHeader(
-        title: S.of(context).receive_bitcoin,
-        buttonDirection: AxisDirection.left,
+        buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.all(0.0),
       ),
       child: Column(children: [
         Column(
           children: [
+            Text(
+              S.of(context).receive_bitcoin,
+              style: ProtonStyles.headline(color: ProtonColors.textNorm),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
             Text(
               S.of(context).receive_desc,
               style: ProtonStyles.body2Regular(
@@ -40,7 +46,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 26),
             Container(
               width: context.width,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -70,7 +76,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                     padding: const EdgeInsets.all(10),
                     child: viewModel.initialized && !viewModel.loadingAddress
                         ? QrImageView(
-                            size: min(context.width, 200),
+                            size: min(context.width, 180),
                             data: viewModel.currentAddress?.address ?? "",
                             eyeStyle: QrEyeStyle(
                               eyeShape: QrEyeShape.square,
@@ -85,64 +91,47 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                             color: ProtonColors.protonBlue,
                           ),
                   ),
-                  CustomTooltip(
-                    preferredDirection: AxisDirection.down,
-                    message: S.of(context).bitcoin_address_desc,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          S.of(context).bitcoin_address,
-                          style: ProtonStyles.body2Medium(
-                            color: ProtonColors.textNorm,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.info_outline_rounded,
-                          size: 20,
-                          color: ProtonColors.textNorm,
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(
                     height: 6,
                   ),
                   if (viewModel.initialized && !viewModel.loadingAddress)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: min(
-                            context.width - defaultPadding * 2 - 50,
-                            200,
-                          ),
-                          child: Text(
-                            viewModel.currentAddress?.address ?? "",
-                            style: ProtonStyles.body2Regular(
-                              color: ProtonColors.textWeak,
+                    GestureDetector(
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(
+                            text: viewModel.currentAddress?.address ?? ""));
+                        LocalToast.showToast(
+                          context,
+                          context.local.copied_address,
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: min(
+                              context.width - defaultPadding * 2 - 50,
+                              200,
                             ),
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
+                            child: Text(
+                              viewModel.currentAddress?.address ?? "",
+                              style: ProtonStyles.body2Regular(
+                                color: ProtonColors.textWeak,
+                              ),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Clipboard.setData(ClipboardData(
-                                text: viewModel.currentAddress?.address ?? ""));
-                            context.showSnackbar(
-                              context.local.copied_address,
-                            );
-                          },
-                          child: Icon(
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Icon(
                             Icons.copy_rounded,
                             size: 20,
                             color: ProtonColors.textWeak,
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   const SizedBox(height: 10),
                   if (viewModel.warnUnusedAddress)

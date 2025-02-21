@@ -5,6 +5,14 @@ import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
+extension BitcoinAmountExtension on BitcoinAmount {
+  BitcoinAmount abs() => BitcoinAmount(
+        amountInSatoshi: amountInSatoshi.abs(),
+        bitcoinUnit: bitcoinUnit,
+        exchangeRate: exchangeRate,
+      );
+}
+
 class BitcoinAmount {
   int amountInSatoshi;
   BitcoinUnit bitcoinUnit;

@@ -74,6 +74,8 @@ class RecoverySection extends StatelessWidget {
                   CupertinoSwitch(
                     value: isSwitched ?? false,
                     activeColor: ProtonColors.protonBlue,
+                    thumbColor: ProtonColors.backgroundNorm,
+                    trackColor: ProtonColors.textHint,
                     onChanged: onChanged,
                   ),
             ],

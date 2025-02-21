@@ -12,7 +12,7 @@ import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
-import 'package:wallet/scenes/components/back.button.v1.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
@@ -38,9 +38,9 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
       child: PageLayoutV1(
         headerWidget: CustomHeader(
           title: context.local.settings_title,
-          buttonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.only(bottom: 10.0),
-          button: BackButtonV1(onPressed: () {
+          button: CloseButtonV1(onPressed: () {
             Navigator.of(context).pop();
           }),
         ),
@@ -117,6 +117,8 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                       : CupertinoSwitch(
                           value: viewModel.receiveInviterNotification,
                           activeColor: ProtonColors.protonBlue,
+                          thumbColor: ProtonColors.backgroundNorm,
+                          trackColor: ProtonColors.textHint,
                           onChanged: viewModel.updateReceiveInviterNotification,
                         ),
                   onTap: () {},
@@ -128,6 +130,8 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                       : CupertinoSwitch(
                           value: viewModel.receiveEmailIntegrationNotification,
                           activeColor: ProtonColors.protonBlue,
+                          thumbColor: ProtonColors.backgroundNorm,
+                          trackColor: ProtonColors.textHint,
                           onChanged: viewModel
                               .updateReceiveEmailIntegrationNotification,
                         ),
