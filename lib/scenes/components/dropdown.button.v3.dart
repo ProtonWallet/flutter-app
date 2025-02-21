@@ -18,6 +18,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
   final String? defaultOption;
   final String? labelText;
   final double? maxSuffixIconWidth;
+  final bool displayLabel;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
   final TextStyle? textStyle;
@@ -40,6 +41,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
     this.textStyle,
     this.maxSuffixIconWidth = 24,
     this.itemsLeadingIcons,
+    this.displayLabel = true,
   });
 
   @override
@@ -88,9 +90,8 @@ class DropdownButtonV3<T> extends StatelessWidget {
           decoration: InputDecoration(
             enabledBorder: InputBorder.none,
             border: InputBorder.none,
-            labelText: labelText,
-            labelStyle:
-                ProtonStyles.body2Regular(color: ProtonColors.textWeak),
+            labelText: displayLabel ? labelText : null,
+            labelStyle: ProtonStyles.body2Regular(color: ProtonColors.textWeak),
             suffixIconConstraints: BoxConstraints(
               maxWidth: maxSuffixIconWidth ?? 24.0,
             ),
