@@ -85,127 +85,117 @@ class BitcoinPriceBoxState extends State<BitcoinPriceBox> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Expanded(
-        child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: defaultPadding,
-              vertical: 24,
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: defaultPadding,
+          vertical: 24,
+        ),
+        decoration: BoxDecoration(
+          color: ProtonColors.backgroundSecondary,
+          border: Border(
+            top: BorderSide(
+              color: ProtonColors.textHint,
+              width: 0.2,
             ),
-            decoration: BoxDecoration(
-              color: ProtonColors.backgroundSecondary,
-              border: Border(
-                top: BorderSide(
-                  color: ProtonColors.textHint,
-                  width: 0.2,
-                ),
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
+          ),
+        ),
+        child: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              if (widget.exchangeRate.id != defaultExchangeRate.id ||
+                  initialized) {
+                BitcoinPriceDetailSheet.show(
+                  context,
+                  widget.exchangeRate,
+                  widget.priceGraphDataProvider,
+                );
+              }
+            },
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (widget.exchangeRate.id != defaultExchangeRate.id ||
-                          initialized) {
-                        BitcoinPriceDetailSheet.show(
-                          context,
-                          widget.exchangeRate,
-                          widget.priceGraphDataProvider,
-                        );
-                      }
-                    },
-                    child: Row(children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.title,
-                              style: TextStyle(
-                                color: ProtonColors.textWeak,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                              )),
-                          (widget.exchangeRate.id == defaultExchangeRate.id &&
-                                  !initialized)
-                              ? SizedBox(
-                                  width: 160,
-                                  child: CustomCardLoadingBuilder(
-                                    height: 16,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(4)),
-                                    margin: EdgeInsets.only(top: 4),
-                                  ).build(context),
-                                )
-                              : Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Wrap(children: [
-                                    AnimatedFlipCounter(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: ProtonStyles.body2Medium(
+                          color: ProtonColors.textWeak,
+                        ),
+                      ),
+                      (widget.exchangeRate.id == defaultExchangeRate.id &&
+                              !initialized)
+                          ? SizedBox(
+                              width: 160,
+                              child: CustomCardLoadingBuilder(
+                                height: 16,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                                margin: EdgeInsets.only(top: 4),
+                              ).build(context),
+                            )
+                          : Align(
+                              alignment: Alignment.centerLeft,
+                              child: Wrap(children: [
+                                AnimatedFlipCounter(
+                                    duration: const Duration(milliseconds: 500),
+                                    prefix: Provider.of<UserSettingProvider>(
+                                            context)
+                                        .getFiatCurrencySign(
+                                            fiatCurrency: widget
+                                                .exchangeRate.fiatCurrency),
+                                    thousandSeparator: ",",
+                                    value: ExchangeCalculator
+                                        .getNotionalInFiatCurrency(
+                                            widget.exchangeRate, btc2satoshi),
+                                    // value: price,
+                                    fractionDigits:
+                                        ExchangeCalculator.getDisplayDigit(
+                                            widget.exchangeRate),
+                                    textStyle: ProtonStyles.body2Medium(
+                                        color: ProtonColors.textNorm)),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                priceChange > 0
+                                    ? AnimatedFlipCounter(
                                         duration:
                                             const Duration(milliseconds: 500),
-                                        prefix:
-                                            Provider.of<UserSettingProvider>(
-                                                    context)
-                                                .getFiatCurrencySign(
-                                                    fiatCurrency: widget
-                                                        .exchangeRate
-                                                        .fiatCurrency),
-                                        thousandSeparator: ",",
-                                        value: ExchangeCalculator
-                                            .getNotionalInFiatCurrency(
-                                                widget.exchangeRate,
-                                                btc2satoshi),
-                                        // value: price,
-                                        fractionDigits:
-                                            ExchangeCalculator.getDisplayDigit(
-                                                widget.exchangeRate),
+                                        prefix: "+",
+                                        value: priceChange,
+                                        suffix: "% (1d)",
+                                        fractionDigits: 2,
                                         textStyle: ProtonStyles.body2Medium(
-                                            color: ProtonColors.textNorm)),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    priceChange > 0
-                                        ? AnimatedFlipCounter(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            prefix: "+",
-                                            value: priceChange,
-                                            suffix: "% (1d)",
-                                            fractionDigits: 2,
-                                            textStyle:
-                                                ProtonStyles.body2Regular(
-                                                    color: ProtonColors
-                                                        .notificationSuccess))
-                                        : AnimatedFlipCounter(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            prefix: "",
-                                            value: priceChange,
-                                            suffix: "% (1d)",
-                                            fractionDigits: 2,
-                                            textStyle:
-                                                ProtonStyles.body2Regular(
-                                                    color: ProtonColors
-                                                        .notificationError)),
-                                  ]),
-                                )
-                        ],
-                      ),
-                      if (widget.exchangeRate.id != defaultExchangeRate.id ||
-                          initialized)
-                        Expanded(
-                          child: BitcoinPriceHomepageChart(
-                            exchangeRate: widget.exchangeRate,
-                            priceGraphDataProvider:
-                                widget.priceGraphDataProvider,
-                            priceChange: priceChange,
-                          ),
-                        ),
-                    ]),
+                                            color: ProtonColors
+                                                .notificationSuccess))
+                                    : AnimatedFlipCounter(
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        prefix: "",
+                                        value: priceChange,
+                                        suffix: "% (1d)",
+                                        fractionDigits: 2,
+                                        textStyle: ProtonStyles.body2Medium(
+                                            color: ProtonColors
+                                                .notificationError)),
+                              ]),
+                            )
+                    ],
                   ),
-                ],
-              ),
-            )),
-      )
-    ]);
+                  if (widget.exchangeRate.id != defaultExchangeRate.id ||
+                      initialized)
+                    Expanded(
+                      child: BitcoinPriceHomepageChart(
+                        exchangeRate: widget.exchangeRate,
+                        priceGraphDataProvider: widget.priceGraphDataProvider,
+                        priceChange: priceChange,
+                      ),
+                    ),
+                ]),
+          ),
+        ),
+      ),
+    );
   }
 }

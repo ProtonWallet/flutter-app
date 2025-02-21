@@ -30,7 +30,7 @@ class WalletAccountAddressListView
           title: viewModel.addressListType == AddressListType.receiveAddress
               ? S.of(context).receive_addresses
               : S.of(context).change_addresses,
-          buttonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.all(0.0),
           button: CloseButtonV1(
               backgroundColor: ProtonColors.backgroundNorm,

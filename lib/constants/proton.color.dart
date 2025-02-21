@@ -14,9 +14,6 @@ class ProtonColors {
   static Color defaultLoadBackgroundLight = const Color(0xFFFFFFFF);
   static Color defaultLoadBackgroundDark = const Color(0xFF191C32);
 
-  /// error dialog background color, used when deleting wallet/account has balance
-  static Color errorBackground = const Color(0xFFFFE0E0);
-
   /// text colors
   static Color textNorm = const Color(0xFF191C32);
   static Color textDisable = const Color(0xffCED0DE);
@@ -34,6 +31,7 @@ class ProtonColors {
   static Color notificationWaningBackground = const Color(0xFFFFEDE4);
   static Color notificationSuccess = const Color(0xFF5DA662);
   static Color notificationError = const Color(0xFFED4349);
+  static Color notificationErrorBackground = const Color(0xFFFFE0E0);
 
   /// other one-time custom colors styles for widgets
   static Color launchBackground = const Color(0xff191927);
@@ -79,9 +77,6 @@ class ProtonColors {
     backgroundSecondary = const Color(0xFFFFFFFF);
     backgroundWelcomePage = const Color(0xFFFEF0E5);
 
-    /// error dialog background color, used when deleting wallet/account has balance
-    errorBackground = const Color(0xFFFFE0E0);
-
     /// text colors
     textNorm = const Color(0xFF191C32);
     textDisable = const Color(0xffCED0DE);
@@ -99,6 +94,7 @@ class ProtonColors {
     notificationWaningBackground = const Color(0xFFFFEDE4);
     notificationSuccess = const Color(0xFF5DA662);
     notificationError = const Color(0xFFED4349);
+    notificationErrorBackground = const Color(0xFFFFE0E0);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xff191927);
@@ -144,11 +140,18 @@ class ProtonColors {
     textHint = const Color(0xFFA6A6B5);
     textWeak = const Color(0xFFBFBFD0);
     textInverted = const Color(0xFF191C32);
-    interActionWeak = const Color(0XFF3D3D5E);
+    interActionWeak = const Color(0xFF454554);
 
     /// slider colors, used for RBF
     sliderActiveColor = const Color(0xFF8B8DF9);
     sliderInactiveColor = const Color(0XFF1A1814);
+
+    /// notification colors, used for btc price chart, status code, warning
+    notificationWaning = const Color(0xFFFF9761);
+    notificationWaningBackground = const Color(0xFF29180F);
+    notificationSuccess = const Color(0xFF88F189);
+    notificationError = const Color(0xFFFB7878);
+    notificationErrorBackground = const Color(0xFF3D2A3D);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xFFE6E6D8);

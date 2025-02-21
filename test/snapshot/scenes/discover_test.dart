@@ -69,7 +69,8 @@ void main() {
       child: DiscoverView(viewModel),
     );
 
-    await testAcrossAllDevices(tester, () => widget, 'discover/dark_view');
+    await testAcrossAllDevices(
+        tester, () => widget, 'discover/discover.dark_view');
   });
 }
 

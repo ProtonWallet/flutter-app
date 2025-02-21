@@ -66,7 +66,7 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
       headerWidget: CustomHeader(
         title: S.of(context).wallet_preference,
         titleStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
-        buttonDirection: AxisDirection.left,
+        buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.only(bottom: 10),
       ),
       scrollController: viewModel.scrollController,
@@ -126,6 +126,10 @@ class WalletSettingView extends ViewBase<WalletSettingViewModel> {
                           }
                           return "";
                         },
+                      ),
+                      const Divider(
+                        thickness: 0.2,
+                        height: 1,
                       ),
                       DropdownButtonV2(
                         labelText: S.of(context).setting_bitcoin_unit_label,
@@ -342,6 +346,8 @@ class AccountRow extends StatelessWidget {
                   accountMenuModel.accountModel.accountID,
                 ),
                 activeColor: ProtonColors.protonBlue,
+                thumbColor: ProtonColors.backgroundNorm,
+                trackColor: ProtonColors.textHint,
                 onChanged: (bool newValue) async {
                   if (newValue) {
                     viewModel.showEditBvE(
@@ -453,28 +459,6 @@ class AccountRow extends StatelessWidget {
                   color: ProtonColors.textNorm,
                 ),
               ),
-              trailing: viewModel.isRemovingBvE
-                  ? Transform.translate(
-                      offset: const Offset(-10, 0),
-                      child: const CustomLoading(
-                        size: 20,
-                      ),
-                    )
-                  : IconButton(
-                      onPressed: () async {
-                        viewModel.updateRemovingBvE(true);
-                        await viewModel.removeEmailAddressFromWalletAccount(
-                          accountMenuModel.accountModel,
-                          addressID,
-                        );
-                        viewModel.updateBvEEnabledStatus(
-                          accountMenuModel.accountModel.accountID,
-                          false,
-                        );
-                        viewModel.updateRemovingBvE(false);
-                      },
-                      icon: const Icon(Icons.close),
-                    ),
             ),
           ),
         const SizedBox(height: 20),

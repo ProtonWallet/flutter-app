@@ -100,7 +100,7 @@ class _WebViewExampleState extends State<WebViewExample> {
                 children: [
                   const CustomHeader(
                     title: "Banxa",
-                    buttonDirection: AxisDirection.left,
+                    buttonDirection: AxisDirection.right,
                   ),
                   Expanded(
                     child: WebViewWidget(

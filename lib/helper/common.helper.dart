@@ -161,7 +161,8 @@ class CommonHelper {
     final now = DateTime.now();
     final difference = now.difference(dt);
     if (difference.inDays >= 1) {
-      final dateLocalFormat = DateFormat.yMMMMd(Platform.localeName).format(dt);
+      final dateLocalFormat =
+          DateFormat("MMM d, y, HH:mm", Platform.localeName).format(dt);
       return isSend
           ? S.of(context).sent_on(dateLocalFormat)
           : S.of(context).received_on(dateLocalFormat);

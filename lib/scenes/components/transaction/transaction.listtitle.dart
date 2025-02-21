@@ -4,6 +4,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common.helper.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class TransactionListTitle extends StatelessWidget {
@@ -42,16 +43,16 @@ class TransactionListTitle extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Row(children: [
             isSend
-                ? Assets.images.icon.send.svg(
-                    fit: BoxFit.fill,
-                    width: 32,
-                    height: 32,
-                  )
-                : Assets.images.icon.receive.svg(
-                    fit: BoxFit.fill,
-                    width: 32,
-                    height: 32,
-                  ),
+                ? Assets.images.icon.send.applyThemeIfNeeded(context).svg(
+                      fit: BoxFit.fill,
+                      width: 32,
+                      height: 32,
+                    )
+                : Assets.images.icon.receive.applyThemeIfNeeded(context).svg(
+                      fit: BoxFit.fill,
+                      width: 32,
+                      height: 32,
+                    ),
             const SizedBox(
               width: 12,
             ),
@@ -121,16 +122,28 @@ class TransactionListTitle extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                isSend
-                    ? Text(
-                        bitcoinAmount.toFiatCurrencySignString(
-                            displayBalance: displayBalance),
-                        style: ProtonStyles.captionRegular(
-                            color: ProtonColors.notificationError))
-                    : Text(
-                        "+${bitcoinAmount.toFiatCurrencySignString(displayBalance: displayBalance)}",
-                        style: ProtonStyles.captionRegular(
-                            color: ProtonColors.notificationSuccess)),
+                Text.rich(TextSpan(children: [
+                  isSend
+                      ? TextSpan(
+                          text: "-",
+                          style: ProtonStyles.body2Medium(
+                            color: ProtonColors.notificationError,
+                          ),
+                        )
+                      : TextSpan(
+                          text: "+",
+                          style: ProtonStyles.body2Medium(
+                            color: ProtonColors.notificationSuccess,
+                          ),
+                        ),
+                  TextSpan(
+                    text: bitcoinAmount.abs().toFiatCurrencySignString(
+                        displayBalance: displayBalance),
+                    style: ProtonStyles.body2Medium(
+                      color: ProtonColors.textNorm,
+                    ),
+                  )
+                ]))
               ],
             ),
           ]),

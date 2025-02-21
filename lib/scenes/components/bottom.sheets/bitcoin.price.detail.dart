@@ -18,10 +18,12 @@ class BitcoinPriceDetailSheet {
         child: Column(
           children: [
             Align(
-                alignment: Alignment.centerLeft,
-                child: CloseButtonV1(onPressed: () {
-                  Navigator.of(context).pop();
-                })),
+                alignment: Alignment.centerRight,
+                child: CloseButtonV1(
+                    backgroundColor: ProtonColors.backgroundNorm,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: BitcoinPriceChart(

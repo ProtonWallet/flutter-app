@@ -179,7 +179,7 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
                 children: [
                   const CustomHeader(
                     title: "Account Deletion",
-                    buttonDirection: AxisDirection.left,
+                    buttonDirection: AxisDirection.right,
                   ),
                   Expanded(
                     child: WebViewWidget(
