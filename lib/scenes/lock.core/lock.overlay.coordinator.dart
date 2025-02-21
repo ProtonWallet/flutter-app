@@ -13,11 +13,11 @@ class LockCoordinator extends Coordinator {
   @override
   void end() {}
 
-  void showLockOverlay({required bool askUnlockWhenOnload}) {
+  Future<void> showLockOverlay({required bool askUnlockWhenOnload}) async {
     final view =
         LockOverlayCoordinator(askUnlockWhenOnload: askUnlockWhenOnload)
             .start();
-    showInBottomSheet(
+    await showInBottomSheet(
       view,
       backgroundColor: ProtonColors.backgroundSecondary,
       enableDrag: false,

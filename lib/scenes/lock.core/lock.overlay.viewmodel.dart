@@ -10,6 +10,8 @@ import 'package:wallet/scenes/lock.core/lock.overlay.coordinator.dart';
 
 abstract class LockCoreViewModel extends ViewModel<LockCoordinator> {
   LockCoreViewModel(super.coordinator);
+
+  bool initialized = false;
 }
 
 class LockCoreViewModelImpl extends LockCoreViewModel
@@ -45,9 +47,13 @@ class LockCoreViewModelImpl extends LockCoreViewModel
       /// only lock when user is not authenticating
       if (!appStateManager.isAuthenticating) {
         appStateManager.isLocked = true;
-        coordinator.showLockOverlay(askUnlockWhenOnload: true);
+        await coordinator.showLockOverlay(askUnlockWhenOnload: true);
       }
     }
+
+    /// mark initialized = true, to hide lockCore view from homepage
+    initialized = true;
+    sinkAddSafe();
   }
 
   @override
