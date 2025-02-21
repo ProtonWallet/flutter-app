@@ -9,6 +9,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
@@ -175,7 +176,7 @@ class TwoFactorAuthView extends ViewBase<TwoFactorAuthViewModel> {
             ColoredBox(
               color: ProtonColors.white,
               child: QrImageView(
-                size: min(400, 200),
+                size: min(context.width, 180),
                 data: viewModel.otpAuthString,
               ),
             ),

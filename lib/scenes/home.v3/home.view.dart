@@ -163,7 +163,8 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 top: defaultPadding,
                                                 bottom: defaultPadding),
                                             decoration: BoxDecoration(
-                                                color: ProtonColors.protonBlue,
+                                                color: ProtonColors
+                                                    .backgroundSecondary,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         24.0)),
@@ -174,13 +175,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    S
-                                                        .of(context)
-                                                        .invite_friends,
+                                                    context.local
+                                                        .invite_your_friends,
                                                     style: ProtonStyles
                                                         .body2Medium(
                                                             color: ProtonColors
-                                                                .textInverted),
+                                                                .protonBlue),
                                                   ),
                                                 ),
                                                 Transform.translate(
@@ -189,7 +189,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       Icons
                                                           .arrow_forward_ios_rounded,
                                                       color: ProtonColors
-                                                          .textInverted,
+                                                          .protonBlue,
                                                       size: 14),
                                                 ),
                                               ],
@@ -202,8 +202,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                     ),
                                     if (viewModel.currentTodoStep <
                                             viewModel.totalTodoSteps &&
-                                        walletTransactionState
-                                            .historyTransaction.isEmpty &&
                                         !walletTransactionState.isSyncing)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -223,8 +221,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                 top: defaultPadding,
                                                 bottom: defaultPadding),
                                             decoration: BoxDecoration(
-                                                color: ProtonColors
-                                                    .backgroundSecondary,
+                                                color: ProtonColors.protonBlue,
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         24.0)),
@@ -240,7 +237,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                   style:
                                                       ProtonStyles.body2Medium(
                                                           color: ProtonColors
-                                                              .protonBlue),
+                                                              .textInverted),
                                                 ),
                                                 Transform.translate(
                                                   offset: const Offset(6, 0),
@@ -248,7 +245,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                       Icons
                                                           .arrow_forward_ios_rounded,
                                                       color: ProtonColors
-                                                          .protonBlue,
+                                                          .textInverted,
                                                       size: 14),
                                                 ),
                                               ],
@@ -256,60 +253,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           ),
                                         ),
                                       ),
-                                    (viewModel.currentTodoStep <
-                                                viewModel.totalTodoSteps &&
-                                            walletTransactionState
-                                                .historyTransaction.isNotEmpty)
-                                        ? CustomExpansion(
-                                            totalSteps:
-                                                viewModel.totalTodoSteps,
-                                            currentStep:
-                                                viewModel.currentTodoStep,
-                                            children: [
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_proton_account,
-                                                    checked: viewModel
-                                                        .hadSetupRecovery,
-                                                    callback: () {
-                                                      viewModel
-                                                          .move(NavID.recovery);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_backup_wallet_mnemonic,
-                                                    checked: !viewModel
-                                                        .showWalletRecovery,
-                                                    callback: () {
-                                                      move(context,
-                                                          NavID.setupBackup);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                CustomTodos(
-                                                    title: S
-                                                        .of(context)
-                                                        .todos_setup_2fa,
-                                                    checked:
-                                                        viewModel.hadSetup2FA,
-                                                    callback: () {
-                                                      viewModel.move(NavID
-                                                          .securitySetting);
-                                                    }),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                              ])
-                                        : const SizedBox(),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -540,7 +483,7 @@ class HomeView extends ViewBase<HomeViewModel> {
       children: [
         Column(children: [
           Text(accountName,
-              style: ProtonStyles.body1Regular(color: ProtonColors.textHint)),
+              style: ProtonStyles.body1Medium(color: ProtonColors.textHint)),
           const SizedBox(
             height: 4,
           ),
@@ -571,14 +514,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                       fractionDigits: defaultDisplayDigits,
                       textStyle: ProtonWalletStyles.textAmount(
                         color: ProtonColors.textNorm,
-                        fontVariation: 400.0,
+                        fontVariation: 600.0,
                         height: 1.0,
                       ))
                   : Text(
                       "${viewModel.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}$hidedBalanceString",
                       style: ProtonWalletStyles.textAmount(
                         color: ProtonColors.textNorm,
-                        fontVariation: 400.0,
+                        fontVariation: 600.0,
                         height: 1.0,
                       ),
                     ),
@@ -625,12 +568,12 @@ class HomeView extends ViewBase<HomeViewModel> {
                       walletBalanceState.balanceInSatoshi,
                     ),
                     style:
-                        ProtonStyles.body1Regular(color: ProtonColors.textHint)
+                        ProtonStyles.body1Medium(color: ProtonColors.textHint)
                             .copyWith(height: 1))
                 : Text(
                     "$hidedBalanceString ${viewModel.bitcoinUnit.name.toUpperCase() != "MBTC" ? viewModel.bitcoinUnit.name.toUpperCase() : "mBTC"}",
                     style:
-                        ProtonStyles.body1Regular(color: ProtonColors.textHint)
+                        ProtonStyles.body1Medium(color: ProtonColors.textHint)
                             .copyWith(height: 1),
                   ),
       ],

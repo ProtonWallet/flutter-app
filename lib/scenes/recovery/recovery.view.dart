@@ -6,7 +6,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.bloc.dart';
 import 'package:wallet/managers/features/proton.recovery/proton.recovery.state.dart';
-import 'package:wallet/scenes/components/back.button.v1.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -27,9 +27,9 @@ class RecoveryView extends ViewBase<RecoveryViewModel> {
       child: PageLayoutV1(
         headerWidget: CustomHeader(
           title: context.local.recovery,
-          buttonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.only(bottom: 10.0),
-          button: BackButtonV1(onPressed: () {
+          button: CloseButtonV1(onPressed: () {
             Navigator.of(context).pop();
           }),
         ),

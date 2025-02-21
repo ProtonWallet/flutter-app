@@ -1529,6 +1529,66 @@ class MockBDKTransactionDataProvider extends _i1.Mock
       ) as bool);
 
   @override
+  String getPositiveBalanceCheckID(
+    _i56.WalletModel? walletModel,
+    _i57.AccountModel? accountModel,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getPositiveBalanceCheckID,
+          [
+            walletModel,
+            accountModel,
+          ],
+        ),
+        returnValue: _i52.dummyValue<String>(
+          this,
+          Invocation.method(
+            #getPositiveBalanceCheckID,
+            [
+              walletModel,
+              accountModel,
+            ],
+          ),
+        ),
+      ) as String);
+
+  @override
+  _i4.Future<bool> getHasPositiveBalance(
+    _i56.WalletModel? walletModel,
+    _i57.AccountModel? accountModel,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getHasPositiveBalance,
+          [
+            walletModel,
+            accountModel,
+          ],
+        ),
+        returnValue: _i4.Future<bool>.value(false),
+      ) as _i4.Future<bool>);
+
+  @override
+  _i4.Future<void> setHasPositiveBalance(
+    _i56.WalletModel? walletModel,
+    _i57.AccountModel? accountModel, {
+    required bool? hasPositiveBalance,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setHasPositiveBalance,
+          [
+            walletModel,
+            accountModel,
+          ],
+          {#hasPositiveBalance: hasPositiveBalance},
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
   String getSyncCheckID(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,

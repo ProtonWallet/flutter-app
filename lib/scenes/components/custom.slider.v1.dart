@@ -88,11 +88,11 @@ class CustomSliderV1ThumbShape extends SliderComponentShape {
 
     const double radius = 16.0;
     final Paint paint = Paint()
-      ..color = ProtonColors.backgroundSecondary
+      ..color = ProtonColors.sliderActiveColor
       ..style = PaintingStyle.fill;
 
     final Paint borderPaint = Paint()
-      ..color = ProtonColors.sliderInactiveColor
+      ..color = ProtonColors.textNorm
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 

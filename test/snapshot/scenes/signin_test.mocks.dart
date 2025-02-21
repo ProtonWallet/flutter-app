@@ -335,6 +335,7 @@ class MockSigninCoordinator extends _i1.Mock implements _i2.SigninCoordinator {
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
+    bool? canPop = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -345,6 +346,7 @@ class MockSigninCoordinator extends _i1.Mock implements _i2.SigninCoordinator {
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
             #isDismissible: isDismissible,
+            #canPop: canPop,
           },
         ),
         returnValue: _i10.Future<bool>.value(false),

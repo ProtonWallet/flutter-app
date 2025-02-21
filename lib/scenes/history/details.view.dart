@@ -11,6 +11,7 @@ import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/transaction.info.model.dart';
@@ -74,7 +75,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
           children: [
             CustomHeader(
               title: S.of(context).transaction_detail,
-              buttonDirection: AxisDirection.left,
+              buttonDirection: AxisDirection.right,
               button: CloseButtonV1(
                   backgroundColor: ProtonColors.backgroundNorm,
                   onPressed: () {
@@ -107,16 +108,20 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                                             right: 4, top: 2),
                                         padding: const EdgeInsets.all(2.0),
                                         child: viewModel.isSend
-                                            ? Assets.images.icon.send.svg(
-                                                fit: BoxFit.fill,
-                                                width: 25,
-                                                height: 25,
-                                              )
-                                            : Assets.images.icon.receive.svg(
-                                                fit: BoxFit.fill,
-                                                width: 25,
-                                                height: 25,
-                                              ),
+                                            ? Assets.images.icon.send
+                                                .applyThemeIfNeeded(context)
+                                                .svg(
+                                                  fit: BoxFit.fill,
+                                                  width: 25,
+                                                  height: 25,
+                                                )
+                                            : Assets.images.icon.receive
+                                                .applyThemeIfNeeded(context)
+                                                .svg(
+                                                  fit: BoxFit.fill,
+                                                  width: 25,
+                                                  height: 25,
+                                                ),
                                       ),
                                       Text(
                                           viewModel.isSend

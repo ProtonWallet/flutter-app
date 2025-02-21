@@ -19,7 +19,7 @@ class ProtonProductsView extends ViewBase<ProtonProductsViewModel> {
   Widget build(BuildContext context) {
     return PageLayoutV1(
         headerWidget: CustomHeader(
-          buttonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.all(0.0),
           button: CloseButtonV1(
               backgroundColor: ProtonColors.backgroundNorm,

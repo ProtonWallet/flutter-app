@@ -165,6 +165,7 @@ class MockDiscoverCoordinator extends _i3.Mock
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
+    bool? canPop = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -175,6 +176,7 @@ class MockDiscoverCoordinator extends _i3.Mock
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
             #isDismissible: isDismissible,
+            #canPop: canPop,
           },
         ),
         returnValue: _i8.Future<bool>.value(false),
