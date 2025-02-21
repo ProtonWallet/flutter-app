@@ -7,7 +7,7 @@ import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/unlock.timer.dart';
 import 'package:wallet/models/unlock.type.dart';
-import 'package:wallet/scenes/components/back.button.v1.dart';
+import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/dropdown.button.v3.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -25,9 +25,9 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
     return PageLayoutV1(
       headerWidget: CustomHeader(
         title: context.local.security,
-        buttonDirection: AxisDirection.left,
+        buttonDirection: AxisDirection.right,
         padding: const EdgeInsets.only(bottom: 10.0),
-        button: BackButtonV1(onPressed: () {
+        button: CloseButtonV1(onPressed: () {
           Navigator.of(context).pop();
         }),
       ),
@@ -37,7 +37,8 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
           if (viewModel.error.isNotEmpty)
             Text(
               viewModel.error,
-              style: ProtonStyles.body2Regular(color: ProtonColors.notificationError),
+              style: ProtonStyles.body2Regular(
+                  color: ProtonColors.notificationError),
             ),
           const SizedBox(height: 10),
           RecoverySection(

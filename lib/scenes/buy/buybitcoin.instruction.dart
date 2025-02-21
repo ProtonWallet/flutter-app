@@ -28,7 +28,7 @@ class BuyBitcoinInstruction extends StatelessWidget {
         child: SafeArea(
           child: Column(children: [
             const CustomHeader(
-              buttonDirection: AxisDirection.left,
+              buttonDirection: AxisDirection.right,
             ),
             Expanded(
               child: Padding(

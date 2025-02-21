@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
@@ -25,7 +26,7 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
       return PageLayoutV1(
         headerWidget: CustomHeader(
           title: getTitle(context),
-          buttonDirection: AxisDirection.left,
+          buttonDirection: AxisDirection.right,
           padding: const EdgeInsets.all(0.0),
           button: CloseButtonV1(onPressed: () {
             Navigator.of(context).pop();
@@ -48,7 +49,7 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
                   color: ProtonColors.backgroundSecondary,
                   padding: const EdgeInsets.all(10),
                   child: QrImageView(
-                    size: min(MediaQuery.of(context).size.width, 200),
+                    size: min(context.width, 180),
                     data: viewModel.data,
                     eyeStyle: QrEyeStyle(
                       eyeShape: QrEyeShape.square,

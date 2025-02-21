@@ -272,12 +272,13 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: defaultPadding),
       Text(
         S.of(context).btc_price,
-        style: ProtonStyles.body2Regular(color: ProtonColors.textHint),
+        style: ProtonStyles.body2Medium(color: ProtonColors.textHint),
         textAlign: TextAlign.left,
       ),
-      const SizedBox(height: 2),
+      const SizedBox(height: 4),
       AnimatedFlipCounter(
         duration: const Duration(milliseconds: 500),
         thousandSeparator: ",",
@@ -292,9 +293,12 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
         fractionDigits: ExchangeCalculator.getDisplayDigit(
           widget.exchangeRate,
         ),
-        textStyle: ProtonStyles.subheadline(color: ProtonColors.textNorm),
+        textStyle: ProtonStyles.subheadline(
+          color: ProtonColors.textNorm,
+          fontSize: 24,
+        ),
       ),
-      const SizedBox(height: 2),
+      const SizedBox(height: 4),
       priceChange > 0
           ? AnimatedFlipCounter(
               duration: const Duration(milliseconds: 500),
@@ -302,7 +306,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle: ProtonStyles.body2Regular(
+              textStyle: ProtonStyles.body2Medium(
                 color: ProtonColors.notificationSuccess,
               ))
           : AnimatedFlipCounter(
@@ -311,7 +315,7 @@ class BitcoinPriceChartState extends State<BitcoinPriceChart> {
               value: priceChange,
               suffix: "% ($dataRangeString)",
               fractionDigits: 2,
-              textStyle: ProtonStyles.body2Regular(
+              textStyle: ProtonStyles.body2Medium(
                 color: ProtonColors.notificationError,
               )),
       const SizedBox(height: 8),

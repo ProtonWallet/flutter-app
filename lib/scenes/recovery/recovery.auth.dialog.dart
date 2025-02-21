@@ -49,8 +49,8 @@ Future<void> showAuthBottomSheet(
                   offset: const Offset(0, -20),
                   child: Center(
                     child: Text(S.of(context).password,
-                        style: ProtonStyles.headline(
-                            color: ProtonColors.textNorm),
+                        style:
+                            ProtonStyles.headline(color: ProtonColors.textNorm),
                         textAlign: TextAlign.center),
                   ),
                 ),
@@ -70,8 +70,8 @@ Future<void> showAuthBottomSheet(
                   Center(
                     child: Text(
                       S.of(context).two_factor_code,
-                      style: ProtonStyles.headline(
-                          color: ProtonColors.textNorm),
+                      style:
+                          ProtonStyles.headline(color: ProtonColors.textNorm),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -90,9 +90,10 @@ Future<void> showAuthBottomSheet(
                   CupertinoTextField.borderless(
                     keyboardType: TextInputType.visiblePassword,
                     controller: twofaController,
-                    style: const TextStyle(fontSize: 16),
+                    style: ProtonStyles.body1Medium(
+                        color: ProtonColors.textNorm),
                     decoration: BoxDecoration(
-                      color: CupertinoColors.white,
+                      color: ProtonColors.backgroundSecondary,
                       border: Border.all(color: ProtonColors.interActionWeak),
                       borderRadius: BorderRadius.circular(14.0),
                     ),
@@ -119,7 +120,8 @@ Future<void> showAuthBottomSheet(
             text: S.of(context).authenticate,
             backgroundColor: ProtonColors.protonBlue,
             borderColor: ProtonColors.protonBlue,
-            textStyle: ProtonStyles.body1Medium(color: ProtonColors.textInverted),
+            textStyle:
+                ProtonStyles.body1Medium(color: ProtonColors.textInverted),
             height: 55,
             width: max(
               330,

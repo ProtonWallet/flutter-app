@@ -298,6 +298,7 @@ class MockBuyingUnavailableCoordinator extends _i1.Mock
     bool? fullScreen = false,
     bool? enableDrag = true,
     bool? isDismissible = true,
+    bool? canPop = true,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -308,6 +309,7 @@ class MockBuyingUnavailableCoordinator extends _i1.Mock
             #fullScreen: fullScreen,
             #enableDrag: enableDrag,
             #isDismissible: isDismissible,
+            #canPop: canPop,
           },
         ),
         returnValue: _i8.Future<bool>.value(false),

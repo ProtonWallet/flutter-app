@@ -6,6 +6,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
@@ -67,11 +68,13 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
               Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  Assets.images.icon.deleteWarning.svg(
-                    width: 48,
-                    height: 48,
-                    fit: BoxFit.fill,
-                  ),
+                  Assets.images.icon.deleteWarning
+                      .applyThemeIfNeeded(context)
+                      .svg(
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.fill,
+                      ),
                   const SizedBox(height: defaultPadding),
                   Padding(
                     padding:
@@ -86,32 +89,31 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                               color: ProtonColors.textNorm,
                             ),
                             textAlign: TextAlign.center),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: defaultPadding),
                         if (viewModel.hasBalance)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
+                            padding:
+                                const EdgeInsets.only(bottom: defaultPadding),
                             child: AlertCustom(
                               content: S
                                   .of(context)
                                   .confirm_to_delete_wallet_has_balance_warning,
                               canClose: false,
-                              leadingWidget:
-                                  Assets.images.icon.alertWarning.svg(
-                                width: 22,
-                                height: 22,
-                                fit: BoxFit.fill,
-                              ),
                               border: Border.all(
                                 color: Colors.transparent,
                                 width: 0,
                               ),
-                              backgroundColor: ProtonColors.errorBackground,
+                              backgroundColor:
+                                  ProtonColors.notificationErrorBackground,
                               color: ProtonColors.notificationError,
                             ),
                           ),
-                        Text(S.of(context).confirm_to_delete_wallet_content,
-                            style: ProtonStyles.body2Regular(
-                                color: ProtonColors.textWeak)),
+                        Text(
+                          S.of(context).confirm_to_delete_wallet_content,
+                          textAlign: TextAlign.center,
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textWeak),
+                        ),
                         const SizedBox(height: 40),
                         BlocSelector<DeleteWalletBloc, DeleteWalletState, bool>(
                             selector: (state) {

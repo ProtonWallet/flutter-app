@@ -121,8 +121,8 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
             width: Responsive.isDesktop(context)
                 ? MediaQuery.of(context).size.width - drawerMaxWidth - 256
                 : MediaQuery.of(context).size.width - 256,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
+            padding: const EdgeInsets.only(
+              left: 10,
             ),
             height: 40,
             child: isLoading
@@ -168,10 +168,13 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
                   ),
           ),
         ]),
-        Icon(
-          Icons.keyboard_arrow_up_rounded,
-          size: 24,
-          color: ProtonColors.textHint,
+        Transform.translate(
+          offset: const Offset(10, 0),
+          child: Icon(
+            Icons.keyboard_arrow_up_rounded,
+            size: 24,
+            color: ProtonColors.textHint,
+          ),
         ),
       ]),
     );

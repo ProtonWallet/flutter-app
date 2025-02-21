@@ -53,7 +53,7 @@ class SendView extends ViewBase<SendViewModel> {
           child: Column(children: [
             CustomHeader(
               title: getTitleString(context),
-              buttonDirection: AxisDirection.left,
+              buttonDirection: AxisDirection.right,
               button: getLeadingButton(context),
             ),
             Expanded(

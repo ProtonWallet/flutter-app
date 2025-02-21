@@ -44,8 +44,8 @@ void main() {
       child: UnavailableView(viewModel),
     );
 
-    await testAcrossAllDevices(
-        tester, () => widget, 'home.v3/subview/buying.unavailable');
+    await testAcrossAllDevices(tester, () => widget,
+        'home.v3/subview/buying.unavailable/buying.unavailable');
   });
 
   testSnapshot('buying unavailable dark tests', (tester) async {
@@ -73,7 +73,7 @@ void main() {
       child: UnavailableView(viewModel),
     );
 
-    await testAcrossAllDevices(
-        tester, () => widget, 'home.v3/subview/dark_view');
+    await testAcrossAllDevices(tester, () => widget,
+        'home.v3/subview/buying.unavailable/buying.unavailable.dark');
   });
 }

@@ -10,6 +10,12 @@ extension ThemedAssetGenImage on SvgGenImage {
         Provider.of<ThemeProvider>(context, listen: false).isDarkMode();
     if (isDarkMode) {
       switch (keyName) {
+        case 'assets/images/icon/delete_warning.svg':
+          return SvgGenImage('assets/images/icon/delete_warning-dark.svg');
+        case 'assets/images/icon/receive.svg':
+          return SvgGenImage('assets/images/icon/receive-dark.svg');
+        case 'assets/images/icon/send.svg':
+          return SvgGenImage('assets/images/icon/send-dark.svg');
         case 'assets/images/icon/wallet-0.svg':
           return SvgGenImage('assets/images/icon/wallet-0-dark.svg');
         case 'assets/images/icon/wallet-1.svg':

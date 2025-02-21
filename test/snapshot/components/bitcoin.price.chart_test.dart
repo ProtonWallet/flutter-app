@@ -48,7 +48,38 @@ void main() {
     await testAcrossAllDevices(
       tester,
       () => widget,
-      "$testPath/1d.grid",
+      "$testPath/$testPath.1d",
+    );
+  });
+
+  testSnapshot('bitcoin price chart with default time frame dark',
+      (tester) async {
+    setGoldenFileComparatorWithThreshold(0.0001);
+
+    final mockThemeProvider = MockThemeProvider();
+    ProtonColors.updateDarkTheme();
+    when(mockThemeProvider.isDarkMode()).thenReturn(true);
+
+    final exchangeRate = MockProtonExchangeRate();
+    when(exchangeRate.fiatCurrency).thenReturn(FiatCurrency.usd);
+    when(exchangeRate.bitcoinUnit).thenReturn(BitcoinUnit.sats);
+    when(exchangeRate.exchangeRate).thenReturn(BigInt.from(101994.70));
+    when(exchangeRate.cents).thenReturn(BigInt.from(100));
+
+    final priceGraphDataProvider = MockPriceGraphDataProvider();
+
+    final widget = ChangeNotifierProvider<ThemeProvider>.value(
+      value: mockThemeProvider,
+      child: BitcoinPriceChart(
+        exchangeRate: exchangeRate,
+        priceGraphDataProvider: priceGraphDataProvider,
+      ),
+    );
+
+    await testAcrossAllDevices(
+      tester,
+      () => widget,
+      "$testPath/$testPath.1d.dark",
     );
   });
 
@@ -79,7 +110,7 @@ void main() {
     await testAcrossAllDevices(
       tester,
       () => widget,
-      "$testPath/1w.grid",
+      "$testPath/$testPath.1w",
     );
   });
 
@@ -110,7 +141,7 @@ void main() {
     await testAcrossAllDevices(
       tester,
       () => widget,
-      "$testPath/1m.grid",
+      "$testPath/$testPath.1m",
     );
   });
 }

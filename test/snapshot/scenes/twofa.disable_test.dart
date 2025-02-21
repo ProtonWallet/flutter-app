@@ -60,7 +60,7 @@ void main() {
     );
 
     await testAcrossAllDevices(
-        tester, () => testwidget, 'twofa/twofa_disable_view');
+        tester, () => testwidget, 'twofa/twofa.disable.view');
   });
 
   testSnapshot('twofa disable mobile dark', (tester) async {
@@ -96,6 +96,7 @@ void main() {
       child: widget,
     );
 
-    await testAcrossAllDevices(tester, () => testwidget, 'twofa/dark_view');
+    await testAcrossAllDevices(
+        tester, () => testwidget, 'twofa/twofa.disable.dark.view');
   });
 }
