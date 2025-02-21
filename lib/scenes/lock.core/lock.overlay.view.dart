@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/scenes/app/app.view.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/lock.core/lock.overlay.viewmodel.dart';
 
@@ -8,6 +9,8 @@ class LockCoreView extends ViewBase<LockCoreViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    return viewModel.initialized
+        ? const SizedBox()
+        : SplashView().build(context);
   }
 }
