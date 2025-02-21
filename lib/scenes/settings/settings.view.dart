@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -12,10 +13,12 @@ import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
+import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
+import 'package:wallet/scenes/components/dropdown.button.v3.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
@@ -85,10 +88,11 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                   title: context.local.theme_mode,
                   logo: !viewModel.loadedWalletUserSettings
                       ? const CustomLoading()
-                      : DropdownButtonV2(
-                          title: context.local.theme_mode,
-                          width: 160,
-                          maxSuffixIconWidth: 10,
+                      : DropdownButtonV3(
+                          labelText: context.local.theme_mode,
+                          displayLabel: false,
+                          width: 170,
+                          maxSuffixIconWidth: 0,
                           items: [
                             ThemeMode.system,
                             ThemeMode.light,
@@ -99,7 +103,42 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
                             context.local.light_mode,
                             context.local.dark_mode
                           ],
-                          valueNotifier: viewModel.themeModeValueNotifier,
+                          selected: viewModel.themeModeValue,
+                          onChanged: viewModel.updateThemeMode,
+                        ),
+                  onTap: () {},
+                ),
+                SettingsItem(
+                  title: context.local.languages,
+                  logo: !viewModel.loadedWalletUserSettings
+                      ? const CustomLoading()
+                      : Consumer<LocaleProvider>(
+                          builder: (context, model, child) {
+                            return DropdownButtonV3(
+                              labelText: context.local.languages,
+                              displayLabel: false,
+                              width: 170,
+                              maxSuffixIconWidth: 0,
+                              items: [LocaleProvider.systemDefault] +
+                                  S.supportedLocales
+                                      .where((e) => e.toLanguageTag() != "zh")
+                                      .map((e) => e.toLanguageTag())
+                                      .toList(),
+                              itemsText: [
+                                    LocaleProvider.localeName(
+                                        LocaleProvider.systemDefault, context)
+                                  ] +
+                                  S.supportedLocales
+                                      .where((e) => e.toLanguageTag() != "zh")
+                                      .map((e) => LocaleProvider.localeName(
+                                            e.toLanguageTag(),
+                                            context,
+                                          ))
+                                      .toList(),
+                              selected: viewModel.localeValue,
+                              onChanged: viewModel.updateLocale,
+                            );
+                          },
                         ),
                   onTap: () {},
                 ),

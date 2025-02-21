@@ -10,6 +10,7 @@ import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/models/drift/db/app.database.dart';
+import 'package:wallet/provider/locale.provider.dart';
 import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/rust/api/proton_api.dart' as proton_api;
 import 'package:wallet/scenes/core/coordinator.dart';
@@ -21,31 +22,36 @@ import 'package:wallet/scenes/settings/settings.coordinator.dart';
 abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   SettingsViewModel(super.coordinator, this.clearCacheBloc);
 
-  String errorMessage = "";
+  final ClearCacheBloc clearCacheBloc;
 
+  String errorMessage = "";
   String displayName = "";
   String displayEmail = "";
   String userName = "";
   String logsFolderSize = "";
 
-  late WalletUserSettings? walletUserSettings;
   bool loadedWalletUserSettings = false;
   bool receiveInviterNotification = false;
   bool receiveEmailIntegrationNotification = false;
+  ThemeMode themeModeValue = ThemeMode.system;
+  String localeValue = LocaleProvider.systemDefault;
+
+  late WalletUserSettings? walletUserSettings;
+  late ValueNotifier<int> stopgapValueNotifier;
 
   void updateReceiveInviterNotification(enable);
 
   void updateReceiveEmailIntegrationNotification(enable);
 
-  final ClearCacheBloc clearCacheBloc;
-  late ValueNotifier<int> stopgapValueNotifier;
-  late ValueNotifier<ThemeMode> themeModeValueNotifier;
+  void updateLocale(newValue);
+
+  void updateThemeMode(newValue);
+
+  bool isTraceLoggerEnabled();
 
   Future<void> clearLogs();
 
   Future<void> deleteAccount();
-
-  bool isTraceLoggerEnabled();
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -82,14 +88,20 @@ class SettingsViewModelImpl extends SettingsViewModel {
     stopgapValueNotifier = ValueNotifier(customStopgap);
     stopgapValueNotifier.addListener(updateStopGap);
 
-    /// init theme mode valueNotifier
+    /// init theme mode value
     final themeProvider = Provider.of<ThemeProvider>(
         Coordinator.rootNavigatorKey.currentContext!,
         listen: false);
     final currentThemeMode =
         themeProvider.getThemeMode(themeProvider.themeMode);
-    themeModeValueNotifier = ValueNotifier(currentThemeMode);
-    themeModeValueNotifier.addListener(updateThemeMode);
+    themeModeValue = currentThemeMode;
+
+    /// init locale value
+    final localeProvider = Provider.of<LocaleProvider>(
+        Coordinator.rootNavigatorKey.currentContext!,
+        listen: false);
+    localeValue =
+        localeProvider.language;
 
     loadSettings();
 
@@ -133,16 +145,29 @@ class SettingsViewModelImpl extends SettingsViewModel {
     }
   }
 
-  void updateThemeMode() {
+  @override
+  void updateThemeMode(newValue) {
+    themeModeValue = newValue;
     final themeProvider = Provider.of<ThemeProvider>(
         Coordinator.rootNavigatorKey.currentContext!,
         listen: false);
     final currentThemeMode =
         themeProvider.getThemeMode(themeProvider.themeMode);
-    if (currentThemeMode != themeModeValueNotifier.value) {
-      themeProvider.toggleChangeTheme(themeModeValueNotifier.value.name);
+
+    if (currentThemeMode != themeModeValue) {
+      themeProvider.toggleChangeTheme(themeModeValue.name);
       sinkAddSafe();
     }
+  }
+
+  @override
+  void updateLocale(newValue) {
+    localeValue = newValue;
+    final localeProvider = Provider.of<LocaleProvider>(
+        Coordinator.rootNavigatorKey.currentContext!,
+        listen: false);
+    localeProvider.toggleChangeLocale(localeValue);
+    sinkAddSafe();
   }
 
   @override
