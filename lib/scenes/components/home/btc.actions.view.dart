@@ -39,21 +39,22 @@ class BtcTitleActionsView extends StatelessWidget {
 
   List<Widget> buildActions(BuildContext context) {
     return [
-      ButtonV5(
-        onPressed: onBuy,
-        text: S.of(context).buy,
-        width: min(160, (context.width - 42) / 3),
-        textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
-        backgroundColor: ProtonColors.interActionWeak,
-        borderColor: ProtonColors.interActionWeak,
-        height: 48,
-        enable: initialized,
-        disableWithAction: disableBuy,
-        textDisableStyle: ProtonStyles.body1Medium(
-          color: ProtonColors.textDisable,
+      if (!disableBuy)
+        ButtonV5(
+          onPressed: onBuy,
+          text: S.of(context).buy,
+          width: min(160, (context.width - 42) / 3),
+          textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
+          backgroundColor: ProtonColors.interActionWeak,
+          borderColor: ProtonColors.interActionWeak,
+          height: 48,
+          enable: initialized,
+          disableWithAction: disableBuy,
+          textDisableStyle: ProtonStyles.body1Medium(
+            color: ProtonColors.textDisable,
+          ),
+          onDisablePressed: onDisabledBuy,
         ),
-        onDisablePressed: onDisabledBuy,
-      ),
       ButtonV5(
         onPressed: onReceive,
         text: S.of(context).receive,
