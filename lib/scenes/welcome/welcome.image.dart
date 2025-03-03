@@ -8,8 +8,6 @@ import 'package:wallet/constants/sizedbox.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
-import 'package:wallet/scenes/core/responsive.dart';
 
 class WelcomeImage extends StatelessWidget {
   const WelcomeImage({
@@ -70,11 +68,9 @@ class WelcomeImage extends StatelessWidget {
         SizedBox(
           width: 264,
           height: 54,
-          child: Assets.images.walletCreation.protonWalletLogoLight
-              .applyThemeIfNeeded(context)
-              .svg(
-                fit: BoxFit.fitHeight,
-              ),
+          child: context.svgImages.protonWalletLogo.svg(
+            fit: BoxFit.fitHeight,
+          ),
         ),
         SizedBoxes.box24,
         SizedBox(

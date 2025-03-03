@@ -21,7 +21,6 @@ import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
@@ -47,7 +46,7 @@ abstract class WalletSettingViewModel
   final WalletNameBloc walletNameBloc;
   final WalletMenuModel walletMenuModel;
 
-  late ScrollController scrollController;
+  final scrollController = ScrollController();
   late TextEditingController walletNameController;
   late FocusNode walletNameFocusNode;
 
@@ -223,15 +222,13 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
   @override
   Future<void> loadData() async {
     /// init wallet controllers / notifiers / focusNodes
-    scrollController = ScrollController();
+
     walletNameController = TextEditingController(
       text: walletMenuModel.walletName,
     );
     walletNameFocusNode = FocusNode();
 
     /// init account setting info
-    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-
     for (final accountMenuModel in walletMenuModel.accounts) {
       final bveEnabled = accountMenuModel.emailIds.isNotEmpty;
       final nameController =
@@ -243,12 +240,13 @@ class WalletSettingViewModelImpl extends WalletSettingViewModel {
             accountMenuModel.accountModel, fiatCurrencyNotifier.value);
       });
       final nameFocusNode = FocusNode();
-      nameFocusNode.addListener(() {
-        if (nameFocusNode.hasFocus && context != null) {
-          scrollController.jumpTo(scrollController.offset +
-              MediaQuery.of(context).viewInsets.bottom);
-        }
-      });
+      // final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
+      // nameFocusNode.addListener(() {
+      //   if (nameFocusNode.hasFocus && context != null) {
+      //     scrollController.jumpTo(scrollController.offset +
+      //         MediaQuery.of(context).viewInsets.bottom);
+      //   }
+      // });
 
       final accountSettingInfo = AccountSettingInfo(
         nameController,

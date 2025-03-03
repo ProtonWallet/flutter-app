@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 
@@ -28,11 +26,11 @@ Future<void> showDisableDialog(
             shrinkWrap: true,
             children: <Widget>[
               const SizedBox(height: defaultPadding),
-              Assets.images.icon.deleteWarning.applyThemeIfNeeded(context).svg(
-                    width: 48,
-                    height: 48,
-                    fit: BoxFit.scaleDown,
-                  ),
+              context.svgImages.deleteWarning.svg(
+                width: 48,
+                height: 48,
+                fit: BoxFit.scaleDown,
+              ),
               const SizedBox(height: defaultPadding),
               Center(
                 child: Text(
@@ -84,8 +82,8 @@ Future<void> showDisableDialog(
                   Navigator.of(context).pop();
                 },
                 text: S.of(context).cancel,
-                borderColor: ProtonColors.interActionWeak,
-                backgroundColor: ProtonColors.interActionWeak,
+                borderColor: ProtonColors.interActionWeakDisable,
+                backgroundColor: ProtonColors.interActionWeakDisable,
                 textStyle: ProtonStyles.body1Medium(
                   color: ProtonColors.textNorm,
                 ),

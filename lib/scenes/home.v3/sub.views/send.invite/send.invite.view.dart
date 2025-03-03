@@ -87,8 +87,8 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                  backgroundColor: ProtonColors.interActionWeak,
-                  borderColor: ProtonColors.interActionWeak,
+                  backgroundColor: ProtonColors.interActionWeakDisable,
+                  borderColor: ProtonColors.interActionWeakDisable,
                   height: 55),
             ]))
       ]);
@@ -137,7 +137,9 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                       itemsText:
                           viewModel.userAddresses.map((e) => e.email).toList(),
                       valueNotifier: viewModel.userAddressValueNotifier,
-                      border: Border.all(color: ProtonColors.interActionWeak),
+                      border: Border.all(
+                        color: ProtonColors.interActionWeakDisable,
+                      ),
                       padding: const EdgeInsets.only(
                           left: defaultPadding, right: 8, top: 12, bottom: 12),
                     ),
@@ -166,7 +168,7 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(18.0)),
                             border: Border.all(
-                              color: ProtonColors.interActionWeak,
+                              color: ProtonColors.interActionWeakDisable,
                             )),
                         child: TextFormField(
                           enabled: false,
@@ -220,10 +222,10 @@ class SendInviteView extends ViewBase<SendInviteViewModel> {
                               ? ProtonColors.textNorm
                               : ProtonColors.white),
                       backgroundColor: viewModel.emailController.text.isEmpty
-                          ? ProtonColors.interActionWeak
+                          ? ProtonColors.interActionWeakDisable
                           : ProtonColors.protonBlue,
                       borderColor: viewModel.emailController.text.isEmpty
-                          ? ProtonColors.interActionWeak
+                          ? ProtonColors.interActionWeakDisable
                           : ProtonColors.protonBlue,
                       enable: viewModel.emailController.text.isNotEmpty,
                       height: 55),

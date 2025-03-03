@@ -54,8 +54,8 @@ class SendFlowInviteSuccessSheet {
                   width: MediaQuery.of(context).size.width,
                   textStyle:
                       ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                  backgroundColor: ProtonColors.interActionWeak,
-                  borderColor: ProtonColors.interActionWeak,
+                  backgroundColor: ProtonColors.interActionWeakDisable,
+                  borderColor: ProtonColors.interActionWeakDisable,
                   height: 55),
             ]))
       ]);

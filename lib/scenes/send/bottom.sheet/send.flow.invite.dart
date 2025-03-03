@@ -23,9 +23,10 @@ class SendFlowInviteSheet {
   ) {
     final ValueNotifier userAddressValueNotifier =
         ValueNotifier(userAddresses.firstOrNull);
-    HomeModalBottomSheet.show(context, backgroundColor: ProtonColors.backgroundSecondary,
-        child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
+    HomeModalBottomSheet.show(context,
+        backgroundColor: ProtonColors.backgroundSecondary, child:
+            StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
       return Column(mainAxisSize: MainAxisSize.min, children: [
         Align(
             alignment: Alignment.centerLeft,
@@ -61,7 +62,7 @@ class SendFlowInviteSheet {
                 items: userAddresses,
                 itemsText: userAddresses.map((e) => e.email).toList(),
                 valueNotifier: userAddressValueNotifier,
-                border: Border.all(color: ProtonColors.interActionWeak),
+                border: Border.all(color: ProtonColors.interActionWeakDisable),
                 padding: const EdgeInsets.only(
                     left: defaultPadding, right: 8, top: 12, bottom: 12),
               ),

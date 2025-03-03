@@ -52,6 +52,8 @@ abstract class SettingsViewModel extends ViewModel<SettingsCoordinator> {
   Future<void> clearLogs();
 
   Future<void> deleteAccount();
+
+  void toDebugView();
 }
 
 class SettingsViewModelImpl extends SettingsViewModel {
@@ -100,8 +102,7 @@ class SettingsViewModelImpl extends SettingsViewModel {
     final localeProvider = Provider.of<LocaleProvider>(
         Coordinator.rootNavigatorKey.currentContext!,
         listen: false);
-    localeValue =
-        localeProvider.language;
+    localeValue = localeProvider.language;
 
     loadSettings();
 
@@ -201,5 +202,10 @@ class SettingsViewModelImpl extends SettingsViewModel {
   @override
   bool isTraceLoggerEnabled() {
     return unleashDataProvider.isTraceLoggerEnabled();
+  }
+
+  @override
+  void toDebugView() {
+    coordinator.showDebugView();
   }
 }

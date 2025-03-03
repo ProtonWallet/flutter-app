@@ -79,7 +79,8 @@ class RecipientDetailSheet {
                   Text(bitcoinAddress,
                       maxLines: 5,
                       style: ProtonStyles.body1Medium(
-                          color: ProtonColors.textNorm)),
+                        color: ProtonColors.textNorm,
+                      )),
                   const SizedBox(height: 40),
                   ButtonV5(
                       onPressed: () async {
@@ -95,9 +96,9 @@ class RecipientDetailSheet {
                       text: S.of(context).copy_address,
                       width: MediaQuery.of(context).size.width,
                       textStyle: ProtonStyles.body1Medium(
-                          color: ProtonColors.textNorm),
-                      backgroundColor: ProtonColors.backgroundNorm,
-                      borderColor: ProtonColors.backgroundNorm,
+                        color: ProtonColors.textNorm,
+                      ),
+                      backgroundColor: ProtonColors.interActionWeakDisable,
                       height: 55),
                   const SizedBox(height: 8),
                 ],

@@ -88,15 +88,15 @@ class TransactionHistoryItem extends StatelessWidget {
                   GestureDetector(
                     onLongPress: () {
                       Clipboard.setData(ClipboardData(
-                              text: content.isNotEmpty ? content : memo ?? ""))
-                          .then((_) {
+                        text: content.isNotEmpty ? content : memo ?? "",
+                      )).then((_) {
                         if (context.mounted) {
                           context.showSnackbar(S.of(context).copied);
                         }
                       });
                     },
                     child: Text(content.isNotEmpty ? content : memo ?? "",
-                        style: ProtonStyles.body2Medium(
+                        style: ProtonStyles.body1Medium(
                             color: contentColor != null
                                 ? contentColor!
                                 : ProtonColors.textNorm),

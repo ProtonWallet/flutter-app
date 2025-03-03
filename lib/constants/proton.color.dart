@@ -16,11 +16,13 @@ class ProtonColors {
 
   /// text colors
   static Color textNorm = const Color(0xFF191C32);
+  static Color iconNorm = const Color(0xFF191C32);
   static Color textDisable = const Color(0xffCED0DE);
   static Color textHint = const Color(0xFF9395A4);
   static Color textWeak = const Color(0xFF535964);
   static Color textInverted = const Color(0xFFFFFFFF);
-  static Color interActionWeak = const Color(0XFFE6E8EC);
+  static Color interActionWeakDisable = const Color(0XFFE6E8EC);
+  static Color interActionWeakPressed = const Color(0XFFE2E2E2);
 
   /// slider colors, used for RBF
   static Color sliderActiveColor = const Color(0xFF8B8DF9);
@@ -68,6 +70,9 @@ class ProtonColors {
   static Color avatarGreen1Text = const Color(0xff059A6F);
   static Color avatarGreen1Background = const Color(0xffDEF5E9);
 
+  /// appbar divider color
+  static Color appBarDividerColor = const Color(0xFFE6E8EC);
+
   /// update colors for light theme
   static void updateLightTheme() {
     initialized = true;
@@ -79,11 +84,13 @@ class ProtonColors {
 
     /// text colors
     textNorm = const Color(0xFF191C32);
+    iconNorm = const Color(0xFF191C32);
     textDisable = const Color(0xffCED0DE);
     textHint = const Color(0xFF9395A4);
     textWeak = const Color(0xFF535964);
     textInverted = const Color(0xFFFFFFFF);
-    interActionWeak = const Color(0XFFE6E8EC);
+    interActionWeakDisable = const Color(0XFFE6E8EC);
+    interActionWeakPressed = const Color(0XFFE2E2E2);
 
     /// slider colors, used for RBF
     sliderActiveColor = const Color(0xFF8B8DF9);
@@ -123,6 +130,9 @@ class ProtonColors {
     avatarBlue1Background = const Color(0xffe0f0ff);
     avatarGreen1Text = const Color(0xff059A6F);
     avatarGreen1Background = const Color(0xffDEF5E9);
+
+    /// appbar divider color
+    appBarDividerColor = const Color(0xFFE6E8EC);
   }
 
   /// update colors for dark theme
@@ -136,11 +146,13 @@ class ProtonColors {
 
     /// text colors
     textNorm = const Color(0xFFFFFFFF);
+    iconNorm = const Color(0xFFFFFFFF);
     textDisable = const Color(0xff646481);
     textHint = const Color(0xFFA6A6B5);
     textWeak = const Color(0xFFBFBFD0);
     textInverted = const Color(0xFF191C32);
-    interActionWeak = const Color(0xFF454554);
+    interActionWeakDisable = const Color(0xFF454554);
+    interActionWeakPressed = const Color(0xFFE2E2E2);
 
     /// slider colors, used for RBF
     sliderActiveColor = const Color(0xFF8B8DF9);
@@ -176,5 +188,47 @@ class ProtonColors {
     avatarBlue1Background = const Color(0XFF333A62);
     avatarGreen1Text = const Color(0XFF52CC9C);
     avatarGreen1Background = const Color(0XFF1A3C2E);
+
+    /// appbar divider color
+    appBarDividerColor = const Color(0xFF31334A);
   }
 }
+
+/// Example
+// TODO(experimental): this is supported by the flutter theme system. This could simplify the code and make it more readable.
+@immutable
+class ProtonColorScheme extends ThemeExtension<ProtonColorScheme> {
+  final Color test;
+
+  const ProtonColorScheme({
+    required this.test,
+  });
+
+  @override
+  ProtonColorScheme copyWith({
+    Color? test,
+  }) {
+    return ProtonColorScheme(
+      test: test ?? this.test,
+    );
+  }
+
+  @override
+  ProtonColorScheme lerp(ThemeExtension<ProtonColorScheme>? other, double t) {
+    if (other is! ProtonColorScheme) {
+      return this;
+    }
+    return ProtonColorScheme(
+      test: Color.lerp(test, other.test, t)!,
+    );
+  }
+}
+
+final lightSchemeExtension = ProtonColorScheme(
+  // link to auto gen color providered by designer
+  test: const Color(0xFFF3F5F6),
+);
+
+final darkSchemeExtension = ProtonColorScheme(
+  test: const Color(0xFF222247),
+);

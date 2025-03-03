@@ -161,9 +161,10 @@ class OnRampTCSheet {
                         text: S.of(context).cancel,
                         width: MediaQuery.of(context).size.width,
                         textStyle: ProtonStyles.body1Medium(
-                            color: ProtonColors.textNorm),
-                        backgroundColor: ProtonColors.interActionWeak,
-                        borderColor: ProtonColors.interActionWeak,
+                          color: ProtonColors.textNorm,
+                        ),
+                        backgroundColor: ProtonColors.interActionWeakDisable,
+                        borderColor: ProtonColors.interActionWeakDisable,
                         height: 55),
                     const SizedBox(
                       height: 12,
