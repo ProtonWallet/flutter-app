@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet/delete.wallet.bloc.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
@@ -68,13 +66,11 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
               Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  Assets.images.icon.deleteWarning
-                      .applyThemeIfNeeded(context)
-                      .svg(
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.fill,
-                      ),
+                  context.svgImages.deleteWarning.svg(
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.fill,
+                  ),
                   const SizedBox(height: defaultPadding),
                   Padding(
                     padding:
@@ -130,8 +126,9 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
                             textStyle: ProtonStyles.body1Medium(
                               color: ProtonColors.textNorm,
                             ),
-                            backgroundColor: ProtonColors.interActionWeak,
-                            borderColor: ProtonColors.interActionWeak,
+                            backgroundColor:
+                                ProtonColors.interActionWeakDisable,
+                            borderColor: ProtonColors.interActionWeakDisable,
                             height: 55,
                           );
                         }),

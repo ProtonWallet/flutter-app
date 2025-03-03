@@ -96,7 +96,7 @@ class ProtonColorsWidget extends StatelessWidget {
             "textInverted",
           ),
           ColorText(
-            ProtonColors.interActionWeak,
+            ProtonColors.interActionWeakDisable,
             "interActionWeak",
           ),
 
@@ -136,7 +136,7 @@ class ProtonColorsWidget extends StatelessWidget {
             "launchBackground",
           ),
           ColorText(
-            ProtonColors.interActionWeak,
+            ProtonColors.interActionWeakDisable,
             "interActionWeak",
           ),
           ColorText(

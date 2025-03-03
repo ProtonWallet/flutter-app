@@ -77,8 +77,8 @@ class UnavailableView extends ViewBase<UnavailableViewModel> {
                   textStyle: ProtonStyles.body1Semibold(
                     color: ProtonColors.textNorm,
                   ),
-                  backgroundColor: ProtonColors.interActionWeak,
-                  borderColor: ProtonColors.interActionWeak,
+                  backgroundColor: ProtonColors.interActionWeakDisable,
+                  borderColor: ProtonColors.interActionWeakDisable,
                   height: 55,
                 ),
               ]),

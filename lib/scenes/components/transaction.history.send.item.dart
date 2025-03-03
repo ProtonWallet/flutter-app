@@ -62,7 +62,7 @@ class TransactionHistorySendItem extends StatelessWidget {
                                   color: ProtonColors.textWeak)),
                           Text(
                             content,
-                            style: ProtonStyles.body2Medium(
+                            style: ProtonStyles.body1Medium(
                                 color: ProtonColors.textNorm),
                             overflow: TextOverflow.ellipsis,
                           ),

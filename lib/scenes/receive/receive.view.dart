@@ -12,9 +12,7 @@ import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
-import 'package:wallet/scenes/components/custom.tooltip.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v2.dart';
 import 'package:wallet/scenes/components/wallet.account.dropdown.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
@@ -25,11 +23,11 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return PageLayoutV1(
-      headerWidget: CustomHeader(
-        buttonDirection: AxisDirection.right,
-        padding: const EdgeInsets.all(0.0),
-      ),
+    final GlobalKey shareButtonKey = GlobalKey();
+    final qrCodeSize = min(context.width, 180.0);
+    final loadingBoxSize = qrCodeSize + 90.0;
+
+    return PageLayoutV2(
       child: Column(children: [
         Column(
           children: [
@@ -66,17 +64,14 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                         accounts: viewModel.walletData?.accounts ?? [],
                         valueNotifier: viewModel.accountValueNotifier,
                       ),
-                      const Divider(
-                        thickness: 0.2,
-                        height: 1,
-                      ),
+                      const Divider(thickness: 0.2, height: 1),
                     ]),
                   Container(
                     color: ProtonColors.backgroundSecondary,
                     padding: const EdgeInsets.all(10),
                     child: viewModel.initialized && !viewModel.loadingAddress
                         ? QrImageView(
-                            size: min(context.width, 180),
+                            size: qrCodeSize,
                             data: viewModel.currentAddress?.address ?? "",
                             eyeStyle: QrEyeStyle(
                               eyeShape: QrEyeShape.square,
@@ -87,18 +82,27 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               color: ProtonColors.textNorm,
                             ),
                           )
-                        : CircularProgressIndicator(
-                            color: ProtonColors.protonBlue,
+                        : SizedBox(
+                            height: loadingBoxSize,
+                            child: Center(
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: CircularProgressIndicator(
+                                  color: ProtonColors.protonBlue,
+                                  strokeWidth: 6.0,
+                                ),
+                              ),
+                            ),
                           ),
                   ),
-                  const SizedBox(
-                    height: 6,
-                  ),
+                  const SizedBox(height: 6),
                   if (viewModel.initialized && !viewModel.loadingAddress)
                     GestureDetector(
                       onTap: () {
                         Clipboard.setData(ClipboardData(
-                            text: viewModel.currentAddress?.address ?? ""));
+                          text: viewModel.currentAddress?.address ?? "",
+                        ));
                         LocalToast.showToast(
                           context,
                           context.local.copied_address,
@@ -122,9 +126,7 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(
-                            width: 4,
-                          ),
+                          const SizedBox(width: 4),
                           Icon(
                             Icons.copy_rounded,
                             size: 20,
@@ -160,10 +162,15 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
             ),
             SizedBoxes.box24,
             ButtonV5(
+              key: shareButtonKey,
               onPressed: () {
+                final box = shareButtonKey.currentContext?.findRenderObject()
+                    as RenderBox?;
                 Share.share(
                   viewModel.currentAddress?.address ?? "",
                   subject: context.local.receive_address,
+                  sharePositionOrigin:
+                      box!.localToGlobal(Offset.zero) & box.size,
                 );
               },
               text: S.of(context).share_address_button,
@@ -184,14 +191,12 @@ class ReceiveView extends ViewBase<ReceiveViewModel> {
               textStyle: ProtonStyles.body1Medium(
                 color: ProtonColors.textNorm,
               ),
-              backgroundColor: ProtonColors.interActionWeak,
-              borderColor: ProtonColors.interActionWeak,
+              backgroundColor: ProtonColors.interActionWeakDisable,
+              borderColor: ProtonColors.interActionWeakDisable,
               height: 55,
               enable: !viewModel.loadingAddress,
             ),
-            const SizedBox(
-              height: defaultPadding,
-            ),
+            const SizedBox(height: defaultPadding),
           ],
         ),
       ]),

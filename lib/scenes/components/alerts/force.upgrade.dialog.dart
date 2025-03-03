@@ -55,8 +55,8 @@ void showUpgradeErrorDialog(
                       ExternalUrl.shared.lanuchForceUpgradeLearnMore();
                     },
                     text: S.of(context).learn_more,
-                    backgroundColor: ProtonColors.interActionWeak,
-                    borderColor: ProtonColors.interActionWeak,
+                    backgroundColor: ProtonColors.interActionWeakDisable,
+                    borderColor: ProtonColors.interActionWeakDisable,
                     textStyle:
                         ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     width: 300,

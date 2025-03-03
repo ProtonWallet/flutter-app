@@ -16,7 +16,6 @@ import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.balance/wallet.balance.bloc.dart';
@@ -33,8 +32,6 @@ import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
-import 'package:wallet/scenes/components/custom.expansion.dart';
-import 'package:wallet/scenes/components/custom.todo.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
 import 'package:wallet/scenes/components/home/bitcoin.price.box.dart';
 import 'package:wallet/scenes/components/home/btc.actions.view.dart';
@@ -103,9 +100,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
+                                    const SizedBox(height: 20),
                                     Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: defaultPadding,
@@ -120,11 +115,9 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               walletTransactionState,
                                               walletListState,
                                             ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
                                           ],
                                         )),
+                                    const SizedBox(height: 24),
                                     BtcTitleActionsView(
                                         initialized:
                                             walletListState.initialized,
@@ -142,9 +135,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                         onReceive: () {
                                           move(context, NavID.receive);
                                         }),
-                                    const SizedBox(
-                                      height: 16,
-                                    ),
+                                    const SizedBox(height: 24),
                                     if (viewModel.canInvite)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -331,7 +322,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                                     backgroundColor: viewModel
                                                             .isBuyMobileDisabled
                                                         ? ProtonColors
-                                                            .interActionWeak
+                                                            .interActionWeakDisable
                                                         : ProtonColors.black,
                                                     text: S.of(context).buy,
                                                     width: MediaQuery.of(
@@ -435,18 +426,19 @@ class HomeView extends ViewBase<HomeViewModel> {
         Row(
           children: [
             accountName.isNotEmpty
-                ? Text(accountName,
-                    style:
-                        ProtonStyles.body1Regular(color: ProtonColors.textHint))
+                ? Text(
+                    accountName,
+                    style: ProtonStyles.body1Regular(
+                      color: ProtonColors.textHint,
+                    ),
+                  )
                 : const CustomCardLoadingBuilder(
                     width: 200,
                     height: 16,
                     borderRadius: BorderRadius.all(Radius.circular(4)),
                     margin: EdgeInsets.only(top: 4),
                   ).build(context),
-            const SizedBox(
-              width: 30,
-            ),
+            const SizedBox(width: 30),
             if (walletTransactionState.syncedWithError &&
                 walletTransactionState.errorMessage.isNotEmpty)
               GestureDetector(
@@ -462,18 +454,14 @@ class HomeView extends ViewBase<HomeViewModel> {
                   )),
           ],
         ),
-        const SizedBox(
-          height: 2,
-        ),
+        const SizedBox(height: 2),
         const CustomCardLoadingBuilder(
           width: 200,
           height: 36,
           borderRadius: BorderRadius.all(Radius.circular(4)),
           margin: EdgeInsets.only(top: 4),
         ).build(context),
-        const SizedBox(
-          height: 2,
-        ),
+        const SizedBox(height: 2),
         const CustomCardLoadingBuilder(
           width: 200,
           height: 16,
@@ -485,12 +473,15 @@ class HomeView extends ViewBase<HomeViewModel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        /// Column [title ]
         Column(children: [
-          Text(accountName,
-              style: ProtonStyles.body1Medium(color: ProtonColors.textHint)),
-          const SizedBox(
-            height: 4,
+          Text(
+            accountName,
+            style: ProtonStyles.body1Medium(
+              color: ProtonColors.textHint,
+            ),
           ),
+          const SizedBox(height: 12),
         ]),
         Row(children: [
           showBalanceLoading(
@@ -516,43 +507,47 @@ class HomeView extends ViewBase<HomeViewModel> {
                         walletBalanceState.balanceInSatoshi,
                       ),
                       fractionDigits: defaultDisplayDigits,
-                      textStyle: ProtonWalletStyles.textAmount(
+                      textStyle: ProtonStyles.headlineHugeSemibold(
                         color: ProtonColors.textNorm,
-                        fontVariation: 600.0,
-                        height: 1.0,
-                      ))
+                      ),
+                    )
                   : Text(
                       "${viewModel.getFiatCurrencySign(fiatCurrency: viewModel.currentExchangeRate.fiatCurrency)}$hidedBalanceString",
-                      style: ProtonWalletStyles.textAmount(
+                      style: ProtonStyles.headlineHugeSemibold(
                         color: ProtonColors.textNorm,
-                        fontVariation: 600.0,
-                        height: 1.0,
                       ),
                     ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 16),
           viewModel.displayBalance
               ? GestureDetector(
                   onTap: () {
                     viewModel.setDisplayBalance(display: false);
                   },
-                  child: Icon(
-                    Icons.visibility_off_outlined,
-                    size: 24,
-                    color: ProtonColors.textWeak,
+                  // single color svg could change color by colorFilter
+                  child: Assets.images.icon.visibilityOff.svg(
+                    fit: BoxFit.fill,
+                    width: 22,
+                    height: 20,
+                    colorFilter: ColorFilter.mode(
+                      ProtonColors.iconNorm,
+                      BlendMode.srcIn,
+                    ),
                   ))
               : GestureDetector(
                   onTap: () {
                     viewModel.setDisplayBalance(display: true);
                   },
-                  child: Icon(
-                    Icons.visibility_outlined,
-                    size: 24,
-                    color: ProtonColors.textWeak,
+                  child: Assets.images.icon.visibility.svg(
+                    fit: BoxFit.fill,
+                    width: 22,
+                    height: 20,
+                    colorFilter: ColorFilter.mode(
+                      ProtonColors.iconNorm,
+                      BlendMode.srcIn,
+                    ),
                   )),
         ]),
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 12),
         showBalanceLoading(
           viewModel,
           walletBalanceState,
@@ -673,13 +668,11 @@ class HomeView extends ViewBase<HomeViewModel> {
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return IconButton(
-                icon: Assets.images.icon.walletEdit
-                    .applyThemeIfNeeded(context)
-                    .svg(
-                      fit: BoxFit.fill,
-                      width: 40,
-                      height: 40,
-                    ),
+                icon: context.svgImages.walletEdit.svg(
+                  fit: BoxFit.fill,
+                  width: 40,
+                  height: 40,
+                ),
                 onPressed: () {
                   /// temperay
                   final context = Coordinator.rootNavigatorKey.currentContext;
@@ -720,9 +713,11 @@ class HomeView extends ViewBase<HomeViewModel> {
         builder: (BuildContext context) {
           if (viewModel.currentSize == ViewSize.mobile) {
             return IconButton(
-              icon: Assets.images.icon.drawerMenu
-                  .applyThemeIfNeeded(context)
-                  .svg(fit: BoxFit.fill, width: 40, height: 40),
+              icon: context.svgImages.drawerMenu.svg(
+                fit: BoxFit.fill,
+                width: 40,
+                height: 40,
+              ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },

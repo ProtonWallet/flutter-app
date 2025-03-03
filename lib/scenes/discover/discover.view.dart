@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/discover/discover.viewmodel.dart';
 
@@ -16,15 +16,11 @@ class DiscoverView extends ViewBase<DiscoverViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return PageLayoutV1(
-      headerWidget: CustomHeader(
-        title: S.of(context).discover,
-        buttonDirection: AxisDirection.right,
-        padding: const EdgeInsets.only(bottom: 10.0),
-        button: CloseButtonV1(onPressed: () {
-          Navigator.of(context).pop();
-        }),
-      ),
+    return PageLayoutV2(
+      backgroundColor: ProtonColors.backgroundNorm,
+      cbtBgColor: ProtonColors.backgroundSecondary,
+      title: S.of(context).discover,
+      titleStyle: ProtonStyles.headline(color: ProtonColors.textNorm),
       child: viewModel.initialized
           ? _buildDiscoverFeedsView()
           : _buildLoadingView(context),

@@ -51,7 +51,7 @@ abstract class Coordinator implements ViewNavigator {
   }) async {
     await Future.delayed(Duration.zero);
     final bool result;
-    if (Responsive.isMobile(Coordinator.rootNavigatorKey.currentContext!)) {
+    if (Responsive.isMobile(rootNavigatorKey.currentContext!)) {
       result = await _showMobileBottomSheet(
         view,
         enableDrag,
@@ -82,6 +82,10 @@ abstract class Coordinator implements ViewNavigator {
     bool canPop = true,
   }) async {
     final context = Coordinator.rootNavigatorKey.currentContext!;
+
+    /// safearea for mobile
+    final safePadding = MediaQuery.of(context).padding.top;
+    final topOffset = 60 + min(safePadding, 56);
     final result = await showModalBottomSheet<bool>(
       context: context,
       enableDrag: enableDrag,
@@ -89,7 +93,7 @@ abstract class Coordinator implements ViewNavigator {
       backgroundColor: Colors.transparent,
       constraints: BoxConstraints(
         minWidth: context.width,
-        maxHeight: fullScreen ? double.infinity : context.height - 60,
+        maxHeight: fullScreen ? double.infinity : context.height - topOffset,
       ),
       isScrollControlled: true,
       builder: (context) {

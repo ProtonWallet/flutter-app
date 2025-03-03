@@ -13,19 +13,17 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24, bottom: 12, left: 16, right: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: ProtonStyles.body2Semibold(
-                color: ProtonColors.textWeak,
-              ),
+      padding: const EdgeInsets.only(top: 24, bottom: 12, right: 16),
+      child: Row(children: [
+        Expanded(
+          child: Text(
+            title,
+            style: ProtonStyles.body2Semibold(
+              color: ProtonColors.textWeak,
             ),
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }

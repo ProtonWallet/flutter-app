@@ -58,11 +58,21 @@ class AppView extends ViewBase<AppViewModel> {
             ).colorScheme.copyWith(primary: ProtonColors.textNorm),
             useMaterial3: true,
             visualDensity: VisualDensity.adaptivePlatformDensity,
+            extensions: [
+              viewModel.lightColorScheme,
+              viewModel.lightSvgImage,
+            ],
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            extensions: [
+              viewModel.darkColorScheme,
+              viewModel.darkSvgImage,
+            ],
           ),
           themeMode: themeProvider.getThemeMode(
             Provider.of<ThemeProvider>(context, listen: false).themeMode,
           ),
-          darkTheme: ThemeData(brightness: Brightness.dark),
           initialRoute: '/',
           routes: <String, WidgetBuilder>{
             '/': (BuildContext context) => rootView,

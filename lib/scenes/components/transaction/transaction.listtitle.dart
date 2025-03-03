@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common.helper.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 
 class TransactionListTitle extends StatelessWidget {
@@ -43,16 +42,16 @@ class TransactionListTitle extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Row(children: [
             isSend
-                ? Assets.images.icon.send.applyThemeIfNeeded(context).svg(
-                      fit: BoxFit.fill,
-                      width: 32,
-                      height: 32,
-                    )
-                : Assets.images.icon.receive.applyThemeIfNeeded(context).svg(
-                      fit: BoxFit.fill,
-                      width: 32,
-                      height: 32,
-                    ),
+                ? context.svgImages.iconSend.svg(
+                    fit: BoxFit.fill,
+                    width: 32,
+                    height: 32,
+                  )
+                : context.svgImages.iconReceive.svg(
+                    fit: BoxFit.fill,
+                    width: 32,
+                    height: 32,
+                  ),
             const SizedBox(
               width: 12,
             ),

@@ -5,7 +5,6 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -36,11 +35,9 @@ class LockOverlayView extends ViewBase<LockOverlayViewModel> {
                 SizedBox(
                   width: 264,
                   height: 54,
-                  child: Assets.images.walletCreation.protonWalletLogoLight
-                      .applyThemeIfNeeded(context)
-                      .svg(
-                        fit: BoxFit.fitHeight,
-                      ),
+                  child: context.svgImages.protonWalletLogo.svg(
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
                 Assets.images.icon.lock.applyThemeIfNeeded(context).image(
                       fit: BoxFit.fitHeight,
@@ -90,8 +87,8 @@ class LockOverlayView extends ViewBase<LockOverlayViewModel> {
                       text: context.local.logout,
                       width: context.width,
                       height: 55,
-                      backgroundColor: ProtonColors.interActionWeak,
-                      borderColor: ProtonColors.interActionWeak,
+                      backgroundColor: ProtonColors.interActionWeakDisable,
+                      borderColor: ProtonColors.interActionWeakDisable,
                       textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textNorm,
                       ),

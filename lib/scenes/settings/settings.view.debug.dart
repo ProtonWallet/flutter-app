@@ -33,7 +33,9 @@ mixin SettingsViewMixin {
             ),
             SettingsItem(
               title: "Debug Button",
-              onTap: () {},
+              onTap: () {
+                viewModel.toDebugView();
+              },
             ),
           ],
         ),
