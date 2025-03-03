@@ -21,18 +21,12 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/logos
   $AssetsImagesLogosGen get logos => const $AssetsImagesLogosGen();
 
-  /// File path: assets/images/wallet.png
-  AssetGenImage get wallet => const AssetGenImage('assets/images/wallet.png');
-
   /// Directory path: assets/images/wallet_creation
   $AssetsImagesWalletCreationGen get walletCreation =>
       const $AssetsImagesWalletCreationGen();
 
   /// Directory path: assets/images/welcome
   $AssetsImagesWelcomeGen get welcome => const $AssetsImagesWelcomeGen();
-
-  /// List of all assets
-  List<AssetGenImage> get values => [wallet];
 }
 
 class $AssetsJsonGen {
@@ -51,9 +45,9 @@ class $AssetsJsonGen {
 class $AssetsImagesIconGen {
   const $AssetsImagesIconGen();
 
-  /// File path: assets/images/icon/add-account.svg
+  /// File path: assets/images/icon/add_account.svg
   SvgGenImage get addAccount =>
-      const SvgGenImage('assets/images/icon/add-account.svg');
+      const SvgGenImage('assets/images/icon/add_account.svg');
 
   /// File path: assets/images/icon/alert_warning.svg
   SvgGenImage get alertWarning =>
@@ -82,13 +76,13 @@ class $AssetsImagesIconGen {
   SvgGenImage get creditCard =>
       const SvgGenImage('assets/images/icon/credit_card.svg');
 
-  /// File path: assets/images/icon/delete_warning-dark.svg
-  SvgGenImage get deleteWarningDark =>
-      const SvgGenImage('assets/images/icon/delete_warning-dark.svg');
-
   /// File path: assets/images/icon/delete_warning.svg
   SvgGenImage get deleteWarning =>
       const SvgGenImage('assets/images/icon/delete_warning.svg');
+
+  /// File path: assets/images/icon/delete_warning_dark.svg
+  SvgGenImage get deleteWarningDark =>
+      const SvgGenImage('assets/images/icon/delete_warning_dark.svg');
 
   /// File path: assets/images/icon/discover_bitcoin_guide.png
   AssetGenImage get discoverBitcoinGuide =>
@@ -134,10 +128,6 @@ class $AssetsImagesIconGen {
   AssetGenImage get earlyAccessDark =>
       const AssetGenImage('assets/images/icon/early_access_dark.png');
 
-  /// File path: assets/images/icon/edit_unknown.svg
-  SvgGenImage get editUnknown =>
-      const SvgGenImage('assets/images/icon/edit_unknown.svg');
-
   /// File path: assets/images/icon/error_message.svg
   SvgGenImage get errorMessage =>
       const SvgGenImage('assets/images/icon/error_message.svg');
@@ -145,72 +135,69 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/euro.svg
   SvgGenImage get euro => const SvgGenImage('assets/images/icon/euro.svg');
 
-  /// File path: assets/images/icon/ic-arrow-out-from-rectanglesignout.svg
+  /// File path: assets/images/icon/ic_arrow_out_from_rectanglesignout.svg
   SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
-      'assets/images/icon/ic-arrow-out-from-rectanglesignout.svg');
+      'assets/images/icon/ic_arrow_out_from_rectanglesignout.svg');
 
-  /// File path: assets/images/icon/ic-arrow-out-square.svg
+  /// File path: assets/images/icon/ic_arrow_out_square.svg
   SvgGenImage get icArrowOutSquare =>
-      const SvgGenImage('assets/images/icon/ic-arrow-out-square.svg');
+      const SvgGenImage('assets/images/icon/ic_arrow_out_square.svg');
 
-  /// File path: assets/images/icon/ic-arrow-rotate-right.svg
+  /// File path: assets/images/icon/ic_arrow_rotate_right.svg
   SvgGenImage get icArrowRotateRight =>
-      const SvgGenImage('assets/images/icon/ic-arrow-rotate-right.svg');
+      const SvgGenImage('assets/images/icon/ic_arrow_rotate_right.svg');
 
-  /// File path: assets/images/icon/ic-bugreport.svg
+  /// File path: assets/images/icon/ic_bugreport.svg
   SvgGenImage get icBugreport =>
-      const SvgGenImage('assets/images/icon/ic-bugreport.svg');
+      const SvgGenImage('assets/images/icon/ic_bugreport.svg');
 
-  /// File path: assets/images/icon/ic-checkmark.svg
+  /// File path: assets/images/icon/ic_checkmark.svg
   SvgGenImage get icCheckmark =>
-      const SvgGenImage('assets/images/icon/ic-checkmark.svg');
+      const SvgGenImage('assets/images/icon/ic_checkmark.svg');
 
-  /// File path: assets/images/icon/ic-chevron-tiny-down.svg
+  /// File path: assets/images/icon/ic_chevron_tiny_down.svg
   SvgGenImage get icChevronTinyDown =>
-      const SvgGenImage('assets/images/icon/ic-chevron-tiny-down.svg');
+      const SvgGenImage('assets/images/icon/ic_chevron_tiny_down.svg');
 
-  /// File path: assets/images/icon/ic-cog-wheel.svg
+  /// File path: assets/images/icon/ic_cog_wheel.svg
   SvgGenImage get icCogWheel =>
-      const SvgGenImage('assets/images/icon/ic-cog-wheel.svg');
+      const SvgGenImage('assets/images/icon/ic_cog_wheel.svg');
 
-  /// File path: assets/images/icon/ic-cross.svg
+  /// File path: assets/images/icon/ic_cross.svg
   SvgGenImage get icCross =>
-      const SvgGenImage('assets/images/icon/ic-cross.svg');
+      const SvgGenImage('assets/images/icon/ic_cross.svg');
 
-  /// File path: assets/images/icon/ic-diamondwallet_plus.svg
+  /// File path: assets/images/icon/ic_diamondwallet_plus.svg
   SvgGenImage get icDiamondwalletPlus =>
-      const SvgGenImage('assets/images/icon/ic-diamondwallet_plus.svg');
+      const SvgGenImage('assets/images/icon/ic_diamondwallet_plus.svg');
 
-  /// File path: assets/images/icon/ic-info-circle-dark.svg
-  SvgGenImage get icInfoCircleDark =>
-      const SvgGenImage('assets/images/icon/ic-info-circle-dark.svg');
-
-  /// File path: assets/images/icon/ic-info-circle.svg
+  /// File path: assets/images/icon/ic_info_circle.svg
   SvgGenImage get icInfoCircle =>
-      const SvgGenImage('assets/images/icon/ic-info-circle.svg');
+      const SvgGenImage('assets/images/icon/ic_info_circle.svg');
 
-  /// File path: assets/images/icon/ic-plus-circle.svg
-  SvgGenImage get icPlusCircle =>
-      const SvgGenImage('assets/images/icon/ic-plus-circle.svg');
-
-  /// File path: assets/images/icon/ic-shield.svg
-  SvgGenImage get icShield =>
-      const SvgGenImage('assets/images/icon/ic-shield.svg');
-
-  /// File path: assets/images/icon/ic-squares-in-squarediscover.svg
-  SvgGenImage get icSquaresInSquarediscover =>
-      const SvgGenImage('assets/images/icon/ic-squares-in-squarediscover.svg');
-
-  /// File path: assets/images/icon/ic-squares.svg
-  SvgGenImage get icSquares =>
-      const SvgGenImage('assets/images/icon/ic-squares.svg');
+  /// File path: assets/images/icon/ic_info_circle_dark.svg
+  SvgGenImage get icInfoCircleDark =>
+      const SvgGenImage('assets/images/icon/ic_info_circle_dark.svg');
 
   /// File path: assets/images/icon/ic_message.svg
   SvgGenImage get icMessage =>
       const SvgGenImage('assets/images/icon/ic_message.svg');
 
-  /// File path: assets/images/icon/ic_note.svg
-  SvgGenImage get icNote => const SvgGenImage('assets/images/icon/ic_note.svg');
+  /// File path: assets/images/icon/ic_plus_circle.svg
+  SvgGenImage get icPlusCircle =>
+      const SvgGenImage('assets/images/icon/ic_plus_circle.svg');
+
+  /// File path: assets/images/icon/ic_shield.svg
+  SvgGenImage get icShield =>
+      const SvgGenImage('assets/images/icon/ic_shield.svg');
+
+  /// File path: assets/images/icon/ic_squares.svg
+  SvgGenImage get icSquares =>
+      const SvgGenImage('assets/images/icon/ic_squares.svg');
+
+  /// File path: assets/images/icon/ic_squares_in_squarediscover.svg
+  SvgGenImage get icSquaresInSquarediscover =>
+      const SvgGenImage('assets/images/icon/ic_squares_in_squarediscover.svg');
 
   /// File path: assets/images/icon/key.png
   AssetGenImage get key => const AssetGenImage('assets/images/icon/key.png');
@@ -242,6 +229,13 @@ class $AssetsImagesIconGen {
   SvgGenImage get noWalletFound =>
       const SvgGenImage('assets/images/icon/no_wallet_found.svg');
 
+  /// File path: assets/images/icon/note.svg
+  SvgGenImage get note => const SvgGenImage('assets/images/icon/note.svg');
+
+  /// File path: assets/images/icon/note_dark.svg
+  SvgGenImage get noteDark =>
+      const SvgGenImage('assets/images/icon/note_dark.svg');
+
   /// File path: assets/images/icon/paper_plane.png
   AssetGenImage get paperPlane =>
       const AssetGenImage('assets/images/icon/paper_plane.png');
@@ -249,6 +243,13 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/paper_plane_dark.png
   AssetGenImage get paperPlaneDark =>
       const AssetGenImage('assets/images/icon/paper_plane_dark.png');
+
+  /// File path: assets/images/icon/pencil.svg
+  SvgGenImage get pencil => const SvgGenImage('assets/images/icon/pencil.svg');
+
+  /// File path: assets/images/icon/pencil_dark.svg
+  SvgGenImage get pencilDark =>
+      const SvgGenImage('assets/images/icon/pencil_dark.svg');
 
   /// File path: assets/images/icon/proton_calendar.svg
   SvgGenImage get protonCalendar =>
@@ -273,24 +274,20 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/ramp.svg
   SvgGenImage get ramp => const SvgGenImage('assets/images/icon/ramp.svg');
 
-  /// File path: assets/images/icon/receive-dark.svg
-  SvgGenImage get receiveDark =>
-      const SvgGenImage('assets/images/icon/receive-dark.svg');
-
   /// File path: assets/images/icon/receive.svg
   SvgGenImage get receive =>
       const SvgGenImage('assets/images/icon/receive.svg');
 
-  /// File path: assets/images/icon/search-dark.svg
-  SvgGenImage get searchDark =>
-      const SvgGenImage('assets/images/icon/search-dark.svg');
+  /// File path: assets/images/icon/receive_dark.svg
+  SvgGenImage get receiveDark =>
+      const SvgGenImage('assets/images/icon/receive_dark.svg');
 
   /// File path: assets/images/icon/search.svg
   SvgGenImage get search => const SvgGenImage('assets/images/icon/search.svg');
 
-  /// File path: assets/images/icon/send-dark.svg
-  SvgGenImage get sendDark =>
-      const SvgGenImage('assets/images/icon/send-dark.svg');
+  /// File path: assets/images/icon/search_dark.svg
+  SvgGenImage get searchDark =>
+      const SvgGenImage('assets/images/icon/search_dark.svg');
 
   /// File path: assets/images/icon/send.svg
   SvgGenImage get send => const SvgGenImage('assets/images/icon/send.svg');
@@ -298,13 +295,17 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/send_1.svg
   SvgGenImage get send1 => const SvgGenImage('assets/images/icon/send_1.svg');
 
-  /// File path: assets/images/icon/setup-preference-dark.svg
-  SvgGenImage get setupPreferenceDark =>
-      const SvgGenImage('assets/images/icon/setup-preference-dark.svg');
+  /// File path: assets/images/icon/send_dark.svg
+  SvgGenImage get sendDark =>
+      const SvgGenImage('assets/images/icon/send_dark.svg');
 
-  /// File path: assets/images/icon/setup-preference.svg
+  /// File path: assets/images/icon/setup_preference.svg
   SvgGenImage get setupPreference =>
-      const SvgGenImage('assets/images/icon/setup-preference.svg');
+      const SvgGenImage('assets/images/icon/setup_preference.svg');
+
+  /// File path: assets/images/icon/setup_preference_dark.svg
+  SvgGenImage get setupPreferenceDark =>
+      const SvgGenImage('assets/images/icon/setup_preference_dark.svg');
 
   /// File path: assets/images/icon/star.svg
   SvgGenImage get star => const SvgGenImage('assets/images/icon/star.svg');
@@ -316,68 +317,76 @@ class $AssetsImagesIconGen {
   AssetGenImage get userDark =>
       const AssetGenImage('assets/images/icon/user_dark.png');
 
-  /// File path: assets/images/icon/wallet-0-dark.svg
-  SvgGenImage get wallet0Dark =>
-      const SvgGenImage('assets/images/icon/wallet-0-dark.svg');
+  /// File path: assets/images/icon/visibility.svg
+  SvgGenImage get visibility =>
+      const SvgGenImage('assets/images/icon/visibility.svg');
 
-  /// File path: assets/images/icon/wallet-0.svg
-  SvgGenImage get wallet0 =>
-      const SvgGenImage('assets/images/icon/wallet-0.svg');
-
-  /// File path: assets/images/icon/wallet-1-dark.svg
-  SvgGenImage get wallet1Dark =>
-      const SvgGenImage('assets/images/icon/wallet-1-dark.svg');
-
-  /// File path: assets/images/icon/wallet-1.svg
-  SvgGenImage get wallet1 =>
-      const SvgGenImage('assets/images/icon/wallet-1.svg');
-
-  /// File path: assets/images/icon/wallet-2-dark.svg
-  SvgGenImage get wallet2Dark =>
-      const SvgGenImage('assets/images/icon/wallet-2-dark.svg');
-
-  /// File path: assets/images/icon/wallet-2.svg
-  SvgGenImage get wallet2 =>
-      const SvgGenImage('assets/images/icon/wallet-2.svg');
-
-  /// File path: assets/images/icon/wallet-3-dark.svg
-  SvgGenImage get wallet3Dark =>
-      const SvgGenImage('assets/images/icon/wallet-3-dark.svg');
-
-  /// File path: assets/images/icon/wallet-3.svg
-  SvgGenImage get wallet3 =>
-      const SvgGenImage('assets/images/icon/wallet-3.svg');
-
-  /// File path: assets/images/icon/wallet-4-dark.svg
-  SvgGenImage get wallet4Dark =>
-      const SvgGenImage('assets/images/icon/wallet-4-dark.svg');
-
-  /// File path: assets/images/icon/wallet-4.svg
-  SvgGenImage get wallet4 =>
-      const SvgGenImage('assets/images/icon/wallet-4.svg');
-
-  /// File path: assets/images/icon/wallet-account-0.svg
-  SvgGenImage get walletAccount0 =>
-      const SvgGenImage('assets/images/icon/wallet-account-0.svg');
-
-  /// File path: assets/images/icon/wallet-account-1.svg
-  SvgGenImage get walletAccount1 =>
-      const SvgGenImage('assets/images/icon/wallet-account-1.svg');
-
-  /// File path: assets/images/icon/wallet-account-2.svg
-  SvgGenImage get walletAccount2 =>
-      const SvgGenImage('assets/images/icon/wallet-account-2.svg');
-
-  /// File path: assets/images/icon/wallet-account-3.svg
-  SvgGenImage get walletAccount3 =>
-      const SvgGenImage('assets/images/icon/wallet-account-3.svg');
-
-  /// File path: assets/images/icon/wallet-account-4.svg
-  SvgGenImage get walletAccount4 =>
-      const SvgGenImage('assets/images/icon/wallet-account-4.svg');
+  /// File path: assets/images/icon/visibility_off.svg
+  SvgGenImage get visibilityOff =>
+      const SvgGenImage('assets/images/icon/visibility_off.svg');
 
   /// File path: assets/images/icon/wallet.svg
   SvgGenImage get wallet => const SvgGenImage('assets/images/icon/wallet.svg');
+
+  /// File path: assets/images/icon/wallet_0.svg
+  SvgGenImage get wallet0 =>
+      const SvgGenImage('assets/images/icon/wallet_0.svg');
+
+  /// File path: assets/images/icon/wallet_0_dark.svg
+  SvgGenImage get wallet0Dark =>
+      const SvgGenImage('assets/images/icon/wallet_0_dark.svg');
+
+  /// File path: assets/images/icon/wallet_1.svg
+  SvgGenImage get wallet1 =>
+      const SvgGenImage('assets/images/icon/wallet_1.svg');
+
+  /// File path: assets/images/icon/wallet_1_dark.svg
+  SvgGenImage get wallet1Dark =>
+      const SvgGenImage('assets/images/icon/wallet_1_dark.svg');
+
+  /// File path: assets/images/icon/wallet_2.svg
+  SvgGenImage get wallet2 =>
+      const SvgGenImage('assets/images/icon/wallet_2.svg');
+
+  /// File path: assets/images/icon/wallet_2_dark.svg
+  SvgGenImage get wallet2Dark =>
+      const SvgGenImage('assets/images/icon/wallet_2_dark.svg');
+
+  /// File path: assets/images/icon/wallet_3.svg
+  SvgGenImage get wallet3 =>
+      const SvgGenImage('assets/images/icon/wallet_3.svg');
+
+  /// File path: assets/images/icon/wallet_3_dark.svg
+  SvgGenImage get wallet3Dark =>
+      const SvgGenImage('assets/images/icon/wallet_3_dark.svg');
+
+  /// File path: assets/images/icon/wallet_4.svg
+  SvgGenImage get wallet4 =>
+      const SvgGenImage('assets/images/icon/wallet_4.svg');
+
+  /// File path: assets/images/icon/wallet_4_dark.svg
+  SvgGenImage get wallet4Dark =>
+      const SvgGenImage('assets/images/icon/wallet_4_dark.svg');
+
+  /// File path: assets/images/icon/wallet_account_0.svg
+  SvgGenImage get walletAccount0 =>
+      const SvgGenImage('assets/images/icon/wallet_account_0.svg');
+
+  /// File path: assets/images/icon/wallet_account_1.svg
+  SvgGenImage get walletAccount1 =>
+      const SvgGenImage('assets/images/icon/wallet_account_1.svg');
+
+  /// File path: assets/images/icon/wallet_account_2.svg
+  SvgGenImage get walletAccount2 =>
+      const SvgGenImage('assets/images/icon/wallet_account_2.svg');
+
+  /// File path: assets/images/icon/wallet_account_3.svg
+  SvgGenImage get walletAccount3 =>
+      const SvgGenImage('assets/images/icon/wallet_account_3.svg');
+
+  /// File path: assets/images/icon/wallet_account_4.svg
+  SvgGenImage get walletAccount4 =>
+      const SvgGenImage('assets/images/icon/wallet_account_4.svg');
 
   /// File path: assets/images/icon/wallet_edit.svg
   SvgGenImage get walletEdit =>
@@ -397,8 +406,8 @@ class $AssetsImagesIconGen {
         bitcoinBigIcon,
         bitcoinBigIconDark,
         creditCard,
-        deleteWarningDark,
         deleteWarning,
+        deleteWarningDark,
         discoverBitcoinGuide,
         discoverBve,
         discoverHowToProtect,
@@ -410,7 +419,6 @@ class $AssetsImagesIconGen {
         drawerMenuDark,
         earlyAccess,
         earlyAccessDark,
-        editUnknown,
         errorMessage,
         euro,
         icArrowOutFromRectanglesignout,
@@ -422,14 +430,13 @@ class $AssetsImagesIconGen {
         icCogWheel,
         icCross,
         icDiamondwalletPlus,
-        icInfoCircleDark,
         icInfoCircle,
+        icInfoCircleDark,
+        icMessage,
         icPlusCircle,
         icShield,
-        icSquaresInSquarediscover,
         icSquares,
-        icMessage,
-        icNote,
+        icSquaresInSquarediscover,
         key,
         keyDark,
         launchIcon,
@@ -438,42 +445,48 @@ class $AssetsImagesIconGen {
         logoText,
         moonpay,
         noWalletFound,
+        note,
+        noteDark,
         paperPlane,
         paperPlaneDark,
+        pencil,
+        pencilDark,
         protonCalendar,
         protonDrive,
         protonForBusiness,
         protonMail,
         protonPass,
         ramp,
-        receiveDark,
         receive,
-        searchDark,
+        receiveDark,
         search,
-        sendDark,
+        searchDark,
         send,
         send1,
-        setupPreferenceDark,
+        sendDark,
         setupPreference,
+        setupPreferenceDark,
         star,
         user,
         userDark,
-        wallet0Dark,
+        visibility,
+        visibilityOff,
+        wallet,
         wallet0,
-        wallet1Dark,
+        wallet0Dark,
         wallet1,
-        wallet2Dark,
+        wallet1Dark,
         wallet2,
-        wallet3Dark,
+        wallet2Dark,
         wallet3,
-        wallet4Dark,
+        wallet3Dark,
         wallet4,
+        wallet4Dark,
         walletAccount0,
         walletAccount1,
         walletAccount2,
         walletAccount3,
         walletAccount4,
-        wallet,
         walletEdit,
         walletEditDark
       ];

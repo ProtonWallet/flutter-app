@@ -8,6 +8,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
@@ -107,6 +108,9 @@ abstract class HistoryDetailViewModel
     String senderName,
     String senderEmail,
   );
+
+  String get displayBTCLabel;
+  String get hidedBitcoinAmountString;
 }
 
 class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
@@ -628,5 +632,20 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
   @override
   String getWalletAccountName() {
     return "$walletName - $accountName";
+  }
+
+  @override
+  String get displayBTCLabel {
+    return displayBalance
+        ? ExchangeCalculator.getBitcoinUnitLabel(
+            userSettingsDataProvider.bitcoinUnit,
+            amount.toInt().abs(),
+          )
+        : hidedBitcoinAmountString;
+  }
+
+  @override
+  String get hidedBitcoinAmountString {
+    return "$hidedBalanceString ${userSettingsDataProvider.bitcoinUnit.name.toUpperCase() != "MBTC" ? userSettingsDataProvider.bitcoinUnit.name.toUpperCase() : "mBTC"}";
   }
 }

@@ -78,7 +78,8 @@ class ProtonMailAutoComplete extends StatelessWidget {
                     maxWidth: constraints.biggest.width,
                   ),
                   decoration: BoxDecoration(
-                    color: itemBackgroundColor ?? ProtonColors.backgroundSecondary,
+                    color:
+                        itemBackgroundColor ?? ProtonColors.backgroundSecondary,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: ListView(
@@ -127,7 +128,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
                           width: 1.6,
                           color: focusNode.hasFocus
                               ? ProtonColors.protonBlue
-                              : ProtonColors.interActionWeak,
+                              : ProtonColors.interActionWeakDisable,
                         )
                       : null,
                 ),

@@ -105,7 +105,7 @@ class CustomExpansionState extends State<CustomExpansion>
                     margin: const EdgeInsets.symmetric(horizontal: 56),
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
-                      color: ProtonColors.interActionWeak,
+                      color: ProtonColors.interActionWeakDisable,
                       borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(24),
                           bottomRight: Radius.circular(24)),

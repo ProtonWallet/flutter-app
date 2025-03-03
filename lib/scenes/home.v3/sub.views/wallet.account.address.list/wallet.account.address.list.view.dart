@@ -5,10 +5,8 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v2.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.bitcoin.address.list.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -24,23 +22,25 @@ class WalletAccountAddressListView
   Widget build(BuildContext context) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-      return PageLayoutV1(
-        height: MediaQuery.of(context).size.height - 60,
-        headerWidget: CustomHeader(
-          title: viewModel.addressListType == AddressListType.receiveAddress
-              ? S.of(context).receive_addresses
-              : S.of(context).change_addresses,
-          buttonDirection: AxisDirection.right,
-          padding: const EdgeInsets.all(0.0),
-          button: CloseButtonV1(
-              backgroundColor: ProtonColors.backgroundNorm,
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
-        ),
-        backgroundColor: ProtonColors.backgroundSecondary,
+      return PageLayoutV2(
+        title: viewModel.addressListType == AddressListType.receiveAddress
+            ? S.of(context).receive_addresses
+            : S.of(context).change_addresses,
+        titleStyle: ProtonStyles.headline(color: ProtonColors.textNorm),
+        // height: MediaQuery.of(context).size.height - 60,
+        // headerWidget: CustomHeader(
+        //   title:
+        //   buttonDirection: AxisDirection.right,
+        //   padding: const EdgeInsets.all(0.0),
+        //   button: CloseButtonV1(
+        //       backgroundColor: ProtonColors.backgroundNorm,
+        //       onPressed: () {
+        //         Navigator.of(context).pop();
+        //       }),
+        // ),
+        // backgroundColor: ProtonColors.backgroundSecondary,
         child: Transform.translate(
-          offset: const Offset(0, -10),
+          offset: const Offset(0, 12),
           child: Column(children: [
             ButtonV6(
               text: viewModel.addressListType == AddressListType.receiveAddress
@@ -57,11 +57,9 @@ class WalletAccountAddressListView
                 viewModel.updateAddressListType();
               },
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 12),
             TextFieldText(
-              borderRadius: 20,
+              borderRadius: 16,
               width: MediaQuery.of(context).size.width,
               height: 50,
               color: ProtonColors.backgroundNorm,
@@ -71,6 +69,7 @@ class WalletAccountAddressListView
                   bottom: MediaQuery.of(context).viewInsets.bottom + 100),
               controller: viewModel.searchTextEditingController,
             ),
+            const SizedBox(height: 12),
             if (!viewModel.loadingAddress || viewModel.initialized)
               WalletBitcoinAddressList(
                 addresses: viewModel.searchTextEditingController.text.isNotEmpty
@@ -89,20 +88,14 @@ class WalletAccountAddressListView
             if (viewModel.loadingAddress)
               const Align(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10,
-                  ),
-                  child: CustomLoading(
-                    size: 28,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: CustomLoading(size: 28),
                 ),
               ),
             if (!viewModel.loadingAddress &&
                 viewModel.searchTextEditingController.text.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: GestureDetector(
                   onTap: viewModel.showMoreCallback,
                   child: Container(
@@ -110,11 +103,15 @@ class WalletAccountAddressListView
                     child: Text(
                       S.of(context).show_more,
                       style: ProtonStyles.body1Regular(
-                          color: ProtonColors.protonBlue),
+                        color: ProtonColors.protonBlue,
+                      ),
                     ),
                   ),
                 ),
               ),
+
+            ///
+            const SizedBox(height: 12),
           ]),
         ),
       );

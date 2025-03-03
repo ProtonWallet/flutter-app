@@ -4,7 +4,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
-import 'package:wallet/helper/extension/svg.gen.image.extension.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/wallet.trans/wallet.transaction.bloc.dart';
 import 'package:wallet/scenes/components/bottom.sheets/base.dart';
@@ -124,12 +124,11 @@ class TransactionList extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 5),
-                                  child: Assets.images.icon.setupPreference
-                                      .applyThemeIfNeeded(context)
-                                      .svg(
-                                          fit: BoxFit.fill,
-                                          width: 16,
-                                          height: 16),
+                                  child: context.svgImages.setupPreference.svg(
+                                    fit: BoxFit.fill,
+                                    width: 16,
+                                    height: 16,
+                                  ),
                                 ),
                               ),
                             const SizedBox(width: 4),
@@ -137,17 +136,19 @@ class TransactionList extends StatelessWidget {
                               GestureDetector(
                                 onTap: () {
                                   viewModel.setSearchHistoryTextField(
-                                      show: true);
+                                    show: true,
+                                  );
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 5),
-                                  child: Assets.images.icon.search
-                                      .applyThemeIfNeeded(context)
-                                      .svg(
-                                          fit: BoxFit.fill,
-                                          width: 16,
-                                          height: 16),
+                                    horizontal: 8,
+                                    vertical: 5,
+                                  ),
+                                  child: context.svgImages.iconSearch.svg(
+                                    fit: BoxFit.fill,
+                                    width: 16,
+                                    height: 16,
+                                  ),
                                 ),
                               ),
                             const SizedBox(width: 4),

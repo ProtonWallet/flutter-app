@@ -38,15 +38,18 @@ class BtcTitleActionsView extends StatelessWidget {
   }
 
   List<Widget> buildActions(BuildContext context) {
+    final minWidth = disableBuy ? 174.0 : 160.0;
+    final splitOffset = 42.0;
+    final number = disableBuy ? 2 : 3;
     return [
       if (!disableBuy)
         ButtonV5(
           onPressed: onBuy,
           text: S.of(context).buy,
-          width: min(160, (context.width - 42) / 3),
+          width: min(minWidth, (context.width - splitOffset) / number),
           textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
-          backgroundColor: ProtonColors.interActionWeak,
-          borderColor: ProtonColors.interActionWeak,
+          backgroundColor: ProtonColors.interActionWeakDisable,
+          borderColor: ProtonColors.interActionWeakDisable,
           height: 48,
           enable: initialized,
           disableWithAction: disableBuy,
@@ -58,20 +61,20 @@ class BtcTitleActionsView extends StatelessWidget {
       ButtonV5(
         onPressed: onReceive,
         text: S.of(context).receive,
-        width: min(160, (context.width - 42) / 3),
+        width: min(minWidth, (context.width - splitOffset) / number),
         textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
-        backgroundColor: ProtonColors.interActionWeak,
-        borderColor: ProtonColors.interActionWeak,
+        backgroundColor: ProtonColors.interActionWeakDisable,
+        borderColor: ProtonColors.interActionWeakDisable,
         height: 48,
         enable: initialized,
       ),
       ButtonV5(
         onPressed: onSend,
         text: S.of(context).send_button,
-        width: min(160, (context.width - 42) / 3),
+        width: min(minWidth, (context.width - splitOffset) / number),
         textStyle: ProtonStyles.body2Medium(color: ProtonColors.textNorm),
-        backgroundColor: ProtonColors.interActionWeak,
-        borderColor: ProtonColors.interActionWeak,
+        backgroundColor: ProtonColors.interActionWeakDisable,
+        borderColor: ProtonColors.interActionWeakDisable,
         height: 48,
         enable: initialized,
       ),
