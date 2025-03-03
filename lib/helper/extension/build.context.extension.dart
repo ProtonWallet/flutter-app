@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/proton.svg.image.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/provider/theme.provider.dart';
@@ -44,4 +45,11 @@ extension BuildContextExtension on BuildContext {
 
   ThemeProvider get themeProvider => Provider.of<ThemeProvider>(this);
   bool get isDarkMode => themeProvider.isDarkMode();
+
+  /// extension for svg images
+  ProtonSvgImages get svgImages {
+    return Theme.of(this).extension<ProtonSvgImages>() ??
+        // fallover to default
+        (isDarkMode ? darkSvgImageExtension : lightSvgImageExtension);
+  }
 }

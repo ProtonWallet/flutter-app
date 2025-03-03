@@ -9,17 +9,16 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/sizedbox.dart';
+import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/features/settings/clear.cache.bloc.dart';
 import 'package:wallet/provider/locale.provider.dart';
-import 'package:wallet/scenes/components/close.button.v1.dart';
-import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/custom.loading.dart';
 import 'package:wallet/scenes/components/dropdown.button.v2.dart';
 import 'package:wallet/scenes/components/dropdown.button.v3.dart';
-import 'package:wallet/scenes/components/page.layout.v1.dart';
+import 'package:wallet/scenes/components/page.layout.v2.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/settings/settings.group.dart';
@@ -36,19 +35,19 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => viewModel.clearCacheBloc,
-      child: PageLayoutV1(
-        headerWidget: CustomHeader(
-          title: context.local.settings_title,
-          buttonDirection: AxisDirection.right,
-          padding: const EdgeInsets.only(bottom: 10.0),
-          button: CloseButtonV1(onPressed: () {
-            Navigator.of(context).pop();
-          }),
-        ),
+    return PageLayoutV2(
+      title: context.local.settings_title,
+      titleStyle: ProtonStyles.headline(color: ProtonColors.textNorm),
+      backgroundColor: ProtonColors.backgroundNorm,
+      cbtBgColor: ProtonColors.backgroundSecondary,
+      dividerOffset: 8.0,
+      child: BlocProvider(
+        create: (context) => viewModel.clearCacheBloc,
         child: Column(
           children: [
+            SizedBoxes.box8,
+
+            /// User info section
             SectionUserInfo(
               displayName: viewModel.displayName,
               displayEmail: viewModel.displayEmail,

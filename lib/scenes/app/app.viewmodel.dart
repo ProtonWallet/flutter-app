@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
+import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/proton.svg.image.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/path.helper.dart';
 import 'package:wallet/helper/user.agent.dart';
@@ -30,13 +32,32 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 abstract class AppViewModel extends ViewModel<AppCoordinator> {
   ThemeProvider get themeProvider;
 
+  ProtonColorScheme get darkColorScheme;
+  ProtonColorScheme get lightColorScheme;
+
+  ProtonSvgImages get darkSvgImage;
+  ProtonSvgImages get lightSvgImage;
+
   AppViewModel(super.coordinator);
 }
 
 class AppViewModelImpl extends AppViewModel {
-  final ManagerFactory serviceManager;
+  ///
   @override
   final ThemeProvider themeProvider = ThemeProvider();
+
+  ///
+  @override
+  ProtonColorScheme get darkColorScheme => darkSchemeExtension;
+  @override
+  ProtonColorScheme get lightColorScheme => lightSchemeExtension;
+  @override
+  ProtonSvgImages get darkSvgImage => darkSvgImageExtension;
+  @override
+  ProtonSvgImages get lightSvgImage => lightSvgImageExtension;
+
+  ///
+  final ManagerFactory serviceManager;
 
   AppViewModelImpl(super.coordinator, this.serviceManager);
 

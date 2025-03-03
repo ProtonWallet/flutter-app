@@ -63,7 +63,7 @@ Future<void> showAuthBottomSheet(
                     return "";
                   },
                   isPassword: true,
-                  borderColor: ProtonColors.interActionWeak,
+                  borderColor: ProtonColors.interActionWeakDisable,
                 ),
                 const SizedBox(height: 16),
                 if (twoFaEnable != 0)
@@ -90,11 +90,12 @@ Future<void> showAuthBottomSheet(
                   CupertinoTextField.borderless(
                     keyboardType: TextInputType.visiblePassword,
                     controller: twofaController,
-                    style: ProtonStyles.body1Medium(
-                        color: ProtonColors.textNorm),
+                    style:
+                        ProtonStyles.body1Medium(color: ProtonColors.textNorm),
                     decoration: BoxDecoration(
                       color: ProtonColors.backgroundSecondary,
-                      border: Border.all(color: ProtonColors.interActionWeak),
+                      border: Border.all(
+                          color: ProtonColors.interActionWeakDisable),
                       borderRadius: BorderRadius.circular(14.0),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -137,8 +138,8 @@ Future<void> showAuthBottomSheet(
               Navigator.of(context).pop();
             },
             text: S.of(context).cancel,
-            backgroundColor: ProtonColors.interActionWeak,
-            borderColor: ProtonColors.interActionWeak,
+            backgroundColor: ProtonColors.interActionWeakDisable,
+            borderColor: ProtonColors.interActionWeakDisable,
             textStyle: ProtonStyles.body1Medium(color: ProtonColors.textNorm),
             height: 55,
             width: max(

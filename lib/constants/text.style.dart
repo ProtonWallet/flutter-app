@@ -29,6 +29,19 @@ class ProtonStyles {
     );
   }
 
+  static TextStyle headlineHugeSemibold({
+    Color? color,
+  }) {
+    return TextStyle(
+      fontFamily: FontFamily.inter,
+      fontSize: 40.0,
+      fontVariations: <FontVariation>[FontVariation('wght', 600.0)],
+      height: 40.0 / 40.0,
+      letterSpacing: 0,
+      color: color,
+    );
+  }
+
   static TextStyle headingSmallSemiBold({
     Color? color,
     double fontSize = 22.0,

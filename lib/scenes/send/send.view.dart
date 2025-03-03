@@ -10,6 +10,7 @@ import 'package:wallet/helper/bitcoin.amount.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/asset.gen.image.extension.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/fiat.currency.dart';
 import 'package:wallet/helper/local_toast.dart';
@@ -435,8 +436,8 @@ class SendView extends ViewBase<SendViewModel> {
                                 .map((e) => e.email)
                                 .toList(),
                             valueNotifier: viewModel.userAddressValueNotifier,
-                            border:
-                                Border.all(color: ProtonColors.interActionWeak),
+                            border: Border.all(
+                                color: ProtonColors.interActionWeakDisable),
                             padding: const EdgeInsets.only(
                                 left: defaultPadding,
                                 right: 8,
@@ -604,8 +605,11 @@ class SendView extends ViewBase<SendViewModel> {
                             borderRadius: BorderRadius.circular(40.0)),
                         child: Row(
                           children: [
-                            Assets.images.icon.icNote
-                                .svg(fit: BoxFit.fill, width: 32, height: 32),
+                            context.svgImages.iconNotes.svg(
+                              fit: BoxFit.fill,
+                              width: 32,
+                              height: 32,
+                            ),
                             const SizedBox(width: 10),
                             GestureDetector(
                                 onTap: viewModel.editMemo,
@@ -1136,8 +1140,8 @@ class SendView extends ViewBase<SendViewModel> {
                     width: MediaQuery.of(context).size.width,
                     textStyle:
                         ProtonStyles.body1Medium(color: ProtonColors.textNorm),
-                    backgroundColor: ProtonColors.interActionWeak,
-                    borderColor: ProtonColors.interActionWeak,
+                    backgroundColor: ProtonColors.interActionWeakDisable,
+                    borderColor: ProtonColors.interActionWeakDisable,
                     height: 55),
                 const SizedBox(height: 20),
               ])),

@@ -231,8 +231,8 @@ class OnboardingGuideView extends ViewBase<OnboardingGuideViewModel> {
                       textStyle: ProtonStyles.body1Medium(
                         color: ProtonColors.textNorm,
                       ),
-                      backgroundColor: ProtonColors.interActionWeak,
-                      borderColor: ProtonColors.interActionWeak,
+                      backgroundColor: ProtonColors.interActionWeakDisable,
+                      borderColor: ProtonColors.interActionWeakDisable,
                       height: 55,
                     ),
                   ]),

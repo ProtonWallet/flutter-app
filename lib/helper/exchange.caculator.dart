@@ -37,6 +37,7 @@ class ExchangeCalculator {
     return defaultDisplayDigits;
   }
 
+  // TODO(fix): frbamount could be used here. we dont need to handle the caculation ourself
   static String getBitcoinUnitLabel(
     BitcoinUnit bitcoinUnit,
     int amountInSatoshi,
