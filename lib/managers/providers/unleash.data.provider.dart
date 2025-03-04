@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:unleash_proxy_client_flutter/toggle_config.dart';
 import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart';
+import 'package:unleash_proxy_client_flutter/variant.dart';
 import 'package:wallet/constants/env.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
@@ -15,6 +17,14 @@ enum UnleashFeature {
   walletMobileClientDebugMode,
   walletEarlyAccess,
   disableBuyMobile,
+}
+
+/// Function to retrieve all default toggles
+Map<String, ToggleConfig> getDefaultToggles() {
+  return {
+    for (var feature in UnleashFeature.values)
+      if (feature.defaultValue case final value?) feature.name: value,
+  };
 }
 
 /// Extension to get feature names
@@ -33,6 +43,20 @@ extension UnleashFeatureExt on UnleashFeature {
         return "DisableBuyMobile";
     }
   }
+
+  /// Returns the default toggle configuration for the feature, if applicable
+  ToggleConfig? get defaultValue {
+    switch (this) {
+      case UnleashFeature.disableBuyMobile:
+        return ToggleConfig(
+          enabled: true,
+          impressionData: false,
+          variant: Variant(enabled: false, name: 'disabled'),
+        );
+      default:
+        return null;
+    }
+  }
 }
 
 class UnleashDataProvider extends DataProvider {
@@ -49,7 +73,7 @@ class UnleashDataProvider extends DataProvider {
   final duration = const Duration(minutes: 2).inSeconds;
 
   /// Timer for periodic refresh
-  Timer? _refreshTimer;
+  Timer? refreshTimer;
 
   UnleashDataProvider(this.apiEnv, this.frbUnleashClient) {
     final hostApiPath = apiEnv.apiPath;
@@ -61,6 +85,8 @@ class UnleashDataProvider extends DataProvider {
         refreshInterval: duration,
         disableMetrics: true,
         disableRefresh: true,
+        bootstrapOverride: false,
+        bootstrap: getDefaultToggles(),
         fetcher: (http.Request request) async {
           final response = await frbUnleashClient.fetchToggles();
           return http.Response.bytes(
@@ -68,11 +94,11 @@ class UnleashDataProvider extends DataProvider {
             response.statusCode,
           );
         });
-    _setupUnleashListeners();
+    setupUnleashListeners();
   }
 
   /// Sets up Unleash event listeners
-  void _setupUnleashListeners() {
+  void setupUnleashListeners() {
     unleashClient.on('ready', (value) {
       if (unleashClient.isEnabled('WalletFirstFlag')) {
         logger.i('WalletFirstFlag is enabled');
@@ -101,13 +127,13 @@ class UnleashDataProvider extends DataProvider {
   /// Starts the Unleash client and sets up auto-refresh
   Future<void> start() async {
     await unleashClient.start();
-    _startPeriodicRefresh();
+    startPeriodicRefresh();
   }
 
   /// Starts periodic refresh if not already running
-  void _startPeriodicRefresh() {
-    if (_refreshTimer == null || !_refreshTimer!.isActive) {
-      _refreshTimer = Timer.periodic(
+  void startPeriodicRefresh() {
+    if (refreshTimer == null || !refreshTimer!.isActive) {
+      refreshTimer = Timer.periodic(
         Duration(seconds: duration),
         (_) => unleashClient.start(),
       );
@@ -117,8 +143,8 @@ class UnleashDataProvider extends DataProvider {
   /// Stops and cleans up resources
   @override
   Future<void> clear() async {
-    _refreshTimer?.cancel();
-    _refreshTimer = null;
+    refreshTimer?.cancel();
+    refreshTimer = null;
     unleashClient.stop();
   }
 
