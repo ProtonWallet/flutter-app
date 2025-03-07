@@ -25,11 +25,11 @@ abstract class FrbWallet implements RustOpaqueInterface {
   FrbAccount addAccount(
       {required ScriptType scriptType,
       required String derivationPath,
-      required WalletMobileConnectorFactory connectorFactory});
+      required WalletMobilePersisterFactory factory_});
 
   Future<List<DiscoveredAccount>> discoverAccount(
       {required ArcProtonApiService apiService,
-      required WalletMobileConnectorFactory connectorFactory,
+      required WalletMobilePersisterFactory factory_,
       required int accountStopGap,
       required BigInt addressStopGap});
 

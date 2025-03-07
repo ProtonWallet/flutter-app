@@ -7,16 +7,15 @@ use andromeda_common::Network;
 use flutter_rust_bridge::frb;
 
 use super::{account::FrbAccount, local_output::FrbOutPoint, psbt::FrbPsbt};
-use crate::proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister};
 use crate::BridgeError;
 
 #[derive(Debug)]
 pub struct FrbTxBuilder {
-    pub(crate) inner: TxBuilder<WalletMobileConnector, WalletMobilePersister>,
+    pub(crate) inner: TxBuilder,
 }
 
-impl From<TxBuilder<WalletMobileConnector, WalletMobilePersister>> for FrbTxBuilder {
-    fn from(inner: TxBuilder<WalletMobileConnector, WalletMobilePersister>) -> Self {
+impl From<TxBuilder> for FrbTxBuilder {
+    fn from(inner: TxBuilder) -> Self {
         FrbTxBuilder { inner }
     }
 }
