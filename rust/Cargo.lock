@@ -147,9 +147,11 @@ version = "0.1.0"
 dependencies = [
  "andromeda-api",
  "andromeda-common",
+ "andromeda-crypto",
  "andromeda-esplora",
  "anyhow",
  "async-std",
+ "async-trait",
  "bdk_chain",
  "bdk_wallet",
  "bitcoin",
@@ -173,6 +175,15 @@ dependencies = [
  "bitcoin",
  "instant",
  "serde",
+ "thiserror 2.0.11",
+]
+
+[[package]]
+name = "andromeda-crypto"
+version = "0.1.0"
+dependencies = [
+ "andromeda-common",
+ "bitcoin",
  "thiserror 2.0.11",
 ]
 
@@ -553,9 +564,9 @@ dependencies = [
 
 [[package]]
 name = "bdk_wallet"
-version = "1.0.0"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c6362d350e13a94f68a102dafadbcc1500705016e4c2971b4c4e6f46054cb18"
+checksum = "6a13c947be940d32a91b876fc5223a6d839a40bc219496c5c78af74714b1b3f7"
 dependencies = [
  "bdk_chain",
  "bip39",
@@ -581,7 +592,7 @@ dependencies = [
  "bitflags 2.6.0",
  "cexpr",
  "clang-sys",
- "itertools 0.10.5",
+ "itertools 0.13.0",
  "log",
  "prettyplease",
  "proc-macro2",
@@ -605,9 +616,9 @@ dependencies = [
 
 [[package]]
 name = "bitcoin"
-version = "0.32.0"
+version = "0.32.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7170e7750a20974246f17ece04311b4205a6155f1db564c5b224af817663c3ea"
+checksum = "ce6bc65742dea50536e35ad42492b234c27904a27f0abdcbce605015cb4ea026"
 dependencies = [
  "base58ck",
  "base64 0.21.7",
@@ -2679,7 +2690,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4979f22fdb869068da03c9f7528f8297c6fd2606bc3a4affe42e6a823fdb8da4"
 dependencies = [
  "cfg-if",
- "windows-targets 0.48.5",
+ "windows-targets 0.52.6",
 ]
 
 [[package]]
@@ -5138,7 +5149,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]

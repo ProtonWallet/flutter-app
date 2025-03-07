@@ -1389,8 +1389,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt dco_decode_box_autoadd_usize(dynamic raw);
 
   @protected
-  WalletMobileConnectorFactory
-      dco_decode_box_autoadd_wallet_mobile_connector_factory(dynamic raw);
+  WalletMobilePersisterFactory
+      dco_decode_box_autoadd_wallet_mobile_persister_factory(dynamic raw);
 
   @protected
   WalletModel dco_decode_box_autoadd_wallet_model(dynamic raw);
@@ -2010,7 +2010,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletKeyEvent dco_decode_wallet_key_event(dynamic raw);
 
   @protected
-  WalletMobileConnectorFactory dco_decode_wallet_mobile_connector_factory(
+  WalletMobilePersisterFactory dco_decode_wallet_mobile_persister_factory(
       dynamic raw);
 
   @protected
@@ -3106,8 +3106,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   BigInt sse_decode_box_autoadd_usize(SseDeserializer deserializer);
 
   @protected
-  WalletMobileConnectorFactory
-      sse_decode_box_autoadd_wallet_mobile_connector_factory(
+  WalletMobilePersisterFactory
+      sse_decode_box_autoadd_wallet_mobile_persister_factory(
           SseDeserializer deserializer);
 
   @protected
@@ -3805,7 +3805,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   WalletKeyEvent sse_decode_wallet_key_event(SseDeserializer deserializer);
 
   @protected
-  WalletMobileConnectorFactory sse_decode_wallet_mobile_connector_factory(
+  WalletMobilePersisterFactory sse_decode_wallet_mobile_persister_factory(
       SseDeserializer deserializer);
 
   @protected
@@ -4942,8 +4942,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_usize(BigInt self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_wallet_mobile_connector_factory(
-      WalletMobileConnectorFactory self, SseSerializer serializer);
+  void sse_encode_box_autoadd_wallet_mobile_persister_factory(
+      WalletMobilePersisterFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_wallet_model(
@@ -5660,8 +5660,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       WalletKeyEvent self, SseSerializer serializer);
 
   @protected
-  void sse_encode_wallet_mobile_connector_factory(
-      WalletMobileConnectorFactory self, SseSerializer serializer);
+  void sse_encode_wallet_mobile_persister_factory(
+      WalletMobilePersisterFactory self, SseSerializer serializer);
 
   @protected
   void sse_encode_wallet_model(WalletModel self, SseSerializer serializer);

@@ -1,29 +1,29 @@
-use andromeda_bitcoin::storage::WalletConnectorFactory;
+use std::sync::Arc;
+
+use andromeda_bitcoin::storage::{Storage, WalletPersisterFactory};
 use flutter_rust_bridge::frb;
 
-use crate::proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister};
+use crate::proton_bdk::storage::WalletMobilePersister;
 
 #[derive(Debug, Clone)]
-pub struct WalletMobileConnectorFactory {
+pub struct WalletMobilePersisterFactory {
     pub(crate) folder_path: String,
 }
 
-impl WalletMobileConnectorFactory {
+impl WalletMobilePersisterFactory {
     #[frb(sync)]
     pub fn new(folder_path: String) -> Self {
         Self { folder_path }
     }
 }
 
-impl WalletConnectorFactory<WalletMobileConnector, WalletMobilePersister>
-    for WalletMobileConnectorFactory
-{
-    fn build(self, key: String) -> WalletMobileConnector {
+impl WalletPersisterFactory for WalletMobilePersisterFactory {
+    fn build(self, key: String) -> Arc<dyn Storage> {
         let clean_key = key.replace("'", "_").replace("/", "_");
         let db_path = format!(
             "{}/proton_wallet_bdk_{}.sqlite",
             self.folder_path, clean_key
         );
-        WalletMobileConnector::new(&db_path)
+        Arc::new(WalletMobilePersister::new(&db_path))
     }
 }

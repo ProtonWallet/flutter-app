@@ -19,11 +19,11 @@ FrbAccount prepareWallet(
     bip39Mnemonic: strMnemonic,
     network: Network.testnet,
   );
-  final connectorFactory = WalletMobileConnectorFactory(folderPath: "./");
+  final connectorFactory = WalletMobilePersisterFactory(folderPath: "./");
   final account = wallet.addAccount(
     scriptType: ScriptType.nativeSegwit,
     derivationPath: strDerivationPath,
-    connectorFactory: connectorFactory,
+    factory_: connectorFactory,
   );
   return account;
 }

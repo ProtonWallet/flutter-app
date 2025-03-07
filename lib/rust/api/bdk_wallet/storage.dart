@@ -8,16 +8,16 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `build`, `clone`, `fmt`
 
-class WalletMobileConnectorFactory {
+class WalletMobilePersisterFactory {
   final String folderPath;
 
-  const WalletMobileConnectorFactory.raw({
+  const WalletMobilePersisterFactory.raw({
     required this.folderPath,
   });
 
-  factory WalletMobileConnectorFactory({required String folderPath}) =>
+  factory WalletMobilePersisterFactory({required String folderPath}) =>
       RustLib.instance.api
-          .crateApiBdkWalletStorageWalletMobileConnectorFactoryNew(
+          .crateApiBdkWalletStorageWalletMobilePersisterFactoryNew(
               folderPath: folderPath);
 
   @override
@@ -26,7 +26,7 @@ class WalletMobileConnectorFactory {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WalletMobileConnectorFactory &&
+      other is WalletMobilePersisterFactory &&
           runtimeType == other.runtimeType &&
           folderPath == other.folderPath;
 }

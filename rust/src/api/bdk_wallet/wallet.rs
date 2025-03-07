@@ -6,22 +6,18 @@ use std::{ops::Deref, sync::Arc};
 
 use super::{
     account::FrbAccount, balance::FrbBalance, derivation_path::FrbDerivationPath,
-    discovered_account::DiscoveredAccount, storage::WalletMobileConnectorFactory,
+    discovered_account::DiscoveredAccount, storage::WalletMobilePersisterFactory,
     transaction_details::FrbTransactionDetails,
 };
-use crate::{
-    api::api_service::proton_api_service::ProtonAPIService,
-    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
-    BridgeError,
-};
+use crate::{api::api_service::proton_api_service::ProtonAPIService, BridgeError};
 
 #[derive(Debug)]
 pub struct FrbWallet {
-    pub(crate) inner: Wallet<WalletMobileConnector, WalletMobilePersister>,
+    pub(crate) inner: Wallet,
 }
 
 impl FrbWallet {
-    pub(crate) fn get_inner(&self) -> &Wallet<WalletMobileConnector, WalletMobilePersister> {
+    pub(crate) fn get_inner(&self) -> &Wallet {
         &self.inner
     }
 }
@@ -41,7 +37,7 @@ impl FrbWallet {
     pub async fn discover_account(
         &self,
         api_service: Arc<ProtonAPIService>,
-        connector_factory: WalletMobileConnectorFactory,
+        factory: WalletMobilePersisterFactory,
         account_stop_gap: u32,
         address_stop_gap: usize,
     ) -> Result<Vec<DiscoveredAccount>, BridgeError> {
@@ -49,7 +45,7 @@ impl FrbWallet {
             .inner
             .discover_accounts(
                 api_service.inner.deref().clone(),
-                connector_factory,
+                factory,
                 Some(account_stop_gap),
                 Some(address_stop_gap),
             )
@@ -64,16 +60,14 @@ impl FrbWallet {
         &mut self,
         script_type: ScriptType,
         derivation_path: String,
-        connector_factory: WalletMobileConnectorFactory,
+        factory: WalletMobilePersisterFactory,
     ) -> Result<FrbAccount, BridgeError> {
         // In a multi-wallet context, an account must be defined by the BIP32 masterkey
         // (fingerprint), and its derivation path (unique)
         let derivation_path = FrbDerivationPath::new(&derivation_path)?;
-        let account = self.inner.add_account(
-            script_type,
-            derivation_path.clone_inner(),
-            connector_factory,
-        )?;
+        let account =
+            self.inner
+                .add_account(script_type, derivation_path.clone_inner(), factory)?;
 
         Ok(account.into())
     }
@@ -137,7 +131,7 @@ mod test {
         api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        bdk_wallet::{blockchain::FrbBlockchainClient, storage::WalletMobileConnectorFactory},
+        bdk_wallet::{blockchain::FrbBlockchainClient, storage::WalletMobilePersisterFactory},
     };
     use crate::mocks::constant::tests::{TEST_MNEMONIC_1, TEST_MNEMONIC_2};
     use andromeda_common::{Network, ScriptType};
@@ -149,7 +143,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
+        let storage_factory = WalletMobilePersisterFactory::new(".".to_string());
         let network = Network::Testnet;
         let bip39_mnemonic = TEST_MNEMONIC_1.to_string();
 
@@ -255,7 +249,7 @@ mod test {
         tracing_subscriber::fmt::init();
         env::set_var("RUST_LOG", "debug");
 
-        let storage_factory = WalletMobileConnectorFactory::new(".".to_string());
+        let storage_factory = WalletMobilePersisterFactory::new(".".to_string());
         let network = Network::Bitcoin;
         let bip39_mnemonic = TEST_MNEMONIC_2.to_string();
 
