@@ -145,10 +145,10 @@ class ImportViewModelImpl extends ImportViewModel {
       );
 
       final dbPath = await getDatabaseFolderPath();
-      final storage = WalletMobileConnectorFactory(folderPath: dbPath);
+      final storage = WalletMobilePersisterFactory(folderPath: dbPath);
       final foundAccounts = await frbWallet.discoverAccount(
           apiService: apiService.getArc(),
-          connectorFactory: storage,
+          factory_: storage,
           accountStopGap: 1,
           addressStopGap: BigInt.from(10));
 

@@ -7,20 +7,16 @@ import '../../common/address_info.dart';
 import '../../common/keychain_kind.dart';
 import '../../common/network.dart';
 import '../../common/pagination.dart';
-import '../../common/script_type.dart';
 import '../../frb_generated.dart';
 import '../errors.dart';
 import 'address.dart';
 import 'balance.dart';
 import 'blockchain.dart';
-import 'derivation_path.dart';
 import 'local_output.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'psbt.dart';
-import 'storage.dart';
 import 'transaction_builder.dart';
 import 'transaction_details.dart';
-import 'wallet.dart';
 
 // These functions are ignored because they are not marked as `pub`: `get_inner`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `from`
@@ -70,19 +66,6 @@ abstract class FrbAccount implements RustOpaqueInterface {
   Future<bool> isMine({required FrbAddress address});
 
   Future<void> markReceiveAddressesUsedTo({required int from, int? to});
-
-  /// Usually creating account need to through wallet.
-  ///  this shouldn't be used. just for sometimes we need it without wallet.
-  factory FrbAccount(
-          {required FrbWallet wallet,
-          required ScriptType scriptType,
-          required FrbDerivationPath derivationPath,
-          required WalletMobileConnectorFactory storageFactory}) =>
-      RustLib.instance.api.crateApiBdkWalletAccountFrbAccountNew(
-          wallet: wallet,
-          scriptType: scriptType,
-          derivationPath: derivationPath,
-          storageFactory: storageFactory);
 
   Future<FrbPsbt> sign({required FrbPsbt psbt, required Network network});
 }

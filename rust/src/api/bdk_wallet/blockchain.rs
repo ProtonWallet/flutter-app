@@ -1,7 +1,7 @@
 use andromeda_api::transaction::{
     BroadcastMessage, ExchangeRateOrTransactionTime, RecommendedFees,
 };
-use andromeda_bitcoin::blockchain_client::BlockchainClient;
+use andromeda_bitcoin::{account_trait::AccessWallet, blockchain_client::BlockchainClient};
 use chrono::Utc;
 use flutter_rust_bridge::frb;
 use std::{collections::HashMap, ops::Deref, sync::Arc};
@@ -50,7 +50,10 @@ impl FrbBlockchainClient {
         stop_gap: Option<usize>,
     ) -> Result<(), BridgeError> {
         let account_inner = account.get_inner();
-        let update = self.inner.full_sync(&account_inner, stop_gap).await?;
+        let update = self
+            .inner
+            .full_sync(account_inner.as_ref(), stop_gap)
+            .await?;
         account_inner.apply_update(update).await?;
 
         Ok(())

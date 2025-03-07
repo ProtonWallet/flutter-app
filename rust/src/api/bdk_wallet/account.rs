@@ -3,14 +3,10 @@
 use andromeda_bitcoin::{
     account::Account, transactions::Pagination, utils::SortOrder, KeychainKind, SignOptions,
 };
-use andromeda_common::{Network, ScriptType};
+use andromeda_common::Network;
 use tracing::debug;
 
-use crate::{
-    common::address_info::FrbAddressInfo,
-    proton_bdk::storage::{WalletMobileConnector, WalletMobilePersister},
-    BridgeError,
-};
+use crate::{common::address_info::FrbAddressInfo, BridgeError};
 use flutter_rust_bridge::frb;
 use std::sync::Arc;
 
@@ -18,55 +14,52 @@ use super::{
     address::{FrbAddress, FrbAddressDetails},
     balance::FrbBalance,
     blockchain::FrbBlockchainClient,
-    derivation_path::FrbDerivationPath,
     local_output::FrbLocalOutput,
     psbt::FrbPsbt,
-    storage::WalletMobileConnectorFactory,
     transaction_builder::FrbTxBuilder,
     transaction_details::FrbTransactionDetails,
-    wallet::FrbWallet,
 };
 
 pub struct FrbAccount {
-    pub(crate) inner: Arc<Account<WalletMobileConnector, WalletMobilePersister>>,
+    pub(crate) inner: Arc<Account>,
 }
 
 impl FrbAccount {
     #[frb(ignore)]
-    pub(crate) fn get_inner(&self) -> Arc<Account<WalletMobileConnector, WalletMobilePersister>> {
+    pub(crate) fn get_inner(&self) -> Arc<Account> {
         self.inner.clone()
     }
 }
 
-impl From<Arc<Account<WalletMobileConnector, WalletMobilePersister>>> for FrbAccount {
-    fn from(value: Arc<Account<WalletMobileConnector, WalletMobilePersister>>) -> Self {
+impl From<Arc<Account>> for FrbAccount {
+    fn from(value: Arc<Account>) -> Self {
         FrbAccount { inner: value }
     }
 }
 
 impl FrbAccount {
-    /// Usually creating account need to through wallet.
-    ///  this shouldn't be used. just for sometimes we need it without wallet.
-    #[frb(sync)]
-    pub fn new(
-        wallet: &FrbWallet,
-        script_type: ScriptType,
-        derivation_path: FrbDerivationPath,
-        storage_factory: WalletMobileConnectorFactory,
-    ) -> Result<FrbAccount, BridgeError> {
-        let (mprv, network) = wallet.get_inner().mprv();
-        let account = Account::new(
-            mprv,
-            network,
-            script_type.into(),
-            (&derivation_path).clone_inner(),
-            storage_factory,
-        )?;
+    // /// Usually creating account need to through wallet.
+    // ///  this shouldn't be used. just for sometimes we need it without wallet.
+    // #[frb(sync)]
+    // pub fn new(
+    //     wallet: &FrbWallet,
+    //     script_type: ScriptType,
+    //     derivation_path: FrbDerivationPath,
+    //     factory: WalletMobilePersisterFactory,
+    // ) -> Result<FrbAccount, BridgeError> {
+    //     let (mprv, network) = wallet.get_inner().mprv();
+    //     let account = Account::new(
+    //         mprv,
+    //         network,
+    //         script_type.into(),
+    //         (&derivation_path).clone_inner(),
+    //         factory.build()
+    //     )?;
 
-        Ok(FrbAccount {
-            inner: Arc::new(account),
-        })
-    }
+    //     Ok(FrbAccount {
+    //         inner: Arc::new(account),
+    //     })
+    // }
 
     pub async fn get_address(&self, index: Option<u32>) -> Result<FrbAddressInfo, BridgeError> {
         let account_inner = self.inner.clone();
