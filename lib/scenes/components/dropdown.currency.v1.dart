@@ -5,6 +5,7 @@ import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
+import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
@@ -119,8 +120,8 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                 enabledBorder: InputBorder.none,
                 border: InputBorder.none,
                 labelText: widget.labelText,
-                labelStyle: ProtonStyles.body2Medium(
-                    color: ProtonColors.textWeak),
+                labelStyle:
+                    ProtonStyles.body2Medium(color: ProtonColors.textWeak),
                 suffixIconConstraints:
                     BoxConstraints(maxWidth: widget.maxSuffixIconWidth ?? 24.0),
                 contentPadding: EdgeInsets.only(
@@ -154,7 +155,8 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
       backgroundColor: ProtonColors.backgroundSecondary,
       constraints: BoxConstraints(
         minWidth: MediaQuery.of(context).size.width,
-        maxHeight: MediaQuery.of(context).size.height * 0.8,
+        minHeight: MediaQuery.of(context).size.height - 60,
+        maxHeight: MediaQuery.of(context).size.height - 60,
       ),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -216,6 +218,22 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                           const SizedBox(
                             height: 5,
                           ),
+                          if (widget.items
+                              .where((e) => e
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(keyWord.toLowerCase()))
+                              .isEmpty)
+                            Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: Text(
+                                context.local.no_results,
+                                style: ProtonStyles.body2Regular(
+                                    color: ProtonColors.textNorm),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           for (int index = 0;
                               index < widget.items.length;
                               index++)
