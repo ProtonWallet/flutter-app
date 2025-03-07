@@ -50,6 +50,7 @@
   "create_new_proton_account": "Create a new Proton account",
   "import_existing_wallet": "Import an existing wallet",
   "no_data": "No data",
+  "no_results": "No results",
   "trans_note": "{note}",
   "trans_body": "{message}",
   "@trans_note": {
