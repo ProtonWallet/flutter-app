@@ -868,9 +868,13 @@ class SendViewModelImpl extends SendViewModel {
       }
       totalAmount += amount;
     }
-    amountTextController.text = totalAmount.toStringAsFixed(
-      displayDigit,
-    );
+    if (totalAmount > 0) {
+      amountTextController.text = totalAmount.toStringAsFixed(
+        displayDigit,
+      );
+    } else {
+      amountTextController.text = "";
+    }
   }
 
   @override
