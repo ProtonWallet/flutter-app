@@ -27,6 +27,7 @@ enum NavID {
   deleteWalletAccount,
   walletAccountAddressList,
   walletAccountInfo,
+  walletAccountXpubInfo,
 
   // Transactions
   send,

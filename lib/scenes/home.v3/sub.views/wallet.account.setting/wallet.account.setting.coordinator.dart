@@ -8,6 +8,7 @@ import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wall
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.info/wallet.account.info.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.setting/wallet.account.setting.view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.setting/wallet.account.setting.viewmodel.dart';
+import 'package:wallet/scenes/home.v3/sub.views/wallet.account.xpub.info/wallet.account.xpub.info.coordinator.dart';
 
 class WalletAccountSettingCoordinator extends Coordinator {
   late ViewBase widget;
@@ -29,6 +30,12 @@ class WalletAccountSettingCoordinator extends Coordinator {
 
   void showWalletAccountInfo() {
     final view = WalletAccountInfoCoordinator(accountMenuModel).start();
+    showInBottomSheet(view);
+  }
+
+  void showWalletAccountXpubInfo() {
+    final view =
+        WalletAccountXpubInfoCoodinator(accountMenuModel.accountModel).start();
     showInBottomSheet(view);
   }
 
