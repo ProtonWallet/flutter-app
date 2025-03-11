@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:wallet/helper/extension/datetime.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
@@ -70,8 +71,10 @@ class LockCoreViewModelImpl extends LockCoreViewModel
     switch (state) {
       case AppLifecycleState.resumed:
         logger.d("App is in foreground");
+        appStateManager.isInBackground = false;
       case AppLifecycleState.inactive:
         logger.d("App is inactive");
+        appStateManager.isInBackground = true;
         if (!appStateManager.isLocked) {
           /// update app last activate time only when app is unlocked
           appStateManager.saveAppLastActivateTime();

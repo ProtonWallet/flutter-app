@@ -249,6 +249,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   Future<void> inAppReviewCheck({bool fromSend = false});
 
   String getFiatCurrencyName({FiatCurrency? fiatCurrency});
+
   String getFiatCurrencySign({FiatCurrency? fiatCurrency});
 }
 
@@ -360,10 +361,12 @@ class HomeViewModelImpl extends HomeViewModel {
       if (!isLogout) {
         _blockInfoDataSubscription =
             blockInfoDataProvider.dataUpdateController.stream.listen((onData) {
-          walletTransactionBloc.syncWallet(
-            forceSync: false,
-            heightChanged: true,
-          );
+          if (!appStateManager.isInBackground) {
+            walletTransactionBloc.syncWallet(
+              forceSync: false,
+              heightChanged: true,
+            );
+          }
         });
       }
     });
