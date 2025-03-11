@@ -76,6 +76,12 @@ class EventLoop extends Service implements Manager {
 
   @override
   Future<Duration?> onUpdate() async {
+    if (appStateManager.isInBackground) {
+      /// skip eventloop if app in background
+      final nextWaiting = await appStateManager.getEventloopDuration();
+      return Duration(seconds: nextWaiting);
+    }
+
     // because of the muon timout can't detect internet drop or not.
     // other wise we can check updating to drop multiple triggters.
     onUpdateing = true;
