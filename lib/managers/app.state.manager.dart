@@ -87,6 +87,7 @@ class AppStateManager extends DataProvider implements Manager {
   bool exponentialBackoffForConcurrentlyMode = false;
   bool isLocked = false;
   bool isAuthenticating = false;
+  bool isInBackground = false;
   List<LoadingTask> failedTask = [];
 
   /// const key
