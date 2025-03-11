@@ -4713,6 +4713,15 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as int);
 
   @override
+  set refreshTimer(_i4.Timer? _refreshTimer) => super.noSuchMethod(
+        Invocation.setter(
+          #refreshTimer,
+          _refreshTimer,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i2.DataState get state => (super.noSuchMethod(
         Invocation.getter(#state),
         returnValue: _FakeDataState_0(
@@ -4734,6 +4743,15 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as bool);
 
   @override
+  void setupUnleashListeners() => super.noSuchMethod(
+        Invocation.method(
+          #setupUnleashListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i4.Future<void> start() => (super.noSuchMethod(
         Invocation.method(
           #start,
@@ -4742,6 +4760,15 @@ class MockUnleashDataProvider extends _i1.Mock
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+
+  @override
+  void startPeriodicRefresh() => super.noSuchMethod(
+        Invocation.method(
+          #startPeriodicRefresh,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   _i4.Future<void> clear() => (super.noSuchMethod(
