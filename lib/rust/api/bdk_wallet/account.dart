@@ -61,6 +61,8 @@ abstract class FrbAccount implements RustOpaqueInterface {
 
   Future<List<FrbLocalOutput>> getUtxos();
 
+  Future<String?> getXpub();
+
   Future<bool> hasSyncData();
 
   Future<bool> isMine({required FrbAddress address});

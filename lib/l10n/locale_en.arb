@@ -596,5 +596,8 @@
   "bridge_error_encoding": "String encoding error. Please try again.",
   "syncing_new_data": "Syncing new data",
   "buying_unavailable": "Buying is temporarily unavailable",
-  "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later."
+  "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later.",
+  "copy_button": "Copy",
+  "xpub_copied": "Public key copied to clipboard",
+  "show_xpub": "Show public key (XPUB)"
 }
