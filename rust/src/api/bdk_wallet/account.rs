@@ -233,4 +233,10 @@ impl FrbAccount {
             .map(|element| element.into())
             .collect())
     }
+
+    pub async fn get_xpub(&self) -> Option<String> {
+        let xpub = self.inner.get_xpub().await;
+
+        xpub.map(|xpub| xpub.to_string())
+    }
 }

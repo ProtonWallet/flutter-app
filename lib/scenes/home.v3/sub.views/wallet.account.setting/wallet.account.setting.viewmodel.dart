@@ -43,6 +43,8 @@ class WalletAccountSettingViewModelImpl extends WalletAccountSettingViewModel {
         coordinator.showWalletAccountAddressList();
       case NavID.walletAccountInfo:
         coordinator.showWalletAccountInfo();
+      case NavID.walletAccountXpubInfo:
+        coordinator.showWalletAccountXpubInfo();
       default:
         break;
     }

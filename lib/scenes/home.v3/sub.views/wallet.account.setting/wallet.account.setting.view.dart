@@ -49,6 +49,19 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
                   Navigator.of(context).pop();
                   viewModel.move(NavID.walletAccountAddressList);
                 }),
+            ListTile(
+                leading:
+                    Icon(Icons.key, size: 18, color: ProtonColors.textNorm),
+                title: Transform.translate(
+                    offset: const Offset(-8, 0),
+                    child: Text(S.of(context).show_xpub,
+                        style: ProtonStyles.body2Regular(
+                          color: ProtonColors.textNorm,
+                        ))),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  viewModel.move(NavID.walletAccountXpubInfo);
+                }),
             const SizedBox(
               height: 5,
             ),
