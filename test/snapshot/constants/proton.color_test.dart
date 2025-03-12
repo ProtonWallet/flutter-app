@@ -236,7 +236,7 @@ class ColorText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "$colorString <$color>",
+      colorString,
       style: ProtonStyles.body1Regular(
         color: color,
       ),
