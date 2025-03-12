@@ -70,7 +70,6 @@ linter:
     - parameter_assignments # https://dart.dev/tools/linter-rules/parameter_assignments
     - throw_in_finally # https://dart.dev/tools/linter-rules/throw_in_finally
     - test_types_in_equals # https://dart.dev/tools/linter-rules/test_types_in_equals
-    - unsafe_html # https://dart.dev/tools/linter-rules/unsafe_html
     - unnecessary_statements # https://dart.dev/tools/linter-rules/unnecessary_statements
     - unnecessary_lambdas # https://dart.dev/tools/linter-rules/unnecessary_lambdas
     # - use_string_buffers # https://dart.dev/tools/linter-rules/use_string_buffers
