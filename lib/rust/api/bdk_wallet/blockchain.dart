@@ -6,15 +6,13 @@
 import '../../common/blockchain.dart';
 import '../../common/broadcast_message.dart';
 import '../../frb_generated.dart';
+import '../api_service/proton_api_service.dart';
 import '../errors.dart';
-import 'account.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'psbt.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `from`
-
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Arc < ProtonAPIService >>>
-abstract class ArcProtonApiService implements RustOpaqueInterface {}
+// These functions are ignored because they are not marked as `pub`: `get_inner`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbBlockchainClient>>
 abstract class FrbBlockchainClient implements RustOpaqueInterface {
@@ -31,20 +29,11 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
       Map<String, String>? recipients,
       int? isAnonymous});
 
-  static FrbBlockchainClient createEsploraBlockchain() => RustLib.instance.api
-      .crateApiBdkWalletBlockchainFrbBlockchainClientCreateEsploraBlockchain();
-
-  Future<void> fullSync({required FrbAccount account, BigInt? stopGap});
-
   Future<Map<String, double>> getFeesEstimation();
 
   Future<RecommendedFees> getRecommendedFees();
 
-  factory FrbBlockchainClient({required ArcProtonApiService apiService}) =>
-      RustLib.instance.api.crateApiBdkWalletBlockchainFrbBlockchainClientNew(
-          apiService: apiService);
-
-  Future<void> partialSync({required FrbAccount account});
-
-  Future<bool> shouldSync({required FrbAccount account});
+  factory FrbBlockchainClient({required ProtonApiService service}) =>
+      RustLib.instance.api
+          .crateApiBdkWalletBlockchainFrbBlockchainClientNew(service: service);
 }

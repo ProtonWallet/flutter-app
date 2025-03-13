@@ -21,7 +21,10 @@ use super::{
     wallet_client::WalletClient,
 };
 use crate::{
-    api::proton_api::{logout, set_proton_api},
+    api::{
+        bdk_wallet::blockchain::FrbBlockchainClient,
+        proton_api::{logout, set_proton_api},
+    },
     auth_credential::AuthCredential,
     proton_wallet::crypto::srp::SrpClient,
     BridgeError,
@@ -244,6 +247,11 @@ impl ProtonAPIService {
     #[frb(sync)]
     pub fn get_unleash_client(&self) -> FrbUnleashClient {
         FrbUnleashClient::new(&self)
+    }
+
+    #[frb(sync)]
+    pub fn get_blockchain_client(&self) -> FrbBlockchainClient {
+        FrbBlockchainClient::new(&self)
     }
 }
 

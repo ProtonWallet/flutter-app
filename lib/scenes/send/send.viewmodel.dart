@@ -226,6 +226,7 @@ class SendViewModelImpl extends SendViewModel {
     super.walletDataProvider,
     super.inviteClient,
     this.appStateManager,
+    this.blockchainClient,
   );
 
   /// event loop
@@ -244,7 +245,7 @@ class SendViewModelImpl extends SendViewModel {
   final UnleashDataProvider unleashDataProvider;
 
   /// api client
-  FrbBlockchainClient? blockClient;
+  final FrbBlockchainClient blockchainClient;
 
   /// internal attributes
   late FrbAccount? _frbAccount;
@@ -353,7 +354,6 @@ class SendViewModelImpl extends SendViewModel {
       amountFocusNode.addListener(splitAmountToRecipients);
 
       /// load fee rate
-      blockClient = FrbBlockchainClient.createEsploraBlockchain();
       await updateFeeRate();
 
       walletModel = await DBHelper.walletDao!.findByServerID(walletID);
@@ -1144,7 +1144,7 @@ class SendViewModelImpl extends SendViewModel {
         network: network,
       );
 
-      txid = await blockClient!.broadcastPsbt(
+      txid = await blockchainClient.broadcastPsbt(
         psbt: frbPsbt,
         walletId: walletModel!.walletID,
         walletAccountId: accountModel!.accountID,
@@ -1196,21 +1196,14 @@ class SendViewModelImpl extends SendViewModel {
 
   Future<void> _updateFeeRateByMempool() async {
     /// move this logic to Rust fee prvider?
-    final recommendedFees = await blockClient?.getRecommendedFees();
-    if (recommendedFees != null) {
-      feeRateHighPriority = recommendedFees.fastestFee;
-      feeRateMedianPriority = recommendedFees.halfHourFee;
-      feeRateLowPriority = recommendedFees.hourFee;
-    } else {
-      throw Exception("Cannot get recommended fees");
-    }
+    final recommendedFees = await blockchainClient.getRecommendedFees();
+    feeRateHighPriority = recommendedFees.fastestFee;
+    feeRateMedianPriority = recommendedFees.halfHourFee;
+    feeRateLowPriority = recommendedFees.hourFee;
   }
 
   Future<void> _updateFeeRateByFeesEstimation() async {
-    final fees = await blockClient?.getFeesEstimation();
-    if (fees == null) {
-      return;
-    }
+    final fees = await blockchainClient.getFeesEstimation();
 
     /// set feeRate for 1, 3, 6 blocks
     feeRateHighPriority = (fees["1"] ?? 0).ceil();
@@ -1349,9 +1342,10 @@ class SendViewModelImpl extends SendViewModel {
     logger.e("Send sendCoin() error: $error stacktrace: $stacktrace");
     final msg = error.localizedString;
     // TODO(fix): improve logic here
+    final origMsg = error.field0.toString();
     final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-    if (msg.toLowerCase().contains("outputbelowdustlimit")) {
-      if (context != null) {
+    if (origMsg.toLowerCase().contains("outputbelowdustlimit")) {
+      if (context != null && context.mounted) {
         context.showSnackbar(
           S.of(context).error_you_dont_have_sufficient_balance_hint_fee,
           isError: true,
@@ -1359,14 +1353,21 @@ class SendViewModelImpl extends SendViewModel {
       } else {
         CommonHelper.showErrorDialog(msg, callback: () {});
       }
-    } else if (msg.toLowerCase().contains("incorrectchecksumerror")) {
-      if (context != null) {
+    } else if (origMsg.toLowerCase().contains("incorrectchecksumerror")) {
+      if (context != null && context.mounted) {
         context.showSnackbar(
           S.of(context).error_this_bitcoin_address_incorrect_checksum,
           isError: true,
         );
       } else {
         CommonHelper.showErrorDialog(msg, callback: () {});
+      }
+    } else if (origMsg.toLowerCase().contains("insufficientfunds")) {
+      if (context != null && context.mounted) {
+        context.showSnackbar(
+          S.of(context).error_this_bitcoin_address_incorrect_checksum,
+          isError: true,
+        );
       }
     } else {
       Sentry.captureException(error, stackTrace: stacktrace);

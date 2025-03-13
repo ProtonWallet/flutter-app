@@ -19,6 +19,7 @@ class ReceiveAddressDataProvider extends DataProvider {
   /// api clients
   final BitcoinAddressClient bitcoinAddressClient;
   final WalletClient walletClient;
+  final FrbBlockchainClient blockChainClient;
 
   /// memory caches
   final Map<String, FrbAddressInfo> id2AddressInfo = {};
@@ -29,6 +30,7 @@ class ReceiveAddressDataProvider extends DataProvider {
   ReceiveAddressDataProvider(
     this.bitcoinAddressClient,
     this.walletClient,
+    this.blockChainClient,
     this.walletDataProvider,
   );
 
@@ -114,7 +116,6 @@ class ReceiveAddressDataProvider extends DataProvider {
     bool isValidReceiveAddress = false;
     FrbAddressInfo addressInfo = id2AddressInfo[accountModel.accountID]!;
     while (!isValidReceiveAddress) {
-      final blockChainClient = FrbBlockchainClient.createEsploraBlockchain();
       final searchedAddress = await account.getAddressFromGraph(
         network: appConfig.coinType.network,
         addressStr: addressInfo.address,

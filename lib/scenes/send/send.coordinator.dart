@@ -64,6 +64,7 @@ class SendCoordinator extends Coordinator {
       dataProvider.walletDataProvider,
       apiServiceManager.getApiService().getInviteClient(),
       appStateManager,
+      apiServiceManager.getApiService().getBlockchainClient(),
     );
     widget = SendView(
       viewModel,
