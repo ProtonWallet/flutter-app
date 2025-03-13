@@ -5,29 +5,29 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:connectivity_plus/connectivity_plus.dart' as _i17;
-import 'package:flutter_bloc/flutter_bloc.dart' as _i50;
+import 'package:connectivity_plus/connectivity_plus.dart' as _i18;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i51;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i52;
+import 'package:mockito/src/dummies.dart' as _i53;
 import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart'
-    as _i33;
+    as _i34;
 import 'package:wallet/constants/coin_type.dart' as _i75;
-import 'package:wallet/constants/env.dart' as _i35;
+import 'package:wallet/constants/env.dart' as _i36;
 import 'package:wallet/constants/script_type.dart' as _i74;
-import 'package:wallet/managers/preferences/preferences.manager.dart' as _i12;
-import 'package:wallet/managers/providers/address.keys.provider.dart' as _i53;
+import 'package:wallet/managers/preferences/preferences.manager.dart' as _i13;
+import 'package:wallet/managers/providers/address.keys.provider.dart' as _i54;
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart'
-    as _i15;
+    as _i16;
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart' as _i58;
 import 'package:wallet/managers/providers/connectivity.provider.dart' as _i59;
 import 'package:wallet/managers/providers/contacts.data.provider.dart' as _i60;
 import 'package:wallet/managers/providers/data.provider.manager.dart' as _i2;
-import 'package:wallet/managers/providers/exchange.data.provider.dart' as _i51;
+import 'package:wallet/managers/providers/exchange.data.provider.dart' as _i52;
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart'
     as _i63;
 import 'package:wallet/managers/providers/gateway.data.provider.dart' as _i64;
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart'
-    as _i25;
+    as _i26;
 import 'package:wallet/managers/providers/models/wallet.key.dart' as _i76;
 import 'package:wallet/managers/providers/models/wallet.mnemonic.dart' as _i73;
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart'
@@ -35,18 +35,18 @@ import 'package:wallet/managers/providers/models/wallet.passphrase.dart'
 import 'package:wallet/managers/providers/pool.address.data.provider.dart'
     as _i67;
 import 'package:wallet/managers/providers/price.graph.data.provider.dart'
-    as _i47;
+    as _i48;
 import 'package:wallet/managers/providers/proton.address.provider.dart' as _i68;
 import 'package:wallet/managers/providers/receive.address.data.provider.dart'
     as _i70;
 import 'package:wallet/managers/providers/server.transaction.data.provider.dart'
-    as _i32;
-import 'package:wallet/managers/providers/unleash.data.provider.dart' as _i14;
-import 'package:wallet/managers/providers/user.data.provider.dart' as _i36;
+    as _i33;
+import 'package:wallet/managers/providers/unleash.data.provider.dart' as _i15;
+import 'package:wallet/managers/providers/user.data.provider.dart' as _i37;
 import 'package:wallet/managers/providers/user.settings.data.provider.dart'
-    as _i13;
-import 'package:wallet/managers/providers/wallet.data.provider.dart' as _i28;
-import 'package:wallet/managers/providers/wallet.keys.provider.dart' as _i46;
+    as _i14;
+import 'package:wallet/managers/providers/wallet.data.provider.dart' as _i29;
+import 'package:wallet/managers/providers/wallet.keys.provider.dart' as _i47;
 import 'package:wallet/managers/providers/wallet.mnemonic.provider.dart'
     as _i77;
 import 'package:wallet/managers/providers/wallet.name.provider.dart' as _i78;
@@ -58,48 +58,48 @@ import 'package:wallet/managers/users/user.manager.dart' as _i8;
 import 'package:wallet/managers/wallet/wallet.manager.dart' as _i9;
 import 'package:wallet/models/account.dao.impl.dart' as _i10;
 import 'package:wallet/models/account.model.dart' as _i57;
-import 'package:wallet/models/address.dao.impl.dart' as _i27;
+import 'package:wallet/models/address.dao.impl.dart' as _i28;
 import 'package:wallet/models/address.model.dart' as _i69;
-import 'package:wallet/models/bitcoin.address.dao.impl.dart' as _i24;
+import 'package:wallet/models/bitcoin.address.dao.impl.dart' as _i25;
 import 'package:wallet/models/bitcoin.address.model.dart' as _i66;
-import 'package:wallet/models/contacts.dao.impl.dart' as _i19;
+import 'package:wallet/models/contacts.dao.impl.dart' as _i20;
 import 'package:wallet/models/contacts.model.dart' as _i61;
 import 'package:wallet/models/drift/db/app.database.dart' as _i72;
-import 'package:wallet/models/drift/user.keys.queries.dart' as _i39;
-import 'package:wallet/models/drift/users.queries.dart' as _i38;
-import 'package:wallet/models/drift/wallet.user.settings.queries.dart' as _i41;
-import 'package:wallet/models/exchangerate.dao.impl.dart' as _i30;
-import 'package:wallet/models/transaction.dao.impl.dart' as _i31;
+import 'package:wallet/models/drift/user.keys.queries.dart' as _i40;
+import 'package:wallet/models/drift/users.queries.dart' as _i39;
+import 'package:wallet/models/drift/wallet.user.settings.queries.dart' as _i42;
+import 'package:wallet/models/exchangerate.dao.impl.dart' as _i31;
+import 'package:wallet/models/transaction.dao.impl.dart' as _i32;
 import 'package:wallet/models/transaction.model.dart' as _i71;
-import 'package:wallet/models/wallet.dao.impl.dart' as _i23;
-import 'package:wallet/models/wallet.keys.store.dart' as _i44;
+import 'package:wallet/models/wallet.dao.impl.dart' as _i24;
+import 'package:wallet/models/wallet.keys.store.dart' as _i45;
 import 'package:wallet/models/wallet.model.dart' as _i56;
 import 'package:wallet/rust/api/api_service/bitcoin_address_client.dart'
-    as _i26;
-import 'package:wallet/rust/api/api_service/block_client.dart' as _i16;
+    as _i27;
+import 'package:wallet/rust/api/api_service/block_client.dart' as _i17;
 import 'package:wallet/rust/api/api_service/exchange_rate_client.dart' as _i3;
-import 'package:wallet/rust/api/api_service/invite_client.dart' as _i20;
-import 'package:wallet/rust/api/api_service/onramp_gateway_client.dart' as _i21;
+import 'package:wallet/rust/api/api_service/invite_client.dart' as _i21;
+import 'package:wallet/rust/api/api_service/onramp_gateway_client.dart' as _i22;
 import 'package:wallet/rust/api/api_service/proton_contacts_client.dart'
-    as _i18;
+    as _i19;
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart'
     as _i7;
-import 'package:wallet/rust/api/api_service/proton_users_client.dart' as _i37;
-import 'package:wallet/rust/api/api_service/settings_client.dart' as _i40;
-import 'package:wallet/rust/api/api_service/unleash_client.dart' as _i34;
+import 'package:wallet/rust/api/api_service/proton_users_client.dart' as _i38;
+import 'package:wallet/rust/api/api_service/settings_client.dart' as _i41;
+import 'package:wallet/rust/api/api_service/unleash_client.dart' as _i35;
 import 'package:wallet/rust/api/api_service/wallet_client.dart' as _i11;
 import 'package:wallet/rust/api/bdk_wallet/account.dart' as _i65;
-import 'package:wallet/rust/api/bdk_wallet/blockchain.dart' as _i55;
-import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart' as _i45;
-import 'package:wallet/rust/common/address_info.dart' as _i29;
+import 'package:wallet/rust/api/bdk_wallet/blockchain.dart' as _i12;
+import 'package:wallet/rust/api/proton_wallet/crypto/wallet_key.dart' as _i46;
+import 'package:wallet/rust/common/address_info.dart' as _i30;
 import 'package:wallet/rust/proton_api/contacts.dart' as _i62;
 import 'package:wallet/rust/proton_api/exchange_rate.dart' as _i5;
-import 'package:wallet/rust/proton_api/payment_gateway.dart' as _i22;
-import 'package:wallet/rust/proton_api/price_graph.dart' as _i48;
-import 'package:wallet/rust/proton_api/proton_address.dart' as _i54;
-import 'package:wallet/rust/proton_api/user_settings.dart' as _i49;
-import 'package:wallet/rust/proton_api/wallet.dart' as _i42;
-import 'package:wallet/rust/proton_api/wallet_account.dart' as _i43;
+import 'package:wallet/rust/proton_api/payment_gateway.dart' as _i23;
+import 'package:wallet/rust/proton_api/price_graph.dart' as _i49;
+import 'package:wallet/rust/proton_api/proton_address.dart' as _i55;
+import 'package:wallet/rust/proton_api/user_settings.dart' as _i50;
+import 'package:wallet/rust/proton_api/wallet.dart' as _i43;
+import 'package:wallet/rust/proton_api/wallet_account.dart' as _i44;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -219,9 +219,9 @@ class _FakeWalletClient_9 extends _i1.SmartFake implements _i11.WalletClient {
         );
 }
 
-class _FakePreferencesManager_10 extends _i1.SmartFake
-    implements _i12.PreferencesManager {
-  _FakePreferencesManager_10(
+class _FakeFrbBlockchainClient_10 extends _i1.SmartFake
+    implements _i12.FrbBlockchainClient {
+  _FakeFrbBlockchainClient_10(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -230,9 +230,9 @@ class _FakePreferencesManager_10 extends _i1.SmartFake
         );
 }
 
-class _FakeUserSettingsDataProvider_11 extends _i1.SmartFake
-    implements _i13.UserSettingsDataProvider {
-  _FakeUserSettingsDataProvider_11(
+class _FakePreferencesManager_11 extends _i1.SmartFake
+    implements _i13.PreferencesManager {
+  _FakePreferencesManager_11(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -241,9 +241,9 @@ class _FakeUserSettingsDataProvider_11 extends _i1.SmartFake
         );
 }
 
-class _FakeUnleashDataProvider_12 extends _i1.SmartFake
-    implements _i14.UnleashDataProvider {
-  _FakeUnleashDataProvider_12(
+class _FakeUserSettingsDataProvider_12 extends _i1.SmartFake
+    implements _i14.UserSettingsDataProvider {
+  _FakeUserSettingsDataProvider_12(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -252,9 +252,9 @@ class _FakeUnleashDataProvider_12 extends _i1.SmartFake
         );
 }
 
-class _FakeBDKTransactionData_13 extends _i1.SmartFake
-    implements _i15.BDKTransactionData {
-  _FakeBDKTransactionData_13(
+class _FakeUnleashDataProvider_13 extends _i1.SmartFake
+    implements _i15.UnleashDataProvider {
+  _FakeUnleashDataProvider_13(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -263,8 +263,9 @@ class _FakeBDKTransactionData_13 extends _i1.SmartFake
         );
 }
 
-class _FakeBlockClient_14 extends _i1.SmartFake implements _i16.BlockClient {
-  _FakeBlockClient_14(
+class _FakeBDKTransactionData_14 extends _i1.SmartFake
+    implements _i16.BDKTransactionData {
+  _FakeBDKTransactionData_14(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -273,8 +274,8 @@ class _FakeBlockClient_14 extends _i1.SmartFake implements _i16.BlockClient {
         );
 }
 
-class _FakeConnectivity_15 extends _i1.SmartFake implements _i17.Connectivity {
-  _FakeConnectivity_15(
+class _FakeBlockClient_15 extends _i1.SmartFake implements _i17.BlockClient {
+  _FakeBlockClient_15(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -283,9 +284,8 @@ class _FakeConnectivity_15 extends _i1.SmartFake implements _i17.Connectivity {
         );
 }
 
-class _FakeContactsClient_16 extends _i1.SmartFake
-    implements _i18.ContactsClient {
-  _FakeContactsClient_16(
+class _FakeConnectivity_16 extends _i1.SmartFake implements _i18.Connectivity {
+  _FakeConnectivity_16(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -294,8 +294,9 @@ class _FakeContactsClient_16 extends _i1.SmartFake
         );
 }
 
-class _FakeContactsDao_17 extends _i1.SmartFake implements _i19.ContactsDao {
-  _FakeContactsDao_17(
+class _FakeContactsClient_17 extends _i1.SmartFake
+    implements _i19.ContactsClient {
+  _FakeContactsClient_17(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -304,8 +305,8 @@ class _FakeContactsDao_17 extends _i1.SmartFake implements _i19.ContactsDao {
         );
 }
 
-class _FakeInviteClient_18 extends _i1.SmartFake implements _i20.InviteClient {
-  _FakeInviteClient_18(
+class _FakeContactsDao_18 extends _i1.SmartFake implements _i20.ContactsDao {
+  _FakeContactsDao_18(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -314,9 +315,8 @@ class _FakeInviteClient_18 extends _i1.SmartFake implements _i20.InviteClient {
         );
 }
 
-class _FakeOnRampGatewayClient_19 extends _i1.SmartFake
-    implements _i21.OnRampGatewayClient {
-  _FakeOnRampGatewayClient_19(
+class _FakeInviteClient_19 extends _i1.SmartFake implements _i21.InviteClient {
+  _FakeInviteClient_19(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -325,8 +325,9 @@ class _FakeOnRampGatewayClient_19 extends _i1.SmartFake
         );
 }
 
-class _FakeApiCountry_20 extends _i1.SmartFake implements _i22.ApiCountry {
-  _FakeApiCountry_20(
+class _FakeOnRampGatewayClient_20 extends _i1.SmartFake
+    implements _i22.OnRampGatewayClient {
+  _FakeOnRampGatewayClient_20(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -335,9 +336,8 @@ class _FakeApiCountry_20 extends _i1.SmartFake implements _i22.ApiCountry {
         );
 }
 
-class _FakeApiSimpleFiatCurrency_21 extends _i1.SmartFake
-    implements _i22.ApiSimpleFiatCurrency {
-  _FakeApiSimpleFiatCurrency_21(
+class _FakeApiCountry_21 extends _i1.SmartFake implements _i23.ApiCountry {
+  _FakeApiCountry_21(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -346,8 +346,9 @@ class _FakeApiSimpleFiatCurrency_21 extends _i1.SmartFake
         );
 }
 
-class _FakeWalletDao_22 extends _i1.SmartFake implements _i23.WalletDao {
-  _FakeWalletDao_22(
+class _FakeApiSimpleFiatCurrency_22 extends _i1.SmartFake
+    implements _i23.ApiSimpleFiatCurrency {
+  _FakeApiSimpleFiatCurrency_22(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -356,9 +357,8 @@ class _FakeWalletDao_22 extends _i1.SmartFake implements _i23.WalletDao {
         );
 }
 
-class _FakeBitcoinAddressDao_23 extends _i1.SmartFake
-    implements _i24.BitcoinAddressDao {
-  _FakeBitcoinAddressDao_23(
+class _FakeWalletDao_23 extends _i1.SmartFake implements _i24.WalletDao {
+  _FakeWalletDao_23(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -367,9 +367,9 @@ class _FakeBitcoinAddressDao_23 extends _i1.SmartFake
         );
 }
 
-class _FakeLocalBitcoinAddressData_24 extends _i1.SmartFake
-    implements _i25.LocalBitcoinAddressData {
-  _FakeLocalBitcoinAddressData_24(
+class _FakeBitcoinAddressDao_24 extends _i1.SmartFake
+    implements _i25.BitcoinAddressDao {
+  _FakeBitcoinAddressDao_24(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -378,9 +378,9 @@ class _FakeLocalBitcoinAddressData_24 extends _i1.SmartFake
         );
 }
 
-class _FakeBitcoinAddressClient_25 extends _i1.SmartFake
-    implements _i26.BitcoinAddressClient {
-  _FakeBitcoinAddressClient_25(
+class _FakeLocalBitcoinAddressData_25 extends _i1.SmartFake
+    implements _i26.LocalBitcoinAddressData {
+  _FakeLocalBitcoinAddressData_25(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -389,8 +389,9 @@ class _FakeBitcoinAddressClient_25 extends _i1.SmartFake
         );
 }
 
-class _FakeAddressDao_26 extends _i1.SmartFake implements _i27.AddressDao {
-  _FakeAddressDao_26(
+class _FakeBitcoinAddressClient_26 extends _i1.SmartFake
+    implements _i27.BitcoinAddressClient {
+  _FakeBitcoinAddressClient_26(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -399,9 +400,8 @@ class _FakeAddressDao_26 extends _i1.SmartFake implements _i27.AddressDao {
         );
 }
 
-class _FakeWalletsDataProvider_27 extends _i1.SmartFake
-    implements _i28.WalletsDataProvider {
-  _FakeWalletsDataProvider_27(
+class _FakeAddressDao_27 extends _i1.SmartFake implements _i28.AddressDao {
+  _FakeAddressDao_27(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -410,9 +410,9 @@ class _FakeWalletsDataProvider_27 extends _i1.SmartFake
         );
 }
 
-class _FakeFrbAddressInfo_28 extends _i1.SmartFake
-    implements _i29.FrbAddressInfo {
-  _FakeFrbAddressInfo_28(
+class _FakeWalletsDataProvider_28 extends _i1.SmartFake
+    implements _i29.WalletsDataProvider {
+  _FakeWalletsDataProvider_28(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -421,9 +421,9 @@ class _FakeFrbAddressInfo_28 extends _i1.SmartFake
         );
 }
 
-class _FakeExchangeRateDao_29 extends _i1.SmartFake
-    implements _i30.ExchangeRateDao {
-  _FakeExchangeRateDao_29(
+class _FakeFrbAddressInfo_29 extends _i1.SmartFake
+    implements _i30.FrbAddressInfo {
+  _FakeFrbAddressInfo_29(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -432,9 +432,9 @@ class _FakeExchangeRateDao_29 extends _i1.SmartFake
         );
 }
 
-class _FakeTransactionDao_30 extends _i1.SmartFake
-    implements _i31.TransactionDao {
-  _FakeTransactionDao_30(
+class _FakeExchangeRateDao_30 extends _i1.SmartFake
+    implements _i31.ExchangeRateDao {
+  _FakeExchangeRateDao_30(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -443,9 +443,9 @@ class _FakeTransactionDao_30 extends _i1.SmartFake
         );
 }
 
-class _FakeServerTransactionData_31 extends _i1.SmartFake
-    implements _i32.ServerTransactionData {
-  _FakeServerTransactionData_31(
+class _FakeTransactionDao_31 extends _i1.SmartFake
+    implements _i32.TransactionDao {
+  _FakeTransactionDao_31(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -454,9 +454,9 @@ class _FakeServerTransactionData_31 extends _i1.SmartFake
         );
 }
 
-class _FakeUnleashClient_32 extends _i1.SmartFake
-    implements _i33.UnleashClient {
-  _FakeUnleashClient_32(
+class _FakeServerTransactionData_32 extends _i1.SmartFake
+    implements _i33.ServerTransactionData {
+  _FakeServerTransactionData_32(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -465,9 +465,9 @@ class _FakeUnleashClient_32 extends _i1.SmartFake
         );
 }
 
-class _FakeFrbUnleashClient_33 extends _i1.SmartFake
-    implements _i34.FrbUnleashClient {
-  _FakeFrbUnleashClient_33(
+class _FakeUnleashClient_33 extends _i1.SmartFake
+    implements _i34.UnleashClient {
+  _FakeUnleashClient_33(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -476,8 +476,9 @@ class _FakeFrbUnleashClient_33 extends _i1.SmartFake
         );
 }
 
-class _FakeApiEnv_34 extends _i1.SmartFake implements _i35.ApiEnv {
-  _FakeApiEnv_34(
+class _FakeFrbUnleashClient_34 extends _i1.SmartFake
+    implements _i35.FrbUnleashClient {
+  _FakeFrbUnleashClient_34(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -486,9 +487,8 @@ class _FakeApiEnv_34 extends _i1.SmartFake implements _i35.ApiEnv {
         );
 }
 
-class _FakeProtonWalletUser_35 extends _i1.SmartFake
-    implements _i36.ProtonWalletUser {
-  _FakeProtonWalletUser_35(
+class _FakeApiEnv_35 extends _i1.SmartFake implements _i36.ApiEnv {
+  _FakeApiEnv_35(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -497,9 +497,9 @@ class _FakeProtonWalletUser_35 extends _i1.SmartFake
         );
 }
 
-class _FakeProtonUsersClient_36 extends _i1.SmartFake
-    implements _i37.ProtonUsersClient {
-  _FakeProtonUsersClient_36(
+class _FakeProtonWalletUser_36 extends _i1.SmartFake
+    implements _i37.ProtonWalletUser {
+  _FakeProtonWalletUser_36(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -508,8 +508,9 @@ class _FakeProtonUsersClient_36 extends _i1.SmartFake
         );
 }
 
-class _FakeUserQueries_37 extends _i1.SmartFake implements _i38.UserQueries {
-  _FakeUserQueries_37(
+class _FakeProtonUsersClient_37 extends _i1.SmartFake
+    implements _i38.ProtonUsersClient {
+  _FakeProtonUsersClient_37(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -518,9 +519,8 @@ class _FakeUserQueries_37 extends _i1.SmartFake implements _i38.UserQueries {
         );
 }
 
-class _FakeUserKeysQueries_38 extends _i1.SmartFake
-    implements _i39.UserKeysQueries {
-  _FakeUserKeysQueries_38(
+class _FakeUserQueries_38 extends _i1.SmartFake implements _i39.UserQueries {
+  _FakeUserQueries_38(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -529,9 +529,9 @@ class _FakeUserKeysQueries_38 extends _i1.SmartFake
         );
 }
 
-class _FakeSettingsClient_39 extends _i1.SmartFake
-    implements _i40.SettingsClient {
-  _FakeSettingsClient_39(
+class _FakeUserKeysQueries_39 extends _i1.SmartFake
+    implements _i40.UserKeysQueries {
+  _FakeUserKeysQueries_39(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -540,9 +540,9 @@ class _FakeSettingsClient_39 extends _i1.SmartFake
         );
 }
 
-class _FakeWalletUserSettingsQueries_40 extends _i1.SmartFake
-    implements _i41.WalletUserSettingsQueries {
-  _FakeWalletUserSettingsQueries_40(
+class _FakeSettingsClient_40 extends _i1.SmartFake
+    implements _i41.SettingsClient {
+  _FakeSettingsClient_40(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -551,9 +551,9 @@ class _FakeWalletUserSettingsQueries_40 extends _i1.SmartFake
         );
 }
 
-class _FakeApiWalletData_41 extends _i1.SmartFake
-    implements _i42.ApiWalletData {
-  _FakeApiWalletData_41(
+class _FakeWalletUserSettingsQueries_41 extends _i1.SmartFake
+    implements _i42.WalletUserSettingsQueries {
+  _FakeWalletUserSettingsQueries_41(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -562,9 +562,9 @@ class _FakeApiWalletData_41 extends _i1.SmartFake
         );
 }
 
-class _FakeApiWalletAccount_42 extends _i1.SmartFake
-    implements _i43.ApiWalletAccount {
-  _FakeApiWalletAccount_42(
+class _FakeApiWalletData_42 extends _i1.SmartFake
+    implements _i43.ApiWalletData {
+  _FakeApiWalletData_42(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -573,9 +573,9 @@ class _FakeApiWalletAccount_42 extends _i1.SmartFake
         );
 }
 
-class _FakeWalletKeyStore_43 extends _i1.SmartFake
-    implements _i44.WalletKeyStore {
-  _FakeWalletKeyStore_43(
+class _FakeApiWalletAccount_43 extends _i1.SmartFake
+    implements _i44.ApiWalletAccount {
+  _FakeApiWalletAccount_43(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -584,9 +584,9 @@ class _FakeWalletKeyStore_43 extends _i1.SmartFake
         );
 }
 
-class _FakeFrbUnlockedWalletKey_44 extends _i1.SmartFake
-    implements _i45.FrbUnlockedWalletKey {
-  _FakeFrbUnlockedWalletKey_44(
+class _FakeWalletKeyStore_44 extends _i1.SmartFake
+    implements _i45.WalletKeyStore {
+  _FakeWalletKeyStore_44(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -595,9 +595,20 @@ class _FakeFrbUnlockedWalletKey_44 extends _i1.SmartFake
         );
 }
 
-class _FakeWalletKeysProvider_45 extends _i1.SmartFake
-    implements _i46.WalletKeysProvider {
-  _FakeWalletKeysProvider_45(
+class _FakeFrbUnlockedWalletKey_45 extends _i1.SmartFake
+    implements _i46.FrbUnlockedWalletKey {
+  _FakeFrbUnlockedWalletKey_45(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeWalletKeysProvider_46 extends _i1.SmartFake
+    implements _i47.WalletKeysProvider {
+  _FakeWalletKeysProvider_46(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -610,7 +621,7 @@ class _FakeWalletKeysProvider_45 extends _i1.SmartFake
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockPriceGraphDataProvider extends _i1.Mock
-    implements _i47.PriceGraphDataProvider {
+    implements _i48.PriceGraphDataProvider {
   MockPriceGraphDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -637,9 +648,9 @@ class MockPriceGraphDataProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<_i48.PriceGraph?> getPriceGraph({
-    required _i49.FiatCurrency? fiatCurrency,
-    required _i48.Timeframe? timeFrame,
+  _i4.Future<_i49.PriceGraph?> getPriceGraph({
+    required _i50.FiatCurrency? fiatCurrency,
+    required _i49.Timeframe? timeFrame,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -650,8 +661,8 @@ class MockPriceGraphDataProvider extends _i1.Mock
             #timeFrame: timeFrame,
           },
         ),
-        returnValue: _i4.Future<_i48.PriceGraph?>.value(),
-      ) as _i4.Future<_i48.PriceGraph?>);
+        returnValue: _i4.Future<_i49.PriceGraph?>.value(),
+      ) as _i4.Future<_i49.PriceGraph?>);
 
   @override
   _i4.Future<void> clear() => (super.noSuchMethod(
@@ -711,8 +722,8 @@ class MockPriceGraphDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -725,7 +736,7 @@ class MockPriceGraphDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -745,7 +756,7 @@ class MockPriceGraphDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -790,7 +801,7 @@ class MockPriceGraphDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockExchangeDataProvider extends _i1.Mock
-    implements _i51.ExchangeDataProvider {
+    implements _i52.ExchangeDataProvider {
   MockExchangeDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -867,7 +878,7 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   _i4.Future<void> runOnce(
-    _i49.FiatCurrency? fiatCurrency, {
+    _i50.FiatCurrency? fiatCurrency, {
     int? time,
   }) =>
       (super.noSuchMethod(
@@ -882,7 +893,7 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   _i4.Future<_i5.ProtonExchangeRate> getExchangeRate(
-    _i49.FiatCurrency? fiatCurrency, {
+    _i50.FiatCurrency? fiatCurrency, {
     int? time,
   }) =>
       (super.noSuchMethod(
@@ -904,7 +915,7 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   _i5.ProtonExchangeRate? getExchangeRateOrNull(
-          _i49.FiatCurrency? fiatCurrency) =>
+          _i50.FiatCurrency? fiatCurrency) =>
       (super.noSuchMethod(Invocation.method(
         #getExchangeRateOrNull,
         [fiatCurrency],
@@ -922,7 +933,7 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   String getKey(
-    _i49.FiatCurrency? fiatCurrency, {
+    _i50.FiatCurrency? fiatCurrency, {
     int? time,
   }) =>
       (super.noSuchMethod(
@@ -931,7 +942,7 @@ class MockExchangeDataProvider extends _i1.Mock
           [fiatCurrency],
           {#time: time},
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #getKey,
@@ -989,8 +1000,8 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -1003,7 +1014,7 @@ class MockExchangeDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -1023,7 +1034,7 @@ class MockExchangeDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -1068,7 +1079,7 @@ class MockExchangeDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAddressKeyProvider extends _i1.Mock
-    implements _i53.AddressKeyProvider {
+    implements _i54.AddressKeyProvider {
   MockAddressKeyProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -1085,7 +1096,7 @@ class MockAddressKeyProvider extends _i1.Mock
   @override
   String get key => (super.noSuchMethod(
         Invocation.getter(#key),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#key),
         ),
@@ -1121,13 +1132,13 @@ class MockAddressKeyProvider extends _i1.Mock
       ) as _i8.UserManager);
 
   @override
-  List<_i54.ProtonAddress> get addresses => (super.noSuchMethod(
+  List<_i55.ProtonAddress> get addresses => (super.noSuchMethod(
         Invocation.getter(#addresses),
-        returnValue: <_i54.ProtonAddress>[],
-      ) as List<_i54.ProtonAddress>);
+        returnValue: <_i55.ProtonAddress>[],
+      ) as List<_i55.ProtonAddress>);
 
   @override
-  set addresses(List<_i54.ProtonAddress>? _addresses) => super.noSuchMethod(
+  set addresses(List<_i55.ProtonAddress>? _addresses) => super.noSuchMethod(
         Invocation.setter(
           #addresses,
           _addresses,
@@ -1157,38 +1168,38 @@ class MockAddressKeyProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<List<_i54.ProtonAddressKey>> getAddressKeysForTL() =>
+  _i4.Future<List<_i55.ProtonAddressKey>> getAddressKeysForTL() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAddressKeysForTL,
           [],
         ),
-        returnValue: _i4.Future<List<_i54.ProtonAddressKey>>.value(
-            <_i54.ProtonAddressKey>[]),
-      ) as _i4.Future<List<_i54.ProtonAddressKey>>);
+        returnValue: _i4.Future<List<_i55.ProtonAddressKey>>.value(
+            <_i55.ProtonAddressKey>[]),
+      ) as _i4.Future<List<_i55.ProtonAddressKey>>);
 
   @override
-  _i4.Future<_i54.ProtonAddressKey?> getPrimaryAddressKey(String? addressID) =>
+  _i4.Future<_i55.ProtonAddressKey?> getPrimaryAddressKey(String? addressID) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPrimaryAddressKey,
           [addressID],
         ),
-        returnValue: _i4.Future<_i54.ProtonAddressKey?>.value(),
-      ) as _i4.Future<_i54.ProtonAddressKey?>);
+        returnValue: _i4.Future<_i55.ProtonAddressKey?>.value(),
+      ) as _i4.Future<_i55.ProtonAddressKey?>);
 
   @override
-  _i4.Future<List<_i54.ProtonAddress>> getAddresses() => (super.noSuchMethod(
+  _i4.Future<List<_i55.ProtonAddress>> getAddresses() => (super.noSuchMethod(
         Invocation.method(
           #getAddresses,
           [],
         ),
         returnValue:
-            _i4.Future<List<_i54.ProtonAddress>>.value(<_i54.ProtonAddress>[]),
-      ) as _i4.Future<List<_i54.ProtonAddress>>);
+            _i4.Future<List<_i55.ProtonAddress>>.value(<_i55.ProtonAddress>[]),
+      ) as _i4.Future<List<_i55.ProtonAddress>>);
 
   @override
-  _i4.Future<List<_i54.AllKeyAddressKey>> getAllPublicKeys(
+  _i4.Future<List<_i55.AllKeyAddressKey>> getAllPublicKeys(
     String? email, {
     required int? internalOnly,
   }) =>
@@ -1198,9 +1209,9 @@ class MockAddressKeyProvider extends _i1.Mock
           [email],
           {#internalOnly: internalOnly},
         ),
-        returnValue: _i4.Future<List<_i54.AllKeyAddressKey>>.value(
-            <_i54.AllKeyAddressKey>[]),
-      ) as _i4.Future<List<_i54.AllKeyAddressKey>>);
+        returnValue: _i4.Future<List<_i55.AllKeyAddressKey>>.value(
+            <_i55.AllKeyAddressKey>[]),
+      ) as _i4.Future<List<_i55.AllKeyAddressKey>>);
 
   @override
   _i4.Future<void> clear() => (super.noSuchMethod(
@@ -1260,8 +1271,8 @@ class MockAddressKeyProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -1274,7 +1285,7 @@ class MockAddressKeyProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -1294,7 +1305,7 @@ class MockAddressKeyProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -1339,7 +1350,7 @@ class MockAddressKeyProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockBDKTransactionDataProvider extends _i1.Mock
-    implements _i15.BDKTransactionDataProvider {
+    implements _i16.BDKTransactionDataProvider {
   MockBDKTransactionDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -1363,15 +1374,6 @@ class MockBDKTransactionDataProvider extends _i1.Mock
       ) as _i10.AccountDao);
 
   @override
-  set blockchain(_i55.FrbBlockchainClient? _blockchain) => super.noSuchMethod(
-        Invocation.setter(
-          #blockchain,
-          _blockchain,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
   _i11.WalletClient get walletClient => (super.noSuchMethod(
         Invocation.getter(#walletClient),
         returnValue: _FakeWalletClient_9(
@@ -1381,32 +1383,41 @@ class MockBDKTransactionDataProvider extends _i1.Mock
       ) as _i11.WalletClient);
 
   @override
-  _i12.PreferencesManager get shared => (super.noSuchMethod(
+  _i12.FrbBlockchainClient get blockchainClient => (super.noSuchMethod(
+        Invocation.getter(#blockchainClient),
+        returnValue: _FakeFrbBlockchainClient_10(
+          this,
+          Invocation.getter(#blockchainClient),
+        ),
+      ) as _i12.FrbBlockchainClient);
+
+  @override
+  _i13.PreferencesManager get shared => (super.noSuchMethod(
         Invocation.getter(#shared),
-        returnValue: _FakePreferencesManager_10(
+        returnValue: _FakePreferencesManager_11(
           this,
           Invocation.getter(#shared),
         ),
-      ) as _i12.PreferencesManager);
+      ) as _i13.PreferencesManager);
 
   @override
-  _i13.UserSettingsDataProvider get userSettingsDataProvider =>
+  _i14.UserSettingsDataProvider get userSettingsDataProvider =>
       (super.noSuchMethod(
         Invocation.getter(#userSettingsDataProvider),
-        returnValue: _FakeUserSettingsDataProvider_11(
+        returnValue: _FakeUserSettingsDataProvider_12(
           this,
           Invocation.getter(#userSettingsDataProvider),
         ),
-      ) as _i13.UserSettingsDataProvider);
+      ) as _i14.UserSettingsDataProvider);
 
   @override
-  _i14.UnleashDataProvider get unleashDataProvider => (super.noSuchMethod(
+  _i15.UnleashDataProvider get unleashDataProvider => (super.noSuchMethod(
         Invocation.getter(#unleashDataProvider),
-        returnValue: _FakeUnleashDataProvider_12(
+        returnValue: _FakeUnleashDataProvider_13(
           this,
           Invocation.getter(#unleashDataProvider),
         ),
-      ) as _i14.UnleashDataProvider);
+      ) as _i15.UnleashDataProvider);
 
   @override
   Map<String, bool> get isWalletSyncing => (super.noSuchMethod(
@@ -1471,7 +1482,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i15.BDKTransactionData> getBDKTransactionDataByWalletAccount(
+  _i4.Future<_i16.BDKTransactionData> getBDKTransactionDataByWalletAccount(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,
   ) =>
@@ -1483,8 +1494,8 @@ class MockBDKTransactionDataProvider extends _i1.Mock
             accountModel,
           ],
         ),
-        returnValue: _i4.Future<_i15.BDKTransactionData>.value(
-            _FakeBDKTransactionData_13(
+        returnValue: _i4.Future<_i16.BDKTransactionData>.value(
+            _FakeBDKTransactionData_14(
           this,
           Invocation.method(
             #getBDKTransactionDataByWalletAccount,
@@ -1494,7 +1505,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
             ],
           ),
         )),
-      ) as _i4.Future<_i15.BDKTransactionData>);
+      ) as _i4.Future<_i16.BDKTransactionData>);
 
   @override
   bool lastSyncTimeCheck(
@@ -1541,7 +1552,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
             accountModel,
           ],
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #getPositiveBalanceCheckID,
@@ -1601,7 +1612,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
             accountModel,
           ],
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #getSyncCheckID,
@@ -1781,8 +1792,8 @@ class MockBDKTransactionDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -1795,7 +1806,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -1815,7 +1826,7 @@ class MockBDKTransactionDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -1866,13 +1877,13 @@ class MockBlockInfoDataProvider extends _i1.Mock
   }
 
   @override
-  _i16.BlockClient get blockClient => (super.noSuchMethod(
+  _i17.BlockClient get blockClient => (super.noSuchMethod(
         Invocation.getter(#blockClient),
-        returnValue: _FakeBlockClient_14(
+        returnValue: _FakeBlockClient_15(
           this,
           Invocation.getter(#blockClient),
         ),
-      ) as _i16.BlockClient);
+      ) as _i17.BlockClient);
 
   @override
   int get blockHeight => (super.noSuchMethod(
@@ -1998,8 +2009,8 @@ class MockBlockInfoDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -2012,7 +2023,7 @@ class MockBlockInfoDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -2032,7 +2043,7 @@ class MockBlockInfoDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -2083,22 +2094,22 @@ class MockConnectivityProvider extends _i1.Mock
   }
 
   @override
-  _i17.Connectivity get connectivity => (super.noSuchMethod(
+  _i18.Connectivity get connectivity => (super.noSuchMethod(
         Invocation.getter(#connectivity),
-        returnValue: _FakeConnectivity_15(
+        returnValue: _FakeConnectivity_16(
           this,
           Invocation.getter(#connectivity),
         ),
-      ) as _i17.Connectivity);
+      ) as _i18.Connectivity);
 
   @override
-  List<_i17.ConnectivityResult> get connectivityResult => (super.noSuchMethod(
+  List<_i18.ConnectivityResult> get connectivityResult => (super.noSuchMethod(
         Invocation.getter(#connectivityResult),
-        returnValue: <_i17.ConnectivityResult>[],
-      ) as List<_i17.ConnectivityResult>);
+        returnValue: <_i18.ConnectivityResult>[],
+      ) as List<_i18.ConnectivityResult>);
 
   @override
-  set connectivityResult(List<_i17.ConnectivityResult>? _connectivityResult) =>
+  set connectivityResult(List<_i18.ConnectivityResult>? _connectivityResult) =>
       super.noSuchMethod(
         Invocation.setter(
           #connectivityResult,
@@ -2205,8 +2216,8 @@ class MockConnectivityProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -2219,7 +2230,7 @@ class MockConnectivityProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -2239,7 +2250,7 @@ class MockConnectivityProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -2290,27 +2301,27 @@ class MockContactsDataProvider extends _i1.Mock
   }
 
   @override
-  _i18.ContactsClient get contactClient => (super.noSuchMethod(
+  _i19.ContactsClient get contactClient => (super.noSuchMethod(
         Invocation.getter(#contactClient),
-        returnValue: _FakeContactsClient_16(
+        returnValue: _FakeContactsClient_17(
           this,
           Invocation.getter(#contactClient),
         ),
-      ) as _i18.ContactsClient);
+      ) as _i19.ContactsClient);
 
   @override
-  _i19.ContactsDao get contactsDao => (super.noSuchMethod(
+  _i20.ContactsDao get contactsDao => (super.noSuchMethod(
         Invocation.getter(#contactsDao),
-        returnValue: _FakeContactsDao_17(
+        returnValue: _FakeContactsDao_18(
           this,
           Invocation.getter(#contactsDao),
         ),
-      ) as _i19.ContactsDao);
+      ) as _i20.ContactsDao);
 
   @override
   String get userID => (super.noSuchMethod(
         Invocation.getter(#userID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#userID),
         ),
@@ -2496,8 +2507,8 @@ class MockContactsDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -2510,7 +2521,7 @@ class MockContactsDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -2530,7 +2541,7 @@ class MockContactsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -2581,13 +2592,13 @@ class MockExclusiveInviteDataProvider extends _i1.Mock
   }
 
   @override
-  _i20.InviteClient get inviteClient => (super.noSuchMethod(
+  _i21.InviteClient get inviteClient => (super.noSuchMethod(
         Invocation.getter(#inviteClient),
-        returnValue: _FakeInviteClient_18(
+        returnValue: _FakeInviteClient_19(
           this,
           Invocation.getter(#inviteClient),
         ),
-      ) as _i20.InviteClient);
+      ) as _i21.InviteClient);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
@@ -2710,8 +2721,8 @@ class MockExclusiveInviteDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -2724,7 +2735,7 @@ class MockExclusiveInviteDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -2744,7 +2755,7 @@ class MockExclusiveInviteDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -2795,23 +2806,23 @@ class MockGatewayDataProvider extends _i1.Mock
   }
 
   @override
-  _i21.OnRampGatewayClient get onRampGatewayClient => (super.noSuchMethod(
+  _i22.OnRampGatewayClient get onRampGatewayClient => (super.noSuchMethod(
         Invocation.getter(#onRampGatewayClient),
-        returnValue: _FakeOnRampGatewayClient_19(
+        returnValue: _FakeOnRampGatewayClient_20(
           this,
           Invocation.getter(#onRampGatewayClient),
         ),
-      ) as _i21.OnRampGatewayClient);
+      ) as _i22.OnRampGatewayClient);
 
   @override
-  Map<_i22.GatewayProvider, List<_i22.ApiCountry>> get countries =>
+  Map<_i23.GatewayProvider, List<_i23.ApiCountry>> get countries =>
       (super.noSuchMethod(
         Invocation.getter(#countries),
-        returnValue: <_i22.GatewayProvider, List<_i22.ApiCountry>>{},
-      ) as Map<_i22.GatewayProvider, List<_i22.ApiCountry>>);
+        returnValue: <_i23.GatewayProvider, List<_i23.ApiCountry>>{},
+      ) as Map<_i23.GatewayProvider, List<_i23.ApiCountry>>);
 
   @override
-  set countries(Map<_i22.GatewayProvider, List<_i22.ApiCountry>>? _countries) =>
+  set countries(Map<_i23.GatewayProvider, List<_i23.ApiCountry>>? _countries) =>
       super.noSuchMethod(
         Invocation.setter(
           #countries,
@@ -2821,16 +2832,16 @@ class MockGatewayDataProvider extends _i1.Mock
       );
 
   @override
-  Map<_i22.GatewayProvider, List<_i22.ApiSimpleFiatCurrency>>
+  Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>
       get fiatCurrencies => (super.noSuchMethod(
             Invocation.getter(#fiatCurrencies),
-            returnValue: <_i22.GatewayProvider,
-                List<_i22.ApiSimpleFiatCurrency>>{},
-          ) as Map<_i22.GatewayProvider, List<_i22.ApiSimpleFiatCurrency>>);
+            returnValue: <_i23.GatewayProvider,
+                List<_i23.ApiSimpleFiatCurrency>>{},
+          ) as Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>);
 
   @override
   set fiatCurrencies(
-          Map<_i22.GatewayProvider, List<_i22.ApiSimpleFiatCurrency>>?
+          Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>?
               _fiatCurrencies) =>
       super.noSuchMethod(
         Invocation.setter(
@@ -2841,15 +2852,15 @@ class MockGatewayDataProvider extends _i1.Mock
       );
 
   @override
-  Map<_i22.GatewayProvider, List<_i22.PaymentMethod>> get paymentMethods =>
+  Map<_i23.GatewayProvider, List<_i23.PaymentMethod>> get paymentMethods =>
       (super.noSuchMethod(
         Invocation.getter(#paymentMethods),
-        returnValue: <_i22.GatewayProvider, List<_i22.PaymentMethod>>{},
-      ) as Map<_i22.GatewayProvider, List<_i22.PaymentMethod>>);
+        returnValue: <_i23.GatewayProvider, List<_i23.PaymentMethod>>{},
+      ) as Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>);
 
   @override
   set paymentMethods(
-          Map<_i22.GatewayProvider, List<_i22.PaymentMethod>>?
+          Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>?
               _paymentMethods) =>
       super.noSuchMethod(
         Invocation.setter(
@@ -2860,13 +2871,13 @@ class MockGatewayDataProvider extends _i1.Mock
       );
 
   @override
-  List<_i22.GatewayProvider> get supportedProviders => (super.noSuchMethod(
+  List<_i23.GatewayProvider> get supportedProviders => (super.noSuchMethod(
         Invocation.getter(#supportedProviders),
-        returnValue: <_i22.GatewayProvider>[],
-      ) as List<_i22.GatewayProvider>);
+        returnValue: <_i23.GatewayProvider>[],
+      ) as List<_i23.GatewayProvider>);
 
   @override
-  set supportedProviders(List<_i22.GatewayProvider>? _supportedProviders) =>
+  set supportedProviders(List<_i23.GatewayProvider>? _supportedProviders) =>
       super.noSuchMethod(
         Invocation.setter(
           #supportedProviders,
@@ -2876,13 +2887,13 @@ class MockGatewayDataProvider extends _i1.Mock
       );
 
   @override
-  Map<_i22.GatewayProvider, List<_i22.Quote>> get quoted => (super.noSuchMethod(
+  Map<_i23.GatewayProvider, List<_i23.Quote>> get quoted => (super.noSuchMethod(
         Invocation.getter(#quoted),
-        returnValue: <_i22.GatewayProvider, List<_i22.Quote>>{},
-      ) as Map<_i22.GatewayProvider, List<_i22.Quote>>);
+        returnValue: <_i23.GatewayProvider, List<_i23.Quote>>{},
+      ) as Map<_i23.GatewayProvider, List<_i23.Quote>>);
 
   @override
-  set quoted(Map<_i22.GatewayProvider, List<_i22.Quote>>? _quoted) =>
+  set quoted(Map<_i23.GatewayProvider, List<_i23.Quote>>? _quoted) =>
       super.noSuchMethod(
         Invocation.setter(
           #quoted,
@@ -2922,8 +2933,8 @@ class MockGatewayDataProvider extends _i1.Mock
       ) as _i4.Future<List<String>>);
 
   @override
-  _i22.ApiCountry getApiCountry(
-    _i22.GatewayProvider? provider,
+  _i23.ApiCountry getApiCountry(
+    _i23.GatewayProvider? provider,
     String? localCode,
   ) =>
       (super.noSuchMethod(
@@ -2934,7 +2945,7 @@ class MockGatewayDataProvider extends _i1.Mock
             localCode,
           ],
         ),
-        returnValue: _FakeApiCountry_20(
+        returnValue: _FakeApiCountry_21(
           this,
           Invocation.method(
             #getApiCountry,
@@ -2944,11 +2955,11 @@ class MockGatewayDataProvider extends _i1.Mock
             ],
           ),
         ),
-      ) as _i22.ApiCountry);
+      ) as _i23.ApiCountry);
 
   @override
   _i4.Future<List<String>> getCurrencies(
-    _i22.GatewayProvider? provider,
+    _i23.GatewayProvider? provider,
     String? localCode,
   ) =>
       (super.noSuchMethod(
@@ -2963,8 +2974,8 @@ class MockGatewayDataProvider extends _i1.Mock
       ) as _i4.Future<List<String>>);
 
   @override
-  _i22.ApiSimpleFiatCurrency getApiCountryFiatCurrency(
-    _i22.GatewayProvider? provider,
+  _i23.ApiSimpleFiatCurrency getApiCountryFiatCurrency(
+    _i23.GatewayProvider? provider,
     String? fiatCurrency,
   ) =>
       (super.noSuchMethod(
@@ -2975,7 +2986,7 @@ class MockGatewayDataProvider extends _i1.Mock
             fiatCurrency,
           ],
         ),
-        returnValue: _FakeApiSimpleFiatCurrency_21(
+        returnValue: _FakeApiSimpleFiatCurrency_22(
           this,
           Invocation.method(
             #getApiCountryFiatCurrency,
@@ -2985,10 +2996,10 @@ class MockGatewayDataProvider extends _i1.Mock
             ],
           ),
         ),
-      ) as _i22.ApiSimpleFiatCurrency);
+      ) as _i23.ApiSimpleFiatCurrency);
 
   @override
-  _i4.Future<void> getPaymentMethods(_i49.FiatCurrency? fiatCurrency) =>
+  _i4.Future<void> getPaymentMethods(_i50.FiatCurrency? fiatCurrency) =>
       (super.noSuchMethod(
         Invocation.method(
           #getPaymentMethods,
@@ -2999,10 +3010,10 @@ class MockGatewayDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<Map<_i22.GatewayProvider, List<_i22.Quote>>> getQuotes(
+  _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>> getQuotes(
     String? fiatCurrency,
     String? amount,
-    List<_i22.GatewayProvider>? providers,
+    List<_i23.GatewayProvider>? providers,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3014,15 +3025,15 @@ class MockGatewayDataProvider extends _i1.Mock
           ],
         ),
         returnValue:
-            _i4.Future<Map<_i22.GatewayProvider, List<_i22.Quote>>>.value(
-                <_i22.GatewayProvider, List<_i22.Quote>>{}),
-      ) as _i4.Future<Map<_i22.GatewayProvider, List<_i22.Quote>>>);
+            _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>.value(
+                <_i23.GatewayProvider, List<_i23.Quote>>{}),
+      ) as _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>);
 
   @override
-  _i4.Future<List<_i22.Quote>?> getCachedQuote(
+  _i4.Future<List<_i23.Quote>?> getCachedQuote(
     String? fiatCurrency,
     String? amount,
-    _i22.GatewayProvider? provider,
+    _i23.GatewayProvider? provider,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3033,16 +3044,16 @@ class MockGatewayDataProvider extends _i1.Mock
             provider,
           ],
         ),
-        returnValue: _i4.Future<List<_i22.Quote>?>.value(),
-      ) as _i4.Future<List<_i22.Quote>?>);
+        returnValue: _i4.Future<List<_i23.Quote>?>.value(),
+      ) as _i4.Future<List<_i23.Quote>?>);
 
   @override
   _i4.Future<String> checkout(
     String? amount,
     String? btcAddress,
     String? fiatCurrency,
-    _i22.PaymentMethod? payMethod,
-    _i22.GatewayProvider? provider,
+    _i23.PaymentMethod? payMethod,
+    _i23.GatewayProvider? provider,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -3055,7 +3066,7 @@ class MockGatewayDataProvider extends _i1.Mock
             provider,
           ],
         ),
-        returnValue: _i4.Future<String>.value(_i52.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
           this,
           Invocation.method(
             #checkout,
@@ -3128,8 +3139,8 @@ class MockGatewayDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3142,7 +3153,7 @@ class MockGatewayDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -3162,7 +3173,7 @@ class MockGatewayDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -3207,19 +3218,19 @@ class MockGatewayDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLocalBitcoinAddressDataProvider extends _i1.Mock
-    implements _i25.LocalBitcoinAddressDataProvider {
+    implements _i26.LocalBitcoinAddressDataProvider {
   MockLocalBitcoinAddressDataProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i23.WalletDao get walletDao => (super.noSuchMethod(
+  _i24.WalletDao get walletDao => (super.noSuchMethod(
         Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_22(
+        returnValue: _FakeWalletDao_23(
           this,
           Invocation.getter(#walletDao),
         ),
-      ) as _i23.WalletDao);
+      ) as _i24.WalletDao);
 
   @override
   _i10.AccountDao get accountDao => (super.noSuchMethod(
@@ -3231,18 +3242,18 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
       ) as _i10.AccountDao);
 
   @override
-  _i24.BitcoinAddressDao get bitcoinAddressDao => (super.noSuchMethod(
+  _i25.BitcoinAddressDao get bitcoinAddressDao => (super.noSuchMethod(
         Invocation.getter(#bitcoinAddressDao),
-        returnValue: _FakeBitcoinAddressDao_23(
+        returnValue: _FakeBitcoinAddressDao_24(
           this,
           Invocation.getter(#bitcoinAddressDao),
         ),
-      ) as _i24.BitcoinAddressDao);
+      ) as _i25.BitcoinAddressDao);
 
   @override
   String get userID => (super.noSuchMethod(
         Invocation.getter(#userID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#userID),
         ),
@@ -3258,15 +3269,15 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
       ) as _i9.WalletManager);
 
   @override
-  Map<String, _i25.AccountBitcoinAddressesInfo> get accountID2AddressesInfo =>
+  Map<String, _i26.AccountBitcoinAddressesInfo> get accountID2AddressesInfo =>
       (super.noSuchMethod(
         Invocation.getter(#accountID2AddressesInfo),
-        returnValue: <String, _i25.AccountBitcoinAddressesInfo>{},
-      ) as Map<String, _i25.AccountBitcoinAddressesInfo>);
+        returnValue: <String, _i26.AccountBitcoinAddressesInfo>{},
+      ) as Map<String, _i26.AccountBitcoinAddressesInfo>);
 
   @override
   set accountID2AddressesInfo(
-          Map<String, _i25.AccountBitcoinAddressesInfo>?
+          Map<String, _i26.AccountBitcoinAddressesInfo>?
               _accountID2AddressesInfo) =>
       super.noSuchMethod(
         Invocation.setter(
@@ -3298,7 +3309,7 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<Map<String, _i29.FrbAddressInfo>> getBitcoinAddress(
+  _i4.Future<Map<String, _i30.FrbAddressInfo>> getBitcoinAddress(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,
     _i65.FrbAccount? account, {
@@ -3314,9 +3325,9 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
           ],
           {#maxAddressIndex: maxAddressIndex},
         ),
-        returnValue: _i4.Future<Map<String, _i29.FrbAddressInfo>>.value(
-            <String, _i29.FrbAddressInfo>{}),
-      ) as _i4.Future<Map<String, _i29.FrbAddressInfo>>);
+        returnValue: _i4.Future<Map<String, _i30.FrbAddressInfo>>.value(
+            <String, _i30.FrbAddressInfo>{}),
+      ) as _i4.Future<Map<String, _i30.FrbAddressInfo>>);
 
   @override
   _i4.Future<int> getLastUsedIndex(
@@ -3335,7 +3346,7 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
       ) as _i4.Future<int>);
 
   @override
-  _i4.Future<_i25.LocalBitcoinAddressData> getDataByWalletAccount(
+  _i4.Future<_i26.LocalBitcoinAddressData> getDataByWalletAccount(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,
   ) =>
@@ -3347,8 +3358,8 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
             accountModel,
           ],
         ),
-        returnValue: _i4.Future<_i25.LocalBitcoinAddressData>.value(
-            _FakeLocalBitcoinAddressData_24(
+        returnValue: _i4.Future<_i26.LocalBitcoinAddressData>.value(
+            _FakeLocalBitcoinAddressData_25(
           this,
           Invocation.method(
             #getDataByWalletAccount,
@@ -3358,7 +3369,7 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
             ],
           ),
         )),
-      ) as _i4.Future<_i25.LocalBitcoinAddressData>);
+      ) as _i4.Future<_i26.LocalBitcoinAddressData>);
 
   @override
   _i4.Future<void> insertOrUpdate(
@@ -3446,8 +3457,8 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3460,7 +3471,7 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -3480,7 +3491,7 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -3531,13 +3542,13 @@ class MockPoolAddressDataProvider extends _i1.Mock
   }
 
   @override
-  _i26.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
+  _i27.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
         Invocation.getter(#bitcoinAddressClient),
-        returnValue: _FakeBitcoinAddressClient_25(
+        returnValue: _FakeBitcoinAddressClient_26(
           this,
           Invocation.getter(#bitcoinAddressClient),
         ),
-      ) as _i26.BitcoinAddressClient);
+      ) as _i27.BitcoinAddressClient);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
@@ -3583,7 +3594,7 @@ class MockPoolAddressDataProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<List<_i42.ApiWalletBitcoinAddress>> getWalletBitcoinAddresses(
+  _i4.Future<List<_i43.ApiWalletBitcoinAddress>> getWalletBitcoinAddresses(
     String? walletID,
     String? accountID,
     int? onlyRequest,
@@ -3597,9 +3608,9 @@ class MockPoolAddressDataProvider extends _i1.Mock
             onlyRequest,
           ],
         ),
-        returnValue: _i4.Future<List<_i42.ApiWalletBitcoinAddress>>.value(
-            <_i42.ApiWalletBitcoinAddress>[]),
-      ) as _i4.Future<List<_i42.ApiWalletBitcoinAddress>>);
+        returnValue: _i4.Future<List<_i43.ApiWalletBitcoinAddress>>.value(
+            <_i43.ApiWalletBitcoinAddress>[]),
+      ) as _i4.Future<List<_i43.ApiWalletBitcoinAddress>>);
 
   @override
   _i4.Future<void> clear() => (super.noSuchMethod(
@@ -3659,8 +3670,8 @@ class MockPoolAddressDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3673,7 +3684,7 @@ class MockPoolAddressDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -3693,7 +3704,7 @@ class MockPoolAddressDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -3744,13 +3755,13 @@ class MockProtonAddressProvider extends _i1.Mock
   }
 
   @override
-  _i27.AddressDao get addressDao => (super.noSuchMethod(
+  _i28.AddressDao get addressDao => (super.noSuchMethod(
         Invocation.getter(#addressDao),
-        returnValue: _FakeAddressDao_26(
+        returnValue: _FakeAddressDao_27(
           this,
           Invocation.getter(#addressDao),
         ),
-      ) as _i27.AddressDao);
+      ) as _i28.AddressDao);
 
   @override
   _i2.DataState get state => (super.noSuchMethod(
@@ -3841,8 +3852,8 @@ class MockProtonAddressProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -3855,7 +3866,7 @@ class MockProtonAddressProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -3875,7 +3886,7 @@ class MockProtonAddressProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -3926,13 +3937,13 @@ class MockReceiveAddressDataProvider extends _i1.Mock
   }
 
   @override
-  _i26.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
+  _i27.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
         Invocation.getter(#bitcoinAddressClient),
-        returnValue: _FakeBitcoinAddressClient_25(
+        returnValue: _FakeBitcoinAddressClient_26(
           this,
           Invocation.getter(#bitcoinAddressClient),
         ),
-      ) as _i26.BitcoinAddressClient);
+      ) as _i27.BitcoinAddressClient);
 
   @override
   _i11.WalletClient get walletClient => (super.noSuchMethod(
@@ -3944,19 +3955,28 @@ class MockReceiveAddressDataProvider extends _i1.Mock
       ) as _i11.WalletClient);
 
   @override
-  Map<String, _i29.FrbAddressInfo> get id2AddressInfo => (super.noSuchMethod(
-        Invocation.getter(#id2AddressInfo),
-        returnValue: <String, _i29.FrbAddressInfo>{},
-      ) as Map<String, _i29.FrbAddressInfo>);
+  _i12.FrbBlockchainClient get blockChainClient => (super.noSuchMethod(
+        Invocation.getter(#blockChainClient),
+        returnValue: _FakeFrbBlockchainClient_10(
+          this,
+          Invocation.getter(#blockChainClient),
+        ),
+      ) as _i12.FrbBlockchainClient);
 
   @override
-  _i28.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
+  Map<String, _i30.FrbAddressInfo> get id2AddressInfo => (super.noSuchMethod(
+        Invocation.getter(#id2AddressInfo),
+        returnValue: <String, _i30.FrbAddressInfo>{},
+      ) as Map<String, _i30.FrbAddressInfo>);
+
+  @override
+  _i29.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
         Invocation.getter(#walletDataProvider),
-        returnValue: _FakeWalletsDataProvider_27(
+        returnValue: _FakeWalletsDataProvider_28(
           this,
           Invocation.getter(#walletDataProvider),
         ),
-      ) as _i28.WalletsDataProvider);
+      ) as _i29.WalletsDataProvider);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
@@ -4053,7 +4073,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i29.FrbAddressInfo> getReceiveAddress(
+  _i4.Future<_i30.FrbAddressInfo> getReceiveAddress(
     _i65.FrbAccount? account,
     _i57.AccountModel? accountModel,
   ) =>
@@ -4066,7 +4086,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
           ],
         ),
         returnValue:
-            _i4.Future<_i29.FrbAddressInfo>.value(_FakeFrbAddressInfo_28(
+            _i4.Future<_i30.FrbAddressInfo>.value(_FakeFrbAddressInfo_29(
           this,
           Invocation.method(
             #getReceiveAddress,
@@ -4076,10 +4096,10 @@ class MockReceiveAddressDataProvider extends _i1.Mock
             ],
           ),
         )),
-      ) as _i4.Future<_i29.FrbAddressInfo>);
+      ) as _i4.Future<_i30.FrbAddressInfo>);
 
   @override
-  _i4.Future<_i29.FrbAddressInfo> generateNewReceiveAddress(
+  _i4.Future<_i30.FrbAddressInfo> generateNewReceiveAddress(
     _i65.FrbAccount? account,
     _i57.AccountModel? accountModel,
   ) =>
@@ -4092,7 +4112,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
           ],
         ),
         returnValue:
-            _i4.Future<_i29.FrbAddressInfo>.value(_FakeFrbAddressInfo_28(
+            _i4.Future<_i30.FrbAddressInfo>.value(_FakeFrbAddressInfo_29(
           this,
           Invocation.method(
             #generateNewReceiveAddress,
@@ -4102,7 +4122,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
             ],
           ),
         )),
-      ) as _i4.Future<_i29.FrbAddressInfo>);
+      ) as _i4.Future<_i30.FrbAddressInfo>);
 
   @override
   _i4.Future<void> updateLastUsedIndex(_i57.AccountModel? accountModel) =>
@@ -4173,8 +4193,8 @@ class MockReceiveAddressDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -4187,7 +4207,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -4207,7 +4227,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -4252,7 +4272,7 @@ class MockReceiveAddressDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockServerTransactionDataProvider extends _i1.Mock
-    implements _i32.ServerTransactionDataProvider {
+    implements _i33.ServerTransactionDataProvider {
   MockServerTransactionDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -4289,13 +4309,13 @@ class MockServerTransactionDataProvider extends _i1.Mock
       ) as _i11.WalletClient);
 
   @override
-  _i23.WalletDao get walletDao => (super.noSuchMethod(
+  _i24.WalletDao get walletDao => (super.noSuchMethod(
         Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_22(
+        returnValue: _FakeWalletDao_23(
           this,
           Invocation.getter(#walletDao),
         ),
-      ) as _i23.WalletDao);
+      ) as _i24.WalletDao);
 
   @override
   _i10.AccountDao get accountDao => (super.noSuchMethod(
@@ -4307,42 +4327,42 @@ class MockServerTransactionDataProvider extends _i1.Mock
       ) as _i10.AccountDao);
 
   @override
-  _i30.ExchangeRateDao get exchangeRateDao => (super.noSuchMethod(
+  _i31.ExchangeRateDao get exchangeRateDao => (super.noSuchMethod(
         Invocation.getter(#exchangeRateDao),
-        returnValue: _FakeExchangeRateDao_29(
+        returnValue: _FakeExchangeRateDao_30(
           this,
           Invocation.getter(#exchangeRateDao),
         ),
-      ) as _i30.ExchangeRateDao);
+      ) as _i31.ExchangeRateDao);
 
   @override
-  _i31.TransactionDao get transactionDao => (super.noSuchMethod(
+  _i32.TransactionDao get transactionDao => (super.noSuchMethod(
         Invocation.getter(#transactionDao),
-        returnValue: _FakeTransactionDao_30(
+        returnValue: _FakeTransactionDao_31(
           this,
           Invocation.getter(#transactionDao),
         ),
-      ) as _i31.TransactionDao);
+      ) as _i32.TransactionDao);
 
   @override
   String get userID => (super.noSuchMethod(
         Invocation.getter(#userID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#userID),
         ),
       ) as String);
 
   @override
-  List<_i32.ServerTransactionData> get serverTransactionDataList =>
+  List<_i33.ServerTransactionData> get serverTransactionDataList =>
       (super.noSuchMethod(
         Invocation.getter(#serverTransactionDataList),
-        returnValue: <_i32.ServerTransactionData>[],
-      ) as List<_i32.ServerTransactionData>);
+        returnValue: <_i33.ServerTransactionData>[],
+      ) as List<_i33.ServerTransactionData>);
 
   @override
   set serverTransactionDataList(
-          List<_i32.ServerTransactionData>? _serverTransactionDataList) =>
+          List<_i33.ServerTransactionData>? _serverTransactionDataList) =>
       super.noSuchMethod(
         Invocation.setter(
           #serverTransactionDataList,
@@ -4388,7 +4408,7 @@ class MockServerTransactionDataProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<_i32.ServerTransactionData>
+  _i4.Future<_i33.ServerTransactionData>
       getServerTransactionDataByWalletAccount(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,
@@ -4401,8 +4421,8 @@ class MockServerTransactionDataProvider extends _i1.Mock
                 accountModel,
               ],
             ),
-            returnValue: _i4.Future<_i32.ServerTransactionData>.value(
-                _FakeServerTransactionData_31(
+            returnValue: _i4.Future<_i33.ServerTransactionData>.value(
+                _FakeServerTransactionData_32(
               this,
               Invocation.method(
                 #getServerTransactionDataByWalletAccount,
@@ -4412,7 +4432,7 @@ class MockServerTransactionDataProvider extends _i1.Mock
                 ],
               ),
             )),
-          ) as _i4.Future<_i32.ServerTransactionData>);
+          ) as _i4.Future<_i33.ServerTransactionData>);
 
   @override
   _i4.Future<List<_i71.TransactionModel>> getTransByAccountID(
@@ -4432,15 +4452,15 @@ class MockServerTransactionDataProvider extends _i1.Mock
       ) as _i4.Future<List<_i71.TransactionModel>>);
 
   @override
-  _i4.Future<List<_i32.ServerTransactionData>> getServerTransactionData() =>
+  _i4.Future<List<_i33.ServerTransactionData>> getServerTransactionData() =>
       (super.noSuchMethod(
         Invocation.method(
           #getServerTransactionData,
           [],
         ),
-        returnValue: _i4.Future<List<_i32.ServerTransactionData>>.value(
-            <_i32.ServerTransactionData>[]),
-      ) as _i4.Future<List<_i32.ServerTransactionData>>);
+        returnValue: _i4.Future<List<_i33.ServerTransactionData>>.value(
+            <_i33.ServerTransactionData>[]),
+      ) as _i4.Future<List<_i33.ServerTransactionData>>);
 
   @override
   _i4.Future<void> fetchTransactions(
@@ -4463,7 +4483,7 @@ class MockServerTransactionDataProvider extends _i1.Mock
 
   @override
   _i4.Future<void> handleWalletTransaction(
-    _i42.WalletTransaction? walletTransaction, {
+    _i43.WalletTransaction? walletTransaction, {
     bool? notifyDataUpdate = false,
     bool? isInitializeProcess = false,
   }) =>
@@ -4586,8 +4606,8 @@ class MockServerTransactionDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -4600,7 +4620,7 @@ class MockServerTransactionDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -4620,7 +4640,7 @@ class MockServerTransactionDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -4665,22 +4685,22 @@ class MockServerTransactionDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockUnleashDataProvider extends _i1.Mock
-    implements _i14.UnleashDataProvider {
+    implements _i15.UnleashDataProvider {
   MockUnleashDataProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i33.UnleashClient get unleashClient => (super.noSuchMethod(
+  _i34.UnleashClient get unleashClient => (super.noSuchMethod(
         Invocation.getter(#unleashClient),
-        returnValue: _FakeUnleashClient_32(
+        returnValue: _FakeUnleashClient_33(
           this,
           Invocation.getter(#unleashClient),
         ),
-      ) as _i33.UnleashClient);
+      ) as _i34.UnleashClient);
 
   @override
-  set unleashClient(_i33.UnleashClient? _unleashClient) => super.noSuchMethod(
+  set unleashClient(_i34.UnleashClient? _unleashClient) => super.noSuchMethod(
         Invocation.setter(
           #unleashClient,
           _unleashClient,
@@ -4689,22 +4709,22 @@ class MockUnleashDataProvider extends _i1.Mock
       );
 
   @override
-  _i34.FrbUnleashClient get frbUnleashClient => (super.noSuchMethod(
+  _i35.FrbUnleashClient get frbUnleashClient => (super.noSuchMethod(
         Invocation.getter(#frbUnleashClient),
-        returnValue: _FakeFrbUnleashClient_33(
+        returnValue: _FakeFrbUnleashClient_34(
           this,
           Invocation.getter(#frbUnleashClient),
         ),
-      ) as _i34.FrbUnleashClient);
+      ) as _i35.FrbUnleashClient);
 
   @override
-  _i35.ApiEnv get apiEnv => (super.noSuchMethod(
+  _i36.ApiEnv get apiEnv => (super.noSuchMethod(
         Invocation.getter(#apiEnv),
-        returnValue: _FakeApiEnv_34(
+        returnValue: _FakeApiEnv_35(
           this,
           Invocation.getter(#apiEnv),
         ),
-      ) as _i35.ApiEnv);
+      ) as _i36.ApiEnv);
 
   @override
   int get duration => (super.noSuchMethod(
@@ -4791,7 +4811,7 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  bool isFeatureEnabled(_i14.UnleashFeature? feature) => (super.noSuchMethod(
+  bool isFeatureEnabled(_i15.UnleashFeature? feature) => (super.noSuchMethod(
         Invocation.method(
           #isFeatureEnabled,
           [feature],
@@ -4882,8 +4902,8 @@ class MockUnleashDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -4896,7 +4916,7 @@ class MockUnleashDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -4916,7 +4936,7 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -4960,22 +4980,22 @@ class MockUnleashDataProvider extends _i1.Mock
 /// A class which mocks [UserDataProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
+class MockUserDataProvider extends _i1.Mock implements _i37.UserDataProvider {
   MockUserDataProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i36.ProtonWalletUser get user => (super.noSuchMethod(
+  _i37.ProtonWalletUser get user => (super.noSuchMethod(
         Invocation.getter(#user),
-        returnValue: _FakeProtonWalletUser_35(
+        returnValue: _FakeProtonWalletUser_36(
           this,
           Invocation.getter(#user),
         ),
-      ) as _i36.ProtonWalletUser);
+      ) as _i37.ProtonWalletUser);
 
   @override
-  set user(_i36.ProtonWalletUser? _user) => super.noSuchMethod(
+  set user(_i37.ProtonWalletUser? _user) => super.noSuchMethod(
         Invocation.setter(
           #user,
           _user,
@@ -4984,31 +5004,31 @@ class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
       );
 
   @override
-  _i37.ProtonUsersClient get protonUsersClient => (super.noSuchMethod(
+  _i38.ProtonUsersClient get protonUsersClient => (super.noSuchMethod(
         Invocation.getter(#protonUsersClient),
-        returnValue: _FakeProtonUsersClient_36(
+        returnValue: _FakeProtonUsersClient_37(
           this,
           Invocation.getter(#protonUsersClient),
         ),
-      ) as _i37.ProtonUsersClient);
+      ) as _i38.ProtonUsersClient);
 
   @override
-  _i38.UserQueries get userQueries => (super.noSuchMethod(
+  _i39.UserQueries get userQueries => (super.noSuchMethod(
         Invocation.getter(#userQueries),
-        returnValue: _FakeUserQueries_37(
+        returnValue: _FakeUserQueries_38(
           this,
           Invocation.getter(#userQueries),
         ),
-      ) as _i38.UserQueries);
+      ) as _i39.UserQueries);
 
   @override
-  _i39.UserKeysQueries get userKeysQueries => (super.noSuchMethod(
+  _i40.UserKeysQueries get userKeysQueries => (super.noSuchMethod(
         Invocation.getter(#userKeysQueries),
-        returnValue: _FakeUserKeysQueries_38(
+        returnValue: _FakeUserKeysQueries_39(
           this,
           Invocation.getter(#userKeysQueries),
         ),
-      ) as _i39.UserKeysQueries);
+      ) as _i40.UserKeysQueries);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
@@ -5187,8 +5207,8 @@ class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -5201,7 +5221,7 @@ class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -5221,7 +5241,7 @@ class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -5266,7 +5286,7 @@ class MockUserDataProvider extends _i1.Mock implements _i36.UserDataProvider {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockUserSettingsDataProvider extends _i1.Mock
-    implements _i13.UserSettingsDataProvider {
+    implements _i14.UserSettingsDataProvider {
   MockUserSettingsDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -5274,29 +5294,29 @@ class MockUserSettingsDataProvider extends _i1.Mock
   @override
   String get userID => (super.noSuchMethod(
         Invocation.getter(#userID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#userID),
         ),
       ) as String);
 
   @override
-  _i40.SettingsClient get settingsClient => (super.noSuchMethod(
+  _i41.SettingsClient get settingsClient => (super.noSuchMethod(
         Invocation.getter(#settingsClient),
-        returnValue: _FakeSettingsClient_39(
+        returnValue: _FakeSettingsClient_40(
           this,
           Invocation.getter(#settingsClient),
         ),
-      ) as _i40.SettingsClient);
+      ) as _i41.SettingsClient);
 
   @override
-  _i12.PreferencesManager get shared => (super.noSuchMethod(
+  _i13.PreferencesManager get shared => (super.noSuchMethod(
         Invocation.getter(#shared),
-        returnValue: _FakePreferencesManager_10(
+        returnValue: _FakePreferencesManager_11(
           this,
           Invocation.getter(#shared),
         ),
-      ) as _i12.PreferencesManager);
+      ) as _i13.PreferencesManager);
 
   @override
   bool get initializedExchangeRate => (super.noSuchMethod(
@@ -5330,13 +5350,13 @@ class MockUserSettingsDataProvider extends _i1.Mock
       );
 
   @override
-  _i41.WalletUserSettingsQueries get settingsQueries => (super.noSuchMethod(
+  _i42.WalletUserSettingsQueries get settingsQueries => (super.noSuchMethod(
         Invocation.getter(#settingsQueries),
-        returnValue: _FakeWalletUserSettingsQueries_40(
+        returnValue: _FakeWalletUserSettingsQueries_41(
           this,
           Invocation.getter(#settingsQueries),
         ),
-      ) as _i41.WalletUserSettingsQueries);
+      ) as _i42.WalletUserSettingsQueries);
 
   @override
   int get customStopgap => (super.noSuchMethod(
@@ -5372,13 +5392,13 @@ class MockUserSettingsDataProvider extends _i1.Mock
       );
 
   @override
-  _i49.BitcoinUnit get bitcoinUnit => (super.noSuchMethod(
+  _i50.BitcoinUnit get bitcoinUnit => (super.noSuchMethod(
         Invocation.getter(#bitcoinUnit),
-        returnValue: _i49.BitcoinUnit.btc,
-      ) as _i49.BitcoinUnit);
+        returnValue: _i50.BitcoinUnit.btc,
+      ) as _i50.BitcoinUnit);
 
   @override
-  set bitcoinUnit(_i49.BitcoinUnit? _bitcoinUnit) => super.noSuchMethod(
+  set bitcoinUnit(_i50.BitcoinUnit? _bitcoinUnit) => super.noSuchMethod(
         Invocation.setter(
           #bitcoinUnit,
           _bitcoinUnit,
@@ -5387,13 +5407,13 @@ class MockUserSettingsDataProvider extends _i1.Mock
       );
 
   @override
-  _i49.FiatCurrency get fiatCurrency => (super.noSuchMethod(
+  _i50.FiatCurrency get fiatCurrency => (super.noSuchMethod(
         Invocation.getter(#fiatCurrency),
-        returnValue: _i49.FiatCurrency.all,
-      ) as _i49.FiatCurrency);
+        returnValue: _i50.FiatCurrency.all,
+      ) as _i50.FiatCurrency);
 
   @override
-  set fiatCurrency(_i49.FiatCurrency? _fiatCurrency) => super.noSuchMethod(
+  set fiatCurrency(_i50.FiatCurrency? _fiatCurrency) => super.noSuchMethod(
         Invocation.setter(
           #fiatCurrency,
           _fiatCurrency,
@@ -5412,54 +5432,54 @@ class MockUserSettingsDataProvider extends _i1.Mock
       );
 
   @override
-  _i4.StreamController<_i13.UserSettingDataUpdated> get dataUpdateController =>
+  _i4.StreamController<_i14.UserSettingDataUpdated> get dataUpdateController =>
       (super.noSuchMethod(
         Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i13.UserSettingDataUpdated>(
+        returnValue: _FakeStreamController_2<_i14.UserSettingDataUpdated>(
           this,
           Invocation.getter(#dataUpdateController),
         ),
-      ) as _i4.StreamController<_i13.UserSettingDataUpdated>);
+      ) as _i4.StreamController<_i14.UserSettingDataUpdated>);
 
   @override
-  _i4.StreamController<_i13.ExchangeRateDataUpdated>
+  _i4.StreamController<_i14.ExchangeRateDataUpdated>
       get exchangeRateUpdateController => (super.noSuchMethod(
             Invocation.getter(#exchangeRateUpdateController),
-            returnValue: _FakeStreamController_2<_i13.ExchangeRateDataUpdated>(
+            returnValue: _FakeStreamController_2<_i14.ExchangeRateDataUpdated>(
               this,
               Invocation.getter(#exchangeRateUpdateController),
             ),
-          ) as _i4.StreamController<_i13.ExchangeRateDataUpdated>);
+          ) as _i4.StreamController<_i14.ExchangeRateDataUpdated>);
 
   @override
-  _i4.StreamController<_i13.FiatCurrencyDataUpdated>
+  _i4.StreamController<_i14.FiatCurrencyDataUpdated>
       get fiatCurrencyUpdateController => (super.noSuchMethod(
             Invocation.getter(#fiatCurrencyUpdateController),
-            returnValue: _FakeStreamController_2<_i13.FiatCurrencyDataUpdated>(
+            returnValue: _FakeStreamController_2<_i14.FiatCurrencyDataUpdated>(
               this,
               Invocation.getter(#fiatCurrencyUpdateController),
             ),
-          ) as _i4.StreamController<_i13.FiatCurrencyDataUpdated>);
+          ) as _i4.StreamController<_i14.FiatCurrencyDataUpdated>);
 
   @override
-  _i4.StreamController<_i13.BitcoinUnitDataUpdated>
+  _i4.StreamController<_i14.BitcoinUnitDataUpdated>
       get bitcoinUnitUpdateController => (super.noSuchMethod(
             Invocation.getter(#bitcoinUnitUpdateController),
-            returnValue: _FakeStreamController_2<_i13.BitcoinUnitDataUpdated>(
+            returnValue: _FakeStreamController_2<_i14.BitcoinUnitDataUpdated>(
               this,
               Invocation.getter(#bitcoinUnitUpdateController),
             ),
-          ) as _i4.StreamController<_i13.BitcoinUnitDataUpdated>);
+          ) as _i4.StreamController<_i14.BitcoinUnitDataUpdated>);
 
   @override
-  _i4.StreamController<_i13.DisplayBalanceUpdated>
+  _i4.StreamController<_i14.DisplayBalanceUpdated>
       get displayBalanceUpdateController => (super.noSuchMethod(
             Invocation.getter(#displayBalanceUpdateController),
-            returnValue: _FakeStreamController_2<_i13.DisplayBalanceUpdated>(
+            returnValue: _FakeStreamController_2<_i14.DisplayBalanceUpdated>(
               this,
               Invocation.getter(#displayBalanceUpdateController),
             ),
-          ) as _i4.StreamController<_i13.DisplayBalanceUpdated>);
+          ) as _i4.StreamController<_i14.DisplayBalanceUpdated>);
 
   @override
   _i2.DataState get state => (super.noSuchMethod(
@@ -5540,7 +5560,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
       ) as _i4.Future<bool>);
 
   @override
-  void updateBitcoinUnit(_i49.BitcoinUnit? bitcoinUnit) => super.noSuchMethod(
+  void updateBitcoinUnit(_i50.BitcoinUnit? bitcoinUnit) => super.noSuchMethod(
         Invocation.method(
           #updateBitcoinUnit,
           [bitcoinUnit],
@@ -5560,7 +5580,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
 
   @override
   _i4.Future<void> updateFiatCurrency(
-    _i49.FiatCurrency? fiatCurrency, {
+    _i50.FiatCurrency? fiatCurrency, {
     dynamic notify = true,
   }) =>
       (super.noSuchMethod(
@@ -5607,7 +5627,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
       );
 
   @override
-  _i4.Future<void> insertUpdate(_i49.ApiWalletUserSettings? settings) =>
+  _i4.Future<void> insertUpdate(_i50.ApiWalletUserSettings? settings) =>
       (super.noSuchMethod(
         Invocation.method(
           #insertUpdate,
@@ -5618,14 +5638,14 @@ class MockUserSettingsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  String getFiatCurrencyName({_i49.FiatCurrency? fiatCurrency}) =>
+  String getFiatCurrencyName({_i50.FiatCurrency? fiatCurrency}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getFiatCurrencyName,
           [],
           {#fiatCurrency: fiatCurrency},
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #getFiatCurrencyName,
@@ -5636,14 +5656,14 @@ class MockUserSettingsDataProvider extends _i1.Mock
       ) as String);
 
   @override
-  String getFiatCurrencySign({_i49.FiatCurrency? fiatCurrency}) =>
+  String getFiatCurrencySign({_i50.FiatCurrency? fiatCurrency}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getFiatCurrencySign,
           [],
           {#fiatCurrency: fiatCurrency},
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #getFiatCurrencySign,
@@ -5721,8 +5741,8 @@ class MockUserSettingsDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -5735,7 +5755,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -5755,7 +5775,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -5800,7 +5820,7 @@ class MockUserSettingsDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletsDataProvider extends _i1.Mock
-    implements _i28.WalletsDataProvider {
+    implements _i29.WalletsDataProvider {
   MockWalletsDataProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -5817,7 +5837,7 @@ class MockWalletsDataProvider extends _i1.Mock
   @override
   String get key => (super.noSuchMethod(
         Invocation.getter(#key),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#key),
         ),
@@ -5899,13 +5919,13 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i11.WalletClient);
 
   @override
-  _i23.WalletDao get walletDao => (super.noSuchMethod(
+  _i24.WalletDao get walletDao => (super.noSuchMethod(
         Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_22(
+        returnValue: _FakeWalletDao_23(
           this,
           Invocation.getter(#walletDao),
         ),
-      ) as _i23.WalletDao);
+      ) as _i24.WalletDao);
 
   @override
   _i10.AccountDao get accountDao => (super.noSuchMethod(
@@ -5917,18 +5937,18 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i10.AccountDao);
 
   @override
-  _i27.AddressDao get addressDao => (super.noSuchMethod(
+  _i28.AddressDao get addressDao => (super.noSuchMethod(
         Invocation.getter(#addressDao),
-        returnValue: _FakeAddressDao_26(
+        returnValue: _FakeAddressDao_27(
           this,
           Invocation.getter(#addressDao),
         ),
-      ) as _i27.AddressDao);
+      ) as _i28.AddressDao);
 
   @override
   String get selectedServerWalletID => (super.noSuchMethod(
         Invocation.getter(#selectedServerWalletID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#selectedServerWalletID),
         ),
@@ -5947,7 +5967,7 @@ class MockWalletsDataProvider extends _i1.Mock
   @override
   String get selectedServerWalletAccountID => (super.noSuchMethod(
         Invocation.getter(#selectedServerWalletAccountID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#selectedServerWalletAccountID),
         ),
@@ -5964,7 +5984,7 @@ class MockWalletsDataProvider extends _i1.Mock
       );
 
   @override
-  set walletsData(List<_i28.WalletData>? _walletsData) => super.noSuchMethod(
+  set walletsData(List<_i29.WalletData>? _walletsData) => super.noSuchMethod(
         Invocation.setter(
           #walletsData,
           _walletsData,
@@ -5975,7 +5995,7 @@ class MockWalletsDataProvider extends _i1.Mock
   @override
   String get userID => (super.noSuchMethod(
         Invocation.getter(#userID),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#userID),
         ),
@@ -6024,23 +6044,23 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<List<_i28.WalletData>?> getWallets() => (super.noSuchMethod(
+  _i4.Future<List<_i29.WalletData>?> getWallets() => (super.noSuchMethod(
         Invocation.method(
           #getWallets,
           [],
         ),
-        returnValue: _i4.Future<List<_i28.WalletData>?>.value(),
-      ) as _i4.Future<List<_i28.WalletData>?>);
+        returnValue: _i4.Future<List<_i29.WalletData>?>.value(),
+      ) as _i4.Future<List<_i29.WalletData>?>);
 
   @override
-  _i4.Future<_i28.WalletData?> getWallet(String? walletID) =>
+  _i4.Future<_i29.WalletData?> getWallet(String? walletID) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWallet,
           [walletID],
         ),
-        returnValue: _i4.Future<_i28.WalletData?>.value(),
-      ) as _i4.Future<_i28.WalletData?>);
+        returnValue: _i4.Future<_i29.WalletData?>.value(),
+      ) as _i4.Future<_i29.WalletData?>);
 
   @override
   _i4.Future<void> disableShowWalletRecovery(String? walletId) =>
@@ -6054,20 +6074,20 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i42.ApiWalletData> createWallet(_i42.CreateWalletReq? request) =>
+  _i4.Future<_i43.ApiWalletData> createWallet(_i43.CreateWalletReq? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #createWallet,
           [request],
         ),
-        returnValue: _i4.Future<_i42.ApiWalletData>.value(_FakeApiWalletData_41(
+        returnValue: _i4.Future<_i43.ApiWalletData>.value(_FakeApiWalletData_42(
           this,
           Invocation.method(
             #createWallet,
             [request],
           ),
         )),
-      ) as _i4.Future<_i42.ApiWalletData>);
+      ) as _i4.Future<_i43.ApiWalletData>);
 
   @override
   _i4.Future<int> getNewDerivationAccountIndex(
@@ -6104,7 +6124,7 @@ class MockWalletsDataProvider extends _i1.Mock
           ],
           {#accountIndex: accountIndex},
         ),
-        returnValue: _i4.Future<String>.value(_i52.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
           this,
           Invocation.method(
             #getNewDerivationPathBy,
@@ -6133,7 +6153,7 @@ class MockWalletsDataProvider extends _i1.Mock
             accountIndex,
           ],
         ),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.method(
             #formatDerivationPath,
@@ -6147,10 +6167,10 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as String);
 
   @override
-  _i4.Future<_i43.ApiWalletAccount> createWalletAccount(
+  _i4.Future<_i44.ApiWalletAccount> createWalletAccount(
     String? walletID,
-    _i43.CreateWalletAccountReq? request,
-    _i49.FiatCurrency? fiatCurrency,
+    _i44.CreateWalletAccountReq? request,
+    _i50.FiatCurrency? fiatCurrency,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -6162,7 +6182,7 @@ class MockWalletsDataProvider extends _i1.Mock
           ],
         ),
         returnValue:
-            _i4.Future<_i43.ApiWalletAccount>.value(_FakeApiWalletAccount_42(
+            _i4.Future<_i44.ApiWalletAccount>.value(_FakeApiWalletAccount_43(
           this,
           Invocation.method(
             #createWalletAccount,
@@ -6173,7 +6193,7 @@ class MockWalletsDataProvider extends _i1.Mock
             ],
           ),
         )),
-      ) as _i4.Future<_i43.ApiWalletAccount>);
+      ) as _i4.Future<_i44.ApiWalletAccount>);
 
   @override
   _i4.Future<void> updateWallet({required _i56.WalletModel? wallet}) =>
@@ -6298,7 +6318,7 @@ class MockWalletsDataProvider extends _i1.Mock
   _i4.Future<void> addEmailAddressToWalletAccount(
     String? serverWalletID,
     String? serverAccountID,
-    _i43.ApiEmailAddress? address,
+    _i44.ApiEmailAddress? address,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -6381,7 +6401,7 @@ class MockWalletsDataProvider extends _i1.Mock
     int? scriptType,
     String? derivationPath,
     String? accountID,
-    _i49.FiatCurrency? fiatCurrency,
+    _i50.FiatCurrency? fiatCurrency,
     int? poolSize,
     int? priority,
     int? lastUsedIndex,
@@ -6423,29 +6443,29 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<_i28.WalletData?> getFirstPriorityWallet() => (super.noSuchMethod(
+  _i4.Future<_i29.WalletData?> getFirstPriorityWallet() => (super.noSuchMethod(
         Invocation.method(
           #getFirstPriorityWallet,
           [],
         ),
-        returnValue: _i4.Future<_i28.WalletData?>.value(),
-      ) as _i4.Future<_i28.WalletData?>);
+        returnValue: _i4.Future<_i29.WalletData?>.value(),
+      ) as _i4.Future<_i29.WalletData?>);
 
   @override
-  _i4.Future<_i28.WalletData?> getWalletByServerWalletID(String? walletID) =>
+  _i4.Future<_i29.WalletData?> getWalletByServerWalletID(String? walletID) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWalletByServerWalletID,
           [walletID],
         ),
-        returnValue: _i4.Future<_i28.WalletData?>.value(),
-      ) as _i4.Future<_i28.WalletData?>);
+        returnValue: _i4.Future<_i29.WalletData?>.value(),
+      ) as _i4.Future<_i29.WalletData?>);
 
   @override
   _i4.Future<void> updateWalletAccountFiatCurrency(
     String? walletID,
     String? accountID,
-    _i49.FiatCurrency? newFiatCurrency,
+    _i50.FiatCurrency? newFiatCurrency,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -6528,8 +6548,8 @@ class MockWalletsDataProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -6542,7 +6562,7 @@ class MockWalletsDataProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -6562,7 +6582,7 @@ class MockWalletsDataProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -6607,7 +6627,7 @@ class MockWalletsDataProvider extends _i1.Mock
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletKeysProvider extends _i1.Mock
-    implements _i46.WalletKeysProvider {
+    implements _i47.WalletKeysProvider {
   MockWalletKeysProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -6622,13 +6642,13 @@ class MockWalletKeysProvider extends _i1.Mock
       ) as _i8.UserManager);
 
   @override
-  _i44.WalletKeyStore get walletKeyStore => (super.noSuchMethod(
+  _i45.WalletKeyStore get walletKeyStore => (super.noSuchMethod(
         Invocation.getter(#walletKeyStore),
-        returnValue: _FakeWalletKeyStore_43(
+        returnValue: _FakeWalletKeyStore_44(
           this,
           Invocation.getter(#walletKeyStore),
         ),
-      ) as _i44.WalletKeyStore);
+      ) as _i45.WalletKeyStore);
 
   @override
   _i11.WalletClient get walletClient => (super.noSuchMethod(
@@ -6670,22 +6690,22 @@ class MockWalletKeysProvider extends _i1.Mock
       ) as bool);
 
   @override
-  _i4.Future<_i45.FrbUnlockedWalletKey> getWalletSecretKey(
+  _i4.Future<_i46.FrbUnlockedWalletKey> getWalletSecretKey(
           String? serverWalletID) =>
       (super.noSuchMethod(
         Invocation.method(
           #getWalletSecretKey,
           [serverWalletID],
         ),
-        returnValue: _i4.Future<_i45.FrbUnlockedWalletKey>.value(
-            _FakeFrbUnlockedWalletKey_44(
+        returnValue: _i4.Future<_i46.FrbUnlockedWalletKey>.value(
+            _FakeFrbUnlockedWalletKey_45(
           this,
           Invocation.method(
             #getWalletSecretKey,
             [serverWalletID],
           ),
         )),
-      ) as _i4.Future<_i45.FrbUnlockedWalletKey>);
+      ) as _i4.Future<_i46.FrbUnlockedWalletKey>);
 
   @override
   _i4.Future<_i76.WalletKey?> getWalletKey(String? walletID) =>
@@ -6709,7 +6729,7 @@ class MockWalletKeysProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> saveApiWalletKeys(List<_i42.ApiWalletKey>? items) =>
+  _i4.Future<void> saveApiWalletKeys(List<_i43.ApiWalletKey>? items) =>
       (super.noSuchMethod(
         Invocation.method(
           #saveApiWalletKeys,
@@ -6787,8 +6807,8 @@ class MockWalletKeysProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -6801,7 +6821,7 @@ class MockWalletKeysProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -6821,7 +6841,7 @@ class MockWalletKeysProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -6872,22 +6892,22 @@ class MockWalletMnemonicProvider extends _i1.Mock
   }
 
   @override
-  _i46.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
+  _i47.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
         Invocation.getter(#walletKeysProvider),
-        returnValue: _FakeWalletKeysProvider_45(
+        returnValue: _FakeWalletKeysProvider_46(
           this,
           Invocation.getter(#walletKeysProvider),
         ),
-      ) as _i46.WalletKeysProvider);
+      ) as _i47.WalletKeysProvider);
 
   @override
-  _i28.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
+  _i29.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
         Invocation.getter(#walletDataProvider),
-        returnValue: _FakeWalletsDataProvider_27(
+        returnValue: _FakeWalletsDataProvider_28(
           this,
           Invocation.getter(#walletDataProvider),
         ),
-      ) as _i28.WalletsDataProvider);
+      ) as _i29.WalletsDataProvider);
 
   @override
   _i8.UserManager get userManager => (super.noSuchMethod(
@@ -6925,7 +6945,7 @@ class MockWalletMnemonicProvider extends _i1.Mock
           #getMnemonicWithID,
           [walletID],
         ),
-        returnValue: _i4.Future<String>.value(_i52.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
           this,
           Invocation.method(
             #getMnemonicWithID,
@@ -6992,8 +7012,8 @@ class MockWalletMnemonicProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -7006,7 +7026,7 @@ class MockWalletMnemonicProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -7026,7 +7046,7 @@ class MockWalletMnemonicProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -7077,13 +7097,13 @@ class MockWalletNameProvider extends _i1.Mock
   }
 
   @override
-  _i46.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
+  _i47.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
         Invocation.getter(#walletKeysProvider),
-        returnValue: _FakeWalletKeysProvider_45(
+        returnValue: _FakeWalletKeysProvider_46(
           this,
           Invocation.getter(#walletKeysProvider),
         ),
-      ) as _i46.WalletKeysProvider);
+      ) as _i47.WalletKeysProvider);
 
   @override
   _i10.AccountDao get accountDao => (super.noSuchMethod(
@@ -7095,13 +7115,13 @@ class MockWalletNameProvider extends _i1.Mock
       ) as _i10.AccountDao);
 
   @override
-  _i23.WalletDao get walletDao => (super.noSuchMethod(
+  _i24.WalletDao get walletDao => (super.noSuchMethod(
         Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_22(
+        returnValue: _FakeWalletDao_23(
           this,
           Invocation.getter(#walletDao),
         ),
-      ) as _i23.WalletDao);
+      ) as _i24.WalletDao);
 
   @override
   _i2.DataState get state => (super.noSuchMethod(
@@ -7131,7 +7151,7 @@ class MockWalletNameProvider extends _i1.Mock
           #getAccountLabelWithID,
           [accountID],
         ),
-        returnValue: _i4.Future<String>.value(_i52.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
           this,
           Invocation.method(
             #getAccountLabelWithID,
@@ -7146,7 +7166,7 @@ class MockWalletNameProvider extends _i1.Mock
           #getNameWithID,
           [walletID],
         ),
-        returnValue: _i4.Future<String>.value(_i52.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
           this,
           Invocation.method(
             #getNameWithID,
@@ -7213,8 +7233,8 @@ class MockWalletNameProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -7227,7 +7247,7 @@ class MockWalletNameProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -7247,7 +7267,7 @@ class MockWalletNameProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],
@@ -7309,7 +7329,7 @@ class MockWalletPassphraseProvider extends _i1.Mock
   @override
   String get key => (super.noSuchMethod(
         Invocation.getter(#key),
-        returnValue: _i52.dummyValue<String>(
+        returnValue: _i53.dummyValue<String>(
           this,
           Invocation.getter(#key),
         ),
@@ -7447,8 +7467,8 @@ class MockWalletPassphraseProvider extends _i1.Mock
 
   @override
   void on<E extends _i2.DataEvent>(
-    _i50.EventHandler<E, _i2.DataState>? handler, {
-    _i50.EventTransformer<E>? transformer,
+    _i51.EventHandler<E, _i2.DataState>? handler, {
+    _i51.EventTransformer<E>? transformer,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -7461,7 +7481,7 @@ class MockWalletPassphraseProvider extends _i1.Mock
 
   @override
   void onTransition(
-          _i50.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
       super.noSuchMethod(
         Invocation.method(
           #onTransition,
@@ -7481,7 +7501,7 @@ class MockWalletPassphraseProvider extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  void onChange(_i50.Change<_i2.DataState>? change) => super.noSuchMethod(
+  void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
         Invocation.method(
           #onChange,
           [change],

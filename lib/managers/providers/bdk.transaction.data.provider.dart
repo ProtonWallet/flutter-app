@@ -18,6 +18,7 @@ import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/wallet_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
+import 'package:wallet/rust/api/bdk_wallet/account_syncer.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
@@ -71,10 +72,10 @@ class BDKTransactionDataProvider extends DataProvider {
 
   /// db dao
   final AccountDao accountDao;
-  FrbBlockchainClient? blockchain;
 
   /// api services
   final WalletClient walletClient;
+  final FrbBlockchainClient blockchainClient;
 
   /// shared preference
   final PreferencesManager shared;
@@ -86,6 +87,7 @@ class BDKTransactionDataProvider extends DataProvider {
   BDKTransactionDataProvider(
     this.accountDao,
     this.walletClient,
+    this.blockchainClient,
     this.shared,
     this.walletManager,
     this.userSettingsDataProvider,
@@ -225,7 +227,7 @@ class BDKTransactionDataProvider extends DataProvider {
     if (!isSyncing) {
       try {
         isWalletSyncing[accountModel.accountID] = true;
-        blockchain ??= FrbBlockchainClient.createEsploraBlockchain();
+
         final FrbAccount? account = await walletManager.loadWalletWithID(
           walletModel.walletID,
           accountModel.accountID,
@@ -262,6 +264,10 @@ class BDKTransactionDataProvider extends DataProvider {
           }
 
           final bool isSynced = await hasFullSynced(walletModel, accountModel);
+          final walletSync = FrbAccountSyncer(
+            client: blockchainClient,
+            account: account,
+          );
           if (!isSynced || forceSync) {
             // when force sync reset the timmer and status. incase task failed cant restart
             final String syncCheckID =
@@ -283,11 +289,11 @@ class BDKTransactionDataProvider extends DataProvider {
               await setUsedServerStopgap(walletModel, accountModel);
             }
             logger.i("customStopgap: $customStopgap");
-            await blockchain?.fullSync(
-              account: account,
+
+            await walletSync.fullSync(
               stopGap: BigInt.from(customStopgap + accountModel.poolSize),
             );
-            await blockchain!.partialSync(account: account);
+            await walletSync.partialSync();
             await shared.write(syncCheckID, true);
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync end time: $timeEnd");
@@ -297,13 +303,12 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet partial sync check");
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet partial sync start time: $timeStart");
-            await blockchain!.partialSync(account: account);
+            await walletSync.partialSync();
 
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet partial sync end time: $timeEnd");
             success = true;
           }
-
           lastSyncedTime[accountModel.accountID] =
               DateTime.now().secondsSinceEpoch();
           await resetErrorCount();

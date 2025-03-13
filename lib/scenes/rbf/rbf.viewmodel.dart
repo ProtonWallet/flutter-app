@@ -55,7 +55,6 @@ abstract class RbfViewModel extends ViewModel<RbfCoordinator> {
 
   bool initialized = false;
   late TextEditingController newFeeController;
-  late FrbBlockchainClient blockchainClient;
 
   Future<bool> bumpTransactionFees();
 
@@ -87,6 +86,7 @@ class RbfViewModelImpl extends RbfViewModel {
     this.accountID,
     this.addressID,
     this.recipients,
+    this.blockchainClient,
   );
 
   final WalletManager walletManager;
@@ -104,6 +104,8 @@ class RbfViewModelImpl extends RbfViewModel {
   late FrbAccount? _frbAccount;
   Map<String, double> estimatedFees = {};
   String errorMessage = "";
+
+  final FrbBlockchainClient blockchainClient;
 
   void onFeeChange() {
     /// callback when user change the new feeRate
@@ -146,7 +148,6 @@ class RbfViewModelImpl extends RbfViewModel {
     final minimumIncrementalFee =
         max(mempoolInfo.mempoolMinFee, mempoolInfo.incrementalRelayFee) *
             100000;
-    blockchainClient = FrbBlockchainClient.createEsploraBlockchain();
     estimatedFees = await blockchainClient.getFeesEstimation();
     final nextBlockFee = estimatedFees["1"] ?? 1.0;
 
