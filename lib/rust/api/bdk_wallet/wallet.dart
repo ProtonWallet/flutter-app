@@ -10,7 +10,6 @@ import '../../frb_generated.dart';
 import '../errors.dart';
 import 'account.dart';
 import 'balance.dart';
-import 'blockchain.dart';
 import 'derivation_path.dart';
 import 'discovered_account.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -19,6 +18,9 @@ import 'transaction_details.dart';
 
 // These functions are ignored because they are not marked as `pub`: `get_inner`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Arc < ProtonAPIService >>>
+abstract class ArcProtonApiService implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>>
 abstract class FrbWallet implements RustOpaqueInterface {

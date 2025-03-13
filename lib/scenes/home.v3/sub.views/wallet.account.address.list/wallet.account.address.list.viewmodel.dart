@@ -60,7 +60,11 @@ class WalletAccountAddressListViewModelImpl
     this.userSettingsDataProvider,
     this.poolAddressDataProvider,
     this.accountMenuModel,
+    this.blockchainClient,
   );
+
+  /// api
+  final FrbBlockchainClient blockchainClient;
 
   /// wallet manager
   final WalletManager walletManager;
@@ -126,11 +130,10 @@ class WalletAccountAddressListViewModelImpl
       return;
     }
     try {
-      final blockChainClient = FrbBlockchainClient.createEsploraBlockchain();
       searchedAddress = await frbAccount.getAddressFromGraph(
         network: appConfig.coinType.network,
         addressStr: keyWord,
-        client: blockChainClient,
+        client: blockchainClient,
         sync_: false,
       );
     } catch (e) {
@@ -149,9 +152,6 @@ class WalletAccountAddressListViewModelImpl
     loadingAddress = true;
     sinkAddSafe();
     try {
-      /// create FrbBlockchainClient, or we will get FrbBlockchainClient disposed error
-      final blockChainClient = FrbBlockchainClient.createEsploraBlockchain();
-
       /// calculate start position for current page
       final start = addressListType == AddressListType.receiveAddress
           ? receiveAddressCurrentPage * addressCountPerPage
@@ -164,7 +164,7 @@ class WalletAccountAddressListViewModelImpl
           skip: BigInt.from(start),
           take: BigInt.from(end),
         ),
-        client: blockChainClient,
+        client: blockchainClient,
         keychain: addressListType == AddressListType.receiveAddress
             ? KeychainKind.external_
             : KeychainKind.internal,

@@ -1,81 +1,49 @@
 use andromeda_api::transaction::{
     BroadcastMessage, ExchangeRateOrTransactionTime, RecommendedFees,
 };
-use andromeda_bitcoin::{account_trait::AccessWallet, blockchain_client::BlockchainClient};
+use andromeda_bitcoin::blockchain_client::BlockchainClient;
 use chrono::Utc;
 use flutter_rust_bridge::frb;
-use std::{collections::HashMap, ops::Deref, sync::Arc};
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock},
+};
 use tracing::info;
 
-use super::{account::FrbAccount, psbt::FrbPsbt};
+use super::psbt::FrbPsbt;
 use crate::api::{
     api_service::proton_api_service::ProtonAPIService, errors::BridgeError,
     proton_api::retrieve_proton_api,
 };
 
+#[derive(Clone)]
 pub struct FrbBlockchainClient {
-    pub(crate) inner: BlockchainClient,
+    pub(crate) inner: Arc<BlockchainClient>,
 }
 
-impl From<BlockchainClient> for FrbBlockchainClient {
-    fn from(inner: BlockchainClient) -> Self {
-        FrbBlockchainClient { inner }
+impl FrbBlockchainClient {
+    #[frb(ignore)]
+    pub(crate) fn get_inner(&self) -> Arc<BlockchainClient> {
+        self.inner.clone()
     }
 }
+
 impl FrbBlockchainClient {
     #[frb(sync)]
-    pub fn create_esplora_blockchain() -> Result<FrbBlockchainClient, BridgeError> {
-        let proton_api = retrieve_proton_api()?;
-        let blockchain = FrbBlockchainClient::new(proton_api)?;
-        Ok(blockchain)
-    }
-
-    #[frb(sync)]
-    pub fn new(api_service: Arc<ProtonAPIService>) -> Result<FrbBlockchainClient, BridgeError> {
-        let inner = BlockchainClient::new(api_service.inner.deref().clone());
-        Ok(FrbBlockchainClient { inner })
+    pub fn new(service: &ProtonAPIService) -> Self {
+        Self {
+            inner: Arc::new(andromeda_bitcoin::blockchain_client::BlockchainClient::new(
+                service.inner.clone(),
+            )),
+        }
     }
 
     pub async fn get_fees_estimation(&mut self) -> Result<HashMap<String, f64>, BridgeError> {
-        Ok(self.inner.get_fees_estimation().await?)
+        Ok(self.get_inner().get_fees_estimation().await?)
     }
 
     pub async fn get_recommended_fees(&self) -> Result<RecommendedFees, BridgeError> {
-        Ok(self.inner.get_recommended_fees().await?)
-    }
-
-    pub async fn full_sync(
-        &self,
-        account: &FrbAccount,
-        stop_gap: Option<usize>,
-    ) -> Result<(), BridgeError> {
-        let account_inner = account.get_inner();
-        let update = self
-            .inner
-            .full_sync(account_inner.as_ref(), stop_gap)
-            .await?;
-        account_inner.apply_update(update).await?;
-
-        Ok(())
-    }
-
-    pub async fn partial_sync(&self, account: &FrbAccount) -> Result<(), BridgeError> {
-        let account_inner = account.get_inner();
-
-        let read_lock = account_inner.get_wallet().await;
-        let update = self.inner.partial_sync(read_lock).await?;
-
-        account_inner.apply_update(update).await?;
-
-        Ok(())
-    }
-
-    pub async fn should_sync(&self, account: &FrbAccount) -> Result<bool, BridgeError> {
-        let account_inner = account.get_inner();
-
-        let wallet_lock = account_inner.get_wallet().await;
-
-        Ok(self.inner.should_sync(wallet_lock).await?)
+        Ok(self.get_inner().get_recommended_fees().await?)
     }
 
     #[allow(clippy::too_many_arguments)]

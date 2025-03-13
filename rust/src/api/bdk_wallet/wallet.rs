@@ -2,7 +2,7 @@
 use andromeda_bitcoin::{transactions::Pagination, utils::SortOrder, wallet::Wallet};
 use andromeda_common::{Network, ScriptType};
 use flutter_rust_bridge::frb;
-use std::{ops::Deref, sync::Arc};
+use std::sync::Arc;
 
 use super::{
     account::FrbAccount, balance::FrbBalance, derivation_path::FrbDerivationPath,
@@ -17,6 +17,7 @@ pub struct FrbWallet {
 }
 
 impl FrbWallet {
+    #[warn(dead_code)]
     pub(crate) fn get_inner(&self) -> &Wallet {
         &self.inner
     }
@@ -44,7 +45,7 @@ impl FrbWallet {
         let found = self
             .inner
             .discover_accounts(
-                api_service.inner.deref().clone(),
+                api_service.inner.clone(),
                 factory,
                 Some(account_stop_gap),
                 Some(address_stop_gap),
@@ -131,7 +132,10 @@ mod test {
         api_service::{
             proton_api_service::ProtonAPIService, wallet_auth_store::ProtonWalletAuthStore,
         },
-        bdk_wallet::{blockchain::FrbBlockchainClient, storage::WalletMobilePersisterFactory},
+        bdk_wallet::{
+            account_syncer::FrbAccountSyncer, blockchain::FrbBlockchainClient,
+            storage::WalletMobilePersisterFactory,
+        },
     };
     use crate::mocks::constant::tests::{TEST_MNEMONIC_1, TEST_MNEMONIC_2};
     use andromeda_common::{Network, ScriptType};
@@ -177,18 +181,16 @@ mod test {
 
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
-        let block_client = FrbBlockchainClient::new(api_service).unwrap();
+        let block_client = FrbBlockchainClient::new(&api_service);
+        let wallet_sync = FrbAccountSyncer::new(&block_client, &frb_account);
 
-        let result = block_client.should_sync(&frb_account).await.unwrap();
+        let result = wallet_sync.should_sync().await.unwrap();
         println!("should sync: {}", result);
 
         if result {
             let now = Instant::now();
             println!("start syncing");
-            block_client
-                .full_sync(&frb_account, Some(20))
-                .await
-                .unwrap();
+            wallet_sync.full_sync(Some(20)).await.unwrap();
 
             let elapsed = now.elapsed();
             println!("sync end: {:.2?}", elapsed);
@@ -198,7 +200,7 @@ mod test {
 
         let now = Instant::now();
         println!("start partial syncing");
-        block_client.partial_sync(&frb_account).await.unwrap();
+        wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
         println!("sync end: {:.2?}", elapsed);
         let balance = frb_account.get_balance().await;
@@ -221,7 +223,7 @@ mod test {
 
         let now = Instant::now();
         println!("start partial syncing");
-        block_client.partial_sync(&frb_account).await.unwrap();
+        wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
         println!("sync end: {:.2?}", elapsed);
         let balance = frb_account.get_balance().await.total();
@@ -283,18 +285,16 @@ mod test {
 
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
-        let block_client = FrbBlockchainClient::new(api_service).unwrap();
+        let block_client = FrbBlockchainClient::new(&api_service);
+        let wallet_sync = FrbAccountSyncer::new(&block_client, &frb_account);
 
-        let result = block_client.should_sync(&frb_account).await.unwrap();
+        let result = wallet_sync.should_sync().await.unwrap();
         println!("should sync: {}", result);
 
         if result {
             let now = Instant::now();
             println!("start syncing");
-            block_client
-                .full_sync(&frb_account, Some(20))
-                .await
-                .unwrap();
+            wallet_sync.full_sync(Some(20)).await.unwrap();
 
             let elapsed = now.elapsed();
             println!("sync end: {:.2?}", elapsed);
@@ -304,7 +304,7 @@ mod test {
 
         let now = Instant::now();
         println!("start partial syncing");
-        block_client.partial_sync(&frb_account).await.unwrap();
+        wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
         println!("sync end: {:.2?}", elapsed);
         let balance = frb_account.get_balance().await;
@@ -330,7 +330,7 @@ mod test {
 
         let now = Instant::now();
         println!("start partial syncing");
-        block_client.partial_sync(&frb_account).await.unwrap();
+        wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
         println!("sync end: {:.2?}", elapsed);
         let balance = frb_account.get_balance().await.total();
