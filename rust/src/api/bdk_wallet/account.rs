@@ -1,7 +1,8 @@
 // account.rs
 
 use andromeda_bitcoin::{
-    account::Account, transactions::Pagination, utils::SortOrder, KeychainKind, SignOptions,
+    account::Account, account_trait::AccessWallet, transactions::Pagination, utils::SortOrder,
+    KeychainKind, SignOptions,
 };
 use andromeda_common::Network;
 use tracing::debug;
@@ -20,8 +21,9 @@ use super::{
     transaction_details::FrbTransactionDetails,
 };
 
+#[derive(Clone)]
 pub struct FrbAccount {
-    pub(crate) inner: Arc<Account>,
+    inner: Arc<Account>,
 }
 
 impl FrbAccount {
@@ -38,29 +40,6 @@ impl From<Arc<Account>> for FrbAccount {
 }
 
 impl FrbAccount {
-    // /// Usually creating account need to through wallet.
-    // ///  this shouldn't be used. just for sometimes we need it without wallet.
-    // #[frb(sync)]
-    // pub fn new(
-    //     wallet: &FrbWallet,
-    //     script_type: ScriptType,
-    //     derivation_path: FrbDerivationPath,
-    //     factory: WalletMobilePersisterFactory,
-    // ) -> Result<FrbAccount, BridgeError> {
-    //     let (mprv, network) = wallet.get_inner().mprv();
-    //     let account = Account::new(
-    //         mprv,
-    //         network,
-    //         script_type.into(),
-    //         (&derivation_path).clone_inner(),
-    //         factory.build()
-    //     )?;
-
-    //     Ok(FrbAccount {
-    //         inner: Arc::new(account),
-    //     })
-    // }
-
     pub async fn get_address(&self, index: Option<u32>) -> Result<FrbAddressInfo, BridgeError> {
         let account_inner = self.inner.clone();
 
@@ -202,12 +181,12 @@ impl FrbAccount {
         &self,
         network: Network,
         address_str: String,
-        client: FrbBlockchainClient,
+        client: &FrbBlockchainClient,
         sync: bool,
     ) -> Result<Option<FrbAddressDetails>, BridgeError> {
         let address_detail = self
             .inner
-            .get_address(network, address_str, Arc::new(client.inner.clone()), sync)
+            .get_address(network, address_str, client.get_inner(), sync)
             .await?;
 
         match address_detail {
@@ -219,13 +198,13 @@ impl FrbAccount {
     pub async fn get_addresses_from_graph(
         &self,
         pagination: Pagination,
-        client: FrbBlockchainClient,
+        client: &FrbBlockchainClient,
         keychain: KeychainKind,
         sync: bool,
     ) -> Result<Vec<FrbAddressDetails>, BridgeError> {
         let address_detail = self
             .inner
-            .get_addresses(pagination, Arc::new(client.inner.clone()), keychain, sync)
+            .get_addresses(pagination, client.get_inner(), keychain, sync)
             .await?;
 
         Ok(address_detail
@@ -235,8 +214,10 @@ impl FrbAccount {
     }
 
     pub async fn get_xpub(&self) -> Option<String> {
-        let xpub = self.inner.get_xpub().await;
-
-        xpub.map(|xpub| xpub.to_string())
+        if let Ok(xpub) = self.inner.get_xpub().await {
+            Some(xpub.to_string())
+        } else {
+            None
+        }
     }
 }

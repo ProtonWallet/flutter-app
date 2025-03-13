@@ -62,6 +62,7 @@ class RbfCoordinator extends Coordinator {
       accountID,
       addressID,
       recipients,
+      apiManager.getApiService().getBlockchainClient(),
     );
     widget = RbfView(
       viewModel,

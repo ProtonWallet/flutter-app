@@ -275,6 +275,7 @@ class DataProviderManager extends Manager {
     receiveAddressDataProvider = ReceiveAddressDataProvider(
       apiServiceManager.getApiService().getBitcoinAddrClient(),
       apiServiceManager.getApiService().getWalletClient(),
+      apiServiceManager.getApiService().getBlockchainClient(),
       walletDataProvider,
     );
 
@@ -307,6 +308,7 @@ class DataProviderManager extends Manager {
     bdkTransactionDataProvider = BDKTransactionDataProvider(
       DBHelper.accountDao!,
       apiServiceManager.getApiService().getWalletClient(),
+      apiServiceManager.getApiService().getBlockchainClient(),
       shared,
       walletManager,
       userSettingsDataProvider,
