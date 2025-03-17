@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/helper/logger.dart';
@@ -23,6 +25,19 @@ class LocaleProvider extends ChangeNotifier {
       }
       if (_language == 'es-419') {
         return Locale("es", "419");
+      }
+
+      /// check and set system default lang
+      if (_language == systemDefault) {
+        final systemLocale = PlatformDispatcher.instance.locale;
+        final local = S.supportedLocales
+            .where((e) =>
+                e.countryCode == systemLocale.countryCode &&
+                e.languageCode == systemLocale.languageCode)
+            .firstOrNull;
+        if (local != null) {
+          return local;
+        }
       }
       return Locale(_language);
     }
