@@ -1,0 +1,91 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+DEVELOPER_KEYCHAIN_NAME = "WALLET_IOS_CERTIFICATE_KEYCHAIN"
+DEVELOPER_KEYCHAIN_PASSWORD = "TUFJTF9JT1NfQ0VSVElGSUNBVEVfS0VZQ0hBSU4="
+CERTIFICATE_PATH = "../certificate.p12"
+APP_IDENTIFIER = "me.proton.wallet.ios"
+
+default_platform(:ios)
+
+def set_up_keychain()
+  create_keychain(
+      name: DEVELOPER_KEYCHAIN_NAME,
+      password: DEVELOPER_KEYCHAIN_PASSWORD,
+      default_keychain: false,
+      add_to_search_list: true,
+      unlock: true
+  )
+  import_certificate(
+      keychain_name: DEVELOPER_KEYCHAIN_NAME,
+      keychain_password: DEVELOPER_KEYCHAIN_PASSWORD,
+      certificate_path: CERTIFICATE_PATH,
+      certificate_password: ENV["CERT_PASSWORD"]
+    )
+end
+
+def tear_down_keychain
+  delete_keychain(
+      name: DEVELOPER_KEYCHAIN_NAME
+  )
+end
+
+def get_xcode_profile()
+  ids = [
+    APP_IDENTIFIER,
+  ]
+
+  ids.each do |id|
+    get_provisioning_profile(
+      app_identifier: id,
+      readonly: true,
+    )
+  end
+end
+
+
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :distribute do
+    set_up_keychain()
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_KEY_IDENTIFIER"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: "../auth_key.p8",
+    )
+    get_xcode_profile()
+
+    build_app(
+      skip_build_archive: true,
+      archive_path: "../build/ios/archive/Runner.xcarchive",
+      export_method: "app-store",
+      export_team_id: "2SB5Z68H26",
+      output_directory: "../build/ios/ipa",
+      output_name: "ProtonWallet_signed.ipa",
+    )
+
+    ENV["FASTLANE_ITUNES_TRANSPORTER_USE_SHELL_SCRIPT"] = "1"
+    ENV["FASTLANE_ITUNES_TRANSPORTER_PATH"] = "/Applications/Transporter.app/Contents/itms"
+
+    upload_to_testflight(
+      app_identifier: APP_IDENTIFIER,
+      skip_waiting_for_build_processing: true,
+      ipa: "../build/ios/ipa/ProtonWallet_signed.ipa",
+    )
+
+    tear_down_keychain
+  end
+end
