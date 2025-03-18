@@ -14845,6 +14845,14 @@ impl SseDecode for crate::api::errors::BridgeError {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::api::errors::BridgeError::Encoding(var_field0);
             }
+            19 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(var_field0);
+            }
+            20 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::InvalidPaperWallet(var_field0);
+            }
             _ => {
                 unimplemented!("");
             }
@@ -19474,6 +19482,12 @@ impl flutter_rust_bridge::IntoDart for crate::api::errors::BridgeError {
             crate::api::errors::BridgeError::Encoding(field0) => {
                 [18.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
+            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
+                [19.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+                [20.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
             _ => {
                 unimplemented!("");
             }
@@ -23000,6 +23014,14 @@ impl SseEncode for crate::api::errors::BridgeError {
             }
             crate::api::errors::BridgeError::Encoding(field0) => {
                 <i32>::sse_encode(18, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
+                <i32>::sse_encode(19, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+                <i32>::sse_encode(20, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             _ => {

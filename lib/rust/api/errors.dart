@@ -98,6 +98,14 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.encoding(
     String field0,
   ) = BridgeError_Encoding;
+
+  /// Paper wallet error
+  const factory BridgeError.insufficientFundsInPaperWallet(
+    String field0,
+  ) = BridgeError_InsufficientFundsInPaperWallet;
+  const factory BridgeError.invalidPaperWallet(
+    String field0,
+  ) = BridgeError_InvalidPaperWallet;
 }
 
 class ResponseError {

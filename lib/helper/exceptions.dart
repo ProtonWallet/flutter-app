@@ -31,6 +31,8 @@ extension BridgeErrorExt on BridgeError {
       apiDeserialize: (e) => s.bridge_error_api_deserialize,
       bitcoinDeserialize: (e) => s.bridge_error_bitcoin_deserialize,
       encoding: (e) => s.bridge_error_encoding,
+      insufficientFundsInPaperWallet: (e) => s.bridge_error_insufficient_funds_in_paper_wallet,
+      invalidPaperWallet: (e) => s.bridge_error_invalid_paper_wallet,
     );
   }
 
@@ -96,6 +98,12 @@ extension BridgeErrorExt on BridgeError {
       encoding: (e) {
         return "String encoding error. Please try again.";
       },
+      insufficientFundsInPaperWallet: (e) {
+        return "This paper has insufficient funds. Please try another one.";
+      },
+      invalidPaperWallet: (e) {
+        return "Invalid private key. Please try again.";
+      },
     );
   }
 }
@@ -128,6 +136,8 @@ String parseSampleDisplayError(BridgeError exception) {
     bitcoinDeserialize: (e) => e.field0,
     sessionStore: (e) => e.field0,
     encoding: (e) => e.field0,
+    insufficientFundsInPaperWallet: (e) => e.field0,
+    invalidPaperWallet: (e) => e.field0,
   );
 }
 

@@ -15203,6 +15203,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return BridgeError_Encoding(
           dco_decode_String(raw[1]),
         );
+      case 19:
+        return BridgeError_InsufficientFundsInPaperWallet(
+          dco_decode_String(raw[1]),
+        );
+      case 20:
+        return BridgeError_InvalidPaperWallet(
+          dco_decode_String(raw[1]),
+        );
       default:
         throw Exception("unreachable");
     }
@@ -19356,6 +19364,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 18:
         var var_field0 = sse_decode_String(deserializer);
         return BridgeError_Encoding(var_field0);
+      case 19:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_InsufficientFundsInPaperWallet(var_field0);
+      case 20:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_InvalidPaperWallet(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -24146,6 +24160,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_String(field0, serializer);
       case BridgeError_Encoding(field0: final field0):
         sse_encode_i_32(18, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_InsufficientFundsInPaperWallet(field0: final field0):
+        sse_encode_i_32(19, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_InvalidPaperWallet(field0: final field0):
+        sse_encode_i_32(20, serializer);
         sse_encode_String(field0, serializer);
       default:
         throw UnimplementedError('');

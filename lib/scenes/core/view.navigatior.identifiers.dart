@@ -75,6 +75,9 @@ enum NavID {
   settings,
   logs,
 
+  // import Paper wallet
+  importPaperWallet,
+
   // Others
   testWallet,
   newuser,

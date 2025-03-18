@@ -12,6 +12,7 @@ import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/proton.address.provider.dart';
 import 'package:wallet/managers/providers/receive.address.data.provider.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.keys.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -52,6 +53,7 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   WalletModel? walletModel;
   AccountModel? accountModel;
   late ValueNotifier accountValueNotifier;
+  final ScrollController scrollController = ScrollController();
 
   /// the address belongs to selected account, and will be displayed to user
   FrbAddressInfo? currentAddress;
@@ -61,6 +63,8 @@ abstract class ReceiveViewModel extends ViewModel<ReceiveCoordinator> {
   void generateNewAddress();
 
   void changeAccount(AccountModel newAccountModel);
+
+  bool isImportPaperWallet();
 }
 
 class ReceiveViewModelImpl extends ReceiveViewModel {
@@ -75,7 +79,8 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     this.protonAddressProvider,
     this.walletKeysProvider,
     this.localBitcoinAddressDataProvider,
-    this.receiveAddressDataProvider, {
+    this.receiveAddressDataProvider,
+    this.unleashDataProvider, {
     required super.isWalletView,
   });
 
@@ -92,6 +97,7 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   final ProtonAddressProvider protonAddressProvider;
   final WalletKeysProvider walletKeysProvider;
   final ReceiveAddressDataProvider receiveAddressDataProvider;
+  final UnleashDataProvider unleashDataProvider;
 
   @override
   Future<void> loadData() async {
@@ -220,7 +226,19 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
   }
 
   @override
-  Future<void> move(NavID to) async {}
+  Future<void> move(NavID to) async {
+    if (to == NavID.importPaperWallet) {
+      if (walletModel != null &&
+          accountModel != null &&
+          currentAddress != null) {
+        coordinator.importPaperWallet(
+          walletModel!,
+          accountModel!,
+          currentAddress!.index,
+        );
+      }
+    }
+  }
 
   @override
   Future<void> changeAccount(AccountModel newAccountModel) async {
@@ -264,5 +282,10 @@ class ReceiveViewModelImpl extends ReceiveViewModel {
     }
     loadingAddress = false;
     sinkAddSafe();
+  }
+
+  @override
+  bool isImportPaperWallet() {
+    return unleashDataProvider.isImportPaperWallet();
   }
 }
