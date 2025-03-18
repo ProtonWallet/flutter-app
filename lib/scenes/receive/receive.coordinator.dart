@@ -2,9 +2,12 @@ import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/models/account.model.dart';
+import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
+import 'package:wallet/scenes/paper.wallet/paper.wallet.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.view.dart';
 import 'package:wallet/scenes/receive/receive.viewmodel.dart';
 
@@ -19,6 +22,16 @@ class ReceiveCoordinator extends Coordinator {
     this.serverAccountID, {
     required this.isWalletView,
   });
+
+  void importPaperWallet(WalletModel walletModel, AccountModel accountModel,
+      int receiveAddressIndex) {
+    final view = PaperWalletCoordinator(
+      walletModel,
+      accountModel,
+      receiveAddressIndex,
+    ).start();
+    showInBottomSheet(view);
+  }
 
   @override
   void end() {}
@@ -41,6 +54,7 @@ class ReceiveCoordinator extends Coordinator {
       dataProviderManager.walletKeysProvider,
       dataProviderManager.localBitcoinAddressDataProvider,
       dataProviderManager.receiveAddressDataProvider,
+      dataProviderManager.unleashDataProvider,
       isWalletView: isWalletView,
     );
     widget = ReceiveView(

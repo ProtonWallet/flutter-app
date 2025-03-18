@@ -1,13 +1,11 @@
+use std::{collections::HashMap, ops::Deref, sync::Arc};
+
 use andromeda_api::transaction::{
     BroadcastMessage, ExchangeRateOrTransactionTime, RecommendedFees,
 };
-use andromeda_bitcoin::blockchain_client::BlockchainClient;
+use andromeda_bitcoin::{blockchain_client::BlockchainClient, psbt::Psbt};
 use chrono::Utc;
 use flutter_rust_bridge::frb;
-use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
-};
 use tracing::info;
 
 use super::psbt::FrbPsbt;

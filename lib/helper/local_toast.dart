@@ -31,8 +31,8 @@ class LocalToast {
         borderRadius: BorderRadius.circular(25.0),
         border: !isWarning ? Border.all() : const Border(),
         color: isWarning
-            ? Theme.of(context).colorScheme.error
-            : ProtonColors.backgroundNorm,
+            ? ProtonColors.notificationError
+            : ProtonColors.protonBlue,
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         if (icon != null) icon,
@@ -43,9 +43,7 @@ class LocalToast {
         Text(
           message,
           style: TextStyle(
-            color: isWarning
-                ? Colors.white
-                : Theme.of(context).colorScheme.onSurface,
+            color: ProtonColors.white,
           ),
         ),
       ]),

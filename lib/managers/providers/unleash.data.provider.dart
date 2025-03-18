@@ -17,6 +17,7 @@ enum UnleashFeature {
   walletMobileClientDebugMode,
   walletEarlyAccess,
   disableBuyMobile,
+  importPaperWallet,
 }
 
 /// Function to retrieve all default toggles
@@ -41,6 +42,8 @@ extension UnleashFeatureExt on UnleashFeature {
         return "WalletEarlyAccess";
       case UnleashFeature.disableBuyMobile:
         return "DisableBuyMobile";
+      case UnleashFeature.importPaperWallet:
+        return "ImportPaperWallet";
     }
   }
 
@@ -159,12 +162,19 @@ class UnleashDataProvider extends DataProvider {
   /// Check specific feature flags
   bool isTraceLoggerEnabled() =>
       kDebugMode || isFeatureEnabled(UnleashFeature.walletFlutterLogInternal);
+
   bool isUsingMempoolFees() =>
       isFeatureEnabled(UnleashFeature.walletMempoolRecommendedFees);
+
   bool isMobileClientDebugMode() =>
       isFeatureEnabled(UnleashFeature.walletMobileClientDebugMode);
+
   bool isWalletEarlyAccess() =>
       isFeatureEnabled(UnleashFeature.walletEarlyAccess);
+
   bool isBuyMobileDisabled() =>
       isFeatureEnabled(UnleashFeature.disableBuyMobile);
+
+  bool isImportPaperWallet() =>
+      isFeatureEnabled(UnleashFeature.importPaperWallet);
 }

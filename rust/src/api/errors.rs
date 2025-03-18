@@ -80,6 +80,13 @@ pub enum BridgeError {
 
     #[error("String encoding error: {0}")]
     Encoding(String),
+
+    /// Paper wallet error
+    #[error("Paper wallet had been used error: {0}")]
+    InsufficientFundsInPaperWallet(String),
+
+    #[error("Invalid paper wallet error: {0}")]
+    InvalidPaperWallet(String),
 }
 
 impl From<DatabaseError> for BridgeError {
@@ -188,6 +195,34 @@ impl From<AndromedaBitcoinError> for BridgeError {
             if let AndromedaApiError::ErrorCode(_, error) = inner_error {
                 return BridgeError::ApiResponse(error.into());
             }
+        }
+
+        if let Some(inner_error) = find_error_type::<AndromedaBitcoinError>(&error) {
+            if let AndromedaBitcoinError::InsufficientFundsInPaperWallet = inner_error {
+                return BridgeError::InsufficientFundsInPaperWallet(format!(
+                    "PaperWallet: this paper wallet had been used"
+                ));
+            }
+
+            if let AndromedaBitcoinError::InvalidPaperWallet = inner_error {
+                return BridgeError::InvalidPaperWallet(format!(
+                    "PaperWallet: invalid paper wallet format"
+                ));
+            }
+        }
+
+        match error {
+            AndromedaBitcoinError::InsufficientFundsInPaperWallet => {
+                return BridgeError::InsufficientFundsInPaperWallet(format!(
+                    "PaperWallet: this paper wallet had been used"
+                ))
+            }
+            AndromedaBitcoinError::InvalidPaperWallet => {
+                return BridgeError::InvalidPaperWallet(format!(
+                    "PaperWallet: invalid paper wallet format"
+                ));
+            }
+            _ => {}
         }
 
         BridgeError::AndromedaBitcoin(format!(
