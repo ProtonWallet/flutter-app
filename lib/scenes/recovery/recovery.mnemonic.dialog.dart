@@ -114,7 +114,6 @@ Future<void> showMnemonicDialog(
                           LocalToast.showToast(
                             context,
                             "Recovery phrase copied to clipboard",
-                            icon: null,
                           );
                         }
                       });

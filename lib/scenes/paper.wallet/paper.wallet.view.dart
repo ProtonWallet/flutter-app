@@ -138,13 +138,11 @@ class PaperWalletView extends ViewBase<PaperWalletViewModel> {
               context,
               context.local.paper_wallet_import_success_toast,
               duration: 2,
-              icon: null,
             );
             LocalToast.showToast(
               context,
               context.local.syncing_new_data,
               duration: 4,
-              icon: null,
             );
           }
         },

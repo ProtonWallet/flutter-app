@@ -21,8 +21,8 @@ class ProtonColors {
   static Color textHint = const Color(0xFF9395A4);
   static Color textWeak = const Color(0xFF535964);
   static Color textInverted = const Color(0xFFFFFFFF);
-  static Color interActionWeakDisable = const Color(0XFFE6E8EC);
-  static Color interActionWeakPressed = const Color(0XFFE2E2E2);
+  static Color interActionWeakDisable = const Color(0xFFE6E8EC);
+  static Color interActionWeakPressed = const Color(0xFFE2E2E2);
 
   /// slider colors, used for RBF
   static Color sliderActiveColor = const Color(0xFF8B8DF9);
@@ -34,18 +34,19 @@ class ProtonColors {
   static Color notificationSuccess = const Color(0xFF5DA662);
   static Color notificationError = const Color(0xFFED4349);
   static Color notificationErrorBackground = const Color(0xFFFFE0E0);
+  static Color notificationNorm = const Color(0xFF767DFF);
 
   /// other one-time custom colors styles for widgets
   static Color launchBackground = const Color(0xff191927);
   static Color black = const Color(0xFF000000);
-  static Color expansionShadow = const Color(0XFFE0E2FF);
-  static Color loadingShadow = const Color(0X22767DFF);
-  static Color inputDoneOverlay = const Color(0XFFD9DDE1);
+  static Color expansionShadow = const Color(0xFFE0E2FF);
+  static Color loadingShadow = const Color(0x22767DFF);
+  static Color inputDoneOverlay = const Color(0xFFD9DDE1);
   static Color circularProgressIndicatorBackGround =
       const Color.fromARGB(51, 255, 255, 255);
 
   /// interAction-Norm, used for link, button background
-  static Color protonBlue = const Color(0XFF767DFF);
+  static Color protonBlue = const Color(0xFF767DFF);
 
   /// drawer colors
   static Color drawerBackground = const Color(0xFF222247);
@@ -89,8 +90,8 @@ class ProtonColors {
     textHint = const Color(0xFF9395A4);
     textWeak = const Color(0xFF535964);
     textInverted = const Color(0xFFFFFFFF);
-    interActionWeakDisable = const Color(0XFFE6E8EC);
-    interActionWeakPressed = const Color(0XFFE2E2E2);
+    interActionWeakDisable = const Color(0xFFE6E8EC);
+    interActionWeakPressed = const Color(0xFFE2E2E2);
 
     /// slider colors, used for RBF
     sliderActiveColor = const Color(0xFF8B8DF9);
@@ -102,18 +103,19 @@ class ProtonColors {
     notificationSuccess = const Color(0xFF5DA662);
     notificationError = const Color(0xFFED4349);
     notificationErrorBackground = const Color(0xFFFFE0E0);
+    notificationNorm = const Color(0xFF767DFF);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xff191927);
     black = const Color(0xFF000000);
-    expansionShadow = const Color(0XFFE0E2FF);
-    loadingShadow = const Color(0X22767DFF);
-    inputDoneOverlay = const Color(0XFFD9DDE1);
+    expansionShadow = const Color(0xFFE0E2FF);
+    loadingShadow = const Color(0x22767DFF);
+    inputDoneOverlay = const Color(0xFFD9DDE1);
     circularProgressIndicatorBackGround =
         const Color.fromARGB(51, 255, 255, 255);
 
     /// interAction-Norm, used for link, button background
-    protonBlue = const Color(0XFF767DFF);
+    protonBlue = const Color(0xFF767DFF);
 
     /// drawer colors
     drawerBackground = const Color(0xFF222247);
@@ -142,7 +144,7 @@ class ProtonColors {
     /// background colors
     backgroundNorm = const Color(0xFF222247);
     backgroundSecondary = const Color(0xFF191C32);
-    backgroundWelcomePage = const Color(0XFF272852);
+    backgroundWelcomePage = const Color(0xFF272852);
 
     /// text colors
     textNorm = const Color(0xFFFFFFFF);
@@ -156,7 +158,7 @@ class ProtonColors {
 
     /// slider colors, used for RBF
     sliderActiveColor = const Color(0xFF8B8DF9);
-    sliderInactiveColor = const Color(0XFF1A1814);
+    sliderInactiveColor = const Color(0xFF1A1814);
 
     /// notification colors, used for btc price chart, status code, warning
     notificationWaning = const Color(0xFFFF9761);
@@ -164,30 +166,31 @@ class ProtonColors {
     notificationSuccess = const Color(0xFF88F189);
     notificationError = const Color(0xFFFB7878);
     notificationErrorBackground = const Color(0xFF3D2A3D);
+    notificationNorm = const Color(0xFF9494FF);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xFFE6E6D8);
     black = const Color(0xFFFFFFFF);
-    expansionShadow = const Color(0XFF5B5BA3);
-    loadingShadow = const Color(0X229494FF);
-    inputDoneOverlay = const Color(0XFFD9DDE1);
+    expansionShadow = const Color(0xFF5B5BA3);
+    loadingShadow = const Color(0x229494FF);
+    inputDoneOverlay = const Color(0xFFD9DDE1);
     circularProgressIndicatorBackGround =
         const Color.fromARGB(51, 255, 255, 255);
 
     /// interAction-Norm, used for link, button background
-    protonBlue = const Color(0XFF9494FF);
+    protonBlue = const Color(0xFF9494FF);
 
     /// recipient avatar text and background colors
-    avatarOrange1Text = const Color(0XFFFF8D52);
-    avatarOrange1Background = const Color(0XFF5D4335);
-    avatarPink1Text = const Color(0XFFFF68DE);
-    avatarPink1Background = const Color(0XFF5E4157);
-    avatarPurple1Text = const Color(0XFF9584FE);
-    avatarPurple1Background = const Color(0XFF413969);
-    avatarBlue1Text = const Color(0XFF536CFF);
-    avatarBlue1Background = const Color(0XFF333A62);
-    avatarGreen1Text = const Color(0XFF52CC9C);
-    avatarGreen1Background = const Color(0XFF1A3C2E);
+    avatarOrange1Text = const Color(0xFFFF8D52);
+    avatarOrange1Background = const Color(0xFF5D4335);
+    avatarPink1Text = const Color(0xFFFF68DE);
+    avatarPink1Background = const Color(0xFF5E4157);
+    avatarPurple1Text = const Color(0xFF9584FE);
+    avatarPurple1Background = const Color(0xFF413969);
+    avatarBlue1Text = const Color(0xFF536CFF);
+    avatarBlue1Background = const Color(0xFF333A62);
+    avatarGreen1Text = const Color(0xFF52CC9C);
+    avatarGreen1Background = const Color(0xFF1A3C2E);
 
     /// appbar divider color
     appBarDividerColor = const Color(0xFF31334A);

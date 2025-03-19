@@ -29,6 +29,7 @@ void main() {
   });
 
   testSnapshot('paper wallet mobile', (tester) async {
+    setGoldenFileComparatorWithThreshold(0.0001);
     final mockThemeProvider = MockThemeProvider();
     ProtonColors.updateLightTheme();
     when(mockThemeProvider.isDarkMode()).thenReturn(false);

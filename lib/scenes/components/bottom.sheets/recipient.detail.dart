@@ -88,8 +88,9 @@ class RecipientDetailSheet {
                             .then((_) {
                           if (context.mounted) {
                             LocalToast.showToast(
-                                context, S.of(context).copied_address,
-                                icon: null);
+                              context,
+                              S.of(context).copied_address,
+                            );
                           }
                         });
                       },
