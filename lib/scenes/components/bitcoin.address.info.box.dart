@@ -49,7 +49,6 @@ class BitcoinAddressInfoBox extends StatelessWidget {
                 LocalToast.showToast(
                   context,
                   S.of(context).copied_address,
-                  icon: null,
                 );
               }
             });

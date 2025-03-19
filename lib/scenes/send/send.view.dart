@@ -699,7 +699,6 @@ class SendView extends ViewBase<SendViewModel> {
                       LocalToast.showToast(
                         context,
                         S.of(context).syncing_new_data,
-                        icon: null,
                       );
                       viewModel.updatePageStatus(SendFlowStatus.sendSuccess);
                     } else if (context.mounted && !success) {

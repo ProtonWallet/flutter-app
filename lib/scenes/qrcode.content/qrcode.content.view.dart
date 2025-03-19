@@ -67,7 +67,6 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
                     LocalToast.showToast(
                       context,
                       S.of(context).copied,
-                      icon: null,
                     );
                   },
                   child: Row(

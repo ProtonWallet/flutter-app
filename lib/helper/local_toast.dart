@@ -2,6 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wallet/constants/proton.color.dart';
+import 'package:wallet/constants/text.style.dart';
+
+enum ToastType {
+  success,
+  warning,
+  error,
+  norm,
+}
+
+extension ToastTypeExtension on ToastType {
+  Color get color {
+    switch (this) {
+      case ToastType.success:
+        return ProtonColors.notificationNorm;
+      case ToastType.warning:
+        return ProtonColors.notificationWaning;
+      case ToastType.error:
+        return ProtonColors.notificationError;
+      case ToastType.norm:
+      default:
+        return ProtonColors.textNorm;
+    }
+  }
+}
 
 class LocalToast {
   static final LocalAuthentication auth = LocalAuthentication();
@@ -11,8 +35,11 @@ class LocalToast {
     showToast(
       context,
       message,
-      isWarning: true,
-      icon: const Icon(Icons.warning, color: Colors.white),
+      icon: Icon(
+        Icons.warning,
+        color: ProtonColors.textInverted,
+      ),
+      toastType: ToastType.error,
       duration: 2,
     );
   }
@@ -21,18 +48,15 @@ class LocalToast {
     BuildContext context,
     String message, {
     int duration = 1,
-    Icon? icon = const Icon(Icons.check),
-    bool isWarning = false,
+    ToastType toastType = ToastType.norm,
+    Icon? icon,
   }) {
     fToast.init(context);
     final Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        border: !isWarning ? Border.all() : const Border(),
-        color: isWarning
-            ? ProtonColors.notificationError
-            : ProtonColors.protonBlue,
+        borderRadius: BorderRadius.circular(16.0),
+        color: toastType.color,
       ),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         if (icon != null) icon,
@@ -42,8 +66,8 @@ class LocalToast {
           ),
         Text(
           message,
-          style: TextStyle(
-            color: ProtonColors.white,
+          style: ProtonStyles.body2Medium(
+            color: ProtonColors.textInverted,
           ),
         ),
       ]),
