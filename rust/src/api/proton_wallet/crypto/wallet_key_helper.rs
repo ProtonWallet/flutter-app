@@ -1,5 +1,4 @@
 use flutter_rust_bridge::frb;
-use rand::RngCore;
 use secrecy::ExposeSecret;
 
 use super::wallet_key::FrbUnlockedWalletKey;
@@ -48,16 +47,5 @@ impl FrbWalletKeyHelper {
         let encrypted_body = EncryptedWalletMnemonic::new_from_base64(&encrypt_text)?;
         let result = encrypted_body.decrypt_with(&wallet_key)?;
         Ok(result.as_utf8_string()?.expose_secret().to_string())
-    }
-
-    /// Cryptographically secure pseudo-random number generation (CSPRNG).
-    #[frb(sync)]
-    pub fn get_secure_random(length: usize) -> Vec<u8> {
-        let mut rng = rand::thread_rng();
-        // Create a Vec<u8> with the specified length
-        let mut out = vec![0u8; length];
-        // Fill the Vec<u8> with random bytes
-        rng.fill_bytes(&mut out);
-        out
     }
 }

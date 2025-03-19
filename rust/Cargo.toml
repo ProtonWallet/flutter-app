@@ -4,17 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dev-dependencies]
-assert_matches = "1.5"
-env_logger = "0.11.0"
+futures = "0.3.31"
+assert_matches = "1.5.0"
 mockall = "0.13.0"
-hyper = "1.1.0"
 
 [build-dependencies]
 flutter_rust_bridge_codegen = { version = "2.6.0" }
 
 [dependencies]
 ##
-futures = "0.3"
 aes-gcm = { version = "0.10.3", features = ["zeroize"] }
 zeroize = { version = "1.7.0", features = ["zeroize_derive"] }
 #https://crates.io/crates/secrecy
@@ -28,27 +26,27 @@ rusqlite = { version = "0.31.0", features = [
     "trace",
 ] }
 serde_rusqlite = "0.35.0"
-async-trait = { version = "0.1.66" }
+async-trait = { version = "0.1.88" }
 
-tracing = "0.1"
+tracing = "0.1.41"
 tracing-appender = "0.2"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
-## old
-thiserror = "1.0.61"
-rand = "0.8"
+## 
+flutter_rust_bridge = { version = "=2.6.0" } 
+
+##
+rand = "0.8.5" #could be removed with small change. when remove ask crypto team to review
+thiserror = "2.0.12" ## auto error mapping
+base64 = "0.22.1" ## base64 encoding
+tokio = { version = "1.44.1", features = ["full"] }
+lazy_static = "1.4.0"
 hmac = "0.12"
 sha2 = "0.10"
-base64 = "0.22.0"
-tokio = { version = "1.28.0", features = ["full"] }
-flutter_rust_bridge = { version = "=2.6.0" }
-serde = "1.0.89"
-serde_json = "1.0.96"
-lazy_static = "1.4.0"
-chrono = "0.4.38"
-## flutter rust logger
-# flutter_logger = { version = "0.6.1", features = ["panic"] }
-# log = "0.4.19"
+serde = "1.0.219"
+serde_json = "1.0.140"
+chrono = "0.4.40"
+
 ### proton dependencies
 andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin", features = [
@@ -64,7 +62,6 @@ proton-crypto-account = { registry = "proton", version = "0.8.2" }
 openssl = { version = "*", features = ["vendored"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-getrandom = { version = "0.2.12", features = ["js"] }
 openssl = { version = "*", features = ["vendored"] }
 # Platform-specific dependencies
 # serde-wasm-bindgen = { version = "0.6.1", optional = true }

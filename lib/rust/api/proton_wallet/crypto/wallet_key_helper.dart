@@ -31,12 +31,6 @@ class FrbWalletKeyHelper {
   static String generateSecretKeyAsBase64() => RustLib.instance.api
       .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKeyAsBase64();
 
-  /// Cryptographically secure pseudo-random number generation (CSPRNG).
-  static Uint8List getSecureRandom({required BigInt length}) => RustLib
-      .instance.api
-      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGetSecureRandom(
-          length: length);
-
   static FrbUnlockedWalletKey restore({required String base64SecureKey}) =>
       RustLib.instance.api
           .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperRestore(

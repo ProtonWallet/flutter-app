@@ -8,7 +8,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:${libs.versions.gradlePlugin.android.get()}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${libs.versions.dagger.get()}")
-        classpath("com.google.gms:google-services:${libs.versions.gradlePlugin.google.services.get()}")
+//        classpath("com.google.gms:google-services:${libs.versions.gradlePlugin.google.services.get()}")
         //classpath("io.sentry:sentry-android-gradle-plugin:${libs.versions.gradlePlugin.sentry.get()}")
     }
 }
@@ -32,8 +32,6 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
