@@ -204,117 +204,126 @@ class DropdownCurrencyV1State extends State<DropdownCurrencyV1> {
                   paddingSize: 2,
                   labelText: S.of(context).search,
                 ),
-                Expanded(
-                    child: SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          if (widget.items
-                              .where((e) => e
-                                  .toString()
-                                  .toLowerCase()
-                                  .contains(keyWord.toLowerCase()))
-                              .isEmpty)
-                            Container(
-                              height: 60,
-                              alignment: Alignment.center,
-                              child: Text(
-                                context.local.no_results,
-                                style: ProtonStyles.body2Regular(
-                                    color: ProtonColors.textNorm),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          for (int index = 0;
-                              index < widget.items.length;
-                              index++)
-                            if (widget.itemsText[index]
-                                .toString()
-                                .toLowerCase()
-                                .contains(keyWord.toLowerCase()))
-                              Container(
-                                  height: 60,
-                                  alignment: Alignment.center,
-                                  child: Column(children: [
-                                    ListTile(
-                                      trailing: selected == widget.items[index]
-                                          ? Assets.images.icon.icCheckmark.svg(
-                                              fit: BoxFit.fill,
-                                              width: 20,
-                                              height: 20,
-                                            )
-                                          : null,
-                                      leading: widget.itemsMoreDetail != null
-                                          ? CustomTooltip(
-                                              message: widget
-                                                  .itemsMoreDetail![index],
-                                              child: Assets
-                                                  .images.icon.icInfoCircle
-                                                  .svg(
-                                                fit: BoxFit.fill,
-                                                width: 20,
-                                                height: 20,
-                                              ),
-                                            )
-                                          : null,
-                                      title: widget.itemsLeadingIcons != null
-                                          ? Row(
-                                              children: [
-                                                widget
-                                                    .itemsLeadingIcons?[index],
-                                                const SizedBox(
-                                                  width: 6,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                    widget.itemsText[index],
+                widget.items
+                        .where((e) => e
+                            .toString()
+                            .toLowerCase()
+                            .contains(keyWord.toLowerCase()))
+                        .isEmpty
+                    ? Container(
+                        height: 50,
+                        alignment: Alignment.center,
+                        child: Text(
+                          context.local.no_results,
+                          style: ProtonStyles.body2Regular(
+                              color: ProtonColors.textNorm),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    : Expanded(
+                        child: SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                for (int index = 0;
+                                    index < widget.items.length;
+                                    index++)
+                                  if (widget.itemsText[index]
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(keyWord.toLowerCase()))
+                                    Container(
+                                        height: 60,
+                                        alignment: Alignment.center,
+                                        child: Column(children: [
+                                          ListTile(
+                                            trailing: selected ==
+                                                    widget.items[index]
+                                                ? Assets.images.icon.icCheckmark
+                                                    .svg(
+                                                    fit: BoxFit.fill,
+                                                    width: 20,
+                                                    height: 20,
+                                                  )
+                                                : null,
+                                            leading: widget.itemsMoreDetail !=
+                                                    null
+                                                ? CustomTooltip(
+                                                    message:
+                                                        widget.itemsMoreDetail![
+                                                            index],
+                                                    child: Assets.images.icon
+                                                        .icInfoCircle
+                                                        .svg(
+                                                      fit: BoxFit.fill,
+                                                      width: 20,
+                                                      height: 20,
+                                                    ),
+                                                  )
+                                                : null,
+                                            title: widget.itemsLeadingIcons !=
+                                                    null
+                                                ? Row(
+                                                    children: [
+                                                      widget.itemsLeadingIcons?[
+                                                          index],
+                                                      const SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          widget
+                                                              .itemsText[index],
+                                                          style: ProtonStyles
+                                                              .body2Regular(
+                                                                  color: ProtonColors
+                                                                      .textNorm),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Text(widget.itemsText[index],
                                                     style: ProtonStyles
                                                         .body2Regular(
                                                             color: ProtonColors
-                                                                .textNorm),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : Text(widget.itemsText[index],
-                                              style: ProtonStyles.body2Regular(
-                                                  color:
-                                                      ProtonColors.textNorm)),
-                                      onTap: () {
-                                        setState(() {
-                                          selected = widget.items[index];
-                                          final int selectedIndex = max(
-                                              widget.items.indexOf(selected),
-                                              0);
-                                          _textEditingController.text =
-                                              getDisplayText(selectedIndex);
-                                          widget.valueNotifier?.value =
-                                              selected;
-                                          Navigator.of(context).pop();
-                                        });
-                                      },
-                                    ),
-                                    const Divider(
-                                      thickness: 0.2,
-                                      height: 1,
-                                    )
-                                  ])),
-                        ],
-                      )
-                    ],
-                  ),
-                )),
+                                                                .textNorm)),
+                                            onTap: () {
+                                              setState(() {
+                                                selected = widget.items[index];
+                                                final int selectedIndex = max(
+                                                    widget.items
+                                                        .indexOf(selected),
+                                                    0);
+                                                _textEditingController.text =
+                                                    getDisplayText(
+                                                        selectedIndex);
+                                                widget.valueNotifier?.value =
+                                                    selected;
+                                                Navigator.of(context).pop();
+                                              });
+                                            },
+                                          ),
+                                          const Divider(
+                                            thickness: 0.2,
+                                            height: 1,
+                                          )
+                                        ])),
+                              ],
+                            )
+                          ],
+                        ),
+                      )),
               ])),
             ),
           );
