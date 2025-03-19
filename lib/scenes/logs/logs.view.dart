@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -24,6 +25,7 @@ class LogsView extends ViewBase<LogsViewModel> {
           : SizedBox(
               height: context.height * 2 / 3,
               child: ListView.builder(
+                shrinkWrap: true,
                 itemCount: viewModel.files.length,
                 itemBuilder: (context, index) {
                   final file = viewModel.files[index];
@@ -33,8 +35,8 @@ class LogsView extends ViewBase<LogsViewModel> {
                       vertical: 4,
                       horizontal: 16,
                     ),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: ProtonColors.backgroundSecondary,
                       borderRadius: BorderRadius.all(
                         Radius.circular(20),
                       ),
