@@ -54,14 +54,12 @@ dependencies:
   animated_size_and_fade: ^5.0.0
   flutter_tags_x: ^1.1.0
   flutter_screen_lock: ^9.0.1
-  sqflite: ^2.3.3+1
   path: ^1.8.3
   flutter_spinkit: ^5.2.0
   # easy_sidemenu: ^0.5.0 # might use later
   qr_flutter: ^4.1.0
   share_plus: ^10.0.0
   flutter_local_notifications: ^18.0.1
-  sqflite_common_ffi: ^2.3.1
   web_socket_channel: ^3.0.1 # might use later
   introduction_screen: ^3.1.12
   # confetti: ^0.8.0
@@ -88,6 +86,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   equatable: ^2.0.3 # better use with flutter bloc
   animated_flip_counter: ^0.3.4
+  sqflite: ^2.3.3+1
+  sqflite_common_ffi: ^2.3.1
   sqlite3_flutter_libs: ^0.5.24
   chips_choice: ^3.0.1
   just_the_tooltip: ^0.0.12
