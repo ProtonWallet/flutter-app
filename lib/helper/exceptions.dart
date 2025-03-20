@@ -23,6 +23,7 @@ extension BridgeErrorExt on BridgeError {
       apiSrp: (e) => s.bridge_error_api_srp,
       aesGcm: (e) => s.bridge_error_aes_gcm,
       walletCrypto: (e) => s.bridge_error_wallet_crypto,
+      walletDecryption: (e) => s.bridge_error_wallet_decryption,
       walletFeature: (e) => s.bridge_error_wallet_feature,
       login: (e) => s.bridge_error_login,
       fork: (e) => s.bridge_error_fork,
@@ -73,6 +74,9 @@ extension BridgeErrorExt on BridgeError {
       },
       walletCrypto: (e) {
         return "A wallet cryptography error occurred. Please try again.";
+      },
+      walletDecryption: (e) {
+        return "Failed to decrypt wallet. Please try again.";
       },
       walletFeature: (e) {
         return "A wallet feature operation failed. Please try again.";
@@ -128,6 +132,7 @@ String parseSampleDisplayError(BridgeError exception) {
     apiSrp: (e) => e.field0,
     aesGcm: (e) => e.field0,
     walletCrypto: (e) => e.field0,
+    walletDecryption: (e) => e.field0,
     walletFeature: (e) => e.field0,
     login: (e) => e.field0,
     fork: (e) => e.field0,
@@ -145,6 +150,13 @@ bool ifMuonClientError(BridgeError exception) {
   return exception.maybeMap(
     muonClient: (e) => true,
     orElse: () => false,
+  );
+}
+
+String? parseAppCryptoError(BridgeError exception) {
+  return exception.maybeMap(
+    walletDecryption: (e) => e.field0,
+    orElse: () => null,
   );
 }
 

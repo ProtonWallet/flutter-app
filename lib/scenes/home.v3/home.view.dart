@@ -30,6 +30,8 @@ import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/alert.warning.dart';
+import 'package:wallet/scenes/components/alerts/app.crypto.error.dialog.dart';
 import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/custom.card_loading.builder.dart';
 import 'package:wallet/scenes/components/discover/discover.feeds.view.dart';
@@ -64,6 +66,46 @@ class HomeView extends ViewBase<HomeViewModel> {
       },
       content: buildContent,
     );
+  }
+
+  Widget buildNotification(BuildContext context) {
+    return BlocBuilder<WalletListBloc, WalletListState>(
+        bloc: viewModel.walletListBloc,
+        builder: (context, state) {
+          bool isCryptoDecryptionError = false;
+          if (state.initialized) {
+            for (WalletMenuModel walletMenuModel in state.walletsModel) {
+              if (walletMenuModel.isSelected) {
+                isCryptoDecryptionError =
+                    walletMenuModel.isCryptoDecryptionError;
+              }
+              for (AccountMenuModel accountMenuModel
+                  in walletMenuModel.accounts) {
+                if (accountMenuModel.isSelected) {
+                  isCryptoDecryptionError =
+                      walletMenuModel.isCryptoDecryptionError;
+                  break;
+                }
+              }
+            }
+          }
+          return isCryptoDecryptionError
+              ? GestureDetector(
+                  onTap: () {
+                    showAppCryptoErrorDialog("");
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: defaultPadding),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: defaultPadding),
+                    child: AlertWarning(
+                      content: context.local.home_app_crypto_error_alert,
+                      width: context.width,
+                    ),
+                  ),
+                )
+              : const SizedBox();
+        });
   }
 
   Widget buildContent(BuildContext context) {
@@ -118,6 +160,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           ],
                                         )),
                                     const SizedBox(height: 24),
+                                    buildNotification(context),
                                     BtcTitleActionsView(
                                         initialized:
                                             walletListState.initialized,

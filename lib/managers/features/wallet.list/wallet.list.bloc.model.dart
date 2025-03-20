@@ -10,6 +10,7 @@ class WalletMenuModel {
   int currentIndex = 0;
 
   bool isSelected = false;
+  bool isCryptoDecryptionError = false;
   List<AccountMenuModel> accounts = [];
 
   final WalletModel walletModel;
