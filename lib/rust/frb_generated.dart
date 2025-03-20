@@ -15148,34 +15148,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           dco_decode_String(raw[1]),
         );
       case 13:
-        return BridgeError_WalletFeature(
+        return BridgeError_WalletDecryption(
           dco_decode_String(raw[1]),
         );
       case 14:
-        return BridgeError_Login(
+        return BridgeError_WalletFeature(
           dco_decode_String(raw[1]),
         );
       case 15:
-        return BridgeError_Fork(
+        return BridgeError_Login(
           dco_decode_String(raw[1]),
         );
       case 16:
-        return BridgeError_Database(
+        return BridgeError_Fork(
           dco_decode_String(raw[1]),
         );
       case 17:
-        return BridgeError_SessionStore(
+        return BridgeError_Database(
           dco_decode_String(raw[1]),
         );
       case 18:
-        return BridgeError_Encoding(
+        return BridgeError_SessionStore(
           dco_decode_String(raw[1]),
         );
       case 19:
-        return BridgeError_InsufficientFundsInPaperWallet(
+        return BridgeError_Encoding(
           dco_decode_String(raw[1]),
         );
       case 20:
+        return BridgeError_InsufficientFundsInPaperWallet(
+          dco_decode_String(raw[1]),
+        );
+      case 21:
         return BridgeError_InvalidPaperWallet(
           dco_decode_String(raw[1]),
         );
@@ -19316,26 +19320,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return BridgeError_WalletCrypto(var_field0);
       case 13:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_WalletFeature(var_field0);
+        return BridgeError_WalletDecryption(var_field0);
       case 14:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Login(var_field0);
+        return BridgeError_WalletFeature(var_field0);
       case 15:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Fork(var_field0);
+        return BridgeError_Login(var_field0);
       case 16:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Database(var_field0);
+        return BridgeError_Fork(var_field0);
       case 17:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_SessionStore(var_field0);
+        return BridgeError_Database(var_field0);
       case 18:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_Encoding(var_field0);
+        return BridgeError_SessionStore(var_field0);
       case 19:
         var var_field0 = sse_decode_String(deserializer);
-        return BridgeError_InsufficientFundsInPaperWallet(var_field0);
+        return BridgeError_Encoding(var_field0);
       case 20:
+        var var_field0 = sse_decode_String(deserializer);
+        return BridgeError_InsufficientFundsInPaperWallet(var_field0);
+      case 21:
         var var_field0 = sse_decode_String(deserializer);
         return BridgeError_InvalidPaperWallet(var_field0);
       default:
@@ -24111,29 +24118,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case BridgeError_WalletCrypto(field0: final field0):
         sse_encode_i_32(12, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_WalletFeature(field0: final field0):
+      case BridgeError_WalletDecryption(field0: final field0):
         sse_encode_i_32(13, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Login(field0: final field0):
+      case BridgeError_WalletFeature(field0: final field0):
         sse_encode_i_32(14, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Fork(field0: final field0):
+      case BridgeError_Login(field0: final field0):
         sse_encode_i_32(15, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Database(field0: final field0):
+      case BridgeError_Fork(field0: final field0):
         sse_encode_i_32(16, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_SessionStore(field0: final field0):
+      case BridgeError_Database(field0: final field0):
         sse_encode_i_32(17, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_Encoding(field0: final field0):
+      case BridgeError_SessionStore(field0: final field0):
         sse_encode_i_32(18, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_InsufficientFundsInPaperWallet(field0: final field0):
+      case BridgeError_Encoding(field0: final field0):
         sse_encode_i_32(19, serializer);
         sse_encode_String(field0, serializer);
-      case BridgeError_InvalidPaperWallet(field0: final field0):
+      case BridgeError_InsufficientFundsInPaperWallet(field0: final field0):
         sse_encode_i_32(20, serializer);
+        sse_encode_String(field0, serializer);
+      case BridgeError_InvalidPaperWallet(field0: final field0):
+        sse_encode_i_32(21, serializer);
         sse_encode_String(field0, serializer);
       default:
         throw UnimplementedError('');

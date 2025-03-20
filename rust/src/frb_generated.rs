@@ -14810,33 +14810,37 @@ impl SseDecode for crate::api::errors::BridgeError {
             }
             13 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::WalletFeature(var_field0);
+                return crate::api::errors::BridgeError::WalletDecryption(var_field0);
             }
             14 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Login(var_field0);
+                return crate::api::errors::BridgeError::WalletFeature(var_field0);
             }
             15 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Fork(var_field0);
+                return crate::api::errors::BridgeError::Login(var_field0);
             }
             16 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Database(var_field0);
+                return crate::api::errors::BridgeError::Fork(var_field0);
             }
             17 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::SessionStore(var_field0);
+                return crate::api::errors::BridgeError::Database(var_field0);
             }
             18 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::Encoding(var_field0);
+                return crate::api::errors::BridgeError::SessionStore(var_field0);
             }
             19 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
-                return crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(var_field0);
+                return crate::api::errors::BridgeError::Encoding(var_field0);
             }
             20 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(var_field0);
+            }
+            21 => {
                 let mut var_field0 = <String>::sse_decode(deserializer);
                 return crate::api::errors::BridgeError::InvalidPaperWallet(var_field0);
             }
@@ -19450,29 +19454,32 @@ impl flutter_rust_bridge::IntoDart for crate::api::errors::BridgeError {
             crate::api::errors::BridgeError::WalletCrypto(field0) => {
                 [12.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::WalletFeature(field0) => {
+            crate::api::errors::BridgeError::WalletDecryption(field0) => {
                 [13.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Login(field0) => {
+            crate::api::errors::BridgeError::WalletFeature(field0) => {
                 [14.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Fork(field0) => {
+            crate::api::errors::BridgeError::Login(field0) => {
                 [15.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Database(field0) => {
+            crate::api::errors::BridgeError::Fork(field0) => {
                 [16.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::SessionStore(field0) => {
+            crate::api::errors::BridgeError::Database(field0) => {
                 [17.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::Encoding(field0) => {
+            crate::api::errors::BridgeError::SessionStore(field0) => {
                 [18.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
+            crate::api::errors::BridgeError::Encoding(field0) => {
                 [19.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
-            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
                 [20.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+                [21.into_dart(), field0.into_into_dart().into_dart()].into_dart()
             }
             _ => {
                 unimplemented!("");
@@ -22978,36 +22985,40 @@ impl SseEncode for crate::api::errors::BridgeError {
                 <i32>::sse_encode(12, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::WalletFeature(field0) => {
+            crate::api::errors::BridgeError::WalletDecryption(field0) => {
                 <i32>::sse_encode(13, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Login(field0) => {
+            crate::api::errors::BridgeError::WalletFeature(field0) => {
                 <i32>::sse_encode(14, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Fork(field0) => {
+            crate::api::errors::BridgeError::Login(field0) => {
                 <i32>::sse_encode(15, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Database(field0) => {
+            crate::api::errors::BridgeError::Fork(field0) => {
                 <i32>::sse_encode(16, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::SessionStore(field0) => {
+            crate::api::errors::BridgeError::Database(field0) => {
                 <i32>::sse_encode(17, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::Encoding(field0) => {
+            crate::api::errors::BridgeError::SessionStore(field0) => {
                 <i32>::sse_encode(18, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
+            crate::api::errors::BridgeError::Encoding(field0) => {
                 <i32>::sse_encode(19, serializer);
                 <String>::sse_encode(field0, serializer);
             }
-            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+            crate::api::errors::BridgeError::InsufficientFundsInPaperWallet(field0) => {
                 <i32>::sse_encode(20, serializer);
+                <String>::sse_encode(field0, serializer);
+            }
+            crate::api::errors::BridgeError::InvalidPaperWallet(field0) => {
+                <i32>::sse_encode(21, serializer);
                 <String>::sse_encode(field0, serializer);
             }
             _ => {

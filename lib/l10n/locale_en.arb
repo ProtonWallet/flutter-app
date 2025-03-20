@@ -125,6 +125,7 @@
   "incorrect_bitcoin_address": "Sorry, this is neither a correct bitcoin address nor a known email address.",
   "your_personal_addr": "Your Personal Wallet Address",
   "learn_more": "Learn More",
+  "learn_more_small": "Learn more",
   "receive_bitcoin": "Receive Bitcoin",
   "bitcoin_via_email_desc": "Bitcoin via Email is active! Discover how it works",
   "bitcoin_via_email_not_active_desc": "Bitcoin via Email is not active. Enable it so Proton Wallet users can easily send you bitcoin.",
@@ -604,9 +605,12 @@
   "paper_wallet_import_success_toast": "Paper wallet was successfully imported",
   "other_options": "Other options",
   "confirm_and_import": "Confirm and import",
+  "bridge_error_wallet_decryption": "Failed to decrypt your wallet",
+  "app_crypto_error_content": "Your wallet cannot be decrypted due to a recent password reset. If you remember your previous password, you can re-activate the previous key with following link in order to access your funds.",
+  "app_crypto_error_hint": "(You will need to logout and login again after you had done the key recovery process.)",
+  "home_app_crypto_error_alert": "Decryption of this wallet's encrypted content failed.\nClick to learn more.",
   "buying_unavailable": "Buying is temporarily unavailable",
   "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later.",
-  "copy_button": "Copy",
   "xpub_copied": "Public key copied to clipboard",
   "show_xpub": "Show public key (XPUB)"
 }

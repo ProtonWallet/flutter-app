@@ -16,6 +16,10 @@ class ExternalUrl {
   final String mainSiteUrl = "https://proton.me/";
   final String supportCenterUrl = "https://proton.me/support/wallet";
   final String terms = "https://proton.me/wallet/legal/terms";
+  final String encryptionKeys =
+      "https://account.proton.me/mail/encryption-keys";
+  final String dataRecovery =
+      "https://proton.me/support/recover-encrypted-messages-files";
   final String privacy = "https://proton.me/wallet/privacy-policy";
   final String walletHomepage = "https://wallet.proton.me";
 
@@ -126,6 +130,14 @@ class ExternalUrl {
 
   void lanuchTerms() {
     launchString(terms);
+  }
+
+  void launchEncryptionKeys() {
+    launchString(encryptionKeys);
+  }
+
+  void launchDataRecovery() {
+    launchString(dataRecovery);
   }
 
   void lanuchPrivacy() {

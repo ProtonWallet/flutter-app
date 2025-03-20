@@ -47,6 +47,7 @@ import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/invite.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
+import 'package:wallet/scenes/components/alerts/app.crypto.error.dialog.dart';
 import 'package:wallet/scenes/components/alerts/force.upgrade.dialog.dart';
 import 'package:wallet/scenes/components/alerts/logout.error.dialog.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
@@ -344,6 +345,8 @@ class HomeViewModelImpl extends HomeViewModel {
         logout();
       } else if (state is AppForceUpgradeState) {
         showUpgradeErrorDialog(state.message, logout);
+      } else if (state is AppCryptoFailed) {
+        showAppCryptoErrorDialog(state.message);
       }
     }, onError: (e, stacktrace) {
       Sentry.captureException(e, stackTrace: stacktrace);

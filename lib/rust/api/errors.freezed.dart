@@ -32,6 +32,7 @@ mixin _$BridgeError {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -57,6 +58,7 @@ mixin _$BridgeError {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -82,6 +84,7 @@ mixin _$BridgeError {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -112,6 +115,8 @@ mixin _$BridgeError {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -139,6 +144,7 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -165,6 +171,7 @@ mixin _$BridgeError {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -282,6 +289,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -310,6 +318,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -338,6 +347,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -374,6 +384,8 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -404,6 +416,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -433,6 +446,7 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -548,6 +562,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -576,6 +591,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -604,6 +620,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -640,6 +657,8 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -670,6 +689,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -699,6 +719,7 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -816,6 +837,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -844,6 +866,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -872,6 +895,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -908,6 +932,8 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -938,6 +964,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -967,6 +994,7 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -1084,6 +1112,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -1112,6 +1141,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -1140,6 +1170,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -1176,6 +1207,8 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -1206,6 +1239,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -1235,6 +1269,7 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -1352,6 +1387,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -1380,6 +1416,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -1408,6 +1445,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -1444,6 +1482,8 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -1474,6 +1514,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -1503,6 +1544,7 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -1620,6 +1662,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -1648,6 +1691,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -1676,6 +1720,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -1712,6 +1757,8 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -1742,6 +1789,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -1771,6 +1819,7 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -1889,6 +1938,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -1917,6 +1967,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -1945,6 +1996,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -1981,6 +2033,8 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -2011,6 +2065,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -2040,6 +2095,7 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -2158,6 +2214,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -2186,6 +2243,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -2214,6 +2272,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -2250,6 +2309,8 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -2280,6 +2341,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -2309,6 +2371,7 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -2426,6 +2489,7 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -2454,6 +2518,7 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -2482,6 +2547,7 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -2518,6 +2584,8 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -2548,6 +2616,7 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -2577,6 +2646,7 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -2697,6 +2767,7 @@ class _$BridgeError_BitcoinDeserializeImpl
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -2725,6 +2796,7 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -2753,6 +2825,7 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -2789,6 +2862,8 @@ class _$BridgeError_BitcoinDeserializeImpl
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -2819,6 +2894,7 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -2848,6 +2924,7 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -2964,6 +3041,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -2992,6 +3070,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -3020,6 +3099,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -3056,6 +3136,8 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -3086,6 +3168,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -3115,6 +3198,7 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -3230,6 +3314,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -3258,6 +3343,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -3286,6 +3372,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -3322,6 +3409,8 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -3352,6 +3441,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -3381,6 +3471,7 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -3498,6 +3589,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -3526,6 +3618,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -3554,6 +3647,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -3590,6 +3684,8 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -3620,6 +3716,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -3649,6 +3746,7 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -3679,6 +3777,283 @@ abstract class BridgeError_WalletCrypto extends BridgeError {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_WalletCryptoImplCopyWith<_$BridgeError_WalletCryptoImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_WalletDecryptionImplCopyWith<$Res> {
+  factory _$$BridgeError_WalletDecryptionImplCopyWith(
+          _$BridgeError_WalletDecryptionImpl value,
+          $Res Function(_$BridgeError_WalletDecryptionImpl) then) =
+      __$$BridgeError_WalletDecryptionImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_WalletDecryptionImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res, _$BridgeError_WalletDecryptionImpl>
+    implements _$$BridgeError_WalletDecryptionImplCopyWith<$Res> {
+  __$$BridgeError_WalletDecryptionImplCopyWithImpl(
+      _$BridgeError_WalletDecryptionImpl _value,
+      $Res Function(_$BridgeError_WalletDecryptionImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_WalletDecryptionImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
+  const _$BridgeError_WalletDecryptionImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.walletDecryption(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_WalletDecryptionImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_WalletDecryptionImplCopyWith<
+          _$BridgeError_WalletDecryptionImpl>
+      get copyWith => __$$BridgeError_WalletDecryptionImplCopyWithImpl<
+          _$BridgeError_WalletDecryptionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+    required TResult Function(String field0) insufficientFundsInPaperWallet,
+    required TResult Function(String field0) invalidPaperWallet,
+  }) {
+    return walletDecryption(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+    TResult? Function(String field0)? insufficientFundsInPaperWallet,
+    TResult? Function(String field0)? invalidPaperWallet,
+  }) {
+    return walletDecryption?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    TResult Function(String field0)? insufficientFundsInPaperWallet,
+    TResult Function(String field0)? invalidPaperWallet,
+    required TResult orElse(),
+  }) {
+    if (walletDecryption != null) {
+      return walletDecryption(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+    required TResult Function(BridgeError_InsufficientFundsInPaperWallet value)
+        insufficientFundsInPaperWallet,
+    required TResult Function(BridgeError_InvalidPaperWallet value)
+        invalidPaperWallet,
+  }) {
+    return walletDecryption(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+    TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+  }) {
+    return walletDecryption?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    required TResult orElse(),
+  }) {
+    if (walletDecryption != null) {
+      return walletDecryption(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_WalletDecryption extends BridgeError {
+  const factory BridgeError_WalletDecryption(final String field0) =
+      _$BridgeError_WalletDecryptionImpl;
+  const BridgeError_WalletDecryption._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_WalletDecryptionImplCopyWith<
+          _$BridgeError_WalletDecryptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -3766,6 +4141,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -3794,6 +4170,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -3822,6 +4199,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -3858,6 +4236,8 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -3888,6 +4268,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -3917,6 +4298,7 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -4032,6 +4414,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -4060,6 +4443,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -4088,6 +4472,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -4124,6 +4509,8 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -4154,6 +4541,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -4183,6 +4571,7 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -4298,6 +4687,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -4326,6 +4716,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -4354,6 +4745,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -4390,6 +4782,8 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -4420,6 +4814,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -4449,6 +4844,7 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -4564,6 +4960,7 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -4592,6 +4989,7 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -4620,6 +5018,7 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -4656,6 +5055,8 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -4686,6 +5087,7 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -4715,6 +5117,7 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -4832,6 +5235,7 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -4860,6 +5264,7 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -4888,6 +5293,7 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -4924,6 +5330,8 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -4954,6 +5362,7 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -4983,6 +5392,7 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -5099,6 +5509,7 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -5127,6 +5538,7 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -5155,6 +5567,7 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -5191,6 +5604,8 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -5221,6 +5636,7 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -5250,6 +5666,7 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -5374,6 +5791,7 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -5402,6 +5820,7 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -5430,6 +5849,7 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -5466,6 +5886,8 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -5496,6 +5918,7 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -5525,6 +5948,7 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,
@@ -5646,6 +6070,7 @@ class _$BridgeError_InvalidPaperWalletImpl
     required TResult Function(String field0) apiSrp,
     required TResult Function(String field0) aesGcm,
     required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
     required TResult Function(String field0) walletFeature,
     required TResult Function(String field0) login,
     required TResult Function(String field0) fork,
@@ -5674,6 +6099,7 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult? Function(String field0)? apiSrp,
     TResult? Function(String field0)? aesGcm,
     TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
     TResult? Function(String field0)? walletFeature,
     TResult? Function(String field0)? login,
     TResult? Function(String field0)? fork,
@@ -5702,6 +6128,7 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult Function(String field0)? apiSrp,
     TResult Function(String field0)? aesGcm,
     TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
     TResult Function(String field0)? walletFeature,
     TResult Function(String field0)? login,
     TResult Function(String field0)? fork,
@@ -5738,6 +6165,8 @@ class _$BridgeError_InvalidPaperWalletImpl
     required TResult Function(BridgeError_ApiSrp value) apiSrp,
     required TResult Function(BridgeError_AesGcm value) aesGcm,
     required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
     required TResult Function(BridgeError_WalletFeature value) walletFeature,
     required TResult Function(BridgeError_Login value) login,
     required TResult Function(BridgeError_Fork value) fork,
@@ -5768,6 +6197,7 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult? Function(BridgeError_ApiSrp value)? apiSrp,
     TResult? Function(BridgeError_AesGcm value)? aesGcm,
     TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult? Function(BridgeError_WalletFeature value)? walletFeature,
     TResult? Function(BridgeError_Login value)? login,
     TResult? Function(BridgeError_Fork value)? fork,
@@ -5797,6 +6227,7 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult Function(BridgeError_ApiSrp value)? apiSrp,
     TResult Function(BridgeError_AesGcm value)? aesGcm,
     TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
     TResult Function(BridgeError_WalletFeature value)? walletFeature,
     TResult Function(BridgeError_Login value)? login,
     TResult Function(BridgeError_Fork value)? fork,

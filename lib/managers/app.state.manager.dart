@@ -36,6 +36,15 @@ enum LoadingTask {
 
 abstract class AppState extends DataState {}
 
+class AppCryptoFailed extends AppState {
+  final String message;
+
+  AppCryptoFailed({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class AppSessionFailed extends AppState {
   final String message;
 
@@ -131,6 +140,15 @@ class AppStateManager extends DataProvider implements Manager {
     if (ifMuonClientError(exception)) {
       isConnectivityOK = false;
     }
+  }
+
+  bool handleAppCryptoError(BridgeError exception) {
+    final message = parseAppCryptoError(exception);
+    if (message != null) {
+      emitState(AppCryptoFailed(message: message));
+      return true;
+    }
+    return false;
   }
 
   bool handleSessionError(BridgeError exception) {

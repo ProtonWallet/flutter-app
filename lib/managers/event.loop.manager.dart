@@ -344,7 +344,10 @@ class EventLoop extends Service implements Manager {
     try {
       /// handlie bitcoin address
       await handleBitcoinAddress();
-
+    } catch (e, stacktrace) {
+      logger.e("polling error: $e stacktrace: $stacktrace");
+    }
+    try {
       /// check block height
       await dataProviderManager.blockInfoDataProvider.syncBlockHeight();
 

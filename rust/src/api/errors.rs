@@ -60,6 +60,10 @@ pub enum BridgeError {
     #[error("An error occurred in wallet crypto: {0}")]
     WalletCrypto(String),
 
+    /// wallet decryption errors
+    #[error("An error occurred in wallet crypto: {0}")]
+    WalletDecryption(String),
+
     /// wallet feature errors
     #[error("An error occurred in wallet feature: {0}")]
     WalletFeature(String),
@@ -97,6 +101,18 @@ impl From<DatabaseError> for BridgeError {
 
 impl From<WalletCryptoError> for BridgeError {
     fn from(value: WalletCryptoError) -> Self {
+        if let WalletCryptoError::CryptoError(inner) = &value {
+            let error_msg = inner.to_string();
+
+            if error_msg.contains(
+                "failed to initialize decryptor: gopenpgp: no decryption key material provided",
+            ) {
+                return BridgeError::WalletDecryption(format!(
+                    "WalletCryptoError occurred: {:?}",
+                    inner.to_string(),
+                ));
+            }
+        }
         BridgeError::WalletCrypto(format!("WalletCryptoError occurred: {:?}", value.source()))
     }
 }

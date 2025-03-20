@@ -188,6 +188,11 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
               );
               walletModel.accounts.add(accMenuModel);
             }
+          } on BridgeError catch (e, stacktrace) {
+            walletModel.isCryptoDecryptionError =
+                appStateManager.handleAppCryptoError(e);
+            logger.e("Event Loop error: $e stacktrace: $stacktrace");
+            Sentry.captureException(e, stackTrace: stacktrace);
           } catch (e, stacktrace) {
             Sentry.captureException(e, stackTrace: stacktrace);
             logger.e(e.toString());
