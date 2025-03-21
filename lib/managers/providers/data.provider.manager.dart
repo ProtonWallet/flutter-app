@@ -9,6 +9,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/manager.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
+import 'package:wallet/managers/providers/backup.alert.timer.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
@@ -148,6 +149,7 @@ class DataProviderManager extends Manager {
   late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
+  late BackupAlertTimerProvider backupAlertTimerProvider;
 
   late UnleashDataProvider unleashDataProvider;
   late ExclusiveInviteDataProvider exclusiveInviteDataProvider;
@@ -258,6 +260,11 @@ class DataProviderManager extends Manager {
       apiServiceManager.getApiService().getBlockClient(),
     );
 
+    /// backup alert timer
+    backupAlertTimerProvider = BackupAlertTimerProvider(
+      shared,
+    );
+
     /// exclusive invite
     exclusiveInviteDataProvider = ExclusiveInviteDataProvider(
       apiServiceManager.getApiService().getInviteClient(),
@@ -337,6 +344,7 @@ class DataProviderManager extends Manager {
     await gatewayDataProvider.clear();
     await protonAddressProvider.clear();
     await blockInfoDataProvider.clear();
+    await backupAlertTimerProvider.clear();
     await unleashDataProvider.clear();
     await exclusiveInviteDataProvider.clear();
     await connectivityProvider.clear();
@@ -362,6 +370,7 @@ class DataProviderManager extends Manager {
     await gatewayDataProvider.reload();
     await protonAddressProvider.reload();
     await blockInfoDataProvider.reload();
+    await backupAlertTimerProvider.reload();
     await unleashDataProvider.reload();
     await exclusiveInviteDataProvider.reload();
     await connectivityProvider.reload();

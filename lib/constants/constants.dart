@@ -19,6 +19,7 @@ const int driftDatabaseVersion = 4;
 const int sqliteDatabaseVersion = 1;
 const int defaultTwoFactorAmountThreshold = 1000;
 const int maxRecipientCount = 5;
+const int showBackupWalletAfterCreateInSeconds = 60 * 60 * 24 * 3;
 
 /// used for desktop
 const double maxDeskTopSheetWidth = 600.0;

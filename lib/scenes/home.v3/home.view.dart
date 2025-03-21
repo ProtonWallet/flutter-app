@@ -179,6 +179,16 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           move(context, NavID.receive);
                                         }),
                                     const SizedBox(height: 24),
+                                    if (viewModel.showBackupYourWalletBanner)
+                                      buildBackupAlertWalletBanner(
+                                        context,
+                                        viewModel,
+                                      ),
+                                    if (viewModel.showBackupYourProtonBanner)
+                                      buildBackupAlertProtonBanner(
+                                        context,
+                                        viewModel,
+                                      ),
                                     if (viewModel.canInvite)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -619,6 +629,79 @@ class HomeView extends ViewBase<HomeViewModel> {
                             .copyWith(height: 1),
                   ),
       ],
+    );
+  }
+
+  Widget buildBackupAlertWalletBanner(
+      BuildContext context, HomeViewModel viewModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: defaultPadding)
+          .copyWith(bottom: 6),
+      child: GestureDetector(
+        onTap: () {
+          viewModel
+              .showBackupYourWallet(viewModel.getSelectedWalletMenuModel());
+        },
+        child: Container(
+          width: context.width,
+          padding: const EdgeInsets.only(
+              left: 20, right: 20, top: defaultPadding, bottom: defaultPadding),
+          decoration: BoxDecoration(
+              color: ProtonColors.notificationWaning,
+              borderRadius: BorderRadius.circular(24.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.local.backup_banner_wallet_title,
+                style:
+                    ProtonStyles.body2Medium(color: ProtonColors.textInverted),
+              ),
+              Transform.translate(
+                offset: const Offset(6, 0),
+                child: Icon(Icons.arrow_forward_ios_rounded,
+                    color: ProtonColors.textInverted, size: 14),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBackupAlertProtonBanner(
+      BuildContext context, HomeViewModel viewModel) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: defaultPadding)
+          .copyWith(bottom: 6),
+      child: GestureDetector(
+        onTap: () {
+          viewModel.showBackupYourProton();
+        },
+        child: Container(
+          width: context.width,
+          padding: const EdgeInsets.only(
+              left: 20, right: 20, top: defaultPadding, bottom: defaultPadding),
+          decoration: BoxDecoration(
+              color: ProtonColors.notificationWaning,
+              borderRadius: BorderRadius.circular(24.0)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.local.backup_banner_proton_title,
+                style:
+                    ProtonStyles.body2Medium(color: ProtonColors.textInverted),
+              ),
+              Transform.translate(
+                offset: const Offset(6, 0),
+                child: Icon(Icons.arrow_forward_ios_rounded,
+                    color: ProtonColors.textInverted, size: 14),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

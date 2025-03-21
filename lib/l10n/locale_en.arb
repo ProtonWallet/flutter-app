@@ -149,7 +149,6 @@
   "create_an_account": "Create an account",
   "ok": "Ok",
   "ok_i_have_save": "Ok, I saved it somewhere",
-  "copy_button": "Copy to clipboard",
   "quick_action": "Quick Actions",
   "explore_wallet": "Explore Proton Wallet",
   "security_n_proton_wallet": "Security & Proton Wallet",
@@ -611,6 +610,15 @@
   "home_app_crypto_error_alert": "Decryption of this wallet's encrypted content failed.\nClick to learn more.",
   "buying_unavailable": "Buying is temporarily unavailable",
   "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later.",
+  "backup_banner_wallet_title": "Backup your wallet",
+  "backup_banner_proton_title": "Backup your Proton account",
+  "backup_your_wallet_alert_title": "Backup: \"{wallet_name}\"",
+  "backup_your_wallet_alert_content": "Back up your wallet's seed phrase so you can always recover your assets, including on other wallet services. Without it, you risk losing your BTC if you forget your Proton password.",
+  "backup_your_wallet_alert_backup_now": "Backup now",
+  "backup_your_wallet_alert_remind_7_days_after": "Remind me later",
+  "backup_your_proton_alert_title": "Backup your Proton account",
+  "backup_your_proton_alert_content": "Enable Proton account recovery to protect your account. Without it, forgetting your password could prevent you from decrypting your existing data, including your wallet.",
+  "copy_button": "Copy",
   "xpub_copied": "Public key copied to clipboard",
   "show_xpub": "Show public key (XPUB)"
 }

@@ -515,6 +515,23 @@ class WalletListBloc extends Bloc<WalletListEvent, WalletListState> {
     return usedEmailIDs;
   }
 
+  WalletMenuModel? getSelectedWalletMenuModel() {
+    WalletMenuModel? selectedWallet;
+    for (final walletMenuModel in state.walletsModel) {
+      if (walletMenuModel.isSelected) {
+        /// walletView
+        selectedWallet = walletMenuModel;
+      }
+      for (final accountMenuModel in walletMenuModel.accounts) {
+        if (accountMenuModel.isSelected) {
+          /// wallet account view
+          selectedWallet = walletMenuModel;
+        }
+      }
+    }
+    return selectedWallet;
+  }
+
   Future<bool> _hasValidPassphrase(
     WalletModel wallet,
     WalletPassphraseProvider walletPassProvider,
