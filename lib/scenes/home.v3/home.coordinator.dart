@@ -32,6 +32,8 @@ import 'package:wallet/scenes/home.v3/home.view.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 import 'package:wallet/scenes/home.v3/sub.views/accept.terms.condition/accept.terms.condition.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/add.wallet.account/add.wallet.account.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/backup.your.proton/backup.your.proton.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/backup.your.wallet/backup.your.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/delete.wallet/delete.wallet.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/onboarding.guide/onboarding.guide.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/passphrase/passphrase.coordinator.dart';
@@ -110,6 +112,26 @@ class HomeCoordinator extends Coordinator {
       hadSetup2FA: hadSetup2FA,
     ).start();
     showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.backgroundSecondary,
+    );
+  }
+
+  Future<bool> showBackupYourWallet(
+    WalletMenuModel walletMenuModel,
+  ) {
+    final view = BackupYourWalletCoordinator(
+      walletMenuModel,
+    ).start();
+    return showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.backgroundSecondary,
+    );
+  }
+
+  Future<bool> showBackupYourProton() {
+    final view = BackupYourProtonCoordinator().start();
+    return showInBottomSheet(
       view,
       backgroundColor: ProtonColors.backgroundSecondary,
     );
@@ -394,6 +416,7 @@ class HomeCoordinator extends Coordinator {
       dataProviderManager.walletDataProvider,
       dataProviderManager.unleashDataProvider,
       dataProviderManager.bdkTransactionDataProvider,
+      dataProviderManager.backupAlertTimerProvider,
       shared,
     );
 

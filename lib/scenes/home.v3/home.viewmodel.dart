@@ -28,6 +28,7 @@ import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/address.keys.provider.dart';
+import 'package:wallet/managers/providers/backup.alert.timer.provider.dart';
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart';
 import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
@@ -178,6 +179,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     coordinator.showTransactionAddressSwitch(accountMenuModel);
   }
 
+  WalletMenuModel? getSelectedWalletMenuModel() {
+    return walletListBloc.getSelectedWalletMenuModel();
+  }
+
   Future<void> showHistoryDetails(
     String walletID,
     String accountID,
@@ -191,6 +196,24 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     inAppReviewCheck();
   }
 
+  Future<void> showBackupYourProton() async {
+    if (!isShowingBackupYourProton) {
+      /// avoid to show twice
+      isShowingBackupYourProton = true;
+      await coordinator.showBackupYourProton();
+      isShowingBackupYourProton = false;
+    }
+  }
+
+  Future<void> showBackupYourWallet(walletMenuModel) async {
+    if (!isShowingBackupYourWallet && walletMenuModel != null) {
+      /// avoid to show twice
+      isShowingBackupYourWallet = true;
+      await coordinator.showBackupYourWallet(walletMenuModel);
+      isShowingBackupYourWallet = false;
+    }
+  }
+
   int totalTodoSteps = 3;
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
@@ -198,6 +221,10 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   String walletIDtoAddAccount = "";
   bool isWalletPassphraseMatch = true;
   bool isValidToken = false;
+  bool isShowingBackupYourProton = false;
+  bool isShowingBackupYourWallet = false;
+  bool showBackupYourWalletBanner = false;
+  bool showBackupYourProtonBanner = false;
 
   late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
@@ -249,6 +276,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   Future<void> inAppReviewCheck({bool fromSend = false});
 
+  Future<void> backupYourWalletCheck();
+
   String getFiatCurrencyName({FiatCurrency? fiatCurrency});
 
   String getFiatCurrencySign({FiatCurrency? fiatCurrency});
@@ -279,6 +308,7 @@ class HomeViewModelImpl extends HomeViewModel {
     this.walletDataProvider,
     this.unleashDataProvider,
     this.bdkTransactionDataProvider,
+    this.backupAlertTimerProvider,
     this.shared,
   );
 
@@ -301,6 +331,7 @@ class HomeViewModelImpl extends HomeViewModel {
   StreamSubscription? _subscription;
   StreamSubscription? _blockInfoDataSubscription;
   StreamSubscription? _exclusiveInviteDataSubscription;
+  StreamSubscription? _walletBalanceSubscription;
 
   final selectedSectionChangedController = StreamController<int>.broadcast();
 
@@ -314,6 +345,7 @@ class HomeViewModelImpl extends HomeViewModel {
   final WalletsDataProvider walletDataProvider;
   final UnleashDataProvider unleashDataProvider;
   final BDKTransactionDataProvider bdkTransactionDataProvider;
+  final BackupAlertTimerProvider backupAlertTimerProvider;
 
   @override
   void dispose() {
@@ -325,6 +357,7 @@ class HomeViewModelImpl extends HomeViewModel {
     _subscription?.cancel();
     _blockInfoDataSubscription?.cancel();
     _exclusiveInviteDataSubscription?.cancel();
+    _walletBalanceSubscription?.cancel();
     super.dispose();
   }
 
@@ -382,9 +415,11 @@ class HomeViewModelImpl extends HomeViewModel {
       } else if (state is RecoveryUpdated) {
         hadSetupRecovery = state.updatedData;
         checkPreference();
+        backupYourWalletCheck(checkOnly: true);
       } else if (state is ShowWalletRecoveryUpdated) {
         showWalletRecovery = state.updatedData;
         checkPreference();
+        backupYourWalletCheck(checkOnly: true);
       }
     });
 
@@ -412,6 +447,12 @@ class HomeViewModelImpl extends HomeViewModel {
               heightChanged: true,
             );
         }
+      }
+    });
+
+    _walletBalanceSubscription = walletBalanceBloc.stream.listen((state) {
+      if (state.balanceInSatoshi > 0) {
+        backupYourWalletCheck();
       }
     });
   }
@@ -601,6 +642,8 @@ class HomeViewModelImpl extends HomeViewModel {
     );
     currentHistoryPage = 0;
     currentAddressPage = 0;
+    showBackupYourProtonBanner = false;
+    showBackupYourWalletBanner = false;
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
     selectedAccountMenuModel = null;
     isWalletView = true;
@@ -619,6 +662,8 @@ class HomeViewModelImpl extends HomeViewModel {
     );
     currentHistoryPage = 0;
     currentAddressPage = 0;
+    showBackupYourProtonBanner = false;
+    showBackupYourWalletBanner = false;
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
     selectedAccountMenuModel = accountMenuModel;
     isWalletView = false;
@@ -886,6 +931,59 @@ class HomeViewModelImpl extends HomeViewModel {
     return userSettingsDataProvider.getFiatCurrencySign(
       fiatCurrency: fiatCurrency,
     );
+  }
+
+  @override
+  Future<void> backupYourWalletCheck({
+    bool checkOnly = false,
+  }) async {
+    if (appStateManager.isInBackground) {
+      return;
+    }
+
+    if (hadSetupRecovery && !showWalletRecovery) {
+      /// skip when user already backup proton account and wallet seedphrase
+      showBackupYourProtonBanner = false;
+      showBackupYourWalletBanner = false;
+      sinkAddSafe();
+      return;
+    }
+
+    /// 1. get current selected wallet
+    final selectedWallet = getSelectedWalletMenuModel();
+
+    if (selectedWallet != null) {
+      showBackupYourProtonBanner = false;
+      showBackupYourWalletBanner = false;
+
+      /// 2. check if match show alert condition
+      final isExceedTimer = await backupAlertTimerProvider.isExceedTimer();
+      final positiveBalance = walletBalanceBloc.state.balanceInSatoshi > 0;
+      final walletCreateMoreThan3Day = (DateTime.now().secondsSinceEpoch() -
+              selectedWallet.walletModel.createTime) >
+          showBackupWalletAfterCreateInSeconds;
+
+      if (isExceedTimer &&
+          positiveBalance &&
+          walletCreateMoreThan3Day &&
+          unleashDataProvider.isWalletBackupAlert()) {
+        /// check if proton account had backedup
+        if (!hadSetupRecovery) {
+          showBackupYourProtonBanner = true;
+          if (!checkOnly) {
+            showBackupYourProton();
+          }
+        } else if (showWalletRecovery) {
+          showBackupYourWalletBanner = true;
+          if (!checkOnly) {
+            showBackupYourWallet(
+              selectedWallet,
+            );
+          }
+        }
+      }
+    }
+    sinkAddSafe();
   }
 
   @override
