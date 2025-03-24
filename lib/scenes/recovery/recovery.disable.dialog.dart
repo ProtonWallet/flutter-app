@@ -26,7 +26,7 @@ Future<void> showDisableDialog(
             shrinkWrap: true,
             children: <Widget>[
               const SizedBox(height: defaultPadding),
-              context.svgImages.deleteWarning.svg(
+              context.images.deleteWarning.svg(
                 width: 48,
                 height: 48,
                 fit: BoxFit.scaleDown,

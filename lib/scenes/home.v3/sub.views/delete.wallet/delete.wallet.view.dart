@@ -66,7 +66,7 @@ class DeleteWalletView extends ViewBase<DeleteWalletViewModel> {
               Transform.translate(
                 offset: const Offset(0, -20),
                 child: Column(children: [
-                  context.svgImages.deleteWarning.svg(
+                  context.images.deleteWarning.svg(
                     width: 48,
                     height: 48,
                     fit: BoxFit.fill,

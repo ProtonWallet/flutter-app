@@ -10,5 +10,6 @@ pub mod mnemonic;
 pub mod network;
 pub mod pagination;
 pub mod script_type;
+pub mod signing_type;
 pub mod transaction_time;
 pub mod word_count;

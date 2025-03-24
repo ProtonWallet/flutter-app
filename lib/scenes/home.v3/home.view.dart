@@ -794,7 +794,7 @@ class HomeView extends ViewBase<HomeViewModel> {
             bloc: viewModel.walletListBloc,
             builder: (context, state) {
               return IconButton(
-                icon: context.svgImages.walletEdit.svg(
+                icon: context.images.walletEdit.svg(
                   fit: BoxFit.fill,
                   width: 40,
                   height: 40,
@@ -839,7 +839,7 @@ class HomeView extends ViewBase<HomeViewModel> {
         builder: (BuildContext context) {
           if (viewModel.currentSize == ViewSize.mobile) {
             return IconButton(
-              icon: context.svgImages.drawerMenu.svg(
+              icon: context.images.drawerMenu.svg(
                 fit: BoxFit.fill,
                 width: 40,
                 height: 40,

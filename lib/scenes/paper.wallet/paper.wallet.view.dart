@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -12,7 +11,6 @@ import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/extension/platform.extension.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/scenes/components/bottom.sheets/qr.code.scanner.dart';
-import 'package:wallet/scenes/components/button.v5.dart';
 import 'package:wallet/scenes/components/button.v6.dart';
 import 'package:wallet/scenes/components/close.button.v1.dart';
 import 'package:wallet/scenes/components/page.layout.v1.dart';
@@ -65,7 +63,7 @@ class PaperWalletView extends ViewBase<PaperWalletViewModel> {
           /// Row [icon | receive/send ]
           Row(
             children: [
-              context.svgImages.iconReceive.svg(
+              context.images.iconReceive.svg(
                 fit: BoxFit.fill,
                 width: 32,
                 height: 32,

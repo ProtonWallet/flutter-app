@@ -3,6 +3,7 @@ import 'package:wallet/managers/api.service.manager.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
+import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
@@ -10,6 +11,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/history/details.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wallet.account.address.list.view.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.account.address.list/wallet.account.address.list.viewmodel.dart';
+import 'package:wallet/scenes/message.sign/message.sign.coordinator.dart';
 import 'package:wallet/scenes/qrcode.content/qrcode.content.coordinator.dart';
 import 'package:wallet/scenes/qrcode.content/qrcode.content.viewmodel.dart';
 
@@ -41,6 +43,17 @@ class WalletAccountAddressListCoordinator extends Coordinator {
     final view = QRcodeContentCoordinator(
       QRcodeType.bitcoinAddress,
       address,
+    ).start();
+    showInBottomSheet(
+      view,
+      backgroundColor: ProtonColors.backgroundSecondary,
+    );
+  }
+
+  void showSignTool(FrbAccount frbAccount, String address) {
+    final view = MessageSignCoordinator(
+      address: address,
+      account: frbAccount,
     ).start();
     showInBottomSheet(
       view,

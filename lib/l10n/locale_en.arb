@@ -620,5 +620,15 @@
   "backup_your_proton_alert_content": "Enable Proton account recovery to protect your account. Without it, forgetting your password could prevent you from decrypting your existing data, including your wallet.",
   "copy_button": "Copy",
   "xpub_copied": "Public key copied to clipboard",
-  "show_xpub": "Show public key (XPUB)"
+  "show_xpub": "Show public key (XPUB)",
+  "generate_signature": "Generate signature",
+  "message": "Message",
+  "message_hint": "Write or paste the message you need to authenticate, then copy and share the generated signature with the requester.",
+  "signature": "Signature",
+  "address_authenticated": "Address authenticated",
+  "address_authenticated_desc": "This Bitcoin address has signed the message using its private key. The signature verifies ownership without exposing the private key. Copy and share it with the requester.",
+  "signature_copied": "Signature copied to clipboard",
+  "copy_signature": "Copy Signature",
+  "message_empty": "Please enter a message to sign.",
+  "message_sign_failed": "Failed to sign the message. Please try again."
 }

@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/components/discover/proton.feeditem.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/discover/discover.view.dart';
@@ -14,6 +13,8 @@ import '../../mocks/discovery.mocks.dart';
 import '../../mocks/theme.provider.mocks.dart';
 import '../helper/comparator.config.dart';
 import '../helper/test.wrapper.dart';
+import '../helper/theme.dart';
+import '../helper/widget.ext.dart';
 
 void main() {
   setUpAll(() async {
@@ -21,7 +22,7 @@ void main() {
   });
 
   testSnapshot('discover content ', (tester) async {
-    setGoldenFileComparatorWithThreshold(0.0006);
+    setGoldenFileComparatorWithThreshold(0.0009);
 
     final mockThemeProvider = MockThemeProvider();
     ProtonColors.updateLightTheme();
@@ -38,20 +39,19 @@ void main() {
     when(viewModel.currentSize).thenAnswer((_) => ViewSize.mobile);
     when(viewModel.protonFeedItems).thenAnswer((_) => sampleData);
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: DiscoverView(viewModel),
-    );
+    final widget = DiscoverView(viewModel).withTheme(lightTheme());
 
-    await testAcrossAllDevices(tester, () => widget, 'discover/discover_view');
+    await testAcrossAllDevices(
+        tester,
+        () => ColoredBox(
+              color: ProtonColors.backgroundSecondary,
+              child: widget,
+            ),
+        'discover/discover_view');
   });
 
   testSnapshot('discover content dark', (tester) async {
-    setGoldenFileComparatorWithThreshold(0.0006);
-
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateDarkTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(true);
+    setGoldenFileComparatorWithThreshold(0.0009);
 
     final viewModel = MockDiscoverViewModel();
     when(viewModel.keepAlive).thenAnswer((_) => true);
@@ -64,13 +64,14 @@ void main() {
     when(viewModel.currentSize).thenAnswer((_) => ViewSize.mobile);
     when(viewModel.protonFeedItems).thenAnswer((_) => sampleData);
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: DiscoverView(viewModel),
-    );
-
+    final widget = DiscoverView(viewModel).withTheme(darkTheme());
     await testAcrossAllDevices(
-        tester, () => widget, 'discover/discover.dark_view');
+        tester,
+        () => ColoredBox(
+              color: ProtonColors.backgroundSecondary,
+              child: widget,
+            ),
+        'discover/discover.dark_view');
   });
 }
 

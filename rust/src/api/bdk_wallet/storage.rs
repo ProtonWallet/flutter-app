@@ -19,6 +19,7 @@ impl WalletMobilePersisterFactory {
 
 impl WalletPersisterFactory for WalletMobilePersisterFactory {
     fn build(self, key: String) -> Arc<dyn Storage> {
+        #[allow(clippy::single_char_pattern)]
         let clean_key = key.replace("'", "_").replace("/", "_");
         let db_path = format!(
             "{}/proton_wallet_bdk_{}.sqlite",

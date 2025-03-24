@@ -32,6 +32,8 @@ abstract class WalletAccountAddressListViewModel
 
   void showAddressQRcode(address);
 
+  void showSigningTool(address);
+
   /// exposed functions for UI
   Future<void> updateAddressListType();
 
@@ -192,6 +194,11 @@ class WalletAccountAddressListViewModelImpl
   @override
   Future<void> showMoreCallback() async {
     loadAddresses(addressListType);
+  }
+
+  @override
+  void showSigningTool(address) {
+    coordinator.showSignTool(frbAccount, address);
   }
 
   @override

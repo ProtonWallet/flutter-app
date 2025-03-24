@@ -35,7 +35,7 @@ class LockOverlayView extends ViewBase<LockOverlayViewModel> {
                 SizedBox(
                   width: 264,
                   height: 54,
-                  child: context.svgImages.protonWalletLogo.svg(
+                  child: context.images.protonWalletLogo.svg(
                     fit: BoxFit.fitHeight,
                   ),
                 ),

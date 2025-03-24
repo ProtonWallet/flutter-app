@@ -1,18 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
-import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/managers/providers/mock/mock.price.graph.data.provider.dart';
-import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/rust/proton_api/price_graph.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 import 'package:wallet/scenes/components/bitcoin.price.chart.dart';
 
 import '../../mocks/proton.exchange.rate.mocks.dart';
-import '../../mocks/theme.provider.mocks.dart';
 import '../helper/comparator.config.dart';
 import '../helper/test.wrapper.dart';
+import '../helper/theme.dart';
+import '../helper/widget.ext.dart';
 
 void main() {
   const testPath = 'bitcoin.price.chart';
@@ -25,10 +23,6 @@ void main() {
   testSnapshot('bitcoin price chart with default time frame', (tester) async {
     setGoldenFileComparatorWithThreshold(0.0001);
 
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateLightTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(false);
-
     final exchangeRate = MockProtonExchangeRate();
     when(exchangeRate.fiatCurrency).thenReturn(FiatCurrency.usd);
     when(exchangeRate.bitcoinUnit).thenReturn(BitcoinUnit.sats);
@@ -37,14 +31,10 @@ void main() {
 
     final priceGraphDataProvider = MockPriceGraphDataProvider();
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: BitcoinPriceChart(
-        exchangeRate: exchangeRate,
-        priceGraphDataProvider: priceGraphDataProvider,
-      ),
-    );
-
+    final widget = BitcoinPriceChart(
+      exchangeRate: exchangeRate,
+      priceGraphDataProvider: priceGraphDataProvider,
+    ).withTheme(lightTheme());
     await testAcrossAllDevices(
       tester,
       () => widget,
@@ -56,10 +46,6 @@ void main() {
       (tester) async {
     setGoldenFileComparatorWithThreshold(0.0001);
 
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateDarkTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(true);
-
     final exchangeRate = MockProtonExchangeRate();
     when(exchangeRate.fiatCurrency).thenReturn(FiatCurrency.usd);
     when(exchangeRate.bitcoinUnit).thenReturn(BitcoinUnit.sats);
@@ -68,14 +54,10 @@ void main() {
 
     final priceGraphDataProvider = MockPriceGraphDataProvider();
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: BitcoinPriceChart(
-        exchangeRate: exchangeRate,
-        priceGraphDataProvider: priceGraphDataProvider,
-      ),
-    );
-
+    final widget = BitcoinPriceChart(
+      exchangeRate: exchangeRate,
+      priceGraphDataProvider: priceGraphDataProvider,
+    ).withTheme(darkTheme());
     await testAcrossAllDevices(
       tester,
       () => widget,
@@ -86,10 +68,6 @@ void main() {
   testSnapshot('bitcoin price chart with 1 week time frame', (tester) async {
     setGoldenFileComparatorWithThreshold(0.0001);
 
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateLightTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(false);
-
     final exchangeRate = MockProtonExchangeRate();
     when(exchangeRate.fiatCurrency).thenReturn(FiatCurrency.usd);
     when(exchangeRate.bitcoinUnit).thenReturn(BitcoinUnit.sats);
@@ -98,15 +76,11 @@ void main() {
 
     final priceGraphDataProvider = MockPriceGraphDataProvider();
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: BitcoinPriceChart(
-        exchangeRate: exchangeRate,
-        priceGraphDataProvider: priceGraphDataProvider,
-        defaultTimeFrame: Timeframe.oneWeek,
-      ),
-    );
-
+    final widget = BitcoinPriceChart(
+      exchangeRate: exchangeRate,
+      priceGraphDataProvider: priceGraphDataProvider,
+      defaultTimeFrame: Timeframe.oneWeek,
+    ).withTheme(lightTheme());
     await testAcrossAllDevices(
       tester,
       () => widget,
@@ -117,10 +91,6 @@ void main() {
   testSnapshot('bitcoin price chart with 1 month time frame', (tester) async {
     setGoldenFileComparatorWithThreshold(0.0001);
 
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateLightTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(false);
-
     final exchangeRate = MockProtonExchangeRate();
     when(exchangeRate.fiatCurrency).thenReturn(FiatCurrency.usd);
     when(exchangeRate.bitcoinUnit).thenReturn(BitcoinUnit.sats);
@@ -129,15 +99,11 @@ void main() {
 
     final priceGraphDataProvider = MockPriceGraphDataProvider();
 
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: BitcoinPriceChart(
-        exchangeRate: exchangeRate,
-        priceGraphDataProvider: priceGraphDataProvider,
-        defaultTimeFrame: Timeframe.oneMonth,
-      ),
-    );
-
+    final widget = BitcoinPriceChart(
+      exchangeRate: exchangeRate,
+      priceGraphDataProvider: priceGraphDataProvider,
+      defaultTimeFrame: Timeframe.oneMonth,
+    ).withTheme(lightTheme());
     await testAcrossAllDevices(
       tester,
       () => widget,

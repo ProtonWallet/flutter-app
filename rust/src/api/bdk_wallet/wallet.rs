@@ -17,7 +17,7 @@ pub struct FrbWallet {
 }
 
 impl FrbWallet {
-    #[warn(dead_code)]
+    #[allow(dead_code)]
     pub(crate) fn get_inner(&self) -> &Wallet {
         &self.inner
     }

@@ -4874,6 +4874,24 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as bool);
 
   @override
+  bool isWalletBackupAlert() => (super.noSuchMethod(
+        Invocation.method(
+          #isWalletBackupAlert,
+          [],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  bool isInAppReviewFreeUser() => (super.noSuchMethod(
+        Invocation.method(
+          #isInAppReviewFreeUser,
+          [],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
         Invocation.method(
           #emitState,

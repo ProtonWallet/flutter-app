@@ -33,6 +33,7 @@ import 'api/bdk_wallet/blockchain.dart';
 import 'api/bdk_wallet/derivation_path.dart';
 import 'api/bdk_wallet/discovered_account.dart';
 import 'api/bdk_wallet/local_output.dart';
+import 'api/bdk_wallet/message_signer.dart';
 import 'api/bdk_wallet/mnemonic.dart';
 import 'api/bdk_wallet/payment_link.dart';
 import 'api/bdk_wallet/psbt.dart';
@@ -69,6 +70,7 @@ import 'common/keychain_kind.dart';
 import 'common/network.dart';
 import 'common/pagination.dart';
 import 'common/script_type.dart';
+import 'common/signing_type.dart';
 import 'common/transaction_time.dart';
 import 'common/word_count.dart';
 import 'dart:async';
@@ -205,6 +207,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_FrbLocalOutputPtr => wire
           ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_FrbMessageSignerPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSignerPtr;
 
   CrossPlatformFinalizerArg
       get rust_arc_decrement_strong_count_FrbMnemonicPtr => wire
@@ -450,6 +456,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbLocalOutput
       dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  FrbMessageSigner
+      dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
           dynamic raw);
 
   @protected
@@ -755,6 +766,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbLocalOutput
       dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  FrbMessageSigner
+      dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
           dynamic raw);
 
   @protected
@@ -1086,6 +1102,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbLocalOutput
       dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          dynamic raw);
+
+  @protected
+  FrbMessageSigner
+      dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
           dynamic raw);
 
   @protected
@@ -1991,6 +2012,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       dynamic raw);
 
   @protected
+  SigningType dco_decode_signing_type(dynamic raw);
+
+  @protected
   SortOrder dco_decode_sort_order(dynamic raw);
 
   @protected
@@ -2199,6 +2223,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbLocalOutput
       sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbMessageSigner
+      sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
           SseDeserializer deserializer);
 
   @protected
@@ -2507,6 +2536,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  FrbMessageSigner
+      sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+          SseDeserializer deserializer);
+
+  @protected
   FrbMnemonic
       sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMnemonic(
           SseDeserializer deserializer);
@@ -2803,6 +2837,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   FrbLocalOutput
       sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
+          SseDeserializer deserializer);
+
+  @protected
+  FrbMessageSigner
+      sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
           SseDeserializer deserializer);
 
   @protected
@@ -3813,6 +3852,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  SigningType sse_decode_signing_type(SseDeserializer deserializer);
+
+  @protected
   SortOrder sse_decode_sort_order(SseDeserializer deserializer);
 
   @protected
@@ -4028,6 +4070,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
           FrbLocalOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+          FrbMessageSigner self, SseSerializer serializer);
 
   @protected
   void
@@ -4333,6 +4380,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
           FrbLocalOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+          FrbMessageSigner self, SseSerializer serializer);
 
   @protected
   void
@@ -4661,6 +4713,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void
       sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput(
           FrbLocalOutput self, SseSerializer serializer);
+
+  @protected
+  void
+      sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+          FrbMessageSigner self, SseSerializer serializer);
 
   @protected
   void
@@ -5696,6 +5753,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
       SetTwoFaTOTPResponseBody self, SseSerializer serializer);
 
   @protected
+  void sse_encode_signing_type(SigningType self, SseSerializer serializer);
+
+  @protected
   void sse_encode_sort_order(SortOrder self, SseSerializer serializer);
 
   @protected
@@ -6626,6 +6686,38 @@ class RustLibWire implements BaseWire {
           'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput');
   late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutput =
       _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbLocalOutputPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSignerPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner');
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSignerPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSignerPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_wallet_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner');
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSigner =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbMessageSignerPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void

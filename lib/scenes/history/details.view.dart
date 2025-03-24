@@ -76,12 +76,12 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                   Row(
                     children: [
                       viewModel.isSend
-                          ? context.svgImages.iconSend.svg(
+                          ? context.images.iconSend.svg(
                               fit: BoxFit.fill,
                               width: 32,
                               height: 32,
                             )
-                          : context.svgImages.iconReceive.svg(
+                          : context.images.iconReceive.svg(
                               fit: BoxFit.fill,
                               width: 32,
                               height: 32,
@@ -187,7 +187,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                               borderRadius: BorderRadius.circular(32.0)),
                           child: Row(
                             children: [
-                              context.svgImages.iconNotes.svg(
+                              context.images.iconNotes.svg(
                                 fit: BoxFit.fill,
                                 width: 32,
                                 height: 32,
@@ -486,7 +486,7 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 onTap: () {
                   EditSenderSheet.show(context, viewModel);
                 },
-                child: context.svgImages.iconPencil.svg(
+                child: context.images.iconPencil.svg(
                   fit: BoxFit.fill,
                   width: 40,
                   height: 40,

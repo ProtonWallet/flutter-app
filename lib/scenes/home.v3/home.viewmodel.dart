@@ -989,15 +989,6 @@ class HomeViewModelImpl extends HomeViewModel {
   @override
   Future<void> inAppReviewCheck({bool fromSend = false}) async {
     final currentTime = DateTime.now().secondsSinceEpoch();
-    int detailClicked =
-        await shared.read(PreferenceKeys.inAppReviewDetailCounter) ?? 0;
-    if (!fromSend) {
-      detailClicked += 1;
-      await shared.write(
-        PreferenceKeys.inAppReviewDetailCounter,
-        detailClicked,
-      );
-    }
     final userInfo = userManager.userInfo;
 
     if (apple) {
@@ -1009,9 +1000,9 @@ class HomeViewModelImpl extends HomeViewModel {
       }
     }
 
-    /// check if user paid user
     final user = await userDataProvider.getUser(userInfo.userId);
-    if (user == null || user.subscribed == 0) {
+    final inAppReviewFreeUser = unleashDataProvider.isInAppReviewFreeUser();
+    if ((user == null || user.subscribed == 0) && !inAppReviewFreeUser) {
       return;
     }
 
@@ -1023,6 +1014,16 @@ class HomeViewModelImpl extends HomeViewModel {
     /// check if there balance
     if (walletBalanceBloc.state.balanceInSatoshi <= 0) {
       return;
+    }
+
+    int detailClicked =
+        await shared.read(PreferenceKeys.inAppReviewDetailCounter) ?? 0;
+    if (!fromSend) {
+      detailClicked += 1;
+      await shared.write(
+        PreferenceKeys.inAppReviewDetailCounter,
+        detailClicked,
+      );
     }
 
     /// show in app review

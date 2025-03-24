@@ -1,18 +1,15 @@
-use std::{collections::HashMap, ops::Deref, sync::Arc};
+use std::{collections::HashMap, sync::Arc};
 
 use andromeda_api::transaction::{
     BroadcastMessage, ExchangeRateOrTransactionTime, RecommendedFees,
 };
-use andromeda_bitcoin::{blockchain_client::BlockchainClient, psbt::Psbt};
+use andromeda_bitcoin::blockchain_client::BlockchainClient;
 use chrono::Utc;
 use flutter_rust_bridge::frb;
 use tracing::info;
 
 use super::psbt::FrbPsbt;
-use crate::api::{
-    api_service::proton_api_service::ProtonAPIService, errors::BridgeError,
-    proton_api::retrieve_proton_api,
-};
+use crate::api::{api_service::proton_api_service::ProtonAPIService, errors::BridgeError};
 
 #[derive(Clone)]
 pub struct FrbBlockchainClient {

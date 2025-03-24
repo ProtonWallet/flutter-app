@@ -124,7 +124,7 @@ class TransactionList extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 5),
-                                  child: context.svgImages.setupPreference.svg(
+                                  child: context.images.setupPreference.svg(
                                     fit: BoxFit.fill,
                                     width: 16,
                                     height: 16,
@@ -144,7 +144,7 @@ class TransactionList extends StatelessWidget {
                                     horizontal: 8,
                                     vertical: 5,
                                   ),
-                                  child: context.svgImages.iconSearch.svg(
+                                  child: context.images.iconSearch.svg(
                                     fit: BoxFit.fill,
                                     width: 16,
                                     height: 16,
