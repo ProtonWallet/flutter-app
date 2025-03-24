@@ -21,26 +21,29 @@ class TextFieldText extends StatefulWidget {
   final double borderRadius;
   final Widget? prefixIcon;
   final EdgeInsets? scrollPadding;
+  final bool readOnly;
 
-  const TextFieldText(
-      {required this.width,
-      super.key,
-      this.height,
-      this.controller,
-      this.focusNode,
-      this.hintText,
-      this.labelText,
-      this.prefixIcon,
-      this.borderRadius = 8.0,
-      this.multiLine = false,
-      this.suffixIconOnPressed,
-      this.showSuffixIcon = true,
-      this.suffixIcon = const Icon(Icons.text_fields),
-      this.color = Colors.transparent,
-      this.showEnabledBorder = true,
-      this.digitOnly = false,
-      this.scrollPadding,
-      this.showMailTag = false});
+  const TextFieldText({
+    required this.width,
+    super.key,
+    this.height,
+    this.controller,
+    this.focusNode,
+    this.hintText,
+    this.labelText,
+    this.prefixIcon,
+    this.borderRadius = 8.0,
+    this.multiLine = false,
+    this.suffixIconOnPressed,
+    this.showSuffixIcon = true,
+    this.suffixIcon = const Icon(Icons.text_fields),
+    this.color = Colors.transparent,
+    this.showEnabledBorder = true,
+    this.digitOnly = false,
+    this.scrollPadding,
+    this.showMailTag = false,
+    this.readOnly = false,
+  });
 
   @override
   TextFieldTextState createState() => TextFieldTextState();
@@ -66,6 +69,7 @@ class TextFieldTextState extends State<TextFieldText> {
                   alignment: Alignment.centerLeft,
                   child: buildTagWidget(widget.controller!.text))
               : TextField(
+                  readOnly: widget.readOnly,
                   textAlignVertical: TextAlignVertical.center,
                   style:
                       ProtonStyles.captionMedium(color: ProtonColors.textNorm),
@@ -86,8 +90,8 @@ class TextFieldTextState extends State<TextFieldText> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: widget.hintText,
                     labelText: widget.labelText,
-                    labelStyle: ProtonStyles.body2Regular(
-                        color: ProtonColors.textWeak),
+                    labelStyle:
+                        ProtonStyles.body2Regular(color: ProtonColors.textWeak),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
                       borderSide: BorderSide(
@@ -97,8 +101,7 @@ class TextFieldTextState extends State<TextFieldText> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(widget.borderRadius),
-                      borderSide:
-                          BorderSide(color: ProtonColors.protonBlue),
+                      borderSide: BorderSide(color: ProtonColors.protonBlue),
                     ),
                     suffixIcon: widget.showSuffixIcon
                         ? IconButton(
@@ -116,9 +119,10 @@ class TextFieldTextState extends State<TextFieldText> {
         padding: const EdgeInsets.only(left: 10),
         child: Chip(
           backgroundColor: ProtonColors.backgroundNorm,
-          label: Text(tag,
-              style: ProtonStyles.body2Medium(
-                  color: ProtonColors.protonBlue)),
+          label: Text(
+            tag,
+            style: ProtonStyles.body2Medium(color: ProtonColors.protonBlue),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(widget.borderRadius),
             side: BorderSide(color: ProtonColors.backgroundNorm),

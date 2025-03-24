@@ -28,6 +28,8 @@ class TextFieldTextV2 extends StatefulWidget {
   final Widget? suffixIcon;
   final double radius;
   final bool alwaysShowHint;
+  final bool readOnly;
+  final bool isLoading;
 
   const TextFieldTextV2({
     required this.textController,
@@ -55,6 +57,8 @@ class TextFieldTextV2 extends StatefulWidget {
     this.suffixIcon,
     this.radius = 18.0,
     this.alwaysShowHint = false,
+    this.readOnly = false,
+    this.isLoading = false,
   });
 
   @override
@@ -114,7 +118,9 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 4, vertical: widget.paddingSize ?? 12),
+                  horizontal: 4,
+                  vertical: widget.paddingSize ?? 12,
+                ),
                 decoration: BoxDecoration(
                     color: widget.backgroundColor ??
                         ProtonColors.backgroundSecondary,
@@ -126,10 +132,12 @@ class TextFieldTextV2State extends State<TextFieldTextV2> {
                           : getBorderColor(widget.myFocusNode.hasFocus),
                     )),
                 child: TextFormField(
+                  enabled: !widget.isLoading,
+                  readOnly: widget.readOnly,
                   scrollPadding: widget.scrollPadding ??
                       EdgeInsets.only(
-                          bottom:
-                              MediaQuery.of(context).viewInsets.bottom + 60),
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 60,
+                      ),
                   obscureText: widget.isPassword ? isObscureText : false,
                   focusNode: widget.myFocusNode,
                   controller: widget.textController,

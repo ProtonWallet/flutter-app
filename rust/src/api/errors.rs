@@ -215,28 +215,28 @@ impl From<AndromedaBitcoinError> for BridgeError {
 
         if let Some(inner_error) = find_error_type::<AndromedaBitcoinError>(&error) {
             if let AndromedaBitcoinError::InsufficientFundsInPaperWallet = inner_error {
-                return BridgeError::InsufficientFundsInPaperWallet(format!(
-                    "PaperWallet: this paper wallet had been used"
-                ));
+                return BridgeError::InsufficientFundsInPaperWallet(
+                    "PaperWallet: this paper wallet had been used".to_string(),
+                );
             }
 
             if let AndromedaBitcoinError::InvalidPaperWallet = inner_error {
-                return BridgeError::InvalidPaperWallet(format!(
-                    "PaperWallet: invalid paper wallet format"
-                ));
+                return BridgeError::InvalidPaperWallet(
+                    "PaperWallet: invalid paper wallet format".to_string(),
+                );
             }
         }
 
         match error {
             AndromedaBitcoinError::InsufficientFundsInPaperWallet => {
-                return BridgeError::InsufficientFundsInPaperWallet(format!(
-                    "PaperWallet: this paper wallet had been used"
-                ))
+                return BridgeError::InsufficientFundsInPaperWallet(
+                    "PaperWallet: this paper wallet had been used".to_string(),
+                )
             }
             AndromedaBitcoinError::InvalidPaperWallet => {
-                return BridgeError::InvalidPaperWallet(format!(
-                    "PaperWallet: invalid paper wallet format"
-                ));
+                return BridgeError::InvalidPaperWallet(
+                    "PaperWallet: invalid paper wallet format".to_string(),
+                );
             }
             _ => {}
         }

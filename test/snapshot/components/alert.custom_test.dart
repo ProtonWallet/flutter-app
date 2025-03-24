@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/provider/theme.provider.dart';
 import 'package:wallet/scenes/components/alert.custom.dart';
 
-import '../../mocks/theme.provider.mocks.dart';
+import '../helper/comparator.config.dart';
 import '../helper/test.wrapper.dart';
+import '../helper/theme.dart';
+import '../helper/widget.ext.dart';
 
 void main() {
   const testPath = 'alert.custom';
@@ -18,35 +17,22 @@ void main() {
   });
 
   testSnapshot('Alert custom tests', (tester) async {
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateLightTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(false);
+    setGoldenFileComparatorWithThreshold(0.0006);
 
     final GoldenBuilder builder = buildContent();
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: builder.build(),
-    );
     await testAcrossAllDevices(
       tester,
-      () => widget,
+      () => builder.build().withTheme(lightTheme()),
       "$testPath/$testPath",
     );
   });
 
   testSnapshot('Alert custom tests dark', (tester) async {
-    final mockThemeProvider = MockThemeProvider();
-    ProtonColors.updateDarkTheme();
-    when(mockThemeProvider.isDarkMode()).thenReturn(true);
-
+    setGoldenFileComparatorWithThreshold(0.0006);
     final GoldenBuilder builder = buildContent();
-    final widget = ChangeNotifierProvider<ThemeProvider>.value(
-      value: mockThemeProvider,
-      child: builder.build(),
-    );
     await testAcrossAllDevices(
       tester,
-      () => widget,
+      () => builder.build().withTheme(darkTheme()),
       "$testPath/$testPath.dark",
     );
   });

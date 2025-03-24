@@ -19,6 +19,7 @@ enum UnleashFeature {
   disableBuyMobile,
   importPaperWallet,
   walletBackupAlert,
+  inAppReviewFreeUser,
 }
 
 /// Function to retrieve all default toggles
@@ -47,6 +48,8 @@ extension UnleashFeatureExt on UnleashFeature {
         return "ImportPaperWallet";
       case UnleashFeature.walletBackupAlert:
         return "WalletBackupAlert";
+      case UnleashFeature.inAppReviewFreeUser:
+        return "InAppReviewFreeUser";
     }
   }
 
@@ -183,4 +186,7 @@ class UnleashDataProvider extends DataProvider {
 
   bool isWalletBackupAlert() =>
       isFeatureEnabled(UnleashFeature.walletBackupAlert);
+
+  bool isInAppReviewFreeUser() =>
+      isFeatureEnabled(UnleashFeature.inAppReviewFreeUser);
 }

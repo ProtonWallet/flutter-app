@@ -242,18 +242,3 @@ class ProtonWalletStyles {
     );
   }
 }
-
-/// maybe for theme later
-// extension TextStyles on BuildContext {
-//   TextStyle headline1({Color? color}) {
-//     return Theme.of(this).textTheme.headline1!.copyWith(
-//           color: color ?? Theme.of(this).primaryColor,
-//         );
-//   }
-
-//   TextStyle bodyText1({Color? color}) {
-//     return Theme.of(this).textTheme.bodyText1!.copyWith(
-//           color: color ?? Theme.of(this).textTheme.bodyText1!.color,
-//         );
-//   }
-// }

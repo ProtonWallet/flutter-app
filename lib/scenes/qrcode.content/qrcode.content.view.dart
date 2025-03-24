@@ -38,7 +38,6 @@ class QRcodeContentView extends ViewBase<QRcodeContentViewModel> {
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: ProtonColors.backgroundSecondary,
-            // border: Border.all(color: Colors.black, width: 1.0),
             borderRadius: BorderRadius.circular(24.0),
           ),
           child: Column(

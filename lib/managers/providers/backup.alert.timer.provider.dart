@@ -1,11 +1,9 @@
 import 'dart:async';
 
 import 'package:wallet/helper/extension/datetime.dart';
-import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
-import 'package:wallet/rust/api/api_service/block_client.dart';
 
 class BackupAlertTimerProvider extends DataProvider {
   /// shared preference

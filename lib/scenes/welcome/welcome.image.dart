@@ -68,7 +68,7 @@ class WelcomeImage extends StatelessWidget {
         SizedBox(
           width: 264,
           height: 54,
-          child: context.svgImages.protonWalletLogo.svg(
+          child: context.images.protonWalletLogo.svg(
             fit: BoxFit.fitHeight,
           ),
         ),

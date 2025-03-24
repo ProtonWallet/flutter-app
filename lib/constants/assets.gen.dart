@@ -163,6 +163,13 @@ class $AssetsImagesIconGen {
   SvgGenImage get icCogWheel =>
       const SvgGenImage('assets/images/icon/ic_cog_wheel.svg');
 
+  /// File path: assets/images/icon/ic_copy.svg
+  SvgGenImage get icCopy => const SvgGenImage('assets/images/icon/ic_copy.svg');
+
+  /// File path: assets/images/icon/ic_copy_dark.svg
+  SvgGenImage get icCopyDark =>
+      const SvgGenImage('assets/images/icon/ic_copy_dark.svg');
+
   /// File path: assets/images/icon/ic_cross.svg
   SvgGenImage get icCross =>
       const SvgGenImage('assets/images/icon/ic_cross.svg');
@@ -187,9 +194,24 @@ class $AssetsImagesIconGen {
   SvgGenImage get icPlusCircle =>
       const SvgGenImage('assets/images/icon/ic_plus_circle.svg');
 
+  /// File path: assets/images/icon/ic_qr_code.svg
+  SvgGenImage get icQrCode =>
+      const SvgGenImage('assets/images/icon/ic_qr_code.svg');
+
+  /// File path: assets/images/icon/ic_qr_code_dark.svg
+  SvgGenImage get icQrCodeDark =>
+      const SvgGenImage('assets/images/icon/ic_qr_code_dark.svg');
+
   /// File path: assets/images/icon/ic_shield.svg
   SvgGenImage get icShield =>
       const SvgGenImage('assets/images/icon/ic_shield.svg');
+
+  /// File path: assets/images/icon/ic_sign.svg
+  SvgGenImage get icSign => const SvgGenImage('assets/images/icon/ic_sign.svg');
+
+  /// File path: assets/images/icon/ic_sign_dark.svg
+  SvgGenImage get icSignDark =>
+      const SvgGenImage('assets/images/icon/ic_sign_dark.svg');
 
   /// File path: assets/images/icon/ic_squares.svg
   SvgGenImage get icSquares =>
@@ -306,6 +328,14 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/setup_preference_dark.svg
   SvgGenImage get setupPreferenceDark =>
       const SvgGenImage('assets/images/icon/setup_preference_dark.svg');
+
+  /// File path: assets/images/icon/sign_header.png
+  AssetGenImage get signHeader =>
+      const AssetGenImage('assets/images/icon/sign_header.png');
+
+  /// File path: assets/images/icon/sign_header_dark.png
+  AssetGenImage get signHeaderDark =>
+      const AssetGenImage('assets/images/icon/sign_header_dark.png');
 
   /// File path: assets/images/icon/star.svg
   SvgGenImage get star => const SvgGenImage('assets/images/icon/star.svg');
@@ -428,13 +458,19 @@ class $AssetsImagesIconGen {
         icCheckmark,
         icChevronTinyDown,
         icCogWheel,
+        icCopy,
+        icCopyDark,
         icCross,
         icDiamondwalletPlus,
         icInfoCircle,
         icInfoCircleDark,
         icMessage,
         icPlusCircle,
+        icQrCode,
+        icQrCodeDark,
         icShield,
+        icSign,
+        icSignDark,
         icSquares,
         icSquaresInSquarediscover,
         key,
@@ -466,6 +502,8 @@ class $AssetsImagesIconGen {
         sendDark,
         setupPreference,
         setupPreferenceDark,
+        signHeader,
+        signHeaderDark,
         star,
         user,
         userDark,

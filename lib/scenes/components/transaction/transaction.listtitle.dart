@@ -42,12 +42,12 @@ class TransactionListTitle extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12.0),
           child: Row(children: [
             isSend
-                ? context.svgImages.iconSend.svg(
+                ? context.images.iconSend.svg(
                     fit: BoxFit.fill,
                     width: 32,
                     height: 32,
                   )
-                : context.svgImages.iconReceive.svg(
+                : context.images.iconReceive.svg(
                     fit: BoxFit.fill,
                     width: 32,
                     height: 32,

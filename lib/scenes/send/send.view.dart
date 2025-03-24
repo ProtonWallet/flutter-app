@@ -605,7 +605,7 @@ class SendView extends ViewBase<SendViewModel> {
                             borderRadius: BorderRadius.circular(40.0)),
                         child: Row(
                           children: [
-                            context.svgImages.iconNotes.svg(
+                            context.images.iconNotes.svg(
                               fit: BoxFit.fill,
                               width: 32,
                               height: 32,

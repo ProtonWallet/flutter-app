@@ -1,36 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/text.style.dart';
-
-enum ToastType {
-  success,
-  warning,
-  error,
-  norm,
-}
-
-extension ToastTypeExtension on ToastType {
-  Color get color {
-    switch (this) {
-      case ToastType.success:
-        return ProtonColors.notificationNorm;
-      case ToastType.warning:
-        return ProtonColors.notificationWaning;
-      case ToastType.error:
-        return ProtonColors.notificationError;
-      case ToastType.norm:
-      default:
-        return ProtonColors.textNorm;
-    }
-  }
-}
+import 'package:wallet/scenes/components/local.toast.view.dart';
 
 class LocalToast {
-  static final LocalAuthentication auth = LocalAuthentication();
   static final FToast fToast = FToast();
-
   static void showErrorToast(BuildContext context, String message) {
     showToast(
       context,
@@ -50,29 +24,15 @@ class LocalToast {
     int duration = 1,
     ToastType toastType = ToastType.norm,
     Icon? icon,
+    TextStyle? textStyle,
   }) {
     fToast.init(context);
-    final Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0),
-        color: toastType.color,
-      ),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (icon != null) icon,
-        if (icon != null)
-          const SizedBox(
-            width: 12.0,
-          ),
-        Text(
-          message,
-          style: ProtonStyles.body2Medium(
-            color: ProtonColors.textInverted,
-          ),
-        ),
-      ]),
+    final toast = ToastView(
+      toastType: toastType,
+      icon: icon,
+      message: message,
+      textStyle: textStyle,
     );
-
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,

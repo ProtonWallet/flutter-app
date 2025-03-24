@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/proton.color.dart';
-import 'package:wallet/constants/proton.svg.image.dart';
+import 'package:wallet/constants/proton.image.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/path.helper.dart';
 import 'package:wallet/helper/user.agent.dart';
@@ -35,8 +35,8 @@ abstract class AppViewModel extends ViewModel<AppCoordinator> {
   ProtonColorScheme get darkColorScheme;
   ProtonColorScheme get lightColorScheme;
 
-  ProtonSvgImages get darkSvgImage;
-  ProtonSvgImages get lightSvgImage;
+  ProtonImages get darkSvgImage;
+  ProtonImages get lightSvgImage;
 
   AppViewModel(super.coordinator);
 }
@@ -52,9 +52,9 @@ class AppViewModelImpl extends AppViewModel {
   @override
   ProtonColorScheme get lightColorScheme => lightSchemeExtension;
   @override
-  ProtonSvgImages get darkSvgImage => darkSvgImageExtension;
+  ProtonImages get darkSvgImage => darkImageExtension;
   @override
-  ProtonSvgImages get lightSvgImage => lightSvgImageExtension;
+  ProtonImages get lightSvgImage => lightImageExtension;
 
   ///
   final ManagerFactory serviceManager;
