@@ -4,6 +4,7 @@ import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/features/wallet.list/wallet.list.bloc.model.dart';
 import 'package:wallet/managers/providers/pool.address.data.provider.dart';
+import 'package:wallet/managers/providers/unleash.data.provider.dart';
 import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
@@ -52,6 +53,8 @@ abstract class WalletAccountAddressListViewModel
   /// late variables, needs to make sure we initialized them
   late ProtonExchangeRate exchangeRate;
   late TextEditingController searchTextEditingController;
+
+  bool get showMessageSigner;
 }
 
 class WalletAccountAddressListViewModelImpl
@@ -63,6 +66,7 @@ class WalletAccountAddressListViewModelImpl
     this.poolAddressDataProvider,
     this.accountMenuModel,
     this.blockchainClient,
+    this.unleashDataProvider,
   );
 
   /// api
@@ -76,6 +80,9 @@ class WalletAccountAddressListViewModelImpl
 
   /// pool address provider to get addresses in pool
   final PoolAddressDataProvider poolAddressDataProvider;
+
+  /// unleash data provider
+  final UnleashDataProvider unleashDataProvider;
 
   /// account info
   final AccountMenuModel accountMenuModel;
@@ -228,4 +235,7 @@ class WalletAccountAddressListViewModelImpl
     }
     sinkAddSafe();
   }
+
+  @override
+  bool get showMessageSigner => unleashDataProvider.isWalletMessageSigner();
 }

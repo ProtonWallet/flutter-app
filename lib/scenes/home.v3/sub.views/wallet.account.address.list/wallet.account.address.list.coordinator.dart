@@ -77,6 +77,7 @@ class WalletAccountAddressListCoordinator extends Coordinator {
       dataProviderManager.poolAddressDataProvider,
       accountMenuModel,
       apiService.getApiService().getBlockchainClient(),
+      dataProviderManager.unleashDataProvider,
     );
     widget = WalletAccountAddressListView(
       viewModel,

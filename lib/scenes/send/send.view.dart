@@ -946,8 +946,8 @@ class SendView extends ViewBase<SendViewModel> {
                         text: S.of(context).continue_buttion,
                         width: MediaQuery.of(context).size.width,
                         backgroundColor: ProtonColors.protonBlue,
-                        textStyle:
-                            ProtonStyles.body1Medium(color: ProtonColors.white),
+                        textStyle: ProtonStyles.body1Medium(
+                            color: ProtonColors.textInverted),
                         height: 55),
                   ),
               ]));

@@ -22,7 +22,7 @@ class SignatureView extends StatelessWidget {
       width: context.width,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Text(
-          context.local.address_authenticated,
+          context.local.message_signed,
           style: ProtonStyles.headline(color: ProtonColors.textNorm),
         ),
 
@@ -35,7 +35,7 @@ class SignatureView extends StatelessWidget {
           ),
           child: Text(
             textAlign: TextAlign.center,
-            context.local.address_authenticated_desc,
+            context.local.message_signed_desc,
             style: ProtonStyles.body2Medium(color: ProtonColors.textWeak),
           ),
         ),

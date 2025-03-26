@@ -2,6 +2,9 @@
   "@@locale": "en",
   "@@last_modified": "2024-02-12T00:10:57.227125",
   "app_name": "Proton Wallet",
+  "@app_name": {
+    "description": "The name of the application"
+  },
   "login": "Login",
   "settings_title": "User Settings",
   "wallet_settings": "Wallet Settings",
@@ -623,12 +626,16 @@
   "show_xpub": "Show public key (XPUB)",
   "generate_signature": "Generate signature",
   "message": "Message",
-  "message_hint": "Write or paste the message you need to authenticate, then copy and share the generated signature with the requester.",
+  "message_hint": "Enter or paste the message you want to sign.",
   "signature": "Signature",
-  "address_authenticated": "Address authenticated",
-  "address_authenticated_desc": "This Bitcoin address has signed the message using its private key. The signature verifies ownership without exposing the private key. Copy and share it with the requester.",
+  "message_signed_desc": "This signature verifies your ownership of this Bitcoin address without revealing your private key. Copy the signature and share it with the requester.",
   "signature_copied": "Signature copied to clipboard",
   "copy_signature": "Copy Signature",
   "message_empty": "Please enter a message to sign.",
-  "message_sign_failed": "Failed to sign the message. Please try again."
+  "message_sign_failed": "Failed to sign the message. Please try again.",
+  "message_sign_header": "Sign a message",
+  "message_signed": "Message signed",
+  "signing_type": "Signing type",
+  "signing_method": "Signing type",
+  "signing_method_desc": "We default to Electrum signing method because it's the easiest adn most common method requested by banks. BIP 137 is used for signing transactions offline and is more advanced."
 }

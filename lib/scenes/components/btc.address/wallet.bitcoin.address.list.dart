@@ -10,6 +10,7 @@ class WalletBitcoinAddressList extends StatefulWidget {
   final ShowTransactionDetailCallback showTransactionDetailCallback;
   final ShowAddressQRcodeCallback showAddressQRcodeCallback;
   final OnSigningCallback onSigningCallback;
+  final bool showMessageSigner;
 
   const WalletBitcoinAddressList({
     required this.addresses,
@@ -18,6 +19,7 @@ class WalletBitcoinAddressList extends StatefulWidget {
     required this.showTransactionDetailCallback,
     required this.showAddressQRcodeCallback,
     required this.onSigningCallback,
+    required this.showMessageSigner,
     super.key,
   });
 
@@ -49,6 +51,7 @@ class WalletBitcoinAddressListState extends State<WalletBitcoinAddressList> {
             showAddressQRcodeCallback: widget.showAddressQRcodeCallback,
             onSigningCallback: widget.onSigningCallback,
             inPool: widget.addressesInPool.contains(address.address),
+            showMessageSigner: widget.showMessageSigner,
           ),
       ],
     );

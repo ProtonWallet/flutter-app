@@ -20,7 +20,6 @@ class DiscoverView extends ViewBase<DiscoverViewModel> {
       backgroundColor: ProtonColors.backgroundNorm,
       cbtBgColor: ProtonColors.backgroundSecondary,
       title: S.of(context).discover,
-      titleStyle: ProtonStyles.headline(color: ProtonColors.textNorm),
       child: viewModel.initialized
           ? _buildDiscoverFeedsView()
           : _buildLoadingView(context),
