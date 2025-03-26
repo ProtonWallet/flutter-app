@@ -80,6 +80,7 @@ Widget buildTestContent() {
             showAddressQRcodeCallback: (address) => {},
             inPool: true,
             onSigningCallback: (String address) {},
+            showMessageSigner: true,
           ),
         ],
       ),
@@ -93,6 +94,7 @@ Widget buildTestContent() {
       showAddressQRcodeCallback: (address) => {},
       inPool: false,
       onSigningCallback: (String address) {},
+      showMessageSigner: true,
     ),
   );
 
@@ -113,6 +115,7 @@ Widget buildTestContent() {
       showAddressQRcodeCallback: (address) => {},
       inPool: false,
       onSigningCallback: (String address) {},
+      showMessageSigner: true,
     ),
   );
 

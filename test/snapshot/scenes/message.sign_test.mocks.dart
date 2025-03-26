@@ -8,9 +8,10 @@ import 'dart:async' as _i7;
 import 'package:flutter/widgets.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:wallet/rust/common/signing_type.dart' as _i10;
 import 'package:wallet/scenes/core/coordinator.dart' as _i9;
 import 'package:wallet/scenes/core/view.dart' as _i6;
-import 'package:wallet/scenes/core/view.navigatior.identifiers.dart' as _i10;
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart' as _i11;
 import 'package:wallet/scenes/core/viewmodel.dart' as _i8;
 import 'package:wallet/scenes/message.sign/message.sign.coordinator.dart'
     as _i3;
@@ -217,10 +218,11 @@ class MockMessageSignViewModel extends _i1.Mock
       ) as bool);
 
   @override
-  _i7.Future<bool> signMessage() => (super.noSuchMethod(
+  _i7.Future<bool> signMessage(_i10.SigningType? signingType) =>
+      (super.noSuchMethod(
         Invocation.method(
           #signMessage,
-          [],
+          [signingType],
         ),
         returnValue: _i7.Future<bool>.value(false),
         returnValueForMissingStub: _i7.Future<bool>.value(false),
@@ -255,7 +257,7 @@ class MockMessageSignViewModel extends _i1.Mock
       );
 
   @override
-  _i7.Future<void> move(_i10.NavID? to) => (super.noSuchMethod(
+  _i7.Future<void> move(_i11.NavID? to) => (super.noSuchMethod(
         Invocation.method(
           #move,
           [to],

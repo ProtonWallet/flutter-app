@@ -34,6 +34,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
   final ShowTransactionDetailCallback showTransactionDetailCallback;
   final ShowAddressQRcodeCallback showAddressQRcodeCallback;
   final OnSigningCallback onSigningCallback;
+  final bool showMessageSigner;
   final bool inPool;
   final bool showTransactions;
 
@@ -44,6 +45,7 @@ class BitcoinAddressInfoBox extends StatelessWidget {
     required this.showAddressQRcodeCallback,
     required this.onSigningCallback,
     required this.inPool,
+    required this.showMessageSigner,
     this.showTransactions = false,
     super.key,
   });
@@ -102,16 +104,18 @@ class BitcoinAddressInfoBox extends StatelessWidget {
                 backgroundColor: ProtonColors.backgroundNorm,
                 icon: context.images.iconQrCode.svg(),
               ),
-              const SizedBox(width: 8),
 
               /// signing button
-              CircleImageButton(
-                onTap: () {
-                  onSigningCallback(bitcoinAddressDetail.address);
-                },
-                backgroundColor: ProtonColors.backgroundNorm,
-                icon: context.images.iconSign.svg(),
-              ),
+              if (showMessageSigner) ...[
+                const SizedBox(width: 8),
+                CircleImageButton(
+                  onTap: () {
+                    onSigningCallback(bitcoinAddressDetail.address);
+                  },
+                  backgroundColor: ProtonColors.backgroundNorm,
+                  icon: context.images.iconSign.svg(),
+                ),
+              ],
             ],
           ),
         ),

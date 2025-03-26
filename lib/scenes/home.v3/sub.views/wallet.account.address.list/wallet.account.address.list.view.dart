@@ -72,6 +72,7 @@ class WalletAccountAddressListView
               showTransactionDetailCallback: viewModel.showTransactionDetail,
               showAddressQRcodeCallback: viewModel.showAddressQRcode,
               onSigningCallback: viewModel.showSigningTool,
+              showMessageSigner: viewModel.showMessageSigner,
             ),
           if (viewModel.loadingAddress)
             const Align(

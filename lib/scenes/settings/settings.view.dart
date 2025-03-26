@@ -37,7 +37,6 @@ class SettingsView extends ViewBase<SettingsViewModel> with SettingsViewMixin {
   Widget build(BuildContext context) {
     return PageLayoutV2(
       title: context.local.settings_title,
-      titleStyle: ProtonStyles.headline(color: ProtonColors.textNorm),
       backgroundColor: ProtonColors.backgroundNorm,
       cbtBgColor: ProtonColors.backgroundSecondary,
       dividerOffset: 8.0,

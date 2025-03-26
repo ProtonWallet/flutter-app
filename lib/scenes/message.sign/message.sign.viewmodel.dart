@@ -20,7 +20,7 @@ abstract class MessageSignViewModel extends ViewModel<MessageSignCoordinator> {
   bool get isLoading;
   String get signature;
 
-  Future<bool> signMessage();
+  Future<bool> signMessage(SigningType signingType);
 }
 
 class MessageSignViewModelImpl extends MessageSignViewModel {
@@ -49,7 +49,7 @@ class MessageSignViewModelImpl extends MessageSignViewModel {
   }
 
   @override
-  Future<bool> signMessage() async {
+  Future<bool> signMessage(SigningType signingType) async {
     _isLoading = true;
     sinkAddSafe();
     final message = messageController.text;
@@ -58,7 +58,7 @@ class MessageSignViewModelImpl extends MessageSignViewModel {
       // sign message
       final result = await signer.signMessage(
           account: account,
-          signingType: SigningType.bip137,
+          signingType: signingType,
           message: message,
           btcAddress: address);
       // set signature

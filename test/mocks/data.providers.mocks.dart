@@ -4892,6 +4892,15 @@ class MockUnleashDataProvider extends _i1.Mock
       ) as bool);
 
   @override
+  bool isWalletMessageSigner() => (super.noSuchMethod(
+        Invocation.method(
+          #isWalletMessageSigner,
+          [],
+        ),
+        returnValue: false,
+      ) as bool);
+
+  @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
         Invocation.method(
           #emitState,

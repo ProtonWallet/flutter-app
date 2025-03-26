@@ -33,14 +33,14 @@ class MessageSignView extends ViewBase<MessageSignViewModel> {
           if (!viewModel.showSignature)
             MessageView(
               btcAddress: viewModel.address,
-              onPressed: () async {
+              onPressed: (signingType) async {
                 if (viewModel.messageController.text.isEmpty &&
                     context.mounted) {
                   context.showErrorToast(context.local.message_empty);
                   return;
                 }
 
-                final result = await viewModel.signMessage();
+                final result = await viewModel.signMessage(signingType);
                 if (!result && context.mounted) {
                   context.showErrorToast(context.local.message_sign_failed);
                 }
