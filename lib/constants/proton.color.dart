@@ -35,6 +35,7 @@ class ProtonColors {
   static Color notificationError = const Color(0xFFED4349);
   static Color notificationErrorBackground = const Color(0xFFFFE0E0);
   static Color notificationNorm = const Color(0xFF767DFF);
+  static Color notificationNormBackground = const Color(0xFFD7D7FF);
 
   /// other one-time custom colors styles for widgets
   static Color launchBackground = const Color(0xff191927);
@@ -104,6 +105,7 @@ class ProtonColors {
     notificationError = const Color(0xFFED4349);
     notificationErrorBackground = const Color(0xFFFFE0E0);
     notificationNorm = const Color(0xFF767DFF);
+    notificationNormBackground = const Color(0xFFD7D7FF);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xff191927);
@@ -167,6 +169,7 @@ class ProtonColors {
     notificationError = const Color(0xFFFB7878);
     notificationErrorBackground = const Color(0xFF3D2A3D);
     notificationNorm = const Color(0xFF9494FF);
+    notificationNormBackground = const Color(0xFF131429);
 
     /// other one-time custom colors styles for widgets
     launchBackground = const Color(0xFFE6E6D8);
