@@ -96,6 +96,7 @@ const List<FiatCurrency> fiatCurrencies = [
   FiatCurrency.huf,
   FiatCurrency.idr,
   FiatCurrency.ils,
+  FiatCurrency.isk,
   FiatCurrency.inr,
   FiatCurrency.jpy,
   FiatCurrency.krw,

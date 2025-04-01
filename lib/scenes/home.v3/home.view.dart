@@ -647,20 +647,30 @@ class HomeView extends ViewBase<HomeViewModel> {
           padding: const EdgeInsets.only(
               left: 20, right: 20, top: defaultPadding, bottom: defaultPadding),
           decoration: BoxDecoration(
-              color: ProtonColors.notificationWaning,
+              color: ProtonColors.notificationNormBackground,
               borderRadius: BorderRadius.circular(24.0)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                context.local.backup_banner_wallet_title,
-                style:
-                    ProtonStyles.body2Medium(color: ProtonColors.textInverted),
-              ),
+              Row(children: [
+                Icon(
+                  Icons.info_rounded,
+                  size: 20,
+                  color: ProtonColors.protonBlue,
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  context.local.backup_banner_wallet_title,
+                  style:
+                  ProtonStyles.body2Medium(color: ProtonColors.protonBlue),
+                ),
+              ]),
               Transform.translate(
                 offset: const Offset(6, 0),
                 child: Icon(Icons.arrow_forward_ios_rounded,
-                    color: ProtonColors.textInverted, size: 14),
+                    color: ProtonColors.protonBlue, size: 14),
               ),
             ],
           ),
@@ -683,20 +693,30 @@ class HomeView extends ViewBase<HomeViewModel> {
           padding: const EdgeInsets.only(
               left: 20, right: 20, top: defaultPadding, bottom: defaultPadding),
           decoration: BoxDecoration(
-              color: ProtonColors.notificationWaning,
+              color: ProtonColors.notificationNormBackground,
               borderRadius: BorderRadius.circular(24.0)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                context.local.backup_banner_proton_title,
-                style:
-                    ProtonStyles.body2Medium(color: ProtonColors.textInverted),
-              ),
+              Row(children: [
+                Icon(
+                  Icons.info_rounded,
+                  size: 20,
+                  color: ProtonColors.protonBlue,
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  context.local.backup_banner_proton_title,
+                  style:
+                      ProtonStyles.body2Medium(color: ProtonColors.protonBlue),
+                ),
+              ]),
               Transform.translate(
                 offset: const Offset(6, 0),
                 child: Icon(Icons.arrow_forward_ios_rounded,
-                    color: ProtonColors.textInverted, size: 14),
+                    color: ProtonColors.protonBlue, size: 14),
               ),
             ],
           ),

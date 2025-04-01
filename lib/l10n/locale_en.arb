@@ -613,7 +613,7 @@
   "home_app_crypto_error_alert": "Decryption of this wallet's encrypted content failed.\nClick to learn more.",
   "buying_unavailable": "Buying is temporarily unavailable",
   "buying_unavailable_description": "This feature is not available on this app at the moment, but we're actively working on it to enhance your buying experience. Try our web app or check again later.",
-  "backup_banner_wallet_title": "Backup your wallet",
+  "backup_banner_wallet_title": "Back up your wallet's seed phrase",
   "backup_banner_proton_title": "Backup your Proton account",
   "backup_your_wallet_alert_title": "Backup: \"{wallet_name}\"",
   "backup_your_wallet_alert_content": "Back up your wallet's seed phrase so you can always recover your assets, including on other wallet services. Without it, you risk losing your BTC if you forget your Proton password.",
