@@ -14,6 +14,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class FrbPaymentLink implements RustOpaqueInterface {
   String toAddress();
 
+  BigInt toAmountInSats();
+
   String toString();
 
   String toUri();

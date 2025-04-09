@@ -27,6 +27,11 @@ impl FrbPaymentLink {
     }
 
     #[frb(sync)]
+    pub fn to_amount_in_sats(&self) -> u64 {
+        self.inner.to_amount_in_sats()
+    }
+
+    #[frb(sync)]
     pub fn try_parse(str: String, network: Network) -> Result<FrbPaymentLink, BridgeError> {
         let inner = PaymentLink::try_parse(str, network.into())?;
 

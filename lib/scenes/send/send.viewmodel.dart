@@ -32,6 +32,7 @@ import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/api_service/invite_client.dart';
 import 'package:wallet/rust/api/bdk_wallet/account.dart';
 import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
+import 'package:wallet/rust/api/bdk_wallet/payment_link.dart';
 import 'package:wallet/rust/api/bdk_wallet/psbt.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_builder.dart';
 import 'package:wallet/rust/api/errors.dart';
@@ -207,6 +208,8 @@ abstract class SendViewModel extends ViewModel<SendCoordinator> {
   Future<bool> buildTransactionScript();
 
   void showSendInvite();
+
+  Future<void> onScanResult(scanResult);
 }
 
 class SendViewModelImpl extends SendViewModel {
@@ -719,7 +722,6 @@ class SendViewModelImpl extends SendViewModel {
   Future<void> addRecipient() async {
     isLoadingBvE = true;
     sinkAddSafe();
-
     final String email = recipientTextController.text.trim();
     recipientTextController.text = "";
     if (!isRecipientExists(email)) {
@@ -1397,5 +1399,37 @@ class SendViewModelImpl extends SendViewModel {
   @override
   void showSendInvite() {
     coordinator.showSendInvite();
+  }
+
+  @override
+  Future<void> onScanResult(scanResult) async {
+    if (scanResult.isNotEmpty) {
+      try {
+        addressFocusNode.requestFocus();
+        final frbPaymentLink = FrbPaymentLink.tryParse(
+          str: scanResult,
+          network: appConfig.coinType.network,
+        );
+        final bitcoinAddress = frbPaymentLink.toAddress();
+
+        final amount = frbPaymentLink.toAmountInSats().toInt();
+        if (bitcoinAddress.isNotEmpty) {
+          recipientTextController.text = bitcoinAddress;
+
+          if (amount > 0) {
+            bitcoinBase = true;
+
+            /// change to sats amount
+            fiatCurrencyNotifier.value = satoshiCurrencyWrapper;
+            amountTextController.text = amount.toString();
+          }
+        }
+        addressFocusNode.unfocus();
+        addressAutoCompleteCallback();
+        sinkAddSafe();
+      } catch (e) {
+        logger.e(e.toString());
+      }
+    }
   }
 }
