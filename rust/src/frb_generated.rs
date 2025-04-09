@@ -3696,7 +3696,8 @@ let api_address_id = <Option<String>>::sse_decode(&mut deserializer);
 let api_body = <Option<String>>::sse_decode(&mut deserializer);
 let api_message = <Option<crate::common::broadcast_message::BroadcastMessage>>::sse_decode(&mut deserializer);
 let api_recipients = <Option<std::collections::HashMap<String, String>>>::sse_decode(&mut deserializer);
-let api_is_anonymous = <Option<u8>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
+let api_is_anonymous = <Option<u8>>::sse_decode(&mut deserializer);
+let api_is_paper_wallet = <Option<u8>>::sse_decode(&mut deserializer);deserializer.end(); move |context| async move {
                     transform_result_sse::<_, crate::api::errors::BridgeError>((move || async move {
                         let mut api_that_guard = None;
 let mut api_psbt_guard = None;
@@ -3710,7 +3711,7 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
         }
         let api_that_guard = api_that_guard.unwrap();
 let api_psbt_guard = api_psbt_guard.unwrap();
- let output_ok = crate::api::bdk_wallet::blockchain::FrbBlockchainClient::broadcast_psbt(&*api_that_guard, &*api_psbt_guard, api_wallet_id, api_wallet_account_id, api_label, api_exchange_rate_id, api_transaction_time, api_address_id, api_body, api_message, api_recipients, api_is_anonymous).await?;   Ok(output_ok)
+ let output_ok = crate::api::bdk_wallet::blockchain::FrbBlockchainClient::broadcast_psbt(&*api_that_guard, &*api_psbt_guard, api_wallet_id, api_wallet_account_id, api_label, api_exchange_rate_id, api_transaction_time, api_address_id, api_body, api_message, api_recipients, api_is_anonymous, api_is_paper_wallet).await?;   Ok(output_ok)
                     })().await)
                 } })
 }

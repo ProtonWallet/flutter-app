@@ -507,7 +507,8 @@ abstract class RustLibApi extends BaseApi {
       String? body,
       BroadcastMessage? message,
       Map<String, String>? recipients,
-      int? isAnonymous});
+      int? isAnonymous,
+      int? isPaperWallet});
 
   Future<Map<String, double>>
       crateApiBdkWalletBlockchainFrbBlockchainClientGetFeesEstimation(
@@ -4626,7 +4627,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       String? body,
       BroadcastMessage? message,
       Map<String, String>? recipients,
-      int? isAnonymous}) {
+      int? isAnonymous,
+      int? isPaperWallet}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -4644,6 +4646,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_opt_box_autoadd_broadcast_message(message, serializer);
         sse_encode_opt_Map_String_String(recipients, serializer);
         sse_encode_opt_box_autoadd_u_8(isAnonymous, serializer);
+        sse_encode_opt_box_autoadd_u_8(isPaperWallet, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 84, port: port_);
       },
@@ -4665,7 +4668,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         body,
         message,
         recipients,
-        isAnonymous
+        isAnonymous,
+        isPaperWallet
       ],
       apiImpl: this,
     ));
@@ -4687,7 +4691,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               "body",
               "message",
               "recipients",
-              "isAnonymous"
+              "isAnonymous",
+              "isPaperWallet"
             ],
           );
 
@@ -27173,7 +27178,8 @@ class FrbBlockchainClientImpl extends RustOpaque
           String? body,
           BroadcastMessage? message,
           Map<String, String>? recipients,
-          int? isAnonymous}) =>
+          int? isAnonymous,
+          int? isPaperWallet}) =>
       RustLib.instance.api
           .crateApiBdkWalletBlockchainFrbBlockchainClientBroadcastPsbt(
               that: this,
@@ -27187,7 +27193,8 @@ class FrbBlockchainClientImpl extends RustOpaque
               body: body,
               message: message,
               recipients: recipients,
-              isAnonymous: isAnonymous);
+              isAnonymous: isAnonymous,
+              isPaperWallet: isPaperWallet);
 
   Future<Map<String, double>> getFeesEstimation() => RustLib.instance.api
           .crateApiBdkWalletBlockchainFrbBlockchainClientGetFeesEstimation(

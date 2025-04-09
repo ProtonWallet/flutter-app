@@ -55,6 +55,7 @@ impl FrbBlockchainClient {
         message: Option<BroadcastMessage>,
         recipients: Option<HashMap<String, String>>,
         is_anonymous: Option<u8>,
+        is_paper_wallet: Option<u8>,
     ) -> Result<String, BridgeError> {
         let tx = psbt.extract_tx()?;
 
@@ -81,6 +82,7 @@ impl FrbBlockchainClient {
                 message,
                 recipients,
                 is_anonymous,
+                is_paper_wallet,
             )
             .await?;
 

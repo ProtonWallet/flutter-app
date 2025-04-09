@@ -27,7 +27,8 @@ abstract class FrbBlockchainClient implements RustOpaqueInterface {
       String? body,
       BroadcastMessage? message,
       Map<String, String>? recipients,
-      int? isAnonymous});
+      int? isAnonymous,
+      int? isPaperWallet});
 
   Future<Map<String, double>> getFeesEstimation();
 
