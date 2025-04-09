@@ -211,6 +211,7 @@ class PaperWalletViewModelImpl extends PaperWalletViewModel {
         walletAccountId: accountModel.accountID,
         exchangeRateId: userSettingsDataProvider.exchangeRate.id,
         isAnonymous: 0,
+        isPaperWallet: 1,
       );
       logger.i(txid);
       await walletDataProvider.newBroadcastTransaction();
