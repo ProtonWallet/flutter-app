@@ -1,19 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/l10n/generated/locale.dart';
-import 'package:wallet/rust/api/bdk_wallet/payment_link.dart';
+
+typedef ScanResultCallback = void Function(String result);
 
 void showQRScanBottomSheet(
   BuildContext context,
   TextEditingController textEditingController,
-  VoidCallback? callback,
+  ScanResultCallback? resultCallback,
 ) {
   showModalBottomSheet(
     context: context,
@@ -38,7 +38,7 @@ void showQRScanBottomSheet(
                 padding: const EdgeInsets.only(top: 10),
                 child: QRScannerWidget(
                   textEditingController: textEditingController,
-                  callback: callback,
+                  resultCallback: resultCallback,
                 ),
               ),
             ])),
@@ -49,10 +49,10 @@ void showQRScanBottomSheet(
 
 class QRScannerWidget extends StatefulWidget {
   final TextEditingController textEditingController;
-  final VoidCallback? callback;
+  final ScanResultCallback? resultCallback;
 
   const QRScannerWidget(
-      {required this.textEditingController, super.key, this.callback});
+      {required this.textEditingController, super.key, this.resultCallback});
 
   @override
   QRScannerWidgetState createState() => QRScannerWidgetState();
@@ -120,23 +120,10 @@ class QRScannerWidgetState extends State<QRScannerWidget> {
           _isProcessing = true;
         });
         try {
-          var scanResult = scanData.code ?? "";
-          if (scanResult.isNotEmpty) {
-            try {
-              scanResult = FrbPaymentLink.tryParse(
-                str: scanResult,
-                network: appConfig.coinType.network,
-              ).toAddress();
-            } catch (e) {
-              logger.e(e.toString());
-            }
-          }
-          widget.textEditingController.text = scanResult;
-          if (widget.callback != null) {
-            if (mounted) {
-              Navigator.of(context).pop();
-            }
-            widget.callback!();
+          final scanResult = scanData.code ?? "";
+          widget.resultCallback?.call(scanResult);
+          if (mounted) {
+            Navigator.of(context).pop();
           }
         } catch (e) {
           logger.e(e.toString());

@@ -15,6 +15,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
   final String? labelText;
   final String? hintText;
   final VoidCallback? callback;
+  final ScanResultCallback? scanResultCallback;
   final bool? showBorder;
   final Color? itemBackgroundColor;
   final bool updateTextController;
@@ -28,6 +29,7 @@ class ProtonMailAutoComplete extends StatelessWidget {
     required this.focusNode,
     super.key,
     this.callback,
+    this.scanResultCallback,
     this.labelText,
     this.hintText,
     this.color = Colors.transparent,
@@ -154,7 +156,10 @@ class ProtonMailAutoComplete extends StatelessWidget {
                                   defaultTargetPlatform == TargetPlatform.iOS) {
                                 focusNode.unfocus();
                                 showQRScanBottomSheet(
-                                    context, textEditingController, callback);
+                                  context,
+                                  textEditingController,
+                                  scanResultCallback,
+                                );
                               }
                             },
                             icon: Icon(Icons.qr_code_rounded,

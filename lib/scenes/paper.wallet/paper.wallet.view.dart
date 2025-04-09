@@ -196,7 +196,10 @@ class PaperWalletView extends ViewBase<PaperWalletViewModel> {
                           viewModel.privateKeyFocusNode.unfocus();
                           viewModel.clearImportedError();
                           showQRScanBottomSheet(
-                              context, viewModel.privateKeyController, () {});
+                            context,
+                            viewModel.privateKeyController,
+                            null,
+                          );
                         }
                       },
                       icon: Icon(Icons.qr_code_rounded,

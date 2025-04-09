@@ -855,15 +855,19 @@ class SendView extends ViewBase<SendViewModel> {
                                   ]),
                                 const SizedBox(height: 8),
                                 ProtonMailAutoComplete(
-                                    labelText:
-                                        S.of(context).send_to_recipient_s,
-                                    emails: viewModel.contactsEmails,
-                                    color: ProtonColors.backgroundSecondary,
-                                    focusNode: viewModel.addressFocusNode,
-                                    textEditingController:
-                                        viewModel.recipientTextController,
-                                    callback:
-                                        viewModel.addressAutoCompleteCallback),
+                                  labelText: S.of(context).send_to_recipient_s,
+                                  emails: viewModel.contactsEmails,
+                                  color: ProtonColors.backgroundSecondary,
+                                  focusNode: viewModel.addressFocusNode,
+                                  textEditingController:
+                                      viewModel.recipientTextController,
+                                  callback:
+                                      viewModel.addressAutoCompleteCallback,
+                                  scanResultCallback:
+                                      (String scanResult) async {
+                                    await viewModel.onScanResult(scanResult);
+                                  },
+                                ),
                                 const SizedBox(height: 5),
                                 Row(
                                     crossAxisAlignment:
