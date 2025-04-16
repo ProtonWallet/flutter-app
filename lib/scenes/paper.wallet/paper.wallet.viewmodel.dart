@@ -68,6 +68,8 @@ abstract class PaperWalletViewModel extends ViewModel<PaperWalletCoordinator> {
   Future<void> tryImportWithPrivateKey();
 
   Future<bool> broadcast();
+
+  Future<void> onScanResult(scanResult);
 }
 
 class PaperWalletViewModelImpl extends PaperWalletViewModel {
@@ -228,5 +230,17 @@ class PaperWalletViewModelImpl extends PaperWalletViewModel {
   void clearImportedError() {
     importedError = "";
     sinkAddSafe();
+  }
+
+  @override
+  Future<void> onScanResult(scanResult) async {
+    if (scanResult.isNotEmpty) {
+      try {
+        privateKeyController.text = scanResult;
+        sinkAddSafe();
+      } catch (e) {
+        logger.e(e.toString());
+      }
+    }
   }
 }
