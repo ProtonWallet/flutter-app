@@ -223,7 +223,7 @@ class BDKTransactionDataProvider extends DataProvider {
     final bool isSyncing = isWalletSyncing.containsKey(accountModel.accountID)
         ? isWalletSyncing[accountModel.accountID]!
         : false;
-    bool success = false;
+    bool syncSuccess = false;
     if (!isSyncing) {
       try {
         isWalletSyncing[accountModel.accountID] = true;
@@ -297,7 +297,7 @@ class BDKTransactionDataProvider extends DataProvider {
             await shared.write(syncCheckID, true);
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync end time: $timeEnd");
-            success = true;
+            syncSuccess = true;
           } else {
             lastSyncedTime[accountModel.accountID] = 0;
             logger.i("Bdk wallet partial sync check");
@@ -307,7 +307,7 @@ class BDKTransactionDataProvider extends DataProvider {
 
             final timeEnd = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet partial sync end time: $timeEnd");
-            success = true;
+            syncSuccess = true;
           }
           lastSyncedTime[accountModel.accountID] =
               DateTime.now().secondsSinceEpoch();
@@ -344,7 +344,7 @@ class BDKTransactionDataProvider extends DataProvider {
       } finally {
         logger.i("Bdk wallet sync end finally");
         isWalletSyncing[accountModel.accountID] = false;
-        if (success) {
+        if (syncSuccess) {
           final timeEnd = DateTime.now().secondsSinceEpoch();
           final check = "${accountModel.accountID}_$timeEnd";
           emitState(BDKSyncUpdated(check));
@@ -358,7 +358,7 @@ class BDKTransactionDataProvider extends DataProvider {
       accountModel.accountID,
       serverScriptType: accountModel.scriptType,
     );
-    if (account != null) {
+    if (account != null && syncSuccess) {
       final int? maximumGapSize =
           await account.getMaximumGapSize(keychain: KeychainKind.external_);
       if (maximumGapSize != null) {
@@ -380,7 +380,7 @@ class BDKTransactionDataProvider extends DataProvider {
     }
 
     /// check metrics after sync
-    if (account != null) {
+    if (account != null && syncSuccess) {
       try {
         final balance = await account.getBalance();
         final hasPositiveBalance =
