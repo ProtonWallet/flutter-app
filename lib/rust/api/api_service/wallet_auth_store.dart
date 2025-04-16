@@ -18,6 +18,7 @@ abstract class ProtonWalletAuthStore implements RustOpaqueInterface {
 
   static ProtonWalletAuthStore fromSession(
           {required String env,
+          required String userId,
           required String uid,
           required String access,
           required String refresh,
@@ -25,6 +26,7 @@ abstract class ProtonWalletAuthStore implements RustOpaqueInterface {
       RustLib.instance.api
           .crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSession(
               env: env,
+              userId: userId,
               uid: uid,
               access: access,
               refresh: refresh,
@@ -39,7 +41,8 @@ abstract class ProtonWalletAuthStore implements RustOpaqueInterface {
       {required FutureOr<String> Function(ChildSession) callback});
 
   void setAuthSync(
-      {required String uid,
+      {required String userId,
+      required String uid,
       required String access,
       required String refresh,
       required List<String> scopes});

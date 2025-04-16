@@ -99,7 +99,8 @@ abstract class ProtonApiService implements RustOpaqueInterface {
   Future<void> setProtonApi();
 
   Future<void> updateAuth(
-      {required String uid,
+      {required String userId,
+      required String uid,
       required String access,
       required String refresh,
       required List<String> scopes});

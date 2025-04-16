@@ -150,10 +150,10 @@ impl From<serde_json::Error> for BridgeError {
     }
 }
 
-impl From<andromeda_api::StoreFailure> for BridgeError {
-    fn from(value: andromeda_api::StoreFailure) -> Self {
+impl From<andromeda_api::StoreError> for BridgeError {
+    fn from(value: andromeda_api::StoreError) -> Self {
         BridgeError::SessionStore(format!(
-            "andromeda_api::StoreFailure occurred: {:?}",
+            "andromeda_api::StoreError occurred: {:?}",
             value.source()
         ))
     }
