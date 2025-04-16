@@ -1078,6 +1078,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiApiServiceProtonApiServiceProtonApiServiceUpdateAuth(
       {required ProtonApiService that,
+      required String userId,
       required String uid,
       required String access,
       required String refresh,
@@ -1171,6 +1172,7 @@ abstract class RustLibApi extends BaseApi {
   ProtonWalletAuthStore
       crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSession(
           {required String env,
+          required String userId,
           required String uid,
           required String access,
           required String refresh,
@@ -1190,6 +1192,7 @@ abstract class RustLibApi extends BaseApi {
 
   void crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreSetAuthSync(
       {required ProtonWalletAuthStore that,
+      required String userId,
       required String uid,
       required String access,
       required String refresh,
@@ -9171,6 +9174,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<void> crateApiApiServiceProtonApiServiceProtonApiServiceUpdateAuth(
       {required ProtonApiService that,
+      required String userId,
       required String uid,
       required String access,
       required String refresh,
@@ -9180,6 +9184,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonAPIService(
             that, serializer);
+        sse_encode_String(userId, serializer);
         sse_encode_String(uid, serializer);
         sse_encode_String(access, serializer);
         sse_encode_String(refresh, serializer);
@@ -9193,7 +9198,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ),
       constMeta:
           kCrateApiApiServiceProtonApiServiceProtonApiServiceUpdateAuthConstMeta,
-      argValues: [that, uid, access, refresh, scopes],
+      argValues: [that, userId, uid, access, refresh, scopes],
       apiImpl: this,
     ));
   }
@@ -9202,7 +9207,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiApiServiceProtonApiServiceProtonApiServiceUpdateAuthConstMeta =>
           const TaskConstMeta(
             debugName: "ProtonApiService_update_auth",
-            argNames: ["that", "uid", "access", "refresh", "scopes"],
+            argNames: ["that", "userId", "uid", "access", "refresh", "scopes"],
           );
 
   @override
@@ -9803,6 +9808,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtonWalletAuthStore
       crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSession(
           {required String env,
+          required String userId,
           required String uid,
           required String access,
           required String refresh,
@@ -9811,6 +9817,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(env, serializer);
+        sse_encode_String(userId, serializer);
         sse_encode_String(uid, serializer);
         sse_encode_String(access, serializer);
         sse_encode_String(refresh, serializer);
@@ -9824,7 +9831,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ),
       constMeta:
           kCrateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSessionConstMeta,
-      argValues: [env, uid, access, refresh, scopes],
+      argValues: [env, userId, uid, access, refresh, scopes],
       apiImpl: this,
     ));
   }
@@ -9833,7 +9840,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSessionConstMeta =>
           const TaskConstMeta(
             debugName: "ProtonWalletAuthStore_from_session",
-            argNames: ["env", "uid", "access", "refresh", "scopes"],
+            argNames: ["env", "userId", "uid", "access", "refresh", "scopes"],
           );
 
   @override
@@ -9930,6 +9937,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   void crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreSetAuthSync(
       {required ProtonWalletAuthStore that,
+      required String userId,
       required String uid,
       required String access,
       required String refresh,
@@ -9939,6 +9947,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerProtonWalletAuthStore(
             that, serializer);
+        sse_encode_String(userId, serializer);
         sse_encode_String(uid, serializer);
         sse_encode_String(access, serializer);
         sse_encode_String(refresh, serializer);
@@ -9951,7 +9960,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       ),
       constMeta:
           kCrateApiApiServiceWalletAuthStoreProtonWalletAuthStoreSetAuthSyncConstMeta,
-      argValues: [that, uid, access, refresh, scopes],
+      argValues: [that, userId, uid, access, refresh, scopes],
       apiImpl: this,
     ));
   }
@@ -9960,7 +9969,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiApiServiceWalletAuthStoreProtonWalletAuthStoreSetAuthSyncConstMeta =>
           const TaskConstMeta(
             debugName: "ProtonWalletAuthStore_set_auth_sync",
-            argNames: ["that", "uid", "access", "refresh", "scopes"],
+            argNames: ["that", "userId", "uid", "access", "refresh", "scopes"],
           );
 
   @override
@@ -28492,13 +28501,15 @@ class ProtonApiServiceImpl extends RustOpaque implements ProtonApiService {
       );
 
   Future<void> updateAuth(
-          {required String uid,
+          {required String userId,
+          required String uid,
           required String access,
           required String refresh,
           required List<String> scopes}) =>
       RustLib.instance.api
           .crateApiApiServiceProtonApiServiceProtonApiServiceUpdateAuth(
               that: this,
+              userId: userId,
               uid: uid,
               access: access,
               refresh: refresh,
@@ -28691,13 +28702,15 @@ class ProtonWalletAuthStoreImpl extends RustOpaque
               that: this, callback: callback);
 
   void setAuthSync(
-          {required String uid,
+          {required String userId,
+          required String uid,
           required String access,
           required String refresh,
           required List<String> scopes}) =>
       RustLib.instance.api
           .crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreSetAuthSync(
               that: this,
+              userId: userId,
               uid: uid,
               access: access,
               refresh: refresh,

@@ -1,4 +1,5 @@
-use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreFailure, Tokens, WalletAuthStore};
+use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreError, Tokens, WalletAuthStore};
+use async_trait::async_trait;
 use flutter_rust_bridge::frb;
 use std::sync::Arc;
 use tokio::sync::Mutex;
@@ -39,12 +40,13 @@ impl ProtonWalletAuthStore {
     #[frb(sync)]
     pub fn from_session(
         env: &str,
+        user_id: String,
         uid: String,
         access: String,
         refresh: String,
         scopes: Vec<String>,
     ) -> Result<Self, BridgeError> {
-        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        let auth = Auth::internal(user_id, uid, Tokens::access(access, refresh, scopes));
         info!("from_session start");
         ProtonWalletAuthStore::from_auth(env, Arc::new(std::sync::Mutex::new(auth)))
     }
@@ -52,13 +54,14 @@ impl ProtonWalletAuthStore {
     #[frb(sync)]
     pub fn set_auth_sync(
         &mut self,
+        user_id: String,
         uid: String,
         access: String,
         refresh: String,
         scopes: Vec<String>,
     ) -> Result<(), BridgeError> {
         info!("set_auth_sync start");
-        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        let auth = Auth::internal(user_id, uid, Tokens::access(access, refresh, scopes));
         let _ = self.inner.set_auth(auth);
         Ok(())
     }
@@ -112,20 +115,21 @@ impl ProtonWalletAuthStore {
     }
 }
 
+#[async_trait]
 impl Store for ProtonWalletAuthStore {
     fn env(&self) -> EnvId {
         info!("ProtonWalletAuthStore env");
         self.inner.env()
     }
 
-    fn get_auth(&self) -> Auth {
+    async fn get_auth(&self) -> Auth {
         info!("ProtonWalletAuthStore get_auth");
-        self.inner.get_auth()
+        self.inner.get_auth().await
     }
 
-    fn set_auth(&mut self, auth: Auth) -> std::result::Result<Auth, StoreFailure> {
+    async fn set_auth(&mut self, auth: Auth) -> std::result::Result<Auth, StoreError> {
         info!("Custom set_auth: {:?}", auth.clone());
-        let result = self.inner.set_auth(auth.clone())?;
+        let result = self.inner.set_auth(auth.clone()).await?;
         self.refresh_auth_credential(auth.clone());
         Ok(result)
     }

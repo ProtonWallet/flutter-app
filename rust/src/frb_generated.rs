@@ -9559,6 +9559,7 @@ fn wire__crate__api__api_service__proton_api_service__ProtonApiService_update_au
             let api_that = <RustOpaqueMoi<
                 flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonAPIService>,
             >>::sse_decode(&mut deserializer);
+            let api_user_id = <String>::sse_decode(&mut deserializer);
             let api_uid = <String>::sse_decode(&mut deserializer);
             let api_access = <String>::sse_decode(&mut deserializer);
             let api_refresh = <String>::sse_decode(&mut deserializer);
@@ -9583,6 +9584,7 @@ fn wire__crate__api__api_service__proton_api_service__ProtonApiService_update_au
                     let output_ok =
                         crate::api::api_service::proton_api_service::ProtonAPIService::update_auth(
                             &mut *api_that_guard,
+                            api_user_id,
                             api_uid,
                             api_access,
                             api_refresh,
@@ -10131,12 +10133,13 @@ fn wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_from_
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_env = <String>::sse_decode(&mut deserializer);
+let api_user_id = <String>::sse_decode(&mut deserializer);
 let api_uid = <String>::sse_decode(&mut deserializer);
 let api_access = <String>::sse_decode(&mut deserializer);
 let api_refresh = <String>::sse_decode(&mut deserializer);
 let api_scopes = <Vec<String>>::sse_decode(&mut deserializer);deserializer.end();
                 transform_result_sse::<_, crate::api::errors::BridgeError>((move || {
-                     let output_ok = crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::from_session(&api_env, api_uid, api_access, api_refresh, api_scopes)?;   Ok(output_ok)
+                     let output_ok = crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::from_session(&api_env, api_user_id, api_uid, api_access, api_refresh, api_scopes)?;   Ok(output_ok)
                 })()) })
 }
 fn wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_logout_impl(
@@ -10230,6 +10233,7 @@ fn wire__crate__api__api_service__wallet_auth_store__ProtonWalletAuthStore_set_a
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_that = <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonWalletAuthStore>>>::sse_decode(&mut deserializer);
+let api_user_id = <String>::sse_decode(&mut deserializer);
 let api_uid = <String>::sse_decode(&mut deserializer);
 let api_access = <String>::sse_decode(&mut deserializer);
 let api_refresh = <String>::sse_decode(&mut deserializer);
@@ -10244,7 +10248,7 @@ let decode_indices_ = flutter_rust_bridge::for_generated::lockable_compute_decod
             }
         }
         let mut api_that_guard = api_that_guard.unwrap();
- let output_ok = crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_auth_sync(&mut *api_that_guard, api_uid, api_access, api_refresh, api_scopes)?;   Ok(output_ok)
+ let output_ok = crate::api::api_service::wallet_auth_store::ProtonWalletAuthStore::set_auth_sync(&mut *api_that_guard, api_user_id, api_uid, api_access, api_refresh, api_scopes)?;   Ok(output_ok)
                 })()) })
 }
 fn wire__crate__api__api_service__settings_client__SettingsClient_accept_terms_and_conditions_impl(

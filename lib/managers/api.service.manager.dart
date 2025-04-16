@@ -49,6 +49,7 @@ class ProtonApiServiceManager implements Manager {
   Future<void> initalOldApiService() async {
     // Notes:: the user manager saving the session in parallel make sure await each other
     final String scopes = await storage.get("scopes");
+    final String userId = await storage.get("userId");
     final String uid = await storage.get("sessionId");
     final String accessToken = await storage.get("accessToken");
     final String refreshToken = await storage.get("refreshToken");
@@ -60,6 +61,7 @@ class ProtonApiServiceManager implements Manager {
     if (apiService != null) {
       logger.w("ApiService already initalized, updating the session");
       await apiService.updateAuth(
+          userId: userId,
           uid: uid,
           access: accessToken,
           refresh: refreshToken,
@@ -67,6 +69,7 @@ class ProtonApiServiceManager implements Manager {
     } else {
       authStore = ProtonWalletAuthStore.fromSession(
           env: env.toString(),
+          userId: userId,
           uid: uid,
           access: accessToken,
           refresh: refreshToken,

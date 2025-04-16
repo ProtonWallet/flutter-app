@@ -240,6 +240,7 @@ mod test {
 
         let store = ProtonWalletAuthStore::from_session(
             env,
+            "7RVyw4mOd82ePZySf2ONk37jzlMWWxJQxhOZvwgnnGgWJ2naVc_OuRsKv6NVzIyBQf-YmQ2oG6NgbPrX6X38-w==".to_string(),
             "aajxkia2ffiwjsm4gip5g2aahhra2gre".to_string(),
             "ietv5s2jri4hmggjj7bv2dtw6sf3ilp7".to_string(),
             "xwpffga6xbuitqw7sndtya5g2nk5xn4n".to_string(),

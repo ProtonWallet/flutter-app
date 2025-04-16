@@ -128,12 +128,13 @@ impl ProtonAPIService {
 
     pub fn update_auth(
         &mut self,
+        user_id: String,
         uid: String,
         access: String,
         refresh: String,
         scopes: Vec<String>,
     ) -> Result<(), BridgeError> {
-        let auth = Auth::internal(uid, Tokens::access(access, refresh, scopes));
+        let auth = Auth::internal(user_id, uid, Tokens::access(access, refresh, scopes));
         info!("update_auth api service --- loggin");
         let mut old_auth = self.store.inner.auth.lock()?;
         *old_auth = auth.clone();
@@ -267,6 +268,7 @@ mod test {
     #[tokio::test]
     #[ignore]
     async fn test_init_api_and_login() {
+        let user_id = "7RVyw4mOd82ePZySf2ONk37jzlMWWxJQxhOZvwgnnGgWJ2naVc_OuRsKv6NVzIyBQf-YmQ2oG6NgbPrX6X38-w==";
         let uid = "c6d5q57l7kiu7rmvz6x3u6c5nx5z6rx2";
         let access_token = "4hswkfyec64s6v735aa2otb5rktjlgyc";
         let refresh_token = "fslfmtvxzvun6djjanqk4cmjxb5425lo";
@@ -280,6 +282,7 @@ mod test {
 
         client
             .update_auth(
+                user_id.to_string(),
                 uid.to_string(),
                 access_token.to_string(),
                 refresh_token.to_string(),
