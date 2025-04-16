@@ -198,7 +198,9 @@ class PaperWalletView extends ViewBase<PaperWalletViewModel> {
                           showQRScanBottomSheet(
                             context,
                             viewModel.privateKeyController,
-                            null,
+                            (String scanResult) async {
+                              await viewModel.onScanResult(scanResult);
+                            },
                           );
                         }
                       },
