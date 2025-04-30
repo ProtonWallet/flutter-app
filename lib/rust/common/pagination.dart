@@ -32,3 +32,10 @@ enum SortOrder {
   desc,
   ;
 }
+
+enum TransactionFilter {
+  all,
+  receive,
+  send,
+  ;
+}

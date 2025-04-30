@@ -1,5 +1,7 @@
 // wallet.rs
-use andromeda_bitcoin::{transactions::Pagination, utils::SortOrder, wallet::Wallet};
+use andromeda_bitcoin::{
+    transactions::Pagination, utils::SortOrder, wallet::Wallet, TransactionFilter,
+};
 use andromeda_common::{Network, ScriptType};
 use flutter_rust_bridge::frb;
 use std::sync::Arc;
@@ -95,8 +97,12 @@ impl FrbWallet {
         &self,
         pagination: Option<Pagination>,
         sort: Option<SortOrder>,
+        TransactionFilter: TransactionFilter,
     ) -> Result<Vec<FrbTransactionDetails>, BridgeError> {
-        let transactions = self.inner.get_transactions(pagination, sort).await?;
+        let transactions = self
+            .inner
+            .get_transactions(pagination, sort, TransactionFilter)
+            .await?;
 
         let out_transactions = transactions
             .into_iter()
@@ -138,6 +144,7 @@ mod test {
         },
     };
     use crate::mocks::constant::tests::{TEST_MNEMONIC_1, TEST_MNEMONIC_2};
+    use andromeda_bitcoin::TransactionFilter;
     use andromeda_common::{Network, ScriptType};
     use std::time::Instant;
     use std::{env, sync::Arc};
@@ -229,7 +236,10 @@ mod test {
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
-        let trans = frb_account.get_transactions(None).await.unwrap();
+        let trans = frb_account
+            .get_transactions(None, TransactionFilter::All)
+            .await
+            .unwrap();
 
         let mut builder = frb_account.build_tx().await.unwrap();
         builder = builder.add_recipient(
@@ -315,7 +325,10 @@ mod test {
         println!("untrusted_pending: {}", balance.inner.untrusted_pending);
         println!("balance: {}", balance.total().to_btc());
 
-        let transactions = frb_account.get_transactions(None).await.unwrap();
+        let transactions = frb_account
+            .get_transactions(None, TransactionFilter::All)
+            .await
+            .unwrap();
         assert!(!transactions.is_empty());
 
         let address1 = frb_account.get_address(Some(0)).await.unwrap();
@@ -336,7 +349,10 @@ mod test {
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
-        let trans = frb_account.get_transactions(None).await.unwrap();
+        let trans = frb_account
+            .get_transactions(None, TransactionFilter::All)
+            .await
+            .unwrap();
         assert!(!trans.is_empty());
 
         let mut tx_builder = frb_account.build_tx().await.unwrap();

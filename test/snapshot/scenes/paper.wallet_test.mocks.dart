@@ -487,6 +487,16 @@ class MockPaperWalletViewModel extends _i1.Mock
       ) as _i14.Future<bool>);
 
   @override
+  _i14.Future<void> onScanResult(dynamic scanResult) => (super.noSuchMethod(
+        Invocation.method(
+          #onScanResult,
+          [scanResult],
+        ),
+        returnValue: _i14.Future<void>.value(),
+        returnValueForMissingStub: _i14.Future<void>.value(),
+      ) as _i14.Future<void>);
+
+  @override
   void sinkAddSafe() => super.noSuchMethod(
         Invocation.method(
           #sinkAddSafe,

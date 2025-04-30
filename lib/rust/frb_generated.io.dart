@@ -1582,11 +1582,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           dynamic raw);
 
   @protected
-  List<FrbDetailledTxIn>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          dynamic raw);
-
-  @protected
   List<FrbDetailledTxOutput>
       dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
           dynamic raw);
@@ -2022,6 +2017,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Timeframe dco_decode_timeframe(dynamic raw);
+
+  @protected
+  TransactionFilter dco_decode_transaction_filter(dynamic raw);
 
   @protected
   TransactionTime dco_decode_transaction_time(dynamic raw);
@@ -3360,11 +3358,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
           SseDeserializer deserializer);
 
   @protected
-  List<FrbDetailledTxIn>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          SseDeserializer deserializer);
-
-  @protected
   List<FrbDetailledTxOutput>
       sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
           SseDeserializer deserializer);
@@ -3862,6 +3855,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Timeframe sse_decode_timeframe(SseDeserializer deserializer);
+
+  @protected
+  TransactionFilter sse_decode_transaction_filter(SseDeserializer deserializer);
 
   @protected
   TransactionTime sse_decode_transaction_time(SseDeserializer deserializer);
@@ -5250,11 +5246,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          List<FrbDetailledTxIn> self, SseSerializer serializer);
-
-  @protected
-  void
       sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxOutput(
           List<FrbDetailledTxOutput> self, SseSerializer serializer);
 
@@ -5763,6 +5754,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_timeframe(Timeframe self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_transaction_filter(
+      TransactionFilter self, SseSerializer serializer);
 
   @protected
   void sse_encode_transaction_time(

@@ -2,7 +2,7 @@
 
 use andromeda_bitcoin::{
     account::Account, account_trait::AccessWallet, transactions::Pagination, utils::SortOrder,
-    KeychainKind, SignOptions,
+    KeychainKind, SignOptions, TransactionFilter,
 };
 use andromeda_common::Network;
 use tracing::debug;
@@ -97,10 +97,11 @@ impl FrbAccount {
     pub async fn get_transactions(
         &self,
         sort: Option<SortOrder>,
+        filter: TransactionFilter,
     ) -> Result<Vec<FrbTransactionDetails>, BridgeError> {
         let transactions = self
             .inner
-            .get_transactions(Pagination::default(), sort)
+            .get_transactions(Pagination::default(), sort, filter)
             .await?;
 
         debug!("BDK Debug: get_transactions count: {}", transactions.len());

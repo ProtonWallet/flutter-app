@@ -45,7 +45,9 @@ abstract class FrbWallet implements RustOpaqueInterface {
       {required FrbDerivationPath accountKey, required String txid});
 
   Future<List<FrbTransactionDetails>> getTransactions(
-      {Pagination? pagination, SortOrder? sort});
+      {Pagination? pagination,
+      SortOrder? sort,
+      required TransactionFilter transactionFilter});
 
   factory FrbWallet(
           {required Network network,
