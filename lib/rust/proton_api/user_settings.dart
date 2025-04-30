@@ -16,6 +16,8 @@ class ApiWalletUserSettings {
   final int? receiveTransactionNotification;
   final int? walletCreated;
   final int? acceptTermsAndConditions;
+  final int? allowReview;
+  final BigInt? reviewTime;
 
   const ApiWalletUserSettings({
     required this.bitcoinUnit,
@@ -27,6 +29,8 @@ class ApiWalletUserSettings {
     this.receiveTransactionNotification,
     this.walletCreated,
     this.acceptTermsAndConditions,
+    this.allowReview,
+    this.reviewTime,
   });
 
   @override
@@ -39,7 +43,9 @@ class ApiWalletUserSettings {
       receiveEmailIntegrationNotification.hashCode ^
       receiveTransactionNotification.hashCode ^
       walletCreated.hashCode ^
-      acceptTermsAndConditions.hashCode;
+      acceptTermsAndConditions.hashCode ^
+      allowReview.hashCode ^
+      reviewTime.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -56,7 +62,9 @@ class ApiWalletUserSettings {
           receiveTransactionNotification ==
               other.receiveTransactionNotification &&
           walletCreated == other.walletCreated &&
-          acceptTermsAndConditions == other.acceptTermsAndConditions;
+          acceptTermsAndConditions == other.acceptTermsAndConditions &&
+          allowReview == other.allowReview &&
+          reviewTime == other.reviewTime;
 }
 
 enum BitcoinUnit {

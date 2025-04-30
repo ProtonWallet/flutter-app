@@ -300,19 +300,11 @@ class HistoryDetailView extends ViewBase<HistoryDetailViewModel> {
                 viewModel.displayBalance
                     ? TransactionHistoryItem(
                         title: S.of(context).trans_total,
-                        content: viewModel.isSend
-                            ? "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() - viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}"
-                            : "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amount.toInt() + viewModel.fee.toInt()).abs(), displayDigits: displayDigits)}",
-                        memo: viewModel.isSend
-                            ? ExchangeCalculator.getBitcoinUnitLabel(
-                                viewModel.userSettingsDataProvider.bitcoinUnit,
-                                (viewModel.amount.toInt() -
-                                        viewModel.fee.toInt())
-                                    .abs())
-                            : ExchangeCalculator.getBitcoinUnitLabel(
-                                viewModel.userSettingsDataProvider.bitcoinUnit,
-                                viewModel.amount.toInt() +
-                                    viewModel.fee.toInt()),
+                        content:
+                            "$fiatCurrencyName ${CommonHelper.formatDouble(ExchangeCalculator.getNotionalInFiatCurrency(viewModel.exchangeRate ?? viewModel.userSettingsDataProvider.exchangeRate, viewModel.amountWithFee.toInt()).abs(), displayDigits: displayDigits)}",
+                        memo: ExchangeCalculator.getBitcoinUnitLabel(
+                            viewModel.userSettingsDataProvider.bitcoinUnit,
+                            viewModel.amountWithFee.toInt()),
                         backgroundColor: ProtonColors.backgroundSecondary,
                         isLoading: !viewModel.initialized,
                       )

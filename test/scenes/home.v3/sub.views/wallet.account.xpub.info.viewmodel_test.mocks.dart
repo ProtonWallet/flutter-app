@@ -1518,13 +1518,18 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
       ) as _i18.Future<_i16.FrbTransactionDetails>);
 
   @override
-  _i18.Future<List<_i16.FrbTransactionDetails>> getTransactions(
-          {_i33.SortOrder? sort}) =>
+  _i18.Future<List<_i16.FrbTransactionDetails>> getTransactions({
+    _i33.SortOrder? sort,
+    required _i33.TransactionFilter? filter,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #getTransactions,
           [],
-          {#sort: sort},
+          {
+            #sort: sort,
+            #filter: filter,
+          },
         ),
         returnValue: _i18.Future<List<_i16.FrbTransactionDetails>>.value(
             <_i16.FrbTransactionDetails>[]),

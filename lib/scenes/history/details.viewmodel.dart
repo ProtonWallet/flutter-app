@@ -64,6 +64,7 @@ abstract class HistoryDetailViewModel
 
   /// double attributes
   double amount = 0.0;
+  double amountWithFee = 0.0;
   double fee = 0.0;
 
   /// string attributes
@@ -196,20 +197,21 @@ class HistoryDetailViewModelImpl extends HistoryDetailViewModel {
     /// load accountName
     accountName = await walletNameProvider.getAccountLabelWithID(accountID);
 
-    /// load amount of this transaction
-    amount = frbTransactionDetails.received.toDouble() -
-        frbTransactionDetails.sent.toDouble();
-
     /// load fee of this transaction
     fee = frbTransactionDetails.fees!.toDouble();
 
     /// mark if it's send
-    isSend = amount < 0;
+    isSend = frbTransactionDetails.isSend;
 
-    /// bdk sent include fee, so need add back to make displayed send amount is without fee
-    if (isSend) {
-      amount += (frbTransactionDetails.fees ?? BigInt.zero).toDouble();
-    }
+    /// load amount of this transaction
+    amount = frbTransactionDetails.value.toDouble();
+
+    amountWithFee = frbTransactionDetails.valueWithFee.toDouble();
+
+    // /// bdk sent include fee, so need add back to make displayed send amount is without fee
+    // if (isSend) {
+    //   amount += (frbTransactionDetails.fees ?? BigInt.zero).toDouble();
+    // }
 
     frbTransactionDetails.time.when(
       confirmed: (confirmationTime) {

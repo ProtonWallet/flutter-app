@@ -132,4 +132,6 @@ pub struct _ApiWalletUserSettings {
     pub ReceiveTransactionNotification: Option<u8>,
     pub WalletCreated: Option<u8>,
     pub AcceptTermsAndConditions: Option<u8>,
+    pub AllowReview: Option<u8>,
+    pub ReviewTime: Option<u64>,
 }

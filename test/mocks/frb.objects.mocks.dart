@@ -10,12 +10,10 @@ import 'package:wallet/rust/api/bdk_wallet/amount.dart' as _i3;
 import 'package:wallet/rust/api/bdk_wallet/balance.dart' as _i2;
 import 'package:wallet/rust/api/bdk_wallet/derivation_path.dart' as _i4;
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart' as _i8;
-import 'package:wallet/rust/api/bdk_wallet/transaction_details_txin.dart'
-    as _i9;
 import 'package:wallet/rust/api/bdk_wallet/transaction_details_txop.dart'
-    as _i10;
+    as _i9;
 import 'package:wallet/rust/common/keychain_kind.dart' as _i7;
-import 'package:wallet/rust/common/transaction_time.dart' as _i11;
+import 'package:wallet/rust/common/transaction_time.dart' as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -248,43 +246,43 @@ class MockFrbTransactionDetails extends _i1.Mock
       ) as _i4.FrbDerivationPath);
 
   @override
-  List<_i9.FrbDetailledTxIn> get inputs => (super.noSuchMethod(
-        Invocation.getter(#inputs),
-        returnValue: <_i9.FrbDetailledTxIn>[],
-      ) as List<_i9.FrbDetailledTxIn>);
+  BigInt get value => (super.noSuchMethod(
+        Invocation.getter(#value),
+        returnValue: _i6.dummyValue<BigInt>(
+          this,
+          Invocation.getter(#value),
+        ),
+      ) as BigInt);
 
   @override
-  List<_i10.FrbDetailledTxOutput> get outputs => (super.noSuchMethod(
+  BigInt get valueWithFee => (super.noSuchMethod(
+        Invocation.getter(#valueWithFee),
+        returnValue: _i6.dummyValue<BigInt>(
+          this,
+          Invocation.getter(#valueWithFee),
+        ),
+      ) as BigInt);
+
+  @override
+  bool get isSend => (super.noSuchMethod(
+        Invocation.getter(#isSend),
+        returnValue: false,
+      ) as bool);
+
+  @override
+  List<_i9.FrbDetailledTxOutput> get outputs => (super.noSuchMethod(
         Invocation.getter(#outputs),
-        returnValue: <_i10.FrbDetailledTxOutput>[],
-      ) as List<_i10.FrbDetailledTxOutput>);
+        returnValue: <_i9.FrbDetailledTxOutput>[],
+      ) as List<_i9.FrbDetailledTxOutput>);
 
   @override
-  BigInt get received => (super.noSuchMethod(
-        Invocation.getter(#received),
-        returnValue: _i6.dummyValue<BigInt>(
-          this,
-          Invocation.getter(#received),
-        ),
-      ) as BigInt);
-
-  @override
-  BigInt get sent => (super.noSuchMethod(
-        Invocation.getter(#sent),
-        returnValue: _i6.dummyValue<BigInt>(
-          this,
-          Invocation.getter(#sent),
-        ),
-      ) as BigInt);
-
-  @override
-  _i11.TransactionTime get time => (super.noSuchMethod(
+  _i10.TransactionTime get time => (super.noSuchMethod(
         Invocation.getter(#time),
-        returnValue: _i6.dummyValue<_i11.TransactionTime>(
+        returnValue: _i6.dummyValue<_i10.TransactionTime>(
           this,
           Invocation.getter(#time),
         ),
-      ) as _i11.TransactionTime);
+      ) as _i10.TransactionTime);
 
   @override
   String get txid => (super.noSuchMethod(

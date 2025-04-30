@@ -7,7 +7,6 @@ import '../../common/transaction_time.dart';
 import '../../frb_generated.dart';
 import 'derivation_path.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'transaction_details_txin.dart';
 import 'transaction_details_txop.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`
@@ -18,13 +17,13 @@ abstract class FrbTransactionDetails implements RustOpaqueInterface {
 
   BigInt? get fees;
 
-  List<FrbDetailledTxIn> get inputs;
+  BigInt get value;
+
+  BigInt get valueWithFee;
+
+  bool get isSend;
 
   List<FrbDetailledTxOutput> get outputs;
-
-  BigInt get received;
-
-  BigInt get sent;
 
   TransactionTime get time;
 

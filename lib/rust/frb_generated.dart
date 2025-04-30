@@ -159,7 +159,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.6.0';
 
   @override
-  int get rustContentHash => 1046861912;
+  int get rustContentHash => 1115289419;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -370,7 +370,9 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<FrbTransactionDetails>>
       crateApiBdkWalletAccountFrbAccountGetTransactions(
-          {required FrbAccount that, SortOrder? sort});
+          {required FrbAccount that,
+          SortOrder? sort,
+          required TransactionFilter filter});
 
   Future<List<FrbLocalOutput>> crateApiBdkWalletAccountFrbAccountGetUtxos(
       {required FrbAccount that});
@@ -693,19 +695,19 @@ abstract class RustLibApi extends BaseApi {
   BigInt? crateApiBdkWalletTransactionDetailsFrbTransactionDetailsFees(
       {required FrbTransactionDetails that});
 
-  List<FrbDetailledTxIn>
-      crateApiBdkWalletTransactionDetailsFrbTransactionDetailsInputs(
+  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValue(
+      {required FrbTransactionDetails that});
+
+  BigInt
+      crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueWithFee(
           {required FrbTransactionDetails that});
+
+  bool crateApiBdkWalletTransactionDetailsFrbTransactionDetailsIsSend(
+      {required FrbTransactionDetails that});
 
   List<FrbDetailledTxOutput>
       crateApiBdkWalletTransactionDetailsFrbTransactionDetailsOutputs(
           {required FrbTransactionDetails that});
-
-  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsReceived(
-      {required FrbTransactionDetails that});
-
-  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsSent(
-      {required FrbTransactionDetails that});
 
   TransactionTime crateApiBdkWalletTransactionDetailsFrbTransactionDetailsTime(
       {required FrbTransactionDetails that});
@@ -898,7 +900,10 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<FrbTransactionDetails>>
       crateApiBdkWalletWalletFrbWalletGetTransactions(
-          {required FrbWallet that, Pagination? pagination, SortOrder? sort});
+          {required FrbWallet that,
+          Pagination? pagination,
+          SortOrder? sort,
+          required TransactionFilter transactionFilter});
 
   FrbWallet crateApiBdkWalletWalletFrbWalletNew(
       {required Network network,
@@ -3549,13 +3554,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<List<FrbTransactionDetails>>
       crateApiBdkWalletAccountFrbAccountGetTransactions(
-          {required FrbAccount that, SortOrder? sort}) {
+          {required FrbAccount that,
+          SortOrder? sort,
+          required TransactionFilter filter}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAccount(
             that, serializer);
         sse_encode_opt_box_autoadd_sort_order(sort, serializer);
+        sse_encode_transaction_filter(filter, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 47, port: port_);
       },
@@ -3565,7 +3573,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta: kCrateApiBdkWalletAccountFrbAccountGetTransactionsConstMeta,
-      argValues: [that, sort],
+      argValues: [that, sort, filter],
       apiImpl: this,
     ));
   }
@@ -3574,7 +3582,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiBdkWalletAccountFrbAccountGetTransactionsConstMeta =>
           const TaskConstMeta(
             debugName: "FrbAccount_get_transactions",
-            argNames: ["that", "sort"],
+            argNames: ["that", "sort", "filter"],
           );
 
   @override
@@ -6223,9 +6231,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           );
 
   @override
-  List<FrbDetailledTxIn>
-      crateApiBdkWalletTransactionDetailsFrbTransactionDetailsInputs(
-          {required FrbTransactionDetails that}) {
+  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValue(
+      {required FrbTransactionDetails that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -6234,21 +6241,78 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 138)!;
       },
       codec: SseCodec(
-        decodeSuccessData:
-            sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn,
+        decodeSuccessData: sse_decode_u_64,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsInputsConstMeta,
+          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsInputsConstMeta =>
+      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueConstMeta =>
           const TaskConstMeta(
-            debugName: "FrbTransactionDetails_inputs",
+            debugName: "FrbTransactionDetails_get_value(dart_style=value)",
+            argNames: ["that"],
+          );
+
+  @override
+  BigInt
+      crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueWithFee(
+          {required FrbTransactionDetails that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 139)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_u_64,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueWithFeeConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueWithFeeConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "FrbTransactionDetails_get_value_with_fee(dart_style=value_with_fee)",
+            argNames: ["that"],
+          );
+
+  @override
+  bool crateApiBdkWalletTransactionDetailsFrbTransactionDetailsIsSend(
+      {required FrbTransactionDetails that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 140)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsIsSendConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsIsSendConstMeta =>
+          const TaskConstMeta(
+            debugName: "FrbTransactionDetails_is_send",
             argNames: ["that"],
           );
 
@@ -6261,7 +6325,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 139)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 141)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -6279,62 +6343,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsOutputsConstMeta =>
           const TaskConstMeta(
             debugName: "FrbTransactionDetails_outputs",
-            argNames: ["that"],
-          );
-
-  @override
-  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsReceived(
-      {required FrbTransactionDetails that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 140)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_u_64,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsReceivedConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsReceivedConstMeta =>
-          const TaskConstMeta(
-            debugName: "FrbTransactionDetails_received",
-            argNames: ["that"],
-          );
-
-  @override
-  BigInt crateApiBdkWalletTransactionDetailsFrbTransactionDetailsSent(
-      {required FrbTransactionDetails that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbTransactionDetails(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 141)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_u_64,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsSentConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateApiBdkWalletTransactionDetailsFrbTransactionDetailsSentConstMeta =>
-          const TaskConstMeta(
-            debugName: "FrbTransactionDetails_sent",
             argNames: ["that"],
           );
 
@@ -7876,7 +7884,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @override
   Future<List<FrbTransactionDetails>>
       crateApiBdkWalletWalletFrbWalletGetTransactions(
-          {required FrbWallet that, Pagination? pagination, SortOrder? sort}) {
+          {required FrbWallet that,
+          Pagination? pagination,
+          SortOrder? sort,
+          required TransactionFilter transactionFilter}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -7884,6 +7895,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             that, serializer);
         sse_encode_opt_box_autoadd_pagination(pagination, serializer);
         sse_encode_opt_box_autoadd_sort_order(sort, serializer);
+        sse_encode_transaction_filter(transactionFilter, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 193, port: port_);
       },
@@ -7893,7 +7905,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeErrorData: sse_decode_bridge_error,
       ),
       constMeta: kCrateApiBdkWalletWalletFrbWalletGetTransactionsConstMeta,
-      argValues: [that, pagination, sort],
+      argValues: [that, pagination, sort, transactionFilter],
       apiImpl: this,
     ));
   }
@@ -7901,7 +7913,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiBdkWalletWalletFrbWalletGetTransactionsConstMeta =>
       const TaskConstMeta(
         debugName: "FrbWallet_get_transactions",
-        argNames: ["that", "pagination", "sort"],
+        argNames: ["that", "pagination", "sort", "transactionFilter"],
       );
 
   @override
@@ -14958,8 +14970,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ApiWalletUserSettings dco_decode_api_wallet_user_settings(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return ApiWalletUserSettings(
       bitcoinUnit: dco_decode_bitcoin_unit(arr[0]),
       fiatCurrency: dco_decode_fiat_currency(arr[1]),
@@ -14971,6 +14983,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       receiveTransactionNotification: dco_decode_opt_box_autoadd_u_8(arr[6]),
       walletCreated: dco_decode_opt_box_autoadd_u_8(arr[7]),
       acceptTermsAndConditions: dco_decode_opt_box_autoadd_u_8(arr[8]),
+      allowReview: dco_decode_opt_box_autoadd_u_8(arr[9]),
+      reviewTime: dco_decode_opt_box_autoadd_u_64(arr[10]),
     );
   }
 
@@ -15788,17 +15802,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return (raw as List<dynamic>)
         .map(
             dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails)
-        .toList();
-  }
-
-  @protected
-  List<FrbDetailledTxIn>
-      dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>)
-        .map(
-            dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn)
         .toList();
   }
 
@@ -17007,6 +17010,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Timeframe dco_decode_timeframe(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return Timeframe.values[raw as int];
+  }
+
+  @protected
+  TransactionFilter dco_decode_transaction_filter(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TransactionFilter.values[raw as int];
   }
 
   @protected
@@ -19142,6 +19151,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_walletCreated = sse_decode_opt_box_autoadd_u_8(deserializer);
     var var_acceptTermsAndConditions =
         sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_allowReview = sse_decode_opt_box_autoadd_u_8(deserializer);
+    var var_reviewTime = sse_decode_opt_box_autoadd_u_64(deserializer);
     return ApiWalletUserSettings(
         bitcoinUnit: var_bitcoinUnit,
         fiatCurrency: var_fiatCurrency,
@@ -19152,7 +19163,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             var_receiveEmailIntegrationNotification,
         receiveTransactionNotification: var_receiveTransactionNotification,
         walletCreated: var_walletCreated,
-        acceptTermsAndConditions: var_acceptTermsAndConditions);
+        acceptTermsAndConditions: var_acceptTermsAndConditions,
+        allowReview: var_allowReview,
+        reviewTime: var_reviewTime);
   }
 
   @protected
@@ -19973,22 +19986,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(
           sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails(
-              deserializer));
-    }
-    return ans_;
-  }
-
-  @protected
-  List<FrbDetailledTxIn>
-      sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <FrbDetailledTxIn>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(
-          sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
               deserializer));
     }
     return ans_;
@@ -21728,6 +21725,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_i_32(deserializer);
     return Timeframe.values[inner];
+  }
+
+  @protected
+  TransactionFilter sse_decode_transaction_filter(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TransactionFilter.values[inner];
   }
 
   @protected
@@ -24006,6 +24011,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         self.receiveTransactionNotification, serializer);
     sse_encode_opt_box_autoadd_u_8(self.walletCreated, serializer);
     sse_encode_opt_box_autoadd_u_8(self.acceptTermsAndConditions, serializer);
+    sse_encode_opt_box_autoadd_u_8(self.allowReview, serializer);
+    sse_encode_opt_box_autoadd_u_64(self.reviewTime, serializer);
   }
 
   @protected
@@ -24729,18 +24736,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbAddressDetails(
-          item, serializer);
-    }
-  }
-
-  @protected
-  void
-      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
-          List<FrbDetailledTxIn> self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerFrbDetailledTxIn(
           item, serializer);
     }
   }
@@ -26124,6 +26119,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_transaction_filter(
+      TransactionFilter self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_transaction_time(
       TransactionTime self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -26813,9 +26815,10 @@ class FrbAccountImpl extends RustOpaque implements FrbAccount {
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountGetTransaction(
           that: this, txid: txid);
 
-  Future<List<FrbTransactionDetails>> getTransactions({SortOrder? sort}) =>
+  Future<List<FrbTransactionDetails>> getTransactions(
+          {SortOrder? sort, required TransactionFilter filter}) =>
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountGetTransactions(
-          that: this, sort: sort);
+          that: this, sort: sort, filter: filter);
 
   Future<List<FrbLocalOutput>> getUtxos() =>
       RustLib.instance.api.crateApiBdkWalletAccountFrbAccountGetUtxos(
@@ -27739,23 +27742,23 @@ class FrbTransactionDetailsImpl extends RustOpaque
         that: this,
       );
 
-  List<FrbDetailledTxIn> get inputs => RustLib.instance.api
-          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsInputs(
+  BigInt get value => RustLib.instance.api
+          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValue(
+        that: this,
+      );
+
+  BigInt get valueWithFee => RustLib.instance.api
+          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsGetValueWithFee(
+        that: this,
+      );
+
+  bool get isSend => RustLib.instance.api
+          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsIsSend(
         that: this,
       );
 
   List<FrbDetailledTxOutput> get outputs => RustLib.instance.api
           .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsOutputs(
-        that: this,
-      );
-
-  BigInt get received => RustLib.instance.api
-          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsReceived(
-        that: this,
-      );
-
-  BigInt get sent => RustLib.instance.api
-          .crateApiBdkWalletTransactionDetailsFrbTransactionDetailsSent(
         that: this,
       );
 
@@ -28121,9 +28124,14 @@ class FrbWalletImpl extends RustOpaque implements FrbWallet {
           that: this, accountKey: accountKey, txid: txid);
 
   Future<List<FrbTransactionDetails>> getTransactions(
-          {Pagination? pagination, SortOrder? sort}) =>
+          {Pagination? pagination,
+          SortOrder? sort,
+          required TransactionFilter transactionFilter}) =>
       RustLib.instance.api.crateApiBdkWalletWalletFrbWalletGetTransactions(
-          that: this, pagination: pagination, sort: sort);
+          that: this,
+          pagination: pagination,
+          sort: sort,
+          transactionFilter: transactionFilter);
 }
 
 @sealed

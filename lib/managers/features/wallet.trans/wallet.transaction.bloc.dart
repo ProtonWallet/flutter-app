@@ -762,11 +762,9 @@ class WalletTransactionBloc
                 TransactionType.protonToProtonReceive.index);
       }
 
-      int amountInSATS =
-          (transactionDetail.received - transactionDetail.sent).toInt();
-      if (amountInSATS < 0) {
-        // bdk sent include fee, so need add back to make display send amount without fee
-        amountInSATS += (transactionDetail.fees ?? BigInt.zero).toInt();
+      int amountInSATS = transactionDetail.value.toInt();
+      if (transactionDetail.isSend) {
+        amountInSATS *= -1;
       }
       final String key = "$txID-${accountModel.accountID}";
 

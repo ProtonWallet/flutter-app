@@ -23,6 +23,7 @@ import 'package:wallet/rust/api/bdk_wallet/blockchain.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/common/keychain_kind.dart';
+import 'package:wallet/rust/common/pagination.dart';
 
 class BDKWalletData {
   final WalletModel walletModel;
@@ -124,7 +125,7 @@ class BDKTransactionDataProvider extends DataProvider {
     );
     List<FrbTransactionDetails> transactions = [];
     if (account != null) {
-      transactions = await account.getTransactions();
+      transactions = await account.getTransactions(filter: TransactionFilter.all);
     }
     return BDKTransactionData(
         accountModel: accountModel, transactions: transactions);
