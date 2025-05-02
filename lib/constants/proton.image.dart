@@ -32,9 +32,11 @@ class ProtonImages extends ThemeExtension<ProtonImages> {
   final SvgGenImage iconCopy;
   final SvgGenImage iconQrCode;
   final SvgGenImage iconSign;
+  final SvgGenImage downloadButton;
 
   /// large view title icons
   final AssetGenImage iconSignHeader;
+  final AssetGenImage download;
 
   final List<SvgGenImage> walletIcons;
 
@@ -58,6 +60,8 @@ class ProtonImages extends ThemeExtension<ProtonImages> {
     required this.iconQrCode,
     required this.iconSign,
     required this.iconSignHeader,
+    required this.download,
+    required this.downloadButton,
   });
 
   @override
@@ -77,6 +81,8 @@ class ProtonImages extends ThemeExtension<ProtonImages> {
     SvgGenImage? iconQrCode,
     SvgGenImage? iconSign,
     AssetGenImage? iconSignHeader,
+    AssetGenImage? download,
+    SvgGenImage? downloadButton,
   }) {
     return ProtonImages(
       iconPencil: iconPencil ?? this.iconPencil,
@@ -94,6 +100,8 @@ class ProtonImages extends ThemeExtension<ProtonImages> {
       iconQrCode: iconQrCode ?? this.iconQrCode,
       iconSign: iconSign ?? this.iconSign,
       iconSignHeader: iconSignHeader ?? this.iconSignHeader,
+      download: download ?? this.download,
+      downloadButton: downloadButton ?? this.downloadButton,
     );
   }
 
@@ -118,6 +126,8 @@ class ProtonImages extends ThemeExtension<ProtonImages> {
       iconQrCode: other.iconQrCode,
       iconSign: other.iconSign,
       iconSignHeader: other.iconSignHeader,
+      download: other.download,
+      downloadButton: other.downloadButton,
     );
   }
 }
@@ -138,6 +148,8 @@ final lightImageExtension = ProtonImages(
   iconQrCode: Assets.images.icon.icQrCode,
   iconSign: Assets.images.icon.icSign,
   iconSignHeader: Assets.images.icon.signHeader,
+  download: Assets.images.icon.download,
+  downloadButton: Assets.images.icon.downloadButton,
 );
 
 final darkImageExtension = ProtonImages(
@@ -156,4 +168,6 @@ final darkImageExtension = ProtonImages(
   iconQrCode: Assets.images.icon.icQrCodeDark,
   iconSign: Assets.images.icon.icSignDark,
   iconSignHeader: Assets.images.icon.signHeaderDark,
+  download: Assets.images.icon.downloadDark,
+  downloadButton: Assets.images.icon.downloadButtonDark,
 );

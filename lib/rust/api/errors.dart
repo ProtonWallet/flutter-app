@@ -9,7 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'errors.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `find_error_type`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`, `from`
 
 @freezed
 sealed class BridgeError with _$BridgeError implements FrbException {
@@ -111,6 +111,21 @@ sealed class BridgeError with _$BridgeError implements FrbException {
   const factory BridgeError.invalidPaperWallet(
     String field0,
   ) = BridgeError_InvalidPaperWallet;
+
+  /// Andromeda feature error
+  const factory BridgeError.featuresAndromedaBitcoinError(
+    String field0,
+  ) = BridgeError_FeaturesAndromedaBitcoinError;
+
+  /// Andromeda feature error
+  const factory BridgeError.featuresAndromedaCommonError(
+    String field0,
+  ) = BridgeError_FeaturesAndromedaCommonError;
+
+  /// Andromeda feature error
+  const factory BridgeError.accountExportDatetimeError(
+    String field0,
+  ) = BridgeError_AccountExportDatetimeError;
 }
 
 class ResponseError {

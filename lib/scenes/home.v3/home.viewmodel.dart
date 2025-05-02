@@ -225,6 +225,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool isShowingBackupYourWallet = false;
   bool showBackupYourWalletBanner = false;
   bool showBackupYourProtonBanner = false;
+  bool showExportTransaction = false;
 
   late FocusNode walletRecoverPassphraseFocusNode;
   List<ProtonFeedItem> protonFeedItems = [];
@@ -644,6 +645,9 @@ class HomeViewModelImpl extends HomeViewModel {
     currentAddressPage = 0;
     showBackupYourProtonBanner = false;
     showBackupYourWalletBanner = false;
+
+    /// only allow export transaction in account level
+    showExportTransaction = false;
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
     selectedAccountMenuModel = null;
     isWalletView = true;
@@ -664,6 +668,9 @@ class HomeViewModelImpl extends HomeViewModel {
     currentAddressPage = 0;
     showBackupYourProtonBanner = false;
     showBackupYourWalletBanner = false;
+
+    /// check if we can allow user to export transaction
+    showExportTransaction = unleashDataProvider.isWalletExportTransaction();
     showWalletRecovery = walletMenuModel.walletModel.showWalletRecovery == 1;
     selectedAccountMenuModel = accountMenuModel;
     isWalletView = false;
@@ -832,6 +839,9 @@ class HomeViewModelImpl extends HomeViewModel {
         );
       case NavID.setupBackup:
         coordinator.showSetupBackup(selectedWallet?.walletID ?? "");
+
+      case NavID.walletAccountStatementExport:
+        coordinator.showWalletAccountStatementExport(walletListBloc);
       default:
         break;
     }

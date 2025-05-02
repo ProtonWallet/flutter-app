@@ -32,8 +32,13 @@ extension BridgeErrorExt on BridgeError {
       apiDeserialize: (e) => s.bridge_error_api_deserialize,
       bitcoinDeserialize: (e) => s.bridge_error_bitcoin_deserialize,
       encoding: (e) => s.bridge_error_encoding,
-      insufficientFundsInPaperWallet: (e) => s.bridge_error_insufficient_funds_in_paper_wallet,
+      insufficientFundsInPaperWallet: (e) =>
+          s.bridge_error_insufficient_funds_in_paper_wallet,
       invalidPaperWallet: (e) => s.bridge_error_invalid_paper_wallet,
+      featuresAndromedaBitcoinError: (e) =>
+          s.bridge_error_features_bitcoin_error,
+      featuresAndromedaCommonError: (e) => s.bridge_error_features_common_error,
+      accountExportDatetimeError: (e) => s.bridge_error_features_datetime_error,
     );
   }
 
@@ -108,6 +113,15 @@ extension BridgeErrorExt on BridgeError {
       invalidPaperWallet: (e) {
         return "Invalid private key. Please try again.";
       },
+      featuresAndromedaBitcoinError: (e) {
+        return "A bitcoin error occurred in andromeda-feature. Please try again.";
+      },
+      featuresAndromedaCommonError: (e) {
+        return "A common error occurred in andromeda-feature. Please try again.";
+      },
+      accountExportDatetimeError: (e) {
+        return "A datetime error occurred in andromeda-feature. Please try again.";
+      },
     );
   }
 }
@@ -143,6 +157,9 @@ String parseSampleDisplayError(BridgeError exception) {
     encoding: (e) => e.field0,
     insufficientFundsInPaperWallet: (e) => e.field0,
     invalidPaperWallet: (e) => e.field0,
+    featuresAndromedaBitcoinError: (e) => e.field0,
+    featuresAndromedaCommonError: (e) => e.field0,
+    accountExportDatetimeError: (e) => e.field0,
   );
 }
 

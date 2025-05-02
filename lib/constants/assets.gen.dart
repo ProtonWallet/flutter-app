@@ -112,6 +112,22 @@ class $AssetsImagesIconGen {
   SvgGenImage get doTransactions =>
       const SvgGenImage('assets/images/icon/do_transactions.svg');
 
+  /// File path: assets/images/icon/download.png
+  AssetGenImage get download =>
+      const AssetGenImage('assets/images/icon/download.png');
+
+  /// File path: assets/images/icon/download_button.svg
+  SvgGenImage get downloadButton =>
+      const SvgGenImage('assets/images/icon/download_button.svg');
+
+  /// File path: assets/images/icon/download_button_dark.svg
+  SvgGenImage get downloadButtonDark =>
+      const SvgGenImage('assets/images/icon/download_button_dark.svg');
+
+  /// File path: assets/images/icon/download_dark.png
+  AssetGenImage get downloadDark =>
+      const AssetGenImage('assets/images/icon/download_dark.png');
+
   /// File path: assets/images/icon/drawer_menu.svg
   SvgGenImage get drawerMenu =>
       const SvgGenImage('assets/images/icon/drawer_menu.svg');
@@ -445,6 +461,10 @@ class $AssetsImagesIconGen {
         discoverProtonWalletSecurity,
         discoverWhatIsBitcoin,
         doTransactions,
+        download,
+        downloadButton,
+        downloadButtonDark,
+        downloadDark,
         drawerMenu,
         drawerMenuDark,
         earlyAccess,

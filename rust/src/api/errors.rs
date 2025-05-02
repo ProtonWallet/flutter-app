@@ -1,6 +1,7 @@
 // errors.rs
 use andromeda_api::error::Error as AndromedaApiError;
 use andromeda_bitcoin::error::Error as AndromedaBitcoinError;
+use andromeda_features::error::Error as AndromedaFeaturesError;
 use proton_crypto_account::proton_crypto;
 use rusqlite::Error as RusqlitError;
 use std::{error::Error, fmt, sync::PoisonError};
@@ -91,6 +92,18 @@ pub enum BridgeError {
 
     #[error("Invalid paper wallet error: {0}")]
     InvalidPaperWallet(String),
+
+    /// Andromeda feature error
+    #[error("An andromeda bitcoin error occurred in andromeda features: {0}")]
+    FeaturesAndromedaBitcoinError(String),
+
+    /// Andromeda feature error
+    #[error("An andromeda common error occurred in andromeda features: {0}")]
+    FeaturesAndromedaCommonError(String),
+
+    /// Andromeda feature error
+    #[error("An andromeda export datetime error occurred in andromeda features: {0}")]
+    AccountExportDatetimeError(String),
 }
 
 impl From<DatabaseError> for BridgeError {
@@ -245,6 +258,30 @@ impl From<AndromedaBitcoinError> for BridgeError {
             "AndromedaBitcoinError occurred: {:?}",
             error.source()
         ))
+    }
+}
+
+impl From<AndromedaFeaturesError> for BridgeError {
+    fn from(error: AndromedaFeaturesError) -> Self {
+        match error {
+            AndromedaFeaturesError::AndromedaBitcoinError(err) => {
+                BridgeError::FeaturesAndromedaBitcoinError(format!(
+                    "FeaturesAndromedaBitcoinError occurred: {:?}",
+                    err.source()
+                ))
+            }
+            AndromedaFeaturesError::AndromedaCommonError(err) => {
+                BridgeError::FeaturesAndromedaCommonError(format!(
+                    "FeaturesAndromedaCommonError occurred: {:?}",
+                    err.source()
+                ))
+            }
+            AndromedaFeaturesError::AccountExportDatetimeError => {
+                BridgeError::AccountExportDatetimeError(
+                    "AccountExportDatetimeError occurred".to_string(),
+                )
+            }
+        }
     }
 }
 

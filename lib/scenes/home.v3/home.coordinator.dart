@@ -42,6 +42,7 @@ import 'package:wallet/scenes/home.v3/sub.views/send.invite/send.invite.coordina
 import 'package:wallet/scenes/home.v3/sub.views/transaction.addresses.switch/transaction.addresses.switch.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/unavailable/buying.unavailable.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/upgrade/upgrade.coordinator.dart';
+import 'package:wallet/scenes/home.v3/sub.views/wallet.account.statement.export/wallet.account.statement.export.coordinator.dart';
 import 'package:wallet/scenes/home.v3/sub.views/wallet.setting/wallet.setting.coordinator.dart';
 import 'package:wallet/scenes/lock.core/lock.overlay.coordinator.dart';
 import 'package:wallet/scenes/receive/receive.coordinator.dart';
@@ -266,6 +267,16 @@ class HomeCoordinator extends Coordinator {
     final view =
         WelcomeCoordinator(nativeViewChannel: nativeViewChannel).start();
     pushReplacementRemoveAll(view);
+  }
+
+  void showWalletAccountStatementExport(
+    WalletListBloc walletListBloc,
+  ) {
+    final view = WalletAccountStatementExportCoordinator(
+      walletListBloc,
+      walletListBloc.state.walletsModel.first.accounts.first,
+    ).start();
+    showInBottomSheet(view);
   }
 
   void showDeleteWallet(

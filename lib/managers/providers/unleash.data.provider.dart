@@ -21,6 +21,7 @@ enum UnleashFeature {
   walletBackupAlert,
   inAppReviewFreeUser,
   walletMessageSigner,
+  walletExportTransaction,
 }
 
 /// Function to retrieve all default toggles
@@ -53,6 +54,8 @@ extension UnleashFeatureExt on UnleashFeature {
         return "InAppReviewFreeUser";
       case UnleashFeature.walletMessageSigner:
         return "WalletMessageSigner";
+      case UnleashFeature.walletExportTransaction:
+        return "WalletExportTransaction";
     }
   }
 
@@ -195,4 +198,7 @@ class UnleashDataProvider extends DataProvider {
 
   bool isWalletMessageSigner() =>
       isFeatureEnabled(UnleashFeature.walletMessageSigner);
+
+  bool isWalletExportTransaction() =>
+      isFeatureEnabled(UnleashFeature.walletExportTransaction);
 }

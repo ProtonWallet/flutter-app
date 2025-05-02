@@ -1305,6 +1305,17 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
       ) as _i18.Future<_i13.FrbPsbt>);
 
   @override
+  _i18.Future<_i27.Uint8List> getAccountReport() => (super.noSuchMethod(
+        Invocation.method(
+          #getAccountReport,
+          [],
+        ),
+        returnValue: _i18.Future<_i27.Uint8List>.value(_i27.Uint8List(0)),
+        returnValueForMissingStub:
+            _i18.Future<_i27.Uint8List>.value(_i27.Uint8List(0)),
+      ) as _i18.Future<_i27.Uint8List>);
+
+  @override
   _i18.Future<_i14.FrbAddressInfo> getAddress({int? index}) =>
       (super.noSuchMethod(
         Invocation.method(

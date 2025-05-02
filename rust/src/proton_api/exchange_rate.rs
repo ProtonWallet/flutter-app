@@ -29,6 +29,19 @@ impl From<ApiExchangeRate> for ProtonExchangeRate {
         }
     }
 }
+impl From<ProtonExchangeRate> for ApiExchangeRate {
+    fn from(exchange_rate: ProtonExchangeRate) -> Self {
+        ApiExchangeRate {
+            ID: exchange_rate.id,
+            BitcoinUnit: exchange_rate.bitcoin_unit,
+            FiatCurrency: exchange_rate.fiat_currency,
+            ExchangeRateTime: exchange_rate.exchange_rate_time,
+            ExchangeRate: exchange_rate.exchange_rate,
+            Cents: exchange_rate.cents,
+            Sign: None,
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {

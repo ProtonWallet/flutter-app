@@ -1,5 +1,6 @@
 // account.rs
 
+use andromeda_api::exchange_rate::ApiExchangeRate;
 use andromeda_bitcoin::{
     account::Account, account_trait::AccessWallet, transactions::Pagination, utils::SortOrder,
     KeychainKind, SignOptions, TransactionFilter,
@@ -7,7 +8,7 @@ use andromeda_bitcoin::{
 use andromeda_common::Network;
 use tracing::debug;
 
-use crate::{common::address_info::FrbAddressInfo, BridgeError};
+use crate::{common::address_info::FrbAddressInfo, exchange_rate::ProtonExchangeRate, BridgeError};
 use flutter_rust_bridge::frb;
 use std::sync::Arc;
 
@@ -36,6 +37,11 @@ impl FrbAccount {
 impl From<Arc<Account>> for FrbAccount {
     fn from(value: Arc<Account>) -> Self {
         FrbAccount { inner: value }
+    }
+}
+impl From<FrbAccount> for Arc<Account> {
+    fn from(value: FrbAccount) -> Self {
+        value.inner
     }
 }
 
