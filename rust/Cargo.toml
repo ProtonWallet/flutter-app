@@ -52,6 +52,7 @@ andromeda-api = { path = "../vendor/andromeda/crates/api" }
 andromeda-bitcoin = { path = "../vendor/andromeda/crates/bitcoin", features = [
     "sqlite",
 ] }
+andromeda-features = { path = "../vendor/andromeda/crates/features" }
 andromeda-common = { path = "../vendor/andromeda/crates/common" }
 proton-srp = { version = "0.6.1", default-features = false, registry = "proton_public" }
 

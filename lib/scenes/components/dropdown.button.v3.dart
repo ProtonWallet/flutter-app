@@ -97,7 +97,7 @@ class DropdownButtonV3<T> extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.only(
               top: 4,
-              bottom: padding != null ? 2 : 16,
+              bottom: 16,
             ),
             suffixIcon: Icon(
               Icons.keyboard_arrow_down_rounded,

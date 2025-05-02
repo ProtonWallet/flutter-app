@@ -14,6 +14,7 @@ import 'package:wallet/scenes/components/custom.tooltip.dart';
 import 'package:wallet/scenes/components/home/transaction.filter.dart';
 import 'package:wallet/scenes/components/textfield.text.dart';
 import 'package:wallet/scenes/components/wallet.history.transaction.list.dart';
+import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/home.v3/home.viewmodel.dart';
 
 class TransactionList extends StatelessWidget {
@@ -86,7 +87,7 @@ class TransactionList extends StatelessWidget {
                                               horizontal: 6, vertical: 3),
                                           child: Icon(
                                             Icons.refresh_rounded,
-                                            size: 20,
+                                            size: 24,
                                             color: ProtonColors.textWeak,
                                           ),
                                         ),
@@ -104,7 +105,7 @@ class TransactionList extends StatelessWidget {
                                           horizontal: 6, vertical: 3),
                                       child: Icon(
                                         Icons.refresh_rounded,
-                                        size: 20,
+                                        size: 24,
                                         color: ProtonColors.textWeak,
                                       ),
                                     ),
@@ -126,8 +127,8 @@ class TransactionList extends StatelessWidget {
                                       horizontal: 8, vertical: 5),
                                   child: context.images.setupPreference.svg(
                                     fit: BoxFit.fill,
-                                    width: 16,
-                                    height: 16,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),
@@ -146,8 +147,27 @@ class TransactionList extends StatelessWidget {
                                   ),
                                   child: context.images.iconSearch.svg(
                                     fit: BoxFit.fill,
-                                    width: 16,
-                                    height: 16,
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                ),
+                              ),
+                            if (state.historyTransaction.isNotEmpty &&
+                                viewModel.showExportTransaction)
+                              GestureDetector(
+                                onTap: () {
+                                  viewModel
+                                      .move(NavID.walletAccountStatementExport);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 5,
+                                  ),
+                                  child: context.images.downloadButton.svg(
+                                    fit: BoxFit.fill,
+                                    width: 20,
+                                    height: 20,
                                   ),
                                 ),
                               ),

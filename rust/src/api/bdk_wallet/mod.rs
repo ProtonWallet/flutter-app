@@ -1,4 +1,5 @@
 pub mod account;
+pub mod account_statement_generator;
 pub mod account_sweeper;
 pub mod account_syncer;
 pub mod address;

@@ -28,6 +28,7 @@ enum NavID {
   walletAccountAddressList,
   walletAccountInfo,
   walletAccountXpubInfo,
+  walletAccountStatementExport,
 
   // Transactions
   send,

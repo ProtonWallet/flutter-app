@@ -41,6 +41,9 @@ mixin _$BridgeError {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -67,6 +70,9 @@ mixin _$BridgeError {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -93,6 +99,9 @@ mixin _$BridgeError {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,6 +136,12 @@ mixin _$BridgeError {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -154,6 +169,12 @@ mixin _$BridgeError {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -181,6 +202,12 @@ mixin _$BridgeError {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -298,6 +325,9 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return apiLock(field0);
   }
@@ -327,6 +357,9 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return apiLock?.call(field0);
   }
@@ -356,6 +389,9 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -396,6 +432,12 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return apiLock(this);
   }
@@ -426,6 +468,12 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return apiLock?.call(this);
   }
@@ -456,6 +504,12 @@ class _$BridgeError_ApiLockImpl extends BridgeError_ApiLock {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiLock != null) {
@@ -571,6 +625,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return generic(field0);
   }
@@ -600,6 +657,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return generic?.call(field0);
   }
@@ -629,6 +689,9 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -669,6 +732,12 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return generic(this);
   }
@@ -699,6 +768,12 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return generic?.call(this);
   }
@@ -729,6 +804,12 @@ class _$BridgeError_GenericImpl extends BridgeError_Generic {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (generic != null) {
@@ -846,6 +927,9 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return muonAuthSession(field0);
   }
@@ -875,6 +959,9 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return muonAuthSession?.call(field0);
   }
@@ -904,6 +991,9 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -944,6 +1034,12 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return muonAuthSession(this);
   }
@@ -974,6 +1070,12 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return muonAuthSession?.call(this);
   }
@@ -1004,6 +1106,12 @@ class _$BridgeError_MuonAuthSessionImpl extends BridgeError_MuonAuthSession {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonAuthSession != null) {
@@ -1121,6 +1229,9 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return muonAuthRefresh(field0);
   }
@@ -1150,6 +1261,9 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return muonAuthRefresh?.call(field0);
   }
@@ -1179,6 +1293,9 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -1219,6 +1336,12 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return muonAuthRefresh(this);
   }
@@ -1249,6 +1372,12 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return muonAuthRefresh?.call(this);
   }
@@ -1279,6 +1408,12 @@ class _$BridgeError_MuonAuthRefreshImpl extends BridgeError_MuonAuthRefresh {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonAuthRefresh != null) {
@@ -1396,6 +1531,9 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return muonClient(field0);
   }
@@ -1425,6 +1563,9 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return muonClient?.call(field0);
   }
@@ -1454,6 +1595,9 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1494,6 +1638,12 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return muonClient(this);
   }
@@ -1524,6 +1674,12 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return muonClient?.call(this);
   }
@@ -1554,6 +1710,12 @@ class _$BridgeError_MuonClientImpl extends BridgeError_MuonClient {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonClient != null) {
@@ -1671,6 +1833,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return muonSession(field0);
   }
@@ -1700,6 +1865,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return muonSession?.call(field0);
   }
@@ -1729,6 +1897,9 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1769,6 +1940,12 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return muonSession(this);
   }
@@ -1799,6 +1976,12 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return muonSession?.call(this);
   }
@@ -1829,6 +2012,12 @@ class _$BridgeError_MuonSessionImpl extends BridgeError_MuonSession {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (muonSession != null) {
@@ -1947,6 +2136,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return andromedaBitcoin(field0);
   }
@@ -1976,6 +2168,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return andromedaBitcoin?.call(field0);
   }
@@ -2005,6 +2200,9 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -2045,6 +2243,12 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return andromedaBitcoin(this);
   }
@@ -2075,6 +2279,12 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return andromedaBitcoin?.call(this);
   }
@@ -2105,6 +2315,12 @@ class _$BridgeError_AndromedaBitcoinImpl extends BridgeError_AndromedaBitcoin {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (andromedaBitcoin != null) {
@@ -2223,6 +2439,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return apiResponse(field0);
   }
@@ -2252,6 +2471,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return apiResponse?.call(field0);
   }
@@ -2281,6 +2503,9 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -2321,6 +2546,12 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return apiResponse(this);
   }
@@ -2351,6 +2582,12 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return apiResponse?.call(this);
   }
@@ -2381,6 +2618,12 @@ class _$BridgeError_ApiResponseImpl extends BridgeError_ApiResponse {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiResponse != null) {
@@ -2498,6 +2741,9 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return apiDeserialize(field0);
   }
@@ -2527,6 +2773,9 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return apiDeserialize?.call(field0);
   }
@@ -2556,6 +2805,9 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiDeserialize != null) {
@@ -2596,6 +2848,12 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return apiDeserialize(this);
   }
@@ -2626,6 +2884,12 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return apiDeserialize?.call(this);
   }
@@ -2656,6 +2920,12 @@ class _$BridgeError_ApiDeserializeImpl extends BridgeError_ApiDeserialize {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiDeserialize != null) {
@@ -2776,6 +3046,9 @@ class _$BridgeError_BitcoinDeserializeImpl
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return bitcoinDeserialize(field0);
   }
@@ -2805,6 +3078,9 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return bitcoinDeserialize?.call(field0);
   }
@@ -2834,6 +3110,9 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (bitcoinDeserialize != null) {
@@ -2874,6 +3153,12 @@ class _$BridgeError_BitcoinDeserializeImpl
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return bitcoinDeserialize(this);
   }
@@ -2904,6 +3189,12 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return bitcoinDeserialize?.call(this);
   }
@@ -2934,6 +3225,12 @@ class _$BridgeError_BitcoinDeserializeImpl
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (bitcoinDeserialize != null) {
@@ -3050,6 +3347,9 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return apiSrp(field0);
   }
@@ -3079,6 +3379,9 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return apiSrp?.call(field0);
   }
@@ -3108,6 +3411,9 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -3148,6 +3454,12 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return apiSrp(this);
   }
@@ -3178,6 +3490,12 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return apiSrp?.call(this);
   }
@@ -3208,6 +3526,12 @@ class _$BridgeError_ApiSrpImpl extends BridgeError_ApiSrp {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (apiSrp != null) {
@@ -3323,6 +3647,9 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return aesGcm(field0);
   }
@@ -3352,6 +3679,9 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return aesGcm?.call(field0);
   }
@@ -3381,6 +3711,9 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -3421,6 +3754,12 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return aesGcm(this);
   }
@@ -3451,6 +3790,12 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return aesGcm?.call(this);
   }
@@ -3481,6 +3826,12 @@ class _$BridgeError_AesGcmImpl extends BridgeError_AesGcm {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (aesGcm != null) {
@@ -3598,6 +3949,9 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return walletCrypto(field0);
   }
@@ -3627,6 +3981,9 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return walletCrypto?.call(field0);
   }
@@ -3656,6 +4013,9 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -3696,6 +4056,12 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return walletCrypto(this);
   }
@@ -3726,6 +4092,12 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return walletCrypto?.call(this);
   }
@@ -3756,6 +4128,12 @@ class _$BridgeError_WalletCryptoImpl extends BridgeError_WalletCrypto {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletCrypto != null) {
@@ -3874,6 +4252,9 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return walletDecryption(field0);
   }
@@ -3903,6 +4284,9 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return walletDecryption?.call(field0);
   }
@@ -3932,6 +4316,9 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletDecryption != null) {
@@ -3972,6 +4359,12 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return walletDecryption(this);
   }
@@ -4002,6 +4395,12 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return walletDecryption?.call(this);
   }
@@ -4032,6 +4431,12 @@ class _$BridgeError_WalletDecryptionImpl extends BridgeError_WalletDecryption {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletDecryption != null) {
@@ -4150,6 +4555,9 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return walletFeature(field0);
   }
@@ -4179,6 +4587,9 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return walletFeature?.call(field0);
   }
@@ -4208,6 +4619,9 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -4248,6 +4662,12 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return walletFeature(this);
   }
@@ -4278,6 +4698,12 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return walletFeature?.call(this);
   }
@@ -4308,6 +4734,12 @@ class _$BridgeError_WalletFeatureImpl extends BridgeError_WalletFeature {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (walletFeature != null) {
@@ -4423,6 +4855,9 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return login(field0);
   }
@@ -4452,6 +4887,9 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return login?.call(field0);
   }
@@ -4481,6 +4919,9 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -4521,6 +4962,12 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return login(this);
   }
@@ -4551,6 +4998,12 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return login?.call(this);
   }
@@ -4581,6 +5034,12 @@ class _$BridgeError_LoginImpl extends BridgeError_Login {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -4696,6 +5155,9 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return fork(field0);
   }
@@ -4725,6 +5187,9 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return fork?.call(field0);
   }
@@ -4754,6 +5219,9 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -4794,6 +5262,12 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return fork(this);
   }
@@ -4824,6 +5298,12 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return fork?.call(this);
   }
@@ -4854,6 +5334,12 @@ class _$BridgeError_ForkImpl extends BridgeError_Fork {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (fork != null) {
@@ -4969,6 +5455,9 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return database(field0);
   }
@@ -4998,6 +5487,9 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return database?.call(field0);
   }
@@ -5027,6 +5519,9 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (database != null) {
@@ -5067,6 +5562,12 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return database(this);
   }
@@ -5097,6 +5598,12 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return database?.call(this);
   }
@@ -5127,6 +5634,12 @@ class _$BridgeError_DatabaseImpl extends BridgeError_Database {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (database != null) {
@@ -5244,6 +5757,9 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return sessionStore(field0);
   }
@@ -5273,6 +5789,9 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return sessionStore?.call(field0);
   }
@@ -5302,6 +5821,9 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (sessionStore != null) {
@@ -5342,6 +5864,12 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return sessionStore(this);
   }
@@ -5372,6 +5900,12 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return sessionStore?.call(this);
   }
@@ -5402,6 +5936,12 @@ class _$BridgeError_SessionStoreImpl extends BridgeError_SessionStore {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (sessionStore != null) {
@@ -5518,6 +6058,9 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return encoding(field0);
   }
@@ -5547,6 +6090,9 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return encoding?.call(field0);
   }
@@ -5576,6 +6122,9 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (encoding != null) {
@@ -5616,6 +6165,12 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return encoding(this);
   }
@@ -5646,6 +6201,12 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return encoding?.call(this);
   }
@@ -5676,6 +6237,12 @@ class _$BridgeError_EncodingImpl extends BridgeError_Encoding {
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (encoding != null) {
@@ -5800,6 +6367,9 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return insufficientFundsInPaperWallet(field0);
   }
@@ -5829,6 +6399,9 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return insufficientFundsInPaperWallet?.call(field0);
   }
@@ -5858,6 +6431,9 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (insufficientFundsInPaperWallet != null) {
@@ -5898,6 +6474,12 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return insufficientFundsInPaperWallet(this);
   }
@@ -5928,6 +6510,12 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return insufficientFundsInPaperWallet?.call(this);
   }
@@ -5958,6 +6546,12 @@ class _$BridgeError_InsufficientFundsInPaperWalletImpl
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (insufficientFundsInPaperWallet != null) {
@@ -6079,6 +6673,9 @@ class _$BridgeError_InvalidPaperWalletImpl
     required TResult Function(String field0) encoding,
     required TResult Function(String field0) insufficientFundsInPaperWallet,
     required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
   }) {
     return invalidPaperWallet(field0);
   }
@@ -6108,6 +6705,9 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult? Function(String field0)? encoding,
     TResult? Function(String field0)? insufficientFundsInPaperWallet,
     TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
   }) {
     return invalidPaperWallet?.call(field0);
   }
@@ -6137,6 +6737,9 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult Function(String field0)? encoding,
     TResult Function(String field0)? insufficientFundsInPaperWallet,
     TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (invalidPaperWallet != null) {
@@ -6177,6 +6780,12 @@ class _$BridgeError_InvalidPaperWalletImpl
         insufficientFundsInPaperWallet,
     required TResult Function(BridgeError_InvalidPaperWallet value)
         invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
   }) {
     return invalidPaperWallet(this);
   }
@@ -6207,6 +6816,12 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
   }) {
     return invalidPaperWallet?.call(this);
   }
@@ -6237,6 +6852,12 @@ class _$BridgeError_InvalidPaperWalletImpl
     TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
         insufficientFundsInPaperWallet,
     TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
     required TResult orElse(),
   }) {
     if (invalidPaperWallet != null) {
@@ -6259,5 +6880,928 @@ abstract class BridgeError_InvalidPaperWallet extends BridgeError {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BridgeError_InvalidPaperWalletImplCopyWith<
           _$BridgeError_InvalidPaperWalletImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWith<$Res> {
+  factory _$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWith(
+          _$BridgeError_FeaturesAndromedaBitcoinErrorImpl value,
+          $Res Function(_$BridgeError_FeaturesAndromedaBitcoinErrorImpl) then) =
+      __$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res,
+        _$BridgeError_FeaturesAndromedaBitcoinErrorImpl>
+    implements _$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWith<$Res> {
+  __$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWithImpl(
+      _$BridgeError_FeaturesAndromedaBitcoinErrorImpl _value,
+      $Res Function(_$BridgeError_FeaturesAndromedaBitcoinErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_FeaturesAndromedaBitcoinErrorImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_FeaturesAndromedaBitcoinErrorImpl
+    extends BridgeError_FeaturesAndromedaBitcoinError {
+  const _$BridgeError_FeaturesAndromedaBitcoinErrorImpl(this.field0)
+      : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.featuresAndromedaBitcoinError(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_FeaturesAndromedaBitcoinErrorImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWith<
+          _$BridgeError_FeaturesAndromedaBitcoinErrorImpl>
+      get copyWith =>
+          __$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWithImpl<
+                  _$BridgeError_FeaturesAndromedaBitcoinErrorImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+    required TResult Function(String field0) insufficientFundsInPaperWallet,
+    required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
+  }) {
+    return featuresAndromedaBitcoinError(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+    TResult? Function(String field0)? insufficientFundsInPaperWallet,
+    TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
+  }) {
+    return featuresAndromedaBitcoinError?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    TResult Function(String field0)? insufficientFundsInPaperWallet,
+    TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (featuresAndromedaBitcoinError != null) {
+      return featuresAndromedaBitcoinError(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+    required TResult Function(BridgeError_InsufficientFundsInPaperWallet value)
+        insufficientFundsInPaperWallet,
+    required TResult Function(BridgeError_InvalidPaperWallet value)
+        invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
+  }) {
+    return featuresAndromedaBitcoinError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+    TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+  }) {
+    return featuresAndromedaBitcoinError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (featuresAndromedaBitcoinError != null) {
+      return featuresAndromedaBitcoinError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_FeaturesAndromedaBitcoinError extends BridgeError {
+  const factory BridgeError_FeaturesAndromedaBitcoinError(final String field0) =
+      _$BridgeError_FeaturesAndromedaBitcoinErrorImpl;
+  const BridgeError_FeaturesAndromedaBitcoinError._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_FeaturesAndromedaBitcoinErrorImplCopyWith<
+          _$BridgeError_FeaturesAndromedaBitcoinErrorImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWith<$Res> {
+  factory _$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWith(
+          _$BridgeError_FeaturesAndromedaCommonErrorImpl value,
+          $Res Function(_$BridgeError_FeaturesAndromedaCommonErrorImpl) then) =
+      __$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res,
+        _$BridgeError_FeaturesAndromedaCommonErrorImpl>
+    implements _$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWith<$Res> {
+  __$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWithImpl(
+      _$BridgeError_FeaturesAndromedaCommonErrorImpl _value,
+      $Res Function(_$BridgeError_FeaturesAndromedaCommonErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_FeaturesAndromedaCommonErrorImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_FeaturesAndromedaCommonErrorImpl
+    extends BridgeError_FeaturesAndromedaCommonError {
+  const _$BridgeError_FeaturesAndromedaCommonErrorImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.featuresAndromedaCommonError(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_FeaturesAndromedaCommonErrorImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWith<
+          _$BridgeError_FeaturesAndromedaCommonErrorImpl>
+      get copyWith =>
+          __$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWithImpl<
+              _$BridgeError_FeaturesAndromedaCommonErrorImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+    required TResult Function(String field0) insufficientFundsInPaperWallet,
+    required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
+  }) {
+    return featuresAndromedaCommonError(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+    TResult? Function(String field0)? insufficientFundsInPaperWallet,
+    TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
+  }) {
+    return featuresAndromedaCommonError?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    TResult Function(String field0)? insufficientFundsInPaperWallet,
+    TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (featuresAndromedaCommonError != null) {
+      return featuresAndromedaCommonError(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+    required TResult Function(BridgeError_InsufficientFundsInPaperWallet value)
+        insufficientFundsInPaperWallet,
+    required TResult Function(BridgeError_InvalidPaperWallet value)
+        invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
+  }) {
+    return featuresAndromedaCommonError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+    TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+  }) {
+    return featuresAndromedaCommonError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (featuresAndromedaCommonError != null) {
+      return featuresAndromedaCommonError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_FeaturesAndromedaCommonError extends BridgeError {
+  const factory BridgeError_FeaturesAndromedaCommonError(final String field0) =
+      _$BridgeError_FeaturesAndromedaCommonErrorImpl;
+  const BridgeError_FeaturesAndromedaCommonError._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_FeaturesAndromedaCommonErrorImplCopyWith<
+          _$BridgeError_FeaturesAndromedaCommonErrorImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BridgeError_AccountExportDatetimeErrorImplCopyWith<$Res> {
+  factory _$$BridgeError_AccountExportDatetimeErrorImplCopyWith(
+          _$BridgeError_AccountExportDatetimeErrorImpl value,
+          $Res Function(_$BridgeError_AccountExportDatetimeErrorImpl) then) =
+      __$$BridgeError_AccountExportDatetimeErrorImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String field0});
+}
+
+/// @nodoc
+class __$$BridgeError_AccountExportDatetimeErrorImplCopyWithImpl<$Res>
+    extends _$BridgeErrorCopyWithImpl<$Res,
+        _$BridgeError_AccountExportDatetimeErrorImpl>
+    implements _$$BridgeError_AccountExportDatetimeErrorImplCopyWith<$Res> {
+  __$$BridgeError_AccountExportDatetimeErrorImplCopyWithImpl(
+      _$BridgeError_AccountExportDatetimeErrorImpl _value,
+      $Res Function(_$BridgeError_AccountExportDatetimeErrorImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? field0 = null,
+  }) {
+    return _then(_$BridgeError_AccountExportDatetimeErrorImpl(
+      null == field0
+          ? _value.field0
+          : field0 // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BridgeError_AccountExportDatetimeErrorImpl
+    extends BridgeError_AccountExportDatetimeError {
+  const _$BridgeError_AccountExportDatetimeErrorImpl(this.field0) : super._();
+
+  @override
+  final String field0;
+
+  @override
+  String toString() {
+    return 'BridgeError.accountExportDatetimeError(field0: $field0)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BridgeError_AccountExportDatetimeErrorImpl &&
+            (identical(other.field0, field0) || other.field0 == field0));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, field0);
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BridgeError_AccountExportDatetimeErrorImplCopyWith<
+          _$BridgeError_AccountExportDatetimeErrorImpl>
+      get copyWith =>
+          __$$BridgeError_AccountExportDatetimeErrorImplCopyWithImpl<
+              _$BridgeError_AccountExportDatetimeErrorImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String field0) apiLock,
+    required TResult Function(String field0) generic,
+    required TResult Function(String field0) muonAuthSession,
+    required TResult Function(String field0) muonAuthRefresh,
+    required TResult Function(String field0) muonClient,
+    required TResult Function(String field0) muonSession,
+    required TResult Function(String field0) andromedaBitcoin,
+    required TResult Function(ResponseError field0) apiResponse,
+    required TResult Function(String field0) apiDeserialize,
+    required TResult Function(String field0) bitcoinDeserialize,
+    required TResult Function(String field0) apiSrp,
+    required TResult Function(String field0) aesGcm,
+    required TResult Function(String field0) walletCrypto,
+    required TResult Function(String field0) walletDecryption,
+    required TResult Function(String field0) walletFeature,
+    required TResult Function(String field0) login,
+    required TResult Function(String field0) fork,
+    required TResult Function(String field0) database,
+    required TResult Function(String field0) sessionStore,
+    required TResult Function(String field0) encoding,
+    required TResult Function(String field0) insufficientFundsInPaperWallet,
+    required TResult Function(String field0) invalidPaperWallet,
+    required TResult Function(String field0) featuresAndromedaBitcoinError,
+    required TResult Function(String field0) featuresAndromedaCommonError,
+    required TResult Function(String field0) accountExportDatetimeError,
+  }) {
+    return accountExportDatetimeError(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String field0)? apiLock,
+    TResult? Function(String field0)? generic,
+    TResult? Function(String field0)? muonAuthSession,
+    TResult? Function(String field0)? muonAuthRefresh,
+    TResult? Function(String field0)? muonClient,
+    TResult? Function(String field0)? muonSession,
+    TResult? Function(String field0)? andromedaBitcoin,
+    TResult? Function(ResponseError field0)? apiResponse,
+    TResult? Function(String field0)? apiDeserialize,
+    TResult? Function(String field0)? bitcoinDeserialize,
+    TResult? Function(String field0)? apiSrp,
+    TResult? Function(String field0)? aesGcm,
+    TResult? Function(String field0)? walletCrypto,
+    TResult? Function(String field0)? walletDecryption,
+    TResult? Function(String field0)? walletFeature,
+    TResult? Function(String field0)? login,
+    TResult? Function(String field0)? fork,
+    TResult? Function(String field0)? database,
+    TResult? Function(String field0)? sessionStore,
+    TResult? Function(String field0)? encoding,
+    TResult? Function(String field0)? insufficientFundsInPaperWallet,
+    TResult? Function(String field0)? invalidPaperWallet,
+    TResult? Function(String field0)? featuresAndromedaBitcoinError,
+    TResult? Function(String field0)? featuresAndromedaCommonError,
+    TResult? Function(String field0)? accountExportDatetimeError,
+  }) {
+    return accountExportDatetimeError?.call(field0);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String field0)? apiLock,
+    TResult Function(String field0)? generic,
+    TResult Function(String field0)? muonAuthSession,
+    TResult Function(String field0)? muonAuthRefresh,
+    TResult Function(String field0)? muonClient,
+    TResult Function(String field0)? muonSession,
+    TResult Function(String field0)? andromedaBitcoin,
+    TResult Function(ResponseError field0)? apiResponse,
+    TResult Function(String field0)? apiDeserialize,
+    TResult Function(String field0)? bitcoinDeserialize,
+    TResult Function(String field0)? apiSrp,
+    TResult Function(String field0)? aesGcm,
+    TResult Function(String field0)? walletCrypto,
+    TResult Function(String field0)? walletDecryption,
+    TResult Function(String field0)? walletFeature,
+    TResult Function(String field0)? login,
+    TResult Function(String field0)? fork,
+    TResult Function(String field0)? database,
+    TResult Function(String field0)? sessionStore,
+    TResult Function(String field0)? encoding,
+    TResult Function(String field0)? insufficientFundsInPaperWallet,
+    TResult Function(String field0)? invalidPaperWallet,
+    TResult Function(String field0)? featuresAndromedaBitcoinError,
+    TResult Function(String field0)? featuresAndromedaCommonError,
+    TResult Function(String field0)? accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (accountExportDatetimeError != null) {
+      return accountExportDatetimeError(field0);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BridgeError_ApiLock value) apiLock,
+    required TResult Function(BridgeError_Generic value) generic,
+    required TResult Function(BridgeError_MuonAuthSession value)
+        muonAuthSession,
+    required TResult Function(BridgeError_MuonAuthRefresh value)
+        muonAuthRefresh,
+    required TResult Function(BridgeError_MuonClient value) muonClient,
+    required TResult Function(BridgeError_MuonSession value) muonSession,
+    required TResult Function(BridgeError_AndromedaBitcoin value)
+        andromedaBitcoin,
+    required TResult Function(BridgeError_ApiResponse value) apiResponse,
+    required TResult Function(BridgeError_ApiDeserialize value) apiDeserialize,
+    required TResult Function(BridgeError_BitcoinDeserialize value)
+        bitcoinDeserialize,
+    required TResult Function(BridgeError_ApiSrp value) apiSrp,
+    required TResult Function(BridgeError_AesGcm value) aesGcm,
+    required TResult Function(BridgeError_WalletCrypto value) walletCrypto,
+    required TResult Function(BridgeError_WalletDecryption value)
+        walletDecryption,
+    required TResult Function(BridgeError_WalletFeature value) walletFeature,
+    required TResult Function(BridgeError_Login value) login,
+    required TResult Function(BridgeError_Fork value) fork,
+    required TResult Function(BridgeError_Database value) database,
+    required TResult Function(BridgeError_SessionStore value) sessionStore,
+    required TResult Function(BridgeError_Encoding value) encoding,
+    required TResult Function(BridgeError_InsufficientFundsInPaperWallet value)
+        insufficientFundsInPaperWallet,
+    required TResult Function(BridgeError_InvalidPaperWallet value)
+        invalidPaperWallet,
+    required TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)
+        featuresAndromedaBitcoinError,
+    required TResult Function(BridgeError_FeaturesAndromedaCommonError value)
+        featuresAndromedaCommonError,
+    required TResult Function(BridgeError_AccountExportDatetimeError value)
+        accountExportDatetimeError,
+  }) {
+    return accountExportDatetimeError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BridgeError_ApiLock value)? apiLock,
+    TResult? Function(BridgeError_Generic value)? generic,
+    TResult? Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult? Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult? Function(BridgeError_MuonClient value)? muonClient,
+    TResult? Function(BridgeError_MuonSession value)? muonSession,
+    TResult? Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult? Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult? Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult? Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult? Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult? Function(BridgeError_AesGcm value)? aesGcm,
+    TResult? Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult? Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult? Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult? Function(BridgeError_Login value)? login,
+    TResult? Function(BridgeError_Fork value)? fork,
+    TResult? Function(BridgeError_Database value)? database,
+    TResult? Function(BridgeError_SessionStore value)? sessionStore,
+    TResult? Function(BridgeError_Encoding value)? encoding,
+    TResult? Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult? Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult? Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult? Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult? Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+  }) {
+    return accountExportDatetimeError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BridgeError_ApiLock value)? apiLock,
+    TResult Function(BridgeError_Generic value)? generic,
+    TResult Function(BridgeError_MuonAuthSession value)? muonAuthSession,
+    TResult Function(BridgeError_MuonAuthRefresh value)? muonAuthRefresh,
+    TResult Function(BridgeError_MuonClient value)? muonClient,
+    TResult Function(BridgeError_MuonSession value)? muonSession,
+    TResult Function(BridgeError_AndromedaBitcoin value)? andromedaBitcoin,
+    TResult Function(BridgeError_ApiResponse value)? apiResponse,
+    TResult Function(BridgeError_ApiDeserialize value)? apiDeserialize,
+    TResult Function(BridgeError_BitcoinDeserialize value)? bitcoinDeserialize,
+    TResult Function(BridgeError_ApiSrp value)? apiSrp,
+    TResult Function(BridgeError_AesGcm value)? aesGcm,
+    TResult Function(BridgeError_WalletCrypto value)? walletCrypto,
+    TResult Function(BridgeError_WalletDecryption value)? walletDecryption,
+    TResult Function(BridgeError_WalletFeature value)? walletFeature,
+    TResult Function(BridgeError_Login value)? login,
+    TResult Function(BridgeError_Fork value)? fork,
+    TResult Function(BridgeError_Database value)? database,
+    TResult Function(BridgeError_SessionStore value)? sessionStore,
+    TResult Function(BridgeError_Encoding value)? encoding,
+    TResult Function(BridgeError_InsufficientFundsInPaperWallet value)?
+        insufficientFundsInPaperWallet,
+    TResult Function(BridgeError_InvalidPaperWallet value)? invalidPaperWallet,
+    TResult Function(BridgeError_FeaturesAndromedaBitcoinError value)?
+        featuresAndromedaBitcoinError,
+    TResult Function(BridgeError_FeaturesAndromedaCommonError value)?
+        featuresAndromedaCommonError,
+    TResult Function(BridgeError_AccountExportDatetimeError value)?
+        accountExportDatetimeError,
+    required TResult orElse(),
+  }) {
+    if (accountExportDatetimeError != null) {
+      return accountExportDatetimeError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BridgeError_AccountExportDatetimeError extends BridgeError {
+  const factory BridgeError_AccountExportDatetimeError(final String field0) =
+      _$BridgeError_AccountExportDatetimeErrorImpl;
+  const BridgeError_AccountExportDatetimeError._() : super._();
+
+  @override
+  String get field0;
+
+  /// Create a copy of BridgeError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BridgeError_AccountExportDatetimeErrorImplCopyWith<
+          _$BridgeError_AccountExportDatetimeErrorImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

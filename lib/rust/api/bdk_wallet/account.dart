@@ -19,7 +19,7 @@ import 'transaction_builder.dart';
 import 'transaction_details.dart';
 
 // These functions are ignored because they are not marked as `pub`: `get_inner`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `from`, `from`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbAccount>>
 abstract class FrbAccount implements RustOpaqueInterface {

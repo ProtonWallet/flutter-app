@@ -51,7 +51,7 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
                 }),
             ListTile(
                 leading:
-                    Icon(Icons.key, size: 18, color: ProtonColors.textNorm),
+                Icon(Icons.key, size: 18, color: ProtonColors.textNorm),
                 title: Transform.translate(
                     offset: const Offset(-8, 0),
                     child: Text(S.of(context).show_xpub,
@@ -61,6 +61,22 @@ class WalletAccountSettingView extends ViewBase<WalletAccountSettingViewModel> {
                 onTap: () {
                   Navigator.of(context).pop();
                   viewModel.move(NavID.walletAccountXpubInfo);
+                }),
+            const SizedBox(
+              height: 5,
+            ),
+            ListTile(
+                leading:
+                Icon(Icons.file_download_rounded, size: 18, color: ProtonColors.textNorm),
+                title: Transform.translate(
+                    offset: const Offset(-8, 0),
+                    child: Text(S.of(context).export_account_statement,
+                        style: ProtonStyles.body2Regular(
+                          color: ProtonColors.textNorm,
+                        ))),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  viewModel.move(NavID.walletAccountStatementExport);
                 }),
             const SizedBox(
               height: 5,
