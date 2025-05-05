@@ -10,6 +10,7 @@ import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/dbhelper.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
+import 'package:wallet/helper/extension/enum.extension.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/helper/user.agent.dart';
 import 'package:wallet/helper/user.settings.provider.dart';
@@ -714,6 +715,8 @@ class HomeViewModelImpl extends HomeViewModel {
       twoFactorAmountThresholdController.text =
           settings.twoFactorAmountThreshold.toString();
       acceptTermsAndConditions = settings.acceptTermsAndConditions;
+      userSettingsDataProvider
+          .updateBitcoinUnit(settings.bitcoinUnit.toBitcoinUnit());
     }
     datasourceStreamSinkAdd();
   }
