@@ -27,6 +27,10 @@ A4:6A:8B:E5:F5:AB:B5:CA:31:4B:A0:16:A6:65:8A:D0:8D:25:23:E8:09:41:9C:C6:09:94:85
 ProtonWallet mobile build required following submodule:
 - <a href="https://github.com/ProtonWallet/andromeda" target="_blank">andromeda</a>
 
+## Build instructions
+- <a href="build_instructions/android/README.md" >Android</a>
+- iOS (WIP)
+
 ## Signing
 All `release` builds done on CI are automatically signed with ProtonWallet's keystore, and depending on the distribution method, they are categorized as follows:
 - Google Play Store (App Bundle)
