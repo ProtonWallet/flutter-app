@@ -271,10 +271,11 @@ class HomeCoordinator extends Coordinator {
 
   void showWalletAccountStatementExport(
     WalletListBloc walletListBloc,
+    AccountMenuModel accountMenuModel,
   ) {
     final view = WalletAccountStatementExportCoordinator(
       walletListBloc,
-      walletListBloc.state.walletsModel.first.accounts.first,
+      accountMenuModel,
     ).start();
     showInBottomSheet(view);
   }
