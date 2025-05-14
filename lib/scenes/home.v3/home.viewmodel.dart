@@ -41,7 +41,6 @@ import 'package:wallet/managers/providers/user.settings.data.provider.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
-import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/history.transaction.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
@@ -766,21 +765,21 @@ class HomeViewModelImpl extends HomeViewModel {
 
   @override
   Future<void> move(NavID to) async {
-    WalletModel? selectedWallet;
-    AccountModel? selectedAccount;
+    WalletMenuModel? selectedWallet;
+    AccountMenuModel? selectedAccount;
     bool isWalletView = false;
     for (final walletMenuModel in walletListBloc.state.walletsModel) {
       if (walletMenuModel.isSelected) {
         /// walletView
-        selectedWallet = walletMenuModel.walletModel;
+        selectedWallet = walletMenuModel;
         selectedAccount = null;
         isWalletView = true;
       }
       for (final accountMenuModel in walletMenuModel.accounts) {
         if (accountMenuModel.isSelected) {
           /// wallet account view
-          selectedWallet = walletMenuModel.walletModel;
-          selectedAccount = accountMenuModel.accountModel;
+          selectedWallet = walletMenuModel;
+          selectedAccount = accountMenuModel;
           isWalletView = false;
         }
       }
@@ -789,16 +788,16 @@ class HomeViewModelImpl extends HomeViewModel {
     switch (to) {
       case NavID.send:
         if (await coordinator.showSend(
-          selectedWallet?.walletID ?? "",
-          selectedAccount?.accountID ?? "",
+          selectedWallet?.walletModel.walletID ?? "",
+          selectedAccount?.accountModel.accountID ?? "",
         )) {
           inAppReviewCheck(fromSend: true);
         }
 
       case NavID.receive:
         coordinator.showReceive(
-          selectedWallet?.walletID ?? "",
-          selectedAccount?.accountID ?? "",
+          selectedWallet?.walletModel.walletID ?? "",
+          selectedAccount?.accountModel.accountID ?? "",
           isWalletView: isWalletView,
         );
       case NavID.securitySetting:
@@ -813,8 +812,8 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showDiscover();
       case NavID.buy:
         coordinator.showBuy(
-          selectedWallet?.walletID ?? "",
-          selectedAccount?.accountID ?? "",
+          selectedWallet?.walletModel.walletID ?? "",
+          selectedAccount?.accountModel.accountID ?? "",
         );
       case NavID.buyUnavailable:
         coordinator.showBuyUnavailableAlert();
@@ -835,16 +834,19 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showSendInvite();
       case NavID.secureYourWallet:
         coordinator.showSecureYourWallet(
-          selectedWallet?.walletID ?? "",
+          selectedWallet?.walletModel.walletID ?? "",
           hadSetupRecovery: hadSetupRecovery,
           showWalletRecovery: showWalletRecovery,
           hadSetup2FA: hadSetup2FA,
         );
       case NavID.setupBackup:
-        coordinator.showSetupBackup(selectedWallet?.walletID ?? "");
+        coordinator.showSetupBackup(selectedWallet?.walletModel.walletID ?? "");
 
       case NavID.walletAccountStatementExport:
-        coordinator.showWalletAccountStatementExport(walletListBloc);
+        if (selectedAccount != null) {
+          coordinator.showWalletAccountStatementExport(
+              walletListBloc, selectedAccount);
+        }
       default:
         break;
     }
