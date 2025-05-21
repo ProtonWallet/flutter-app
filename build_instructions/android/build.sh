@@ -42,11 +42,11 @@ flutter gen-l10n
 # 7. Build APK
 echo "Building APK..."
 flutter build apk --flavor prod -vv > apk.log.txt 2> apk.err.txt
+echo "Build APK completed!"
+echo "APK location: build/app/outputs/flutter-apk/app-prod-release.apk"
 
 # 8. Build App Bundle (optional)
 # echo "Building App Bundle..."
 # flutter build appbundle --flavor prod -vv > log.txt 2> err.txt
-
-echo "Build completed!"
-echo "APK location: build/app/outputs/flutter-apk/app-prod-release.apk"
-echo "App Bundle location: build/app/outputs/bundle/prodRelease/app-prod-release.aab"
+# echo "Build App Bundle completed!"
+# echo "App Bundle location: build/app/outputs/bundle/prodRelease/app-prod-release.aab"
