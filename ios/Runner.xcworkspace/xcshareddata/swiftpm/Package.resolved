@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "1f7d0eb2c3feb4f28ea0251a4470c44731484637",
-        "version" : "25.3.4"
+        "revision" : "022ff66aaf50c6a3e3b51ce4dbeecd5b0c7fb386",
+        "version" : "29.0.14"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "c9a692ba837f4832ec7ce6378c071cb91cb55f92",
-        "version" : "8.29.0"
+        "revision" : "930b78a63f47549c81e6e63c9172584f7d3dfdd6",
+        "version" : "8.52.1"
       }
     },
     {
@@ -134,6 +134,15 @@
       "state" : {
         "revision" : "d107d7cc825f38ae2d6dc7c54af71d58145c3506",
         "version" : "1.0.3"
+      }
+    },
+    {
+      "identity" : "yams",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jpsim/Yams.git",
+      "state" : {
+        "revision" : "3d6871d5b4a5cd519adf233fbb576e0a2af71c17",
+        "version" : "5.4.0"
       }
     }
   ],

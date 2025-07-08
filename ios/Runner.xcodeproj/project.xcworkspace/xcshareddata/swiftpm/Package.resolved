@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "1f7d0eb2c3feb4f28ea0251a4470c44731484637",
-        "version" : "25.3.4"
+        "revision" : "b12cf4f4dc3f5474dd1d10f394c40f3b4beec303",
+        "version" : "26.3.3"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "c9a692ba837f4832ec7ce6378c071cb91cb55f92",
-        "version" : "8.29.0"
+        "revision" : "930b78a63f47549c81e6e63c9172584f7d3dfdd6",
+        "version" : "8.52.1"
       }
     },
     {
