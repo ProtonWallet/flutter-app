@@ -226,11 +226,11 @@ class AppStateManager extends DataProvider implements Manager {
         case LockTimer.immediately:
           return true;
         case LockTimer.lockTimer5Minutes:
-          return secondsDiff > 60 * 5;
+          return secondsDiff > 60 * 5 || secondsDiff < 0;
         case LockTimer.lockTimer15Minutes:
-          return secondsDiff > 60 * 15;
+          return secondsDiff > 60 * 15 || secondsDiff < 0;
         case LockTimer.lockTimer1Hour:
-          return secondsDiff > 60 * 60;
+          return secondsDiff > 60 * 60 || secondsDiff < 0;
       }
     } catch (e, stacktrace) {
       /// unexpected error, log on sentry and force user to unlock
