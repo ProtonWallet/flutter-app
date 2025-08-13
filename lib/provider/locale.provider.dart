@@ -90,7 +90,7 @@ class LocaleProvider extends ChangeNotifier {
       case 'tr':
         return 'Türkçe';
       case 'zh':
-        return '中文';
+        return '简体中文';
       case 'zh-CN':
         return '简体中文';
       case 'zh-TW':
