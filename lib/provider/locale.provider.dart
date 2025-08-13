@@ -47,8 +47,16 @@ class LocaleProvider extends ChangeNotifier {
   /// return the language native words by given bcp47 code
   static String localeName(String bcp47, context) {
     switch (bcp47) {
+      case 'be':
+        return 'Беларуская';
+      case 'ca':
+        return 'Català';
+      case 'cs':
+        return 'Čeština';
       case 'de':
         return 'Deutsch';
+      case 'el':
+        return 'Ελληνικά';
       case 'en':
         return 'English';
       case 'es':
@@ -57,18 +65,32 @@ class LocaleProvider extends ChangeNotifier {
         return 'Español (Latinoamérica)';
       case 'fr':
         return 'Français';
+      case 'hu':
+        return 'Magyar';
+      case 'id':
+        return 'Bahasa Indonesia';
       case 'it':
         return 'Italiano';
       case 'nl':
         return 'Nederlands';
+      case 'no':
+        return 'Norsk';
       case 'pl':
         return 'Polski';
       case 'pt':
         return 'Português';
+      case 'ro':
+        return 'Română';
       case 'ru':
         return 'Русский';
+      case 'sk':
+        return 'Slovenčina';
+      case 'sv':
+        return 'Svenska';
       case 'tr':
         return 'Türkçe';
+      case 'zh':
+        return '简体中文';
       case 'zh-CN':
         return '简体中文';
       case 'zh-TW':
