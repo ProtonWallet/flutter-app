@@ -11,23 +11,23 @@ androidx-core-splashscreen = "1.0.1"
 androidx-espresso-core = "3.6.1"
 androidx-hilt = "1.2.0"
 androidx-hilt-navigation-compose = "1.2.0"
-androidx-lifecycle = "2.4.6"
-androidx-navigation = "2.6.0"
-androidx-room = "2.6.1"
+androidx-lifecycle = "2.8.7"
+androidx-navigation = "2.8.4"
+androidx-room = "2.7.0-alpha10"
 androidx-startup = "1.2.0"
 androidx-test = "1.5.0"
 androidx-test-junit = "1.2.1"
-androidx-test-orchestrator = "1.4.2"
+androidx-test-orchestrator = "1.5.1"
 androidx-test-uiautomator = "2.3.0"
-androidx-work = "2.8.1"
+androidx-work = "2.9.1"
 
 # Compose
 # See https://developer.android.com/develop/ui/compose/bom/bom-mapping
-androidx-compose-bom = "2024.02.01"
+androidx-compose-bom = "2024.11.00"
 androidx-compose-compiler = "1.5.15"
 
 # Proton Core
-core = "27.1.0"
+core = "31.0.0"
 
 # Dagger
 dagger = "2.49"
@@ -40,14 +40,14 @@ firebase-bom = "32.7.0"
 firebase-messaging = "23.2.1"
 
 # Gradle
-gradlePlugin-android = "8.2.2"
+gradlePlugin-android = "8.7.3"
 gradlePlugin-flutter = "1.0.0"
 #gradlePlugin-google-services = "4.4.0"
 gradlePlugin-proton-config = "1.3.1"
 gradlePlugin-sentry = "3.5.0"
 
 # Kotlin
-kotlin = "1.9.25"
+kotlin = "2.0.21"
 kotlinx-coroutines = "1.8.0"
 kotlinx-datetime = "0.3.3"
 kotlinx-serialization-json = "1.6.3"
@@ -60,7 +60,7 @@ ramp = "4.0.1"
 moonpay = "1.1.2"
 
 # Sentry
-sentry = "6.18.1"
+sentry = "7.21.0"
 
 # Square
 okhttp = "4.10.0"

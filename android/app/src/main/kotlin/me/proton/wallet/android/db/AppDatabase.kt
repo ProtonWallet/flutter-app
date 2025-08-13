@@ -23,6 +23,11 @@ import androidx.room.Database
 import androidx.room.TypeConverters
 import me.proton.core.account.data.db.AccountConverters
 import me.proton.core.account.data.db.AccountDatabase
+import me.proton.core.auth.data.db.AuthConverters
+import me.proton.core.auth.data.db.AuthDatabase
+import me.proton.core.auth.data.entity.AuthDeviceEntity
+import me.proton.core.auth.data.entity.DeviceSecretEntity
+import me.proton.core.auth.data.entity.MemberDeviceEntity
 import me.proton.core.account.data.entity.AccountEntity
 import me.proton.core.account.data.entity.AccountMetadataEntity
 import me.proton.core.account.data.entity.SessionDetailsEntity
@@ -84,6 +89,10 @@ import me.proton.core.usersettings.data.entity.UserSettingsEntity
         AccountMetadataEntity::class,
         SessionEntity::class,
         SessionDetailsEntity::class,
+        // auth-data
+        AuthDeviceEntity::class,
+        DeviceSecretEntity::class,
+        MemberDeviceEntity::class,
         // user-data
         UserEntity::class,
         UserKeyEntity::class,
@@ -136,6 +145,7 @@ import me.proton.core.usersettings.data.entity.UserSettingsEntity
     ChallengeConverters::class,
     PushConverters::class,
     NotificationConverters::class,
+    AuthConverters::class
 )
 abstract class AppDatabase :
     BaseDatabase(),
@@ -155,16 +165,19 @@ abstract class AppDatabase :
     ObservabilityDatabase,
     TelemetryDatabase,
     NotificationDatabase,
-    DeviceRecoveryDatabase {
+    DeviceRecoveryDatabase,
+    AuthDatabase {
 
     companion object {
         const val name = "db-account-manager"
-        const val version = 4
+        const val version = 6
 
         private val migrations = listOf(
             AppDatabaseMigrations.MIGRATION_1_2,
             AppDatabaseMigrations.MIGRATION_2_3,
             AppDatabaseMigrations.MIGRATION_3_4,
+            AppDatabaseMigrations.MIGRATION_4_5,
+            AppDatabaseMigrations.MIGRATION_5_6,
         )
 
         fun buildDatabase(context: Context): AppDatabase =

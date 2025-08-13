@@ -31,8 +31,6 @@ import me.proton.core.plan.data.PlanIconsEndpointProviderImpl
 import me.proton.core.plan.data.repository.PlansRepositoryImpl
 import me.proton.core.plan.data.usecase.ObserveUserCurrencyImpl
 import me.proton.core.plan.data.usecase.PerformSubscribeImpl
-import me.proton.core.plan.domain.IsDynamicPlanAdjustedPriceEnabled
-import me.proton.core.plan.domain.IsDynamicPlanEnabled
 import me.proton.core.plan.domain.IsSplitStorageEnabled
 import me.proton.core.plan.domain.PlanIconsEndpointProvider
 import me.proton.core.plan.domain.repository.PlansRepository
@@ -74,19 +72,4 @@ public interface CorePlanModule {
 @Module
 @InstallIn(SingletonComponent::class)
 object CorePlansFeaturesModule {
-    @Provides
-    @Singleton
-    fun provideIsDynamicPlanEnabled(): IsDynamicPlanEnabled = object : IsDynamicPlanEnabled {
-        override fun invoke(userId: UserId?): Boolean = true
-        override fun isLocalEnabled(): Boolean = true
-        override fun isRemoteEnabled(userId: UserId?): Boolean = true
-    }
-
-    @Provides
-    @Singleton
-    fun provideIsDynamicPlanAdjustedPricesEnabled(): IsDynamicPlanAdjustedPriceEnabled = object : IsDynamicPlanAdjustedPriceEnabled {
-        override fun invoke(userId: UserId?): Boolean = true
-        override fun isLocalEnabled(): Boolean = true
-        override fun isRemoteEnabled(userId: UserId?): Boolean = true
-    }
 }
