@@ -123,11 +123,11 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun startLogin() {
-        authOrchestrator.startLoginWorkflow(requiredAccountType)
+        authOrchestrator.startLoginWorkflow()
     }
 
     fun startSignUp() {
-        authOrchestrator.startSignupWorkflow(requiredAccountType)
+        authOrchestrator.startSignupWorkflow()
     }
 
     fun startSubscription(accountSession: AccountSession) = viewModelScope.launch {

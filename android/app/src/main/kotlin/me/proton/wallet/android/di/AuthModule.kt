@@ -51,9 +51,5 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideLoginBlockingHelp(): LoginActivity.BlockingHelp? = null
-
-    @Provides
-    @Singleton
     fun provideHelpOptionHandler(): HelpOptionHandler = DefaultHelpOptionHandler()
 }
