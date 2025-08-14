@@ -25,6 +25,7 @@ import me.proton.core.auth.data.db.AuthDatabase
 import me.proton.core.eventmanager.data.db.EventMetadataDatabase
 import me.proton.core.key.data.db.PublicAddressDatabase
 import me.proton.core.payment.data.local.db.PaymentDatabase
+import me.proton.core.user.data.db.UserDatabase
 import me.proton.core.user.data.db.UserKeyDatabase
 import me.proton.core.userrecovery.data.db.DeviceRecoveryDatabase
 import me.proton.core.usersettings.data.db.UserSettingsDatabase
@@ -68,7 +69,9 @@ object AppDatabaseMigrations {
             AuthDatabase.MIGRATION_3.migrate(db)
             AuthDatabase.MIGRATION_4.migrate(db)
             AuthDatabase.MIGRATION_5.migrate(db)
+            UserDatabase.MIGRATION_6.migrate(db)
             AccountDatabase.MIGRATION_9.migrate(db)
+            UserSettingsDatabase.MIGRATION_8.migrate(db)
         }
     }
 }
