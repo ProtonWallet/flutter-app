@@ -141,6 +141,7 @@ core-account = { module = "me.proton.core:account", version.ref = "core" }
 core-accountManager = { module = "me.proton.core:account-manager", version.ref = "core" }
 core-accountRecovery = { module = "me.proton.core:account-recovery", version.ref = "core" }
 core-auth = { module = "me.proton.core:auth", version.ref = "core" }
+core-authFido = { module = "me.proton.core:auth-fido", version.ref = "core" }
 core-challenge = { module = "me.proton.core:challenge", version.ref = "core" }
 core-country = { module = "me.proton.core:country", version.ref = "core" }
 core-crypto = { module = "me.proton.core:crypto", version.ref = "core" }
