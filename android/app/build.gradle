@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.VariantDimension
 import groovy.json.JsonSlurper
 // TODO: https://developer.android.com/build/migrate-to-kotlin-dsl
 plugins {
@@ -88,6 +89,16 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
+
+        resValue(
+            "string", "asset_statements",
+            """
+            [{
+            "relation": ["delegate_permission/common.handle_all_urls", "delegate_permission/common.get_login_creds"],
+            "target": { "namespace": "web", "site": "https://proton.me" }
+            }]
+            """.stripIndent()
+        )
     }
 
     compileOptions {
@@ -217,6 +228,7 @@ dependencies {
     implementation(libs.core.accountManager)
     implementation(libs.core.accountRecovery)
     implementation(libs.core.auth)
+    implementation(libs.core.authFido)
     implementation(libs.core.challenge)
     implementation(libs.core.config.data)
     implementation(libs.core.country)
