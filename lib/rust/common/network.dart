@@ -18,5 +18,4 @@ enum Network {
 
   /// Bitcoin's regtest network.
   regtest,
-  ;
 }

@@ -10,10 +10,7 @@ class Pagination {
   final BigInt skip;
   final BigInt take;
 
-  const Pagination({
-    required this.skip,
-    required this.take,
-  });
+  const Pagination({required this.skip, required this.take});
 
   @override
   int get hashCode => skip.hashCode ^ take.hashCode;
@@ -27,15 +24,6 @@ class Pagination {
           take == other.take;
 }
 
-enum SortOrder {
-  asc,
-  desc,
-  ;
-}
+enum SortOrder { asc, desc }
 
-enum TransactionFilter {
-  all,
-  receive,
-  send,
-  ;
-}
+enum TransactionFilter { all, receive, send }

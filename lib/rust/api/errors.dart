@@ -15,117 +15,83 @@ part 'errors.freezed.dart';
 sealed class BridgeError with _$BridgeError implements FrbException {
   const BridgeError._();
 
-  const factory BridgeError.apiLock(
-    String field0,
-  ) = BridgeError_ApiLock;
+  const factory BridgeError.apiLock(String field0) = BridgeError_ApiLock;
 
   /// Generic error
-  const factory BridgeError.generic(
-    String field0,
-  ) = BridgeError_Generic;
+  const factory BridgeError.generic(String field0) = BridgeError_Generic;
 
   /// Muon auth session error
-  const factory BridgeError.muonAuthSession(
-    String field0,
-  ) = BridgeError_MuonAuthSession;
+  const factory BridgeError.muonAuthSession(String field0) =
+      BridgeError_MuonAuthSession;
 
   /// Muon auth refresh error
-  const factory BridgeError.muonAuthRefresh(
-    String field0,
-  ) = BridgeError_MuonAuthRefresh;
+  const factory BridgeError.muonAuthRefresh(String field0) =
+      BridgeError_MuonAuthRefresh;
 
   /// Muon client error
-  const factory BridgeError.muonClient(
-    String field0,
-  ) = BridgeError_MuonClient;
+  const factory BridgeError.muonClient(String field0) = BridgeError_MuonClient;
 
   /// Muon session error
-  const factory BridgeError.muonSession(
-    String field0,
-  ) = BridgeError_MuonSession;
+  const factory BridgeError.muonSession(String field0) =
+      BridgeError_MuonSession;
 
   /// Andromeda bitcoin error
-  const factory BridgeError.andromedaBitcoin(
-    String field0,
-  ) = BridgeError_AndromedaBitcoin;
+  const factory BridgeError.andromedaBitcoin(String field0) =
+      BridgeError_AndromedaBitcoin;
 
   /// Andromeda api response error
-  const factory BridgeError.apiResponse(
-    ResponseError field0,
-  ) = BridgeError_ApiResponse;
-  const factory BridgeError.apiDeserialize(
-    String field0,
-  ) = BridgeError_ApiDeserialize;
-  const factory BridgeError.bitcoinDeserialize(
-    String field0,
-  ) = BridgeError_BitcoinDeserialize;
+  const factory BridgeError.apiResponse(ResponseError field0) =
+      BridgeError_ApiResponse;
+  const factory BridgeError.apiDeserialize(String field0) =
+      BridgeError_ApiDeserialize;
+  const factory BridgeError.bitcoinDeserialize(String field0) =
+      BridgeError_BitcoinDeserialize;
 
   /// srp errors
-  const factory BridgeError.apiSrp(
-    String field0,
-  ) = BridgeError_ApiSrp;
+  const factory BridgeError.apiSrp(String field0) = BridgeError_ApiSrp;
 
   /// crypto errors
-  const factory BridgeError.aesGcm(
-    String field0,
-  ) = BridgeError_AesGcm;
+  const factory BridgeError.aesGcm(String field0) = BridgeError_AesGcm;
 
   /// wallet crypto errors
-  const factory BridgeError.walletCrypto(
-    String field0,
-  ) = BridgeError_WalletCrypto;
+  const factory BridgeError.walletCrypto(String field0) =
+      BridgeError_WalletCrypto;
 
   /// wallet decryption errors
-  const factory BridgeError.walletDecryption(
-    String field0,
-  ) = BridgeError_WalletDecryption;
+  const factory BridgeError.walletDecryption(String field0) =
+      BridgeError_WalletDecryption;
 
   /// wallet feature errors
-  const factory BridgeError.walletFeature(
-    String field0,
-  ) = BridgeError_WalletFeature;
+  const factory BridgeError.walletFeature(String field0) =
+      BridgeError_WalletFeature;
 
   /// Login error
-  const factory BridgeError.login(
-    String field0,
-  ) = BridgeError_Login;
+  const factory BridgeError.login(String field0) = BridgeError_Login;
 
   /// Fork error
-  const factory BridgeError.fork(
-    String field0,
-  ) = BridgeError_Fork;
-  const factory BridgeError.database(
-    String field0,
-  ) = BridgeError_Database;
-  const factory BridgeError.sessionStore(
-    String field0,
-  ) = BridgeError_SessionStore;
-  const factory BridgeError.encoding(
-    String field0,
-  ) = BridgeError_Encoding;
+  const factory BridgeError.fork(String field0) = BridgeError_Fork;
+  const factory BridgeError.database(String field0) = BridgeError_Database;
+  const factory BridgeError.sessionStore(String field0) =
+      BridgeError_SessionStore;
+  const factory BridgeError.encoding(String field0) = BridgeError_Encoding;
 
   /// Paper wallet error
-  const factory BridgeError.insufficientFundsInPaperWallet(
-    String field0,
-  ) = BridgeError_InsufficientFundsInPaperWallet;
-  const factory BridgeError.invalidPaperWallet(
-    String field0,
-  ) = BridgeError_InvalidPaperWallet;
+  const factory BridgeError.insufficientFundsInPaperWallet(String field0) =
+      BridgeError_InsufficientFundsInPaperWallet;
+  const factory BridgeError.invalidPaperWallet(String field0) =
+      BridgeError_InvalidPaperWallet;
 
   /// Andromeda feature error
-  const factory BridgeError.featuresAndromedaBitcoinError(
-    String field0,
-  ) = BridgeError_FeaturesAndromedaBitcoinError;
+  const factory BridgeError.featuresAndromedaBitcoinError(String field0) =
+      BridgeError_FeaturesAndromedaBitcoinError;
 
   /// Andromeda feature error
-  const factory BridgeError.featuresAndromedaCommonError(
-    String field0,
-  ) = BridgeError_FeaturesAndromedaCommonError;
+  const factory BridgeError.featuresAndromedaCommonError(String field0) =
+      BridgeError_FeaturesAndromedaCommonError;
 
   /// Andromeda feature error
-  const factory BridgeError.accountExportDatetimeError(
-    String field0,
-  ) = BridgeError_AccountExportDatetimeError;
+  const factory BridgeError.accountExportDatetimeError(String field0) =
+      BridgeError_AccountExportDatetimeError;
 }
 
 class ResponseError {

@@ -10,10 +10,7 @@ class MnemonicData {
   final String walletId;
   final String? mnemonic;
 
-  const MnemonicData({
-    required this.walletId,
-    this.mnemonic,
-  });
+  const MnemonicData({required this.walletId, this.mnemonic});
 
   @override
   int get hashCode => walletId.hashCode ^ mnemonic.hashCode;

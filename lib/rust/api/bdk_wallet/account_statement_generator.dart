@@ -16,10 +16,12 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class FrbAccountStatementGenerator implements RustOpaqueInterface {
   void addAccount({required FrbAccount account, required String accountName});
 
-  factory FrbAccountStatementGenerator({ProtonExchangeRate? exchangeRate}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletAccountStatementGeneratorFrbAccountStatementGeneratorNew(
-              exchangeRate: exchangeRate);
+  factory FrbAccountStatementGenerator({
+    ProtonExchangeRate? exchangeRate,
+  }) => RustLib.instance.api
+      .crateApiBdkWalletAccountStatementGeneratorFrbAccountStatementGeneratorNew(
+        exchangeRate: exchangeRate,
+      );
 
   Future<Uint8List> toCsv({required BigInt exportTime});
 

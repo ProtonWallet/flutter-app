@@ -12,13 +12,14 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PriceGraphClient>>
 abstract class PriceGraphClient implements RustOpaqueInterface {
-  Future<PriceGraph> getGraphData(
-      {required FiatCurrency fiatCurrency, required Timeframe timeframe});
+  Future<PriceGraph> getGraphData({
+    required FiatCurrency fiatCurrency,
+    required Timeframe timeframe,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<PriceGraphClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServicePriceGraphClientPriceGraphClientNew(
-              service: service);
+  static Future<PriceGraphClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServicePriceGraphClientPriceGraphClientNew(service: service);
 }

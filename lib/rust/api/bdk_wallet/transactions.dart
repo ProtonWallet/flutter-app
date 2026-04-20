@@ -16,5 +16,6 @@ abstract class FrbTransaction implements RustOpaqueInterface {
 
   factory FrbTransaction({required List<int> transactionBytes}) =>
       RustLib.instance.api.crateApiBdkWalletTransactionsFrbTransactionNew(
-          transactionBytes: transactionBytes);
+        transactionBytes: transactionBytes,
+      );
 }

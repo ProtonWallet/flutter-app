@@ -11,14 +11,14 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 class WalletMobilePersisterFactory {
   final String folderPath;
 
-  const WalletMobilePersisterFactory.raw({
-    required this.folderPath,
-  });
+  const WalletMobilePersisterFactory.raw({required this.folderPath});
 
-  factory WalletMobilePersisterFactory({required String folderPath}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletStorageWalletMobilePersisterFactoryNew(
-              folderPath: folderPath);
+  factory WalletMobilePersisterFactory({required String folderPath}) => RustLib
+      .instance
+      .api
+      .crateApiBdkWalletStorageWalletMobilePersisterFactoryNew(
+        folderPath: folderPath,
+      );
 
   @override
   int get hashCode => folderPath.hashCode;

@@ -14,15 +14,16 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbDerivationPath>>
 abstract class FrbDerivationPath implements RustOpaqueInterface {
-  static FrbDerivationPath fromParts(
-          {required ScriptType scriptType,
-          required Network network,
-          required int accountIndex}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletDerivationPathFrbDerivationPathFromParts(
-              scriptType: scriptType,
-              network: network,
-              accountIndex: accountIndex);
+  static FrbDerivationPath fromParts({
+    required ScriptType scriptType,
+    required Network network,
+    required int accountIndex,
+  }) => RustLib.instance.api
+      .crateApiBdkWalletDerivationPathFrbDerivationPathFromParts(
+        scriptType: scriptType,
+        network: network,
+        accountIndex: accountIndex,
+      );
 
   factory FrbDerivationPath({required String path}) => RustLib.instance.api
       .crateApiBdkWalletDerivationPathFrbDerivationPathNew(path: path);

@@ -16,15 +16,17 @@ abstract class FrbMessageSigner implements RustOpaqueInterface {
   factory FrbMessageSigner() =>
       RustLib.instance.api.crateApiBdkWalletMessageSignerFrbMessageSignerNew();
 
-  Future<String> signMessage(
-      {required FrbAccount account,
-      required SigningType signingType,
-      required String message,
-      required String btcAddress});
+  Future<String> signMessage({
+    required FrbAccount account,
+    required SigningType signingType,
+    required String message,
+    required String btcAddress,
+  });
 
-  Future<void> verifyMessage(
-      {required FrbAccount account,
-      required String message,
-      required String signature,
-      required String btcAddress});
+  Future<void> verifyMessage({
+    required FrbAccount account,
+    required String message,
+    required String signature,
+    required String btcAddress,
+  });
 }

@@ -76,7 +76,6 @@ enum BitcoinUnit {
 
   /// 1 sat
   sats,
-  ;
 }
 
 enum FiatCurrency {
@@ -173,7 +172,6 @@ enum FiatCurrency {
   uyu,
   uzs,
   vnd,
-  ;
 }
 
 enum UserReceiveNotificationEmailTypes {
@@ -181,5 +179,4 @@ enum UserReceiveNotificationEmailTypes {
   emailIntegration,
   transactionalBvE,
   unsupported,
-  ;
 }

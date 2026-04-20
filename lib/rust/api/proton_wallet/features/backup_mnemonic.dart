@@ -12,8 +12,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class FrbBackupMnemonic implements RustOpaqueInterface {
   Future<int> twoFaStatus();
 
-  Future<MnemonicResult> viewSeed(
-      {required String walletId,
-      required String loginPassword,
-      required String twofa});
+  Future<MnemonicResult> viewSeed({
+    required String walletId,
+    required String loginPassword,
+    required String twofa,
+  });
 }

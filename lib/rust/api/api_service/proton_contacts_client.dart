@@ -14,9 +14,10 @@ abstract class ContactsClient implements RustOpaqueInterface {
   Future<List<ApiContactEmails>> getContacts();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ContactsClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceProtonContactsClientContactsClientNew(
-              service: service);
+  static Future<ContactsClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceProtonContactsClientContactsClientNew(
+        service: service,
+      );
 }

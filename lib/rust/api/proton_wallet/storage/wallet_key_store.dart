@@ -14,9 +14,11 @@ abstract class FrbWalletKeyStore implements RustOpaqueInterface {
   factory FrbWalletKeyStore() => RustLib.instance.api
       .crateApiProtonWalletStorageWalletKeyStoreFrbWalletKeyStoreNew();
 
-  Future<void> setGetWalletKeysCallback(
-      {required FutureOr<List<ApiWalletKey>> Function() callback});
+  Future<void> setGetWalletKeysCallback({
+    required FutureOr<List<ApiWalletKey>> Function() callback,
+  });
 
-  Future<void> setSaveWalletKeysCallback(
-      {required FutureOr<void> Function(List<ApiWalletKey>) callback});
+  Future<void> setSaveWalletKeysCallback({
+    required FutureOr<void> Function(List<ApiWalletKey>) callback,
+  });
 }

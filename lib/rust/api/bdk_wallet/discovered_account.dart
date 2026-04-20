@@ -16,15 +16,16 @@ abstract class DiscoveredAccount implements RustOpaqueInterface {
 
   int get index;
 
-  factory DiscoveredAccount(
-          {required ScriptType scriptType,
-          required int index,
-          required FrbDerivationPath derivationPath}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletDiscoveredAccountDiscoveredAccountNew(
-              scriptType: scriptType,
-              index: index,
-              derivationPath: derivationPath);
+  factory DiscoveredAccount({
+    required ScriptType scriptType,
+    required int index,
+    required FrbDerivationPath derivationPath,
+  }) => RustLib.instance.api
+      .crateApiBdkWalletDiscoveredAccountDiscoveredAccountNew(
+        scriptType: scriptType,
+        index: index,
+        derivationPath: derivationPath,
+      );
 
   ScriptType get scriptType;
 }

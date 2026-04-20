@@ -14,9 +14,10 @@ abstract class DiscoveryContentClient implements RustOpaqueInterface {
   Future<List<Content>> getDiscoveryContents();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<DiscoveryContentClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceDiscoveryContentClientDiscoveryContentClientNew(
-              service: service);
+  static Future<DiscoveryContentClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceDiscoveryContentClientDiscoveryContentClientNew(
+        service: service,
+      );
 }

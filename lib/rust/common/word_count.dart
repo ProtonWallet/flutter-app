@@ -21,5 +21,4 @@ enum WordCount {
 
   /// 24 words mnemonic (256 bits entropy)
   words24,
-  ;
 }

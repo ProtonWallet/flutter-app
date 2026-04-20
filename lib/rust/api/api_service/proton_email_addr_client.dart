@@ -11,15 +11,18 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonEmailAddressClient>>
 abstract class ProtonEmailAddressClient implements RustOpaqueInterface {
-  Future<List<AllKeyAddressKey>> getAllPublicKeys(
-      {required String email, required int internalOnly});
+  Future<List<AllKeyAddressKey>> getAllPublicKeys({
+    required String email,
+    required int internalOnly,
+  });
 
   Future<List<ProtonAddress>> getProtonAddress();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ProtonEmailAddressClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceProtonEmailAddrClientProtonEmailAddressClientNew(
-              service: service);
+  static Future<ProtonEmailAddressClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceProtonEmailAddrClientProtonEmailAddressClientNew(
+        service: service,
+      );
 }

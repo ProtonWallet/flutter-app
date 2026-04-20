@@ -38,10 +38,7 @@ class FrbOutPoint {
   /// The index of the referenced output in its transaction's vout.
   final int vout;
 
-  const FrbOutPoint({
-    required this.txid,
-    required this.vout,
-  });
+  const FrbOutPoint({required this.txid, required this.vout});
 
   @override
   int get hashCode => txid.hashCode ^ vout.hashCode;

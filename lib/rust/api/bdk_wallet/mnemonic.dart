@@ -20,20 +20,23 @@ abstract class FrbMnemonic implements RustOpaqueInterface {
   List<String> asWords();
 
   /// Parse a Mnemonic with the given string.
-  static FrbMnemonic fromString({required String mnemonic}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletMnemonicFrbMnemonicFromString(mnemonic: mnemonic);
+  static FrbMnemonic fromString({required String mnemonic}) => RustLib
+      .instance
+      .api
+      .crateApiBdkWalletMnemonicFrbMnemonicFromString(mnemonic: mnemonic);
 
   static List<String> getWordsAutocomplete({required String wordStart}) =>
       RustLib.instance.api
           .crateApiBdkWalletMnemonicFrbMnemonicGetWordsAutocomplete(
-              wordStart: wordStart);
+            wordStart: wordStart,
+          );
 
   /// Create a new Mnemonic with the given word count.
   factory FrbMnemonic({required WordCount wordCount}) => RustLib.instance.api
       .crateApiBdkWalletMnemonicFrbMnemonicNew(wordCount: wordCount);
 
-  static FrbMnemonic newWith({required List<int> entropy}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletMnemonicFrbMnemonicNewWith(entropy: entropy);
+  static FrbMnemonic newWith({required List<int> entropy}) => RustLib
+      .instance
+      .api
+      .crateApiBdkWalletMnemonicFrbMnemonicNewWith(entropy: entropy);
 }
