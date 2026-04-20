@@ -11,32 +11,40 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BitcoinAddressClient>>
 abstract class BitcoinAddressClient implements RustOpaqueInterface {
-  Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
-      {required String walletId,
-      required String walletAccountId,
-      required List<BitcoinAddress> bitcoinAddresses});
+  Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses({
+    required String walletId,
+    required String walletAccountId,
+    required List<BitcoinAddress> bitcoinAddresses,
+  });
 
-  Future<BigInt> getBitcoinAddressLatestIndex(
-      {required String walletId, required String walletAccountId});
+  Future<BigInt> getBitcoinAddressLatestIndex({
+    required String walletId,
+    required String walletAccountId,
+  });
 
-  Future<Uint64List> getUsedIndexes(
-      {required String walletId, required String walletAccountId});
+  Future<Uint64List> getUsedIndexes({
+    required String walletId,
+    required String walletAccountId,
+  });
 
-  Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
-      {required String walletId,
-      required String walletAccountId,
-      int? onlyRequest});
+  Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress({
+    required String walletId,
+    required String walletAccountId,
+    int? onlyRequest,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<BitcoinAddressClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceBitcoinAddressClientBitcoinAddressClientNew(
-              service: service);
+  static Future<BitcoinAddressClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceBitcoinAddressClientBitcoinAddressClientNew(
+        service: service,
+      );
 
-  Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
-      {required String walletId,
-      required String walletAccountId,
-      required String walletAccountBitcoinAddressId,
-      required BitcoinAddress bitcoinAddress});
+  Future<ApiWalletBitcoinAddress> updateBitcoinAddress({
+    required String walletId,
+    required String walletAccountId,
+    required String walletAccountBitcoinAddressId,
+    required BitcoinAddress bitcoinAddress,
+  });
 }

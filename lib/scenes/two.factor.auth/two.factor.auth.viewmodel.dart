@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/logger.dart';
-import 'package:wallet/helper/two.factor.auth.dart';
 import 'package:wallet/managers/providers/user.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_settings_client.dart';
@@ -12,6 +12,7 @@ import 'package:wallet/rust/api/api_service/proton_users_client.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/api/proton_wallet/srp/srp_client.dart';
 import 'package:wallet/rust/proton_api/proton_users.dart';
+import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 
@@ -62,16 +63,18 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 
       final clientProofs = await FrbSrpClient.generateProofs(
-          loginPassword: loginPassword,
-          version: authInfo.version,
-          salt: authInfo.salt,
-          modulus: authInfo.modulus,
-          serverEphemeral: authInfo.serverEphemeral);
+        loginPassword: loginPassword,
+        version: authInfo.version,
+        salt: authInfo.salt,
+        modulus: authInfo.modulus,
+        serverEphemeral: authInfo.serverEphemeral,
+      );
 
       final proofs = ProtonSrpClientProofs(
-          clientEphemeral: clientProofs.clientEphemeral,
-          clientProof: clientProofs.clientProof,
-          srpSession: authInfo.srpSession);
+        clientEphemeral: clientProofs.clientEphemeral,
+        clientProof: clientProofs.clientProof,
+        srpSession: authInfo.srpSession,
+      );
 
       final serverProofs = await protonUsersApi.unlockPasswordChange(
         proofs: proofs,
@@ -83,10 +86,7 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
       if (!check) {
         logger.e('Invalid server proofs');
       }
-      final req = SetTwoFaTOTPRequestBody(
-        totpConfirmation: loginTwoFaTotp,
-        totpSharedSecret: secret,
-      );
+      final req = SetTwoFaTOTPRequestBody(totpConfirmation: loginTwoFaTotp);
       final response = await protonSettingsApi.enable2FaTotp(req: req);
       logger.i("enable2FaTotp response code: $response");
       backupPhrases = response.twoFactorRecoveryCodes;
@@ -117,7 +117,31 @@ class TwoFactorAuthViewModelImpl extends TwoFactorAuthViewModel {
     digitControllers = List.generate(6, (index) => TextEditingController());
     passwordController = TextEditingController();
     passphraseFocusNode = FocusNode();
-    secret = TwoFactorAuthHelper.generateSecret();
+    final context = Coordinator.rootNavigatorKey.currentContext;
+    try {
+      secret = await protonSettingsApi.getTotpSharedSecret();
+    } on BridgeError catch (exception, stacktrace) {
+      error = exception.localizedString;
+      Sentry.captureException(exception, stackTrace: stacktrace);
+      logger.e(exception.toString());
+      secret = "";
+      if (context != null && context.mounted) {
+        LocalToast.showErrorToast(
+          context,
+          "Failed to load TOTP secret: $error",
+        );
+      }
+    } catch (e) {
+      error = e.toString();
+      logger.e(e.toString());
+      secret = "";
+      if (context != null && context.mounted) {
+        LocalToast.showErrorToast(
+          context,
+          "Failed to load TOTP secret: $error",
+        );
+      }
+    }
     final userEmail = userManager.userInfo.userMail;
 
     /// format otp auth string for QRCode

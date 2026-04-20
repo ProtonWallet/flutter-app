@@ -21,18 +21,21 @@ abstract class SettingsClient implements RustOpaqueInterface {
 
   Future<int> getUserWalletEligibility();
 
-  Future<ApiWalletUserSettings> hideEmptyUsedAddresses(
-      {required bool hideEmptyUsedAddresses});
+  Future<ApiWalletUserSettings> hideEmptyUsedAddresses({
+    required bool hideEmptyUsedAddresses,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<SettingsClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceSettingsClientSettingsClientNew(service: service);
+  static Future<SettingsClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api.crateApiApiServiceSettingsClientSettingsClientNew(
+    service: service,
+  );
 
-  Future<ApiWalletUserSettings> receiveNotificationEmail(
-      {required UserReceiveNotificationEmailTypes emailType,
-      required bool isEnable});
+  Future<ApiWalletUserSettings> receiveNotificationEmail({
+    required UserReceiveNotificationEmailTypes emailType,
+    required bool isEnable,
+  });
 
   Future<ApiWalletUserSettings> twoFaThreshold({required BigInt amount});
 }

@@ -10,10 +10,7 @@ class UnleashResponse {
   final int statusCode;
   final Uint8List body;
 
-  const UnleashResponse({
-    required this.statusCode,
-    required this.body,
-  });
+  const UnleashResponse({required this.statusCode, required this.body});
 
   @override
   int get hashCode => statusCode.hashCode ^ body.hashCode;

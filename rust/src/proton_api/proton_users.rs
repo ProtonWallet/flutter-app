@@ -209,5 +209,4 @@ pub struct _SetTwoFaTOTPResponseBody {
 #[allow(non_snake_case)]
 pub struct _SetTwoFaTOTPRequestBody {
     pub TOTPConfirmation: String,
-    pub TOTPSharedSecret: String,
 }

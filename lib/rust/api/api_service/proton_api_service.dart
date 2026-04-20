@@ -79,29 +79,33 @@ abstract class ProtonApiService implements RustOpaqueInterface {
   /// clients
   Future<List<ApiWalletData>> getWallets();
 
-  Future<AuthCredential> login(
-      {required String username, required String password});
+  Future<AuthCredential> login({
+    required String username,
+    required String password,
+  });
 
   Future<void> logout();
 
-  factory ProtonApiService(
-          {required String env,
-          required String appVersion,
-          required String userAgent,
-          required ProtonWalletAuthStore store}) =>
-      RustLib.instance.api
-          .crateApiApiServiceProtonApiServiceProtonApiServiceNew(
-              env: env,
-              appVersion: appVersion,
-              userAgent: userAgent,
-              store: store);
+  factory ProtonApiService({
+    required String env,
+    required String appVersion,
+    required String userAgent,
+    required ProtonWalletAuthStore store,
+  }) => RustLib.instance.api
+      .crateApiApiServiceProtonApiServiceProtonApiServiceNew(
+        env: env,
+        appVersion: appVersion,
+        userAgent: userAgent,
+        store: store,
+      );
 
   Future<void> setProtonApi();
 
-  Future<void> updateAuth(
-      {required String userId,
-      required String uid,
-      required String access,
-      required String refresh,
-      required List<String> scopes});
+  Future<void> updateAuth({
+    required String userId,
+    required String uid,
+    required String access,
+    required String refresh,
+    required List<String> scopes,
+  });
 }

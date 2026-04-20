@@ -361,10 +361,7 @@ class MigratedWalletAccount {
   final String id;
   final String label;
 
-  const MigratedWalletAccount({
-    required this.id,
-    required this.label,
-  });
+  const MigratedWalletAccount({required this.id, required this.label});
 
   @override
   int get hashCode => id.hashCode ^ label.hashCode;
@@ -416,7 +413,6 @@ enum TransactionType {
   externalSend,
   externalReceive,
   unsupported,
-  ;
 }
 
 class WalletTransaction {

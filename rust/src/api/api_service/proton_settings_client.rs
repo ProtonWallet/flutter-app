@@ -47,6 +47,10 @@ impl ProtonSettingsClient {
         Ok(self.inner.get_mnemonic_settings().await?)
     }
 
+    pub async fn get_totp_shared_secret(&self) -> Result<String, BridgeError> {
+        Ok(self.inner.get_totp_shared_secret().await?)
+    }
+
     pub async fn enable_2fa_totp(
         &self,
         req: SetTwoFaTOTPRequestBody,

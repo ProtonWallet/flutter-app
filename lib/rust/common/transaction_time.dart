@@ -12,10 +12,8 @@ part 'transaction_time.freezed.dart';
 sealed class TransactionTime with _$TransactionTime {
   const TransactionTime._();
 
-  const factory TransactionTime.confirmed({
-    required BigInt confirmationTime,
-  }) = TransactionTime_Confirmed;
-  const factory TransactionTime.unconfirmed({
-    required BigInt lastSeen,
-  }) = TransactionTime_Unconfirmed;
+  const factory TransactionTime.confirmed({required BigInt confirmationTime}) =
+      TransactionTime_Confirmed;
+  const factory TransactionTime.unconfirmed({required BigInt lastSeen}) =
+      TransactionTime_Unconfirmed;
 }

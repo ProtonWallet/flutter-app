@@ -20,8 +20,11 @@ abstract class FrbPaymentLink implements RustOpaqueInterface {
 
   String toUri();
 
-  static FrbPaymentLink tryParse(
-          {required String str, required Network network}) =>
-      RustLib.instance.api.crateApiBdkWalletPaymentLinkFrbPaymentLinkTryParse(
-          str: str, network: network);
+  static FrbPaymentLink tryParse({
+    required String str,
+    required Network network,
+  }) => RustLib.instance.api.crateApiBdkWalletPaymentLinkFrbPaymentLinkTryParse(
+    str: str,
+    network: network,
+  );
 }

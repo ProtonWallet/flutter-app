@@ -11,27 +11,35 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ProtonSettingsClient>>
 abstract class ProtonSettingsClient implements RustOpaqueInterface {
-  Future<ProtonUserSettings> disable2FaTotp(
-      {required ProtonSrpClientProofs req});
+  Future<ProtonUserSettings> disable2FaTotp({
+    required ProtonSrpClientProofs req,
+  });
 
-  Future<String> disableMnemonicSettings(
-      {required ProtonSrpClientProofs proofs});
+  Future<String> disableMnemonicSettings({
+    required ProtonSrpClientProofs proofs,
+  });
 
-  Future<SetTwoFaTOTPResponseBody> enable2FaTotp(
-      {required SetTwoFaTOTPRequestBody req});
+  Future<SetTwoFaTOTPResponseBody> enable2FaTotp({
+    required SetTwoFaTOTPRequestBody req,
+  });
 
   Future<List<ApiMnemonicUserKey>> getMnemonicSettings();
 
+  Future<String> getTotpSharedSecret();
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ProtonSettingsClient> newInstance(
-          {required ProtonApiService client}) =>
-      RustLib.instance.api
-          .crateApiApiServiceProtonSettingsClientProtonSettingsClientNew(
-              client: client);
+  static Future<ProtonSettingsClient> newInstance({
+    required ProtonApiService client,
+  }) => RustLib.instance.api
+      .crateApiApiServiceProtonSettingsClientProtonSettingsClientNew(
+        client: client,
+      );
 
-  Future<int> reactiveMnemonicSettings(
-      {required UpdateMnemonicSettingsRequestBody req});
+  Future<int> reactiveMnemonicSettings({
+    required UpdateMnemonicSettingsRequestBody req,
+  });
 
-  Future<int> setMnemonicSettings(
-      {required UpdateMnemonicSettingsRequestBody req});
+  Future<int> setMnemonicSettings({
+    required UpdateMnemonicSettingsRequestBody req,
+  });
 }

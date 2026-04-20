@@ -29,10 +29,7 @@ class FrbPsbtRecipient {
   final String field0;
   final BigInt field1;
 
-  const FrbPsbtRecipient({
-    required this.field0,
-    required this.field1,
-  });
+  const FrbPsbtRecipient({required this.field0, required this.field1});
 
   @override
   int get hashCode => field0.hashCode ^ field1.hashCode;

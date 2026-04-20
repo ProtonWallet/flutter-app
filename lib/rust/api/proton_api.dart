@@ -18,95 +18,110 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `deref`, `initialize`
 
 /// proton_api.getexchangerate
-Future<ProtonExchangeRate> getExchangeRate(
-        {required FiatCurrency fiatCurrency, BigInt? time}) =>
-    RustLib.instance.api.crateApiProtonApiGetExchangeRate(
-        fiatCurrency: fiatCurrency, time: time);
+Future<ProtonExchangeRate> getExchangeRate({
+  required FiatCurrency fiatCurrency,
+  BigInt? time,
+}) => RustLib.instance.api.crateApiProtonApiGetExchangeRate(
+  fiatCurrency: fiatCurrency,
+  time: time,
+);
 
 /// proton_api.getprotonaddress
 Future<List<ProtonAddress>> getProtonAddress() =>
     RustLib.instance.api.crateApiProtonApiGetProtonAddress();
 
 /// proton_api.addemailaddress
-Future<ApiWalletAccount> addEmailAddress(
-        {required String walletId,
-        required String walletAccountId,
-        required String addressId}) =>
-    RustLib.instance.api.crateApiProtonApiAddEmailAddress(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        addressId: addressId);
+Future<ApiWalletAccount> addEmailAddress({
+  required String walletId,
+  required String walletAccountId,
+  required String addressId,
+}) => RustLib.instance.api.crateApiProtonApiAddEmailAddress(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+  addressId: addressId,
+);
 
 /// proton_api.updatebitcoinaddress
-Future<ApiWalletBitcoinAddress> updateBitcoinAddress(
-        {required String walletId,
-        required String walletAccountId,
-        required String walletAccountBitcoinAddressId,
-        required BitcoinAddress bitcoinAddress}) =>
-    RustLib.instance.api.crateApiProtonApiUpdateBitcoinAddress(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        walletAccountBitcoinAddressId: walletAccountBitcoinAddressId,
-        bitcoinAddress: bitcoinAddress);
+Future<ApiWalletBitcoinAddress> updateBitcoinAddress({
+  required String walletId,
+  required String walletAccountId,
+  required String walletAccountBitcoinAddressId,
+  required BitcoinAddress bitcoinAddress,
+}) => RustLib.instance.api.crateApiProtonApiUpdateBitcoinAddress(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+  walletAccountBitcoinAddressId: walletAccountBitcoinAddressId,
+  bitcoinAddress: bitcoinAddress,
+);
 
 /// proton_api.get_used_indexes
-Future<Uint64List> getUsedIndexes(
-        {required String walletId, required String walletAccountId}) =>
-    RustLib.instance.api.crateApiProtonApiGetUsedIndexes(
-        walletId: walletId, walletAccountId: walletAccountId);
+Future<Uint64List> getUsedIndexes({
+  required String walletId,
+  required String walletAccountId,
+}) => RustLib.instance.api.crateApiProtonApiGetUsedIndexes(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+);
 
 /// proton_api.addbitcoinaddresses
-Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses(
-        {required String walletId,
-        required String walletAccountId,
-        required List<BitcoinAddress> bitcoinAddresses}) =>
-    RustLib.instance.api.crateApiProtonApiAddBitcoinAddresses(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        bitcoinAddresses: bitcoinAddresses);
+Future<List<ApiWalletBitcoinAddress>> addBitcoinAddresses({
+  required String walletId,
+  required String walletAccountId,
+  required List<BitcoinAddress> bitcoinAddresses,
+}) => RustLib.instance.api.crateApiProtonApiAddBitcoinAddresses(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+  bitcoinAddresses: bitcoinAddresses,
+);
 
 /// proton_api.lookupbitcoinaddress
-Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress(
-        {required String email}) =>
-    RustLib.instance.api.crateApiProtonApiLookupBitcoinAddress(email: email);
+Future<EmailIntegrationBitcoinAddress> lookupBitcoinAddress({
+  required String email,
+}) => RustLib.instance.api.crateApiProtonApiLookupBitcoinAddress(email: email);
 
 /// proton_api.getwalletbitcoinaddress
-Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress(
-        {required String walletId,
-        required String walletAccountId,
-        int? onlyRequest}) =>
-    RustLib.instance.api.crateApiProtonApiGetWalletBitcoinAddress(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        onlyRequest: onlyRequest);
+Future<List<ApiWalletBitcoinAddress>> getWalletBitcoinAddress({
+  required String walletId,
+  required String walletAccountId,
+  int? onlyRequest,
+}) => RustLib.instance.api.crateApiProtonApiGetWalletBitcoinAddress(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+  onlyRequest: onlyRequest,
+);
 
 /// proton_api.createwallettransactions
-Future<WalletTransaction> createWalletTransactions(
-        {required String walletId,
-        required String walletAccountId,
-        required String transactionId,
-        required String hashedTransactionId,
-        String? label,
-        String? exchangeRateId,
-        String? transactionTime}) =>
-    RustLib.instance.api.crateApiProtonApiCreateWalletTransactions(
-        walletId: walletId,
-        walletAccountId: walletAccountId,
-        transactionId: transactionId,
-        hashedTransactionId: hashedTransactionId,
-        label: label,
-        exchangeRateId: exchangeRateId,
-        transactionTime: transactionTime);
+Future<WalletTransaction> createWalletTransactions({
+  required String walletId,
+  required String walletAccountId,
+  required String transactionId,
+  required String hashedTransactionId,
+  String? label,
+  String? exchangeRateId,
+  String? transactionTime,
+}) => RustLib.instance.api.crateApiProtonApiCreateWalletTransactions(
+  walletId: walletId,
+  walletAccountId: walletAccountId,
+  transactionId: transactionId,
+  hashedTransactionId: hashedTransactionId,
+  label: label,
+  exchangeRateId: exchangeRateId,
+  transactionTime: transactionTime,
+);
 
 /// proton_api.fork
-Future<ChildSession> fork(
-        {required String appVersion,
-        required String userAgent,
-        required String clientChild}) =>
-    RustLib.instance.api.crateApiProtonApiFork(
-        appVersion: appVersion, userAgent: userAgent, clientChild: clientChild);
+Future<ChildSession> fork({
+  required String appVersion,
+  required String userAgent,
+  required String clientChild,
+}) => RustLib.instance.api.crateApiProtonApiFork(
+  appVersion: appVersion,
+  userAgent: userAgent,
+  clientChild: clientChild,
+);
 
 /// proton_api.fork
-Future<String> forkSelector({required String clientChild}) =>
-    RustLib.instance.api
-        .crateApiProtonApiForkSelector(clientChild: clientChild);
+Future<String> forkSelector({required String clientChild}) => RustLib
+    .instance
+    .api
+    .crateApiProtonApiForkSelector(clientChild: clientChild);

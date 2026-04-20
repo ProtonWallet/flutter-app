@@ -9,14 +9,20 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbProtonRecovery>>
 abstract class FrbProtonRecovery implements RustOpaqueInterface {
-  Future<void> disableRecovery(
-      {required String loginPassword, required String twofa});
+  Future<void> disableRecovery({
+    required String loginPassword,
+    required String twofa,
+  });
 
-  Future<List<String>> enableRecovery(
-      {required String loginPassword, required String twofa});
+  Future<List<String>> enableRecovery({
+    required String loginPassword,
+    required String twofa,
+  });
 
-  Future<List<String>> reactiveRecovery(
-      {String? loginPassword, required String twofa});
+  Future<List<String>> reactiveRecovery({
+    String? loginPassword,
+    required String twofa,
+  });
 
   Future<int> recoveryStatus();
 

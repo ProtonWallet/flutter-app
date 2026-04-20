@@ -24,16 +24,18 @@ abstract class ArcProtonApiService implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbWallet>>
 abstract class FrbWallet implements RustOpaqueInterface {
-  FrbAccount addAccount(
-      {required ScriptType scriptType,
-      required String derivationPath,
-      required WalletMobilePersisterFactory factory_});
+  FrbAccount addAccount({
+    required ScriptType scriptType,
+    required String derivationPath,
+    required WalletMobilePersisterFactory factory_,
+  });
 
-  Future<List<DiscoveredAccount>> discoverAccount(
-      {required ArcProtonApiService apiService,
-      required WalletMobilePersisterFactory factory_,
-      required int accountStopGap,
-      required BigInt addressStopGap});
+  Future<List<DiscoveredAccount>> discoverAccount({
+    required ArcProtonApiService apiService,
+    required WalletMobilePersisterFactory factory_,
+    required int accountStopGap,
+    required BigInt addressStopGap,
+  });
 
   FrbAccount? getAccount({required String derivationPath});
 
@@ -41,20 +43,24 @@ abstract class FrbWallet implements RustOpaqueInterface {
 
   String getFingerprint();
 
-  Future<FrbTransactionDetails> getTransaction(
-      {required FrbDerivationPath accountKey, required String txid});
+  Future<FrbTransactionDetails> getTransaction({
+    required FrbDerivationPath accountKey,
+    required String txid,
+  });
 
-  Future<List<FrbTransactionDetails>> getTransactions(
-      {Pagination? pagination,
-      SortOrder? sort,
-      required TransactionFilter transactionFilter});
+  Future<List<FrbTransactionDetails>> getTransactions({
+    Pagination? pagination,
+    SortOrder? sort,
+    required TransactionFilter transactionFilter,
+  });
 
-  factory FrbWallet(
-          {required Network network,
-          required String bip39Mnemonic,
-          String? bip38Passphrase}) =>
-      RustLib.instance.api.crateApiBdkWalletWalletFrbWalletNew(
-          network: network,
-          bip39Mnemonic: bip39Mnemonic,
-          bip38Passphrase: bip38Passphrase);
+  factory FrbWallet({
+    required Network network,
+    required String bip39Mnemonic,
+    String? bip38Passphrase,
+  }) => RustLib.instance.api.crateApiBdkWalletWalletFrbWalletNew(
+    network: network,
+    bip39Mnemonic: bip39Mnemonic,
+    bip38Passphrase: bip38Passphrase,
+  );
 }

@@ -20,7 +20,6 @@ impl ProtonTowfa {
         &self,
         login_password: &str,
         twofa: &str,
-        secret: &str,
     ) -> Result<SetTwoFaTOTPResponseBody> {
         self.unlock_password
             .unlock_password_change(login_password, twofa)
@@ -28,7 +27,6 @@ impl ProtonTowfa {
 
         let req = SetTwoFaTOTPRequestBody {
             TOTPConfirmation: twofa.to_string(),
-            TOTPSharedSecret: secret.to_string(),
         };
 
         let response = self.proton_settings_api.enable_2fa_totp(req).await?;
@@ -96,7 +94,6 @@ mod tests {
 
         let req = SetTwoFaTOTPRequestBody {
             TOTPConfirmation: "123456".to_string(),
-            TOTPSharedSecret: "secret".to_string(),
         };
         mock_settings_client
             .expect_enable_2fa_totp()
@@ -114,7 +111,7 @@ mod tests {
             unlock_password: Arc::new(mock_password_scope),
         };
         let response = towfa
-            .enable_twofa("password", "123456", "secret")
+            .enable_twofa("password", "123456")
             .await
             .unwrap();
         assert_eq!(response.Code, 1000);
@@ -132,7 +129,7 @@ mod tests {
             proton_settings_api: Arc::new(mock_settings_client),
             unlock_password: Arc::new(mock_password_scope),
         };
-        let result = towfa.enable_twofa("password", "123456", "secret").await;
+        let result = towfa.enable_twofa("password", "123456").await;
         assert!(result.is_err());
         assert_eq!(
             result.err().unwrap().to_string(),
@@ -155,7 +152,7 @@ mod tests {
             proton_settings_api: Arc::new(mock_settings_client),
             unlock_password: Arc::new(mock_password_scope),
         };
-        let result = towfa.enable_twofa("password", "123456", "secret").await;
+        let result = towfa.enable_twofa("password", "123456").await;
         assert!(result.is_err());
         assert_eq!(
             result.err().unwrap().to_string(),

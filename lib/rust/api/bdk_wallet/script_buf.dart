@@ -12,7 +12,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class FrbScriptBuf implements RustOpaqueInterface {
   factory FrbScriptBuf({required List<int> rawOutputScript}) =>
       RustLib.instance.api.crateApiBdkWalletScriptBufFrbScriptBufNew(
-          rawOutputScript: rawOutputScript);
+        rawOutputScript: rawOutputScript,
+      );
 
   Uint8List toBytes();
 }
