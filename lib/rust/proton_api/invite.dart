@@ -6,12 +6,7 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-enum InviteNotificationType {
-  newcomer,
-  emailIntegration,
-  unsupported,
-  ;
-}
+enum InviteNotificationType { newcomer, emailIntegration, unsupported }
 
 class RemainingMonthlyInvitations {
   final int used;

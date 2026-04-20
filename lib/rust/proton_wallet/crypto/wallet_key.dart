@@ -10,10 +10,7 @@ class LockedWalletKey {
   final String encrypted;
   final String signature;
 
-  const LockedWalletKey({
-    required this.encrypted,
-    required this.signature,
-  });
+  const LockedWalletKey({required this.encrypted, required this.signature});
 
   @override
   int get hashCode => encrypted.hashCode ^ signature.hashCode;

@@ -12,5 +12,4 @@ enum KeychainKind {
 
   /// Internal keychain, used for deriving change addresses.
   internal,
-  ;
 }

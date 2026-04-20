@@ -14,9 +14,11 @@ abstract class FrbWalletMnemonicStore implements RustOpaqueInterface {
   factory FrbWalletMnemonicStore() => RustLib.instance.api
       .crateApiProtonWalletStorageWalletMnemonicStoreFrbWalletMnemonicStoreNew();
 
-  Future<void> setGetWalletKeysCallback(
-      {required FutureOr<List<MnemonicData>> Function() callback});
+  Future<void> setGetWalletKeysCallback({
+    required FutureOr<List<MnemonicData>> Function() callback,
+  });
 
-  Future<void> setSaveWalletKeysCallback(
-      {required FutureOr<void> Function(List<MnemonicData>) callback});
+  Future<void> setSaveWalletKeysCallback({
+    required FutureOr<void> Function(List<MnemonicData>) callback,
+  });
 }

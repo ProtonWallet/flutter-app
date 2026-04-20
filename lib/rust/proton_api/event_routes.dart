@@ -133,11 +133,7 @@ class WalletEvent {
   final int action;
   final ApiWallet? wallet;
 
-  const WalletEvent({
-    required this.id,
-    required this.action,
-    this.wallet,
-  });
+  const WalletEvent({required this.id, required this.action, this.wallet});
 
   @override
   int get hashCode => id.hashCode ^ action.hashCode ^ wallet.hashCode;

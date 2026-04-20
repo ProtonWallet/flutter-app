@@ -19,17 +19,15 @@ abstract class FrbUnlockedWalletKey implements RustOpaqueInterface {
 class FrbLockedWalletKey {
   final LockedWalletKey field0;
 
-  const FrbLockedWalletKey({
-    required this.field0,
-  });
+  const FrbLockedWalletKey({required this.field0});
 
   String getArmored() => RustLib.instance.api
-          .crateApiProtonWalletCryptoWalletKeyFrbLockedWalletKeyGetArmored(
+      .crateApiProtonWalletCryptoWalletKeyFrbLockedWalletKeyGetArmored(
         that: this,
       );
 
   String getSignature() => RustLib.instance.api
-          .crateApiProtonWalletCryptoWalletKeyFrbLockedWalletKeyGetSignature(
+      .crateApiProtonWalletCryptoWalletKeyFrbLockedWalletKeyGetSignature(
         that: this,
       );
 

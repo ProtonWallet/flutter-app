@@ -57,10 +57,4 @@ class PriceGraph {
           graphData == other.graphData;
 }
 
-enum Timeframe {
-  oneDay,
-  oneWeek,
-  oneMonth,
-  unsupported,
-  ;
-}
+enum Timeframe { oneDay, oneWeek, oneMonth, unsupported }

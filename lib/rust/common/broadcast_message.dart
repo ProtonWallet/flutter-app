@@ -10,10 +10,7 @@ class BroadcastMessage {
   final String dataPacket;
   final Map<String, String> keyPackets;
 
-  const BroadcastMessage({
-    required this.dataPacket,
-    required this.keyPackets,
-  });
+  const BroadcastMessage({required this.dataPacket, required this.keyPackets});
 
   @override
   int get hashCode => dataPacket.hashCode ^ keyPackets.hashCode;

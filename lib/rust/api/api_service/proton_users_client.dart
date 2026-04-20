@@ -22,14 +22,14 @@ abstract class ProtonUsersClient implements RustOpaqueInterface {
   Future<int> lockSensitiveSettings();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ProtonUsersClient> newInstance(
-          {required ProtonApiService client}) =>
-      RustLib.instance.api
-          .crateApiApiServiceProtonUsersClientProtonUsersClientNew(
-              client: client);
+  static Future<ProtonUsersClient> newInstance({
+    required ProtonApiService client,
+  }) => RustLib.instance.api
+      .crateApiApiServiceProtonUsersClientProtonUsersClientNew(client: client);
 
   Future<String> unlockPasswordChange({required ProtonSrpClientProofs proofs});
 
-  Future<String> unlockSensitiveSettings(
-      {required ProtonSrpClientProofs proofs});
+  Future<String> unlockSensitiveSettings({
+    required ProtonSrpClientProofs proofs,
+  });
 }

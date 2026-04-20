@@ -35,24 +35,15 @@ import 'package:wallet/scenes/welcome/welcome.viewmodel.dart' as _i9;
 
 class _FakeWelcomeCoordinator_0 extends _i1.SmartFake
     implements _i2.WelcomeCoordinator {
-  _FakeWelcomeCoordinator_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWelcomeCoordinator_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeViewBase_1<V extends _i3.ViewModel<_i4.Coordinator>>
-    extends _i1.SmartFake implements _i5.ViewBase<V> {
-  _FakeViewBase_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i5.ViewBase<V> {
+  _FakeViewBase_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i6.DiagnosticLevel? minLevel = _i6.DiagnosticLevel.info}) =>
@@ -61,35 +52,21 @@ class _FakeViewBase_1<V extends _i3.ViewModel<_i4.Coordinator>>
 
 class _FakeNativeViewChannel_2 extends _i1.SmartFake
     implements _i7.NativeViewChannel {
-  _FakeNativeViewChannel_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeNativeViewChannel_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGlobalKey_3<T extends _i6.State<_i6.StatefulWidget>>
-    extends _i1.SmartFake implements _i6.GlobalKey<T> {
-  _FakeGlobalKey_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i6.GlobalKey<T> {
+  _FakeGlobalKey_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeManagerFactory_4 extends _i1.SmartFake
     implements _i8.ManagerFactory {
-  _FakeManagerFactory_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeManagerFactory_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [WelcomeViewModel].
@@ -101,136 +78,120 @@ class MockWelcomeViewModel extends _i1.Mock implements _i9.WelcomeViewModel {
   }
 
   @override
-  bool get isLoginToHomepage => (super.noSuchMethod(
-        Invocation.getter(#isLoginToHomepage),
-        returnValue: false,
-      ) as bool);
+  bool get isLoginToHomepage =>
+      (super.noSuchMethod(
+            Invocation.getter(#isLoginToHomepage),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   set isLoginToHomepage(bool? value) => super.noSuchMethod(
-        Invocation.setter(
-          #isLoginToHomepage,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#isLoginToHomepage, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.WelcomeCoordinator get coordinator => (super.noSuchMethod(
-        Invocation.getter(#coordinator),
-        returnValue: _FakeWelcomeCoordinator_0(
-          this,
-          Invocation.getter(#coordinator),
-        ),
-      ) as _i2.WelcomeCoordinator);
+  _i2.WelcomeCoordinator get coordinator =>
+      (super.noSuchMethod(
+            Invocation.getter(#coordinator),
+            returnValue: _FakeWelcomeCoordinator_0(
+              this,
+              Invocation.getter(#coordinator),
+            ),
+          )
+          as _i2.WelcomeCoordinator);
 
   @override
   _i10.Stream<_i3.ViewModel<_i4.Coordinator>> get datasourceChanged =>
       (super.noSuchMethod(
-        Invocation.getter(#datasourceChanged),
-        returnValue: _i10.Stream<_i3.ViewModel<_i4.Coordinator>>.empty(),
-      ) as _i10.Stream<_i3.ViewModel<_i4.Coordinator>>);
+            Invocation.getter(#datasourceChanged),
+            returnValue: _i10.Stream<_i3.ViewModel<_i4.Coordinator>>.empty(),
+          )
+          as _i10.Stream<_i3.ViewModel<_i4.Coordinator>>);
 
   @override
-  bool get isMobileSize => (super.noSuchMethod(
-        Invocation.getter(#isMobileSize),
-        returnValue: false,
-      ) as bool);
+  bool get isMobileSize =>
+      (super.noSuchMethod(Invocation.getter(#isMobileSize), returnValue: false)
+          as bool);
 
   @override
-  bool get keepAlive => (super.noSuchMethod(
-        Invocation.getter(#keepAlive),
-        returnValue: false,
-      ) as bool);
+  bool get keepAlive =>
+      (super.noSuchMethod(Invocation.getter(#keepAlive), returnValue: false)
+          as bool);
 
   @override
-  bool get mobile => (super.noSuchMethod(
-        Invocation.getter(#mobile),
-        returnValue: false,
-      ) as bool);
+  bool get mobile =>
+      (super.noSuchMethod(Invocation.getter(#mobile), returnValue: false)
+          as bool);
 
   @override
-  bool get desktop => (super.noSuchMethod(
-        Invocation.getter(#desktop),
-        returnValue: false,
-      ) as bool);
+  bool get desktop =>
+      (super.noSuchMethod(Invocation.getter(#desktop), returnValue: false)
+          as bool);
 
   @override
-  bool get android => (super.noSuchMethod(
-        Invocation.getter(#android),
-        returnValue: false,
-      ) as bool);
+  bool get android =>
+      (super.noSuchMethod(Invocation.getter(#android), returnValue: false)
+          as bool);
 
   @override
-  bool get iOS => (super.noSuchMethod(
-        Invocation.getter(#iOS),
-        returnValue: false,
-      ) as bool);
+  bool get iOS =>
+      (super.noSuchMethod(Invocation.getter(#iOS), returnValue: false) as bool);
 
   @override
-  bool get macOS => (super.noSuchMethod(
-        Invocation.getter(#macOS),
-        returnValue: false,
-      ) as bool);
+  bool get macOS =>
+      (super.noSuchMethod(Invocation.getter(#macOS), returnValue: false)
+          as bool);
 
   @override
-  bool get apple => (super.noSuchMethod(
-        Invocation.getter(#apple),
-        returnValue: false,
-      ) as bool);
+  bool get apple =>
+      (super.noSuchMethod(Invocation.getter(#apple), returnValue: false)
+          as bool);
 
   @override
-  bool get screenSizeState => (super.noSuchMethod(
-        Invocation.getter(#screenSizeState),
-        returnValue: false,
-      ) as bool);
+  bool get screenSizeState =>
+      (super.noSuchMethod(
+            Invocation.getter(#screenSizeState),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   set currentSize(_i5.ViewSize? value) => super.noSuchMethod(
-        Invocation.setter(
-          #currentSize,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#currentSize, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void sinkAddSafe() => super.noSuchMethod(
-        Invocation.method(
-          #sinkAddSafe,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#sinkAddSafe, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i10.Future<void> loadData() => (super.noSuchMethod(
-        Invocation.method(
-          #loadData,
-          [],
-        ),
-        returnValue: _i10.Future<void>.value(),
-        returnValueForMissingStub: _i10.Future<void>.value(),
-      ) as _i10.Future<void>);
+  _i10.Future<void> loadData() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadData, []),
+            returnValue: _i10.Future<void>.value(),
+            returnValueForMissingStub: _i10.Future<void>.value(),
+          )
+          as _i10.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i10.Future<void> move(_i11.NavID? to) => (super.noSuchMethod(
-        Invocation.method(
-          #move,
-          [to],
-        ),
-        returnValue: _i10.Future<void>.value(),
-        returnValueForMissingStub: _i10.Future<void>.value(),
-      ) as _i10.Future<void>);
+  _i10.Future<void> move(_i11.NavID? to) =>
+      (super.noSuchMethod(
+            Invocation.method(#move, [to]),
+            returnValue: _i10.Future<void>.value(),
+            returnValueForMissingStub: _i10.Future<void>.value(),
+          )
+          as _i10.Future<void>);
 }
 
 /// A class which mocks [WelcomeCoordinator].
@@ -245,118 +206,102 @@ class MockWelcomeCoordinator extends _i1.Mock
   @override
   _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>> get widget =>
       (super.noSuchMethod(
-        Invocation.getter(#widget),
-        returnValue: _FakeViewBase_1<_i3.ViewModel<_i4.Coordinator>>(
-          this,
-          Invocation.getter(#widget),
-        ),
-      ) as _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>>);
+            Invocation.getter(#widget),
+            returnValue: _FakeViewBase_1<_i3.ViewModel<_i4.Coordinator>>(
+              this,
+              Invocation.getter(#widget),
+            ),
+          )
+          as _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>>);
 
   @override
-  _i7.NativeViewChannel get nativeViewChannel => (super.noSuchMethod(
-        Invocation.getter(#nativeViewChannel),
-        returnValue: _FakeNativeViewChannel_2(
-          this,
-          Invocation.getter(#nativeViewChannel),
-        ),
-      ) as _i7.NativeViewChannel);
+  _i7.NativeViewChannel get nativeViewChannel =>
+      (super.noSuchMethod(
+            Invocation.getter(#nativeViewChannel),
+            returnValue: _FakeNativeViewChannel_2(
+              this,
+              Invocation.getter(#nativeViewChannel),
+            ),
+          )
+          as _i7.NativeViewChannel);
 
   @override
   set widget(_i5.ViewBase<_i3.ViewModel<_i4.Coordinator>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #widget,
-          value,
-        ),
+        Invocation.setter(#widget, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i6.GlobalKey<_i6.NavigatorState> get navigatorKey => (super.noSuchMethod(
-        Invocation.getter(#navigatorKey),
-        returnValue: _FakeGlobalKey_3<_i6.NavigatorState>(
-          this,
-          Invocation.getter(#navigatorKey),
-        ),
-      ) as _i6.GlobalKey<_i6.NavigatorState>);
+  _i6.GlobalKey<_i6.NavigatorState> get navigatorKey =>
+      (super.noSuchMethod(
+            Invocation.getter(#navigatorKey),
+            returnValue: _FakeGlobalKey_3<_i6.NavigatorState>(
+              this,
+              Invocation.getter(#navigatorKey),
+            ),
+          )
+          as _i6.GlobalKey<_i6.NavigatorState>);
 
   @override
-  _i8.ManagerFactory get serviceManager => (super.noSuchMethod(
-        Invocation.getter(#serviceManager),
-        returnValue: _FakeManagerFactory_4(
-          this,
-          Invocation.getter(#serviceManager),
-        ),
-      ) as _i8.ManagerFactory);
+  _i8.ManagerFactory get serviceManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#serviceManager),
+            returnValue: _FakeManagerFactory_4(
+              this,
+              Invocation.getter(#serviceManager),
+            ),
+          )
+          as _i8.ManagerFactory);
 
   @override
   void end() => super.noSuchMethod(
-        Invocation.method(
-          #end,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#end, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showNativeSignin() => super.noSuchMethod(
-        Invocation.method(
-          #showNativeSignin,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showNativeSignin, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showNativeSignup() => super.noSuchMethod(
-        Invocation.method(
-          #showNativeSignup,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showNativeSignup, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showHome(_i12.ApiEnv? env) => super.noSuchMethod(
-        Invocation.method(
-          #showHome,
-          [env],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showHome, [env]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showFlutterSignin(_i12.ApiEnv? env) => super.noSuchMethod(
-        Invocation.method(
-          #showFlutterSignin,
-          [env],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showFlutterSignin, [env]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>> start() => (super.noSuchMethod(
-        Invocation.method(
-          #start,
-          [],
-        ),
-        returnValue: _FakeViewBase_1<_i3.ViewModel<_i4.Coordinator>>(
-          this,
-          Invocation.method(
-            #start,
-            [],
-          ),
-        ),
-      ) as _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>>);
+  _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>> start() =>
+      (super.noSuchMethod(
+            Invocation.method(#start, []),
+            returnValue: _FakeViewBase_1<_i3.ViewModel<_i4.Coordinator>>(
+              this,
+              Invocation.method(#start, []),
+            ),
+          )
+          as _i5.ViewBase<_i3.ViewModel<_i4.Coordinator>>);
 
   @override
-  List<_i6.Widget> starts() => (super.noSuchMethod(
-        Invocation.method(
-          #starts,
-          [],
-        ),
-        returnValue: <_i6.Widget>[],
-      ) as List<_i6.Widget>);
+  List<_i6.Widget> starts() =>
+      (super.noSuchMethod(
+            Invocation.method(#starts, []),
+            returnValue: <_i6.Widget>[],
+          )
+          as List<_i6.Widget>);
 
   @override
   _i10.Future<bool> showInBottomSheet(
@@ -368,25 +313,23 @@ class MockWelcomeCoordinator extends _i1.Mock
     bool? canPop = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showInBottomSheet,
-          [view],
-          {
-            #backgroundColor: backgroundColor,
-            #fullScreen: fullScreen,
-            #enableDrag: enableDrag,
-            #isDismissible: isDismissible,
-            #canPop: canPop,
-          },
-        ),
-        returnValue: _i10.Future<bool>.value(false),
-      ) as _i10.Future<bool>);
+            Invocation.method(
+              #showInBottomSheet,
+              [view],
+              {
+                #backgroundColor: backgroundColor,
+                #fullScreen: fullScreen,
+                #enableDrag: enableDrag,
+                #isDismissible: isDismissible,
+                #canPop: canPop,
+              },
+            ),
+            returnValue: _i10.Future<bool>.value(false),
+          )
+          as _i10.Future<bool>);
 
   @override
-  void pushReplacement(
-    _i6.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushReplacement(_i6.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushReplacement,
@@ -400,44 +343,30 @@ class MockWelcomeCoordinator extends _i1.Mock
   void pushReplacementRemoveAll(
     _i6.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementRemoveAll,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementRemoveAll,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void push(
-    _i6.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void push(_i6.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
-        Invocation.method(
-          #push,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
+        Invocation.method(#push, [view], {#fullscreenDialog: fullscreenDialog}),
         returnValueForMissingStub: null,
       );
 
   @override
   void pop() => super.noSuchMethod(
-        Invocation.method(
-          #pop,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#pop, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void pushCustom(
-    _i6.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushCustom(_i6.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushCustom,
@@ -451,22 +380,18 @@ class MockWelcomeCoordinator extends _i1.Mock
   void pushReplacementCustom(
     _i6.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementCustom,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementCustom,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showDialog1(_i6.Widget? view) => super.noSuchMethod(
-        Invocation.method(
-          #showDialog1,
-          [view],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showDialog1, [view]),
+    returnValueForMissingStub: null,
+  );
 }

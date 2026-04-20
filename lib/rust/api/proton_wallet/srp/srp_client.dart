@@ -11,19 +11,20 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 class FrbSrpClient {
   const FrbSrpClient.raw();
 
-  static Future<SRPProofB64> generateProofs(
-          {required String loginPassword,
-          required int version,
-          required String salt,
-          required String modulus,
-          required String serverEphemeral}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletSrpSrpClientFrbSrpClientGenerateProofs(
-              loginPassword: loginPassword,
-              version: version,
-              salt: salt,
-              modulus: modulus,
-              serverEphemeral: serverEphemeral);
+  static Future<SRPProofB64> generateProofs({
+    required String loginPassword,
+    required int version,
+    required String salt,
+    required String modulus,
+    required String serverEphemeral,
+  }) => RustLib.instance.api
+      .crateApiProtonWalletSrpSrpClientFrbSrpClientGenerateProofs(
+        loginPassword: loginPassword,
+        version: version,
+        salt: salt,
+        modulus: modulus,
+        serverEphemeral: serverEphemeral,
+      );
 
   factory FrbSrpClient() =>
       RustLib.instance.api.crateApiProtonWalletSrpSrpClientFrbSrpClientNew();

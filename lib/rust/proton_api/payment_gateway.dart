@@ -54,13 +54,7 @@ class ApiSimpleFiatCurrency {
           minimumAmount == other.minimumAmount;
 }
 
-enum GatewayProvider {
-  banxa,
-  ramp,
-  moonPay,
-  unsupported,
-  ;
-}
+enum GatewayProvider { banxa, ramp, moonPay, unsupported }
 
 enum PaymentMethod {
   applePay,
@@ -70,7 +64,6 @@ enum PaymentMethod {
   instantPayment,
   paypal,
   unsupported,
-  ;
 }
 
 class Quote {

@@ -11,22 +11,28 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InviteClient>>
 abstract class InviteClient implements RustOpaqueInterface {
-  Future<int> checkInviteStatus(
-      {required String inviteeEmail,
-      required InviteNotificationType inviteNotificationType,
-      required String inviterAddressId});
+  Future<int> checkInviteStatus({
+    required String inviteeEmail,
+    required InviteNotificationType inviteNotificationType,
+    required String inviterAddressId,
+  });
 
   Future<RemainingMonthlyInvitations> getRemainingMonthlyInvitation();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<InviteClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceInviteClientInviteClientNew(service: service);
+  static Future<InviteClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api.crateApiApiServiceInviteClientInviteClientNew(
+    service: service,
+  );
 
-  Future<void> sendEmailIntegrationInvite(
-      {required String inviteeEmail, required String inviterAddressId});
+  Future<void> sendEmailIntegrationInvite({
+    required String inviteeEmail,
+    required String inviterAddressId,
+  });
 
-  Future<void> sendNewcomerInvite(
-      {required String inviteeEmail, required String inviterAddressId});
+  Future<void> sendNewcomerInvite({
+    required String inviteeEmail,
+    required String inviterAddressId,
+  });
 }

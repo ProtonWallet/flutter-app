@@ -12,18 +12,24 @@ class FrbWalletKeyHelper {
   const FrbWalletKeyHelper();
 
   /// Decrypts the encrypted text using AES-GCM with 256-bit key.
-  static String decrypt(
-          {required String base64SecureKey, required String encryptText}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
-              base64SecureKey: base64SecureKey, encryptText: encryptText);
+  static String decrypt({
+    required String base64SecureKey,
+    required String encryptText,
+  }) => RustLib.instance.api
+      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperDecrypt(
+        base64SecureKey: base64SecureKey,
+        encryptText: encryptText,
+      );
 
   /// Encrypts the plaintext using AES-GCM with 256-bit key.
-  static String encrypt(
-          {required String base64SecureKey, required String plaintext}) =>
-      RustLib.instance.api
-          .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperEncrypt(
-              base64SecureKey: base64SecureKey, plaintext: plaintext);
+  static String encrypt({
+    required String base64SecureKey,
+    required String plaintext,
+  }) => RustLib.instance.api
+      .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperEncrypt(
+        base64SecureKey: base64SecureKey,
+        plaintext: plaintext,
+      );
 
   static FrbUnlockedWalletKey generateSecretKey() => RustLib.instance.api
       .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperGenerateSecretKey();
@@ -34,7 +40,8 @@ class FrbWalletKeyHelper {
   static FrbUnlockedWalletKey restore({required String base64SecureKey}) =>
       RustLib.instance.api
           .crateApiProtonWalletCryptoWalletKeyHelperFrbWalletKeyHelperRestore(
-              base64SecureKey: base64SecureKey);
+            base64SecureKey: base64SecureKey,
+          );
 
   @override
   int get hashCode => 0;

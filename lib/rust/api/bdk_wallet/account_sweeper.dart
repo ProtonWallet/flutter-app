@@ -15,15 +15,20 @@ import 'psbt.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbAccountSweeper>>
 abstract class FrbAccountSweeper implements RustOpaqueInterface {
-  factory FrbAccountSweeper(
-          {required FrbBlockchainClient client, required FrbAccount account}) =>
+  factory FrbAccountSweeper({
+    required FrbBlockchainClient client,
+    required FrbAccount account,
+  }) =>
       RustLib.instance.api.crateApiBdkWalletAccountSweeperFrbAccountSweeperNew(
-          client: client, account: account);
+        client: client,
+        account: account,
+      );
 
   /// Sweep BTC from a WIF private key and its corresponding address into the user's wallet
-  Future<FrbPsbt> psbtSweepFromWif(
-      {required String wif,
-      required BigInt satPerVb,
-      int? receiveAddressIndex,
-      required Network network});
+  Future<FrbPsbt> psbtSweepFromWif({
+    required String wif,
+    required BigInt satPerVb,
+    int? receiveAddressIndex,
+    required Network network,
+  });
 }

@@ -17,16 +17,21 @@ import 'transaction_details.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbAddress>>
 abstract class FrbAddress implements RustOpaqueInterface {
-  static FrbAddress fromScript(
-          {required FrbScriptBuf script, required Network network}) =>
-      RustLib.instance.api.crateApiBdkWalletAddressFrbAddressFromScript(
-          script: script, network: network);
+  static FrbAddress fromScript({
+    required FrbScriptBuf script,
+    required Network network,
+  }) => RustLib.instance.api.crateApiBdkWalletAddressFrbAddressFromScript(
+    script: script,
+    network: network,
+  );
 
   FrbScriptBuf intoScript();
 
   factory FrbAddress({required String address, required Network network}) =>
       RustLib.instance.api.crateApiBdkWalletAddressFrbAddressNew(
-          address: address, network: network);
+        address: address,
+        network: network,
+      );
 
   String toString();
 }

@@ -12,13 +12,16 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ExchangeRateClient>>
 abstract class ExchangeRateClient implements RustOpaqueInterface {
-  Future<ProtonExchangeRate> getExchangeRate(
-      {required FiatCurrency fiatCurrency, BigInt? time});
+  Future<ProtonExchangeRate> getExchangeRate({
+    required FiatCurrency fiatCurrency,
+    BigInt? time,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<ExchangeRateClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceExchangeRateClientExchangeRateClientNew(
-              service: service);
+  static Future<ExchangeRateClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceExchangeRateClientExchangeRateClientNew(
+        service: service,
+      );
 }

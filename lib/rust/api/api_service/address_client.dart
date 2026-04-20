@@ -20,14 +20,17 @@ abstract class AddressClient implements RustOpaqueInterface {
   Future<List<ApiTx>> getScripthashTransactions({required String scriptHash});
 
   /// Get a [`BlockHeader`] given a particular block hash.
-  Future<List<ApiTx>> getScripthashTransactionsAtTransactionId(
-      {required String scriptHash, required String transactionId});
+  Future<List<ApiTx>> getScripthashTransactionsAtTransactionId({
+    required String scriptHash,
+    required String transactionId,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<AddressClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceAddressClientAddressClientNew(service: service);
+  static Future<AddressClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api.crateApiApiServiceAddressClientAddressClientNew(
+    service: service,
+  );
 }
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiTx>>

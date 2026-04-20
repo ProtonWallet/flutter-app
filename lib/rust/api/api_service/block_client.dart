@@ -14,6 +14,7 @@ abstract class BlockClient implements RustOpaqueInterface {
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<BlockClient> newInstance({required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceBlockClientBlockClientNew(service: service);
+      RustLib.instance.api.crateApiApiServiceBlockClientBlockClientNew(
+        service: service,
+      );
 }

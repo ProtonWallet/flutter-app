@@ -69,8 +69,11 @@ abstract class FrbTxBuilder implements RustOpaqueInterface {
   ///
   Future<FrbTxBuilder> setFeeRate({required BigInt satPerVb});
 
-  Future<FrbTxBuilder> updateRecipient(
-      {required BigInt index, String? addressStr, BigInt? amount});
+  Future<FrbTxBuilder> updateRecipient({
+    required BigInt index,
+    String? addressStr,
+    BigInt? amount,
+  });
 
   Future<FrbTxBuilder> updateRecipientAmountToMax({required BigInt index});
 }

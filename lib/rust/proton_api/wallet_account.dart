@@ -11,10 +11,7 @@ class ApiEmailAddress {
   final String id;
   final String email;
 
-  const ApiEmailAddress({
-    required this.id,
-    required this.email,
-  });
+  const ApiEmailAddress({required this.id, required this.email});
 
   @override
   int get hashCode => id.hashCode ^ email.hashCode;
