@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/manager.dart';
@@ -34,7 +33,7 @@ class LocalAuthManager implements Manager {
       _initialized = true;
       try {
         canCheckBiometrics = await auth.canCheckBiometrics;
-      } on PlatformException catch (e) {
+      } on LocalAuthException catch (e) {
         logger.e(e);
       }
     }
@@ -50,12 +49,11 @@ class LocalAuthManager implements Manager {
     // final checkable = await auth.canCheckBiometrics;
     bool authenticated = false;
     try {
-      const option = AuthenticationOptions(
+      authenticated = await auth.authenticate(
+        localizedReason: hint,
         biometricOnly: true,
       );
-      authenticated =
-          await auth.authenticate(localizedReason: hint, options: option);
-    } on PlatformException catch (e) {
+    } on LocalAuthException catch (e) {
       logger.e(e);
       return false;
     }

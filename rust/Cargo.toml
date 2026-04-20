@@ -33,7 +33,7 @@ tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 ## 
-flutter_rust_bridge = { version = "=2.6.0" } 
+flutter_rust_bridge = { version = "=2.11.1" } 
 
 ##
 rand = "0.8.5" #could be removed with small change. when remove ask crypto team to review

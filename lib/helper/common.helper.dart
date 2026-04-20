@@ -54,9 +54,7 @@ class CommonHelper {
           )
         : CountryFlag.fromCountryCode(
             FiatCurrencyHelper.toCountryCode(fiatCurrency),
-            shape: const Circle(),
-            width: 20,
-            height: 20,
+            theme: const ImageTheme(shape: Circle(), width: 20, height: 20),
           );
   }
 

@@ -29,15 +29,6 @@
       }
     },
     {
-      "identity" : "ellipticcurvekeypair",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/agens-no/EllipticCurveKeyPair",
-      "state" : {
-        "revision" : "944ae5c89ca045e9f1a113b736706c73fc51d1c2",
-        "version" : "2.0.0"
-      }
-    },
-    {
       "identity" : "lottie-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-ios",
@@ -69,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.protontech.ch/apple/shared/protoncore",
       "state" : {
-        "revision" : "022ff66aaf50c6a3e3b51ce4dbeecd5b0c7fb386",
-        "version" : "29.0.14"
+        "revision" : "57c17923ed01de3015f8b369bdfa1d83d213860e",
+        "version" : "35.0.4"
       }
     },
     {
@@ -96,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "930b78a63f47549c81e6e63c9172584f7d3dfdd6",
-        "version" : "8.52.1"
+        "revision" : "05d3ce8332097ff0b2347231ac66476fd7d2f4d8",
+        "version" : "9.8.0"
       }
     },
     {

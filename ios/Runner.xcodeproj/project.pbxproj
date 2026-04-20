@@ -985,7 +985,7 @@
 			repositoryURL = "https://gitlab.protontech.ch/apple/shared/protoncore";
 			requirement = {
 				kind = exactVersion;
-				version = 29.0.14;
+				version = 35.0.4;
 			};
 		};
 		75CF52EB2C75DDDC0049F6BB /* XCRemoteSwiftPackageReference "mobile-sdk-ios" */ = {

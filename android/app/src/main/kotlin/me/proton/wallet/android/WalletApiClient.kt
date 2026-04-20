@@ -39,7 +39,7 @@ open class WalletApiClient @Inject constructor() : ApiClient {
      * Tells the lib if DoH should be used in a given moment (based e.g. on user setting or whether
      * VPN connection is active). Will be checked before  each API call.
      */
-    override val shouldUseDoh: Boolean = false
+    override suspend fun shouldUseDoh(): Boolean = false
 
     /**
      * Client's value for 'x-pm-appversion' header.

@@ -1,19 +1,20 @@
 [versions]
 # Android Sdk
 minSdk = "24"
-compileSdk = "35"
-targetSdk = "35"
-ndkVersion = "25.1.8937393"
+compileSdk = "36"
+targetSdk = "36"
+ndkVersion = "27.0.12077973"
 
 # AndroidX
 androidx-activity = "1.10.1"
+androidx-biometric = "1.2.0-alpha05"
 androidx-core-splashscreen = "1.0.1"
 androidx-espresso-core = "3.6.1"
 androidx-hilt = "1.2.0"
 androidx-hilt-navigation-compose = "1.2.0"
 androidx-lifecycle = "2.8.7"
 androidx-navigation = "2.8.4"
-androidx-room = "2.7.0-alpha10"
+androidx-room = "2.7.2"
 androidx-startup = "1.2.0"
 androidx-test = "1.5.0"
 androidx-test-junit = "1.2.1"
@@ -27,20 +28,20 @@ androidx-compose-bom = "2024.11.00"
 androidx-compose-compiler = "1.5.15"
 
 # Proton Core
-core = "31.0.0"
+core = "36.3.1"
 
 # Dagger
-dagger = "2.49"
+dagger = "2.53.1"
 
 # Desugaring
-desugaring = "2.0.3"
+desugaring = "2.1.4"
 
 # Google
 firebase-bom = "32.7.0"
 firebase-messaging = "23.2.1"
 
 # Gradle
-gradlePlugin-android = "8.7.3"
+gradlePlugin-android = "8.9.1"
 gradlePlugin-flutter = "1.0.0"
 #gradlePlugin-google-services = "4.4.0"
 gradlePlugin-proton-config = "1.3.1"
@@ -60,7 +61,7 @@ ramp = "4.0.1"
 moonpay = "1.1.2"
 
 # Sentry
-sentry = "7.21.0"
+sentry = "8.29.0"
 
 # Square
 okhttp = "4.10.0"
@@ -81,6 +82,7 @@ flutter = { id = "dev.flutter.flutter-gradle-plugin", version.ref = "gradlePlugi
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 #kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin" }
@@ -137,17 +139,22 @@ androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", 
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "androidx-biometric" }
+androidx-biometric-ktx = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric" }
+
 core-account = { module = "me.proton.core:account", version.ref = "core" }
 core-accountManager = { module = "me.proton.core:account-manager", version.ref = "core" }
 core-accountRecovery = { module = "me.proton.core:account-recovery", version.ref = "core" }
 core-auth = { module = "me.proton.core:auth", version.ref = "core" }
 core-authFido = { module = "me.proton.core:auth-fido", version.ref = "core" }
+core-biometric = { module = "me.proton.core:biometric", version.ref = "core" }
 core-challenge = { module = "me.proton.core:challenge", version.ref = "core" }
 core-country = { module = "me.proton.core:country", version.ref = "core" }
 core-crypto = { module = "me.proton.core:crypto", version.ref = "core" }
 core-cryptoValidator = { module = "me.proton.core:crypto-validator", version.ref = "core" }
 core-data = { module = "me.proton.core:data", version.ref = "core" }
 core-dataRoom = { module = "me.proton.core:data-room", version.ref = "core" }
+core-deviceMigration = { module = "me.proton.core:device-migration", version.ref = "core" }
 core-domain = { module = "me.proton.core:domain", version.ref = "core" }
 core-eventManager = { module = "me.proton.core:event-manager", version.ref = "core" }
 core-featureFlag = { module = "me.proton.core:feature-flag", version.ref = "core" }
@@ -157,6 +164,8 @@ core-keyTransparency = { module = "me.proton.core:key-transparency", version.ref
 core-network = { module = "me.proton.core:network", version.ref = "core" }
 core-notification = { module = "me.proton.core:notification", version.ref = "core" }
 core-observability = { module = "me.proton.core:observability", version.ref = "core" }
+core-passValidator = { module = "me.proton.core:pass-validator", version.ref = "core" }
+core-passValidatorDagger = { module = "me.proton.core:pass-validator-dagger", version.ref = "core" }
 core-payment = { module = "me.proton.core:payment", version.ref = "core" }
 core-paymentIap = { module = "me.proton.core:payment-iap", version.ref = "core" }
 core-plan-data = { module = "me.proton.core:plan-data", version.ref = "core" }
