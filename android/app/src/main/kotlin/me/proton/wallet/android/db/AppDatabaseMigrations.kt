@@ -23,6 +23,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import me.proton.core.account.data.db.AccountDatabase
 import me.proton.core.auth.data.db.AuthDatabase
 import me.proton.core.eventmanager.data.db.EventMetadataDatabase
+import me.proton.core.featureflag.data.db.FeatureFlagDatabase
 import me.proton.core.key.data.db.PublicAddressDatabase
 import me.proton.core.payment.data.local.db.PaymentDatabase
 import me.proton.core.user.data.db.UserDatabase
@@ -72,6 +73,15 @@ object AppDatabaseMigrations {
             UserDatabase.MIGRATION_6.migrate(db)
             AccountDatabase.MIGRATION_9.migrate(db)
             UserSettingsDatabase.MIGRATION_8.migrate(db)
+        }
+    }
+
+    // android core 31.0.0 -> 36.3.1
+    val MIGRATION_6_7 = object : Migration(6, 7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            AccountDatabase.MIGRATION_10.migrate(db)
+            AccountDatabase.MIGRATION_11.migrate(db)
+            FeatureFlagDatabase.MIGRATION_4.migrate(db)
         }
     }
 }

@@ -34,7 +34,6 @@ import me.proton.core.plan.data.usecase.PerformSubscribeImpl
 import me.proton.core.plan.domain.IsSplitStorageEnabled
 import me.proton.core.plan.domain.PlanIconsEndpointProvider
 import me.proton.core.plan.domain.repository.PlansRepository
-import me.proton.core.plan.domain.usecase.CreatePaymentTokenForGooglePurchase
 import me.proton.core.plan.domain.usecase.ObserveUserCurrency
 import me.proton.core.plan.domain.usecase.PerformGiapPurchase
 import me.proton.core.plan.domain.usecase.PerformSubscribe
@@ -64,9 +63,6 @@ public interface CorePlanModule {
 
     @BindsOptionalOf
     public fun optionalPerformGiapPurchase(): PerformGiapPurchase<Activity>
-
-    @BindsOptionalOf
-    public fun optionalCreateSubscriptionForGiap(): CreatePaymentTokenForGooglePurchase
 }
 
 @Module

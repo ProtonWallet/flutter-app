@@ -132,6 +132,16 @@ class AndroidEnvironment {
     final rustFlagsKey = 'CARGO_ENCODED_RUSTFLAGS';
     final rustFlagsValue = _libGccWorkaround(targetTempDir, ndkVersionParsed);
 
+    // Pass 16 KB page-size alignment flag to CGo's external linker so that
+    // Go-produced shared libraries (e.g. libgopenpgp-sys.so) also satisfy
+    // the Google Play Android 15+ requirement.
+    final cgoLdFlagsKey = 'CGO_LDFLAGS';
+    final existingCgoLdFlags = Platform.environment['CGO_LDFLAGS'] ?? '';
+    final cgoLdFlagsValue = [
+      if (existingCgoLdFlags.isNotEmpty) existingCgoLdFlags,
+      '-Wl,-z,max-page-size=16384',
+    ].join(' ');
+
     final runRustTool =
         Platform.isWindows ? 'run_build_tool.cmd' : 'run_build_tool.sh';
 
@@ -159,6 +169,7 @@ class AndroidEnvironment {
       cxxfFlagsKey: cxxFlagsValue,
       ranlibKey: ranlibValue,
       rustFlagsKey: rustFlagsValue,
+      cgoLdFlagsKey: cgoLdFlagsValue,
       linkerKey: selfPath,
       // Recognized by main() so we know when we're acting as a wrapper
       '_CARGOKIT_NDK_LINK_TARGET': targetArg,
@@ -191,6 +202,8 @@ class AndroidEnvironment {
       rustFlags = '$rustFlags\x1f';
     }
     rustFlags = '$rustFlags-L\x1f$workaroundDir';
+    // Align PT_LOAD ELF segments to 16 KB — required by Google Play for Android 15+ devices.
+    rustFlags = '$rustFlags\x1f-C\x1flink-arg=-Wl,-z,max-page-size=16384';
     return rustFlags;
   }
 }

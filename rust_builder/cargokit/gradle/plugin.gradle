@@ -89,7 +89,11 @@ class CargoKitPlugin implements Plugin<Project> {
    private Plugin _findFlutterPlugin(Map projects) {
         for (project in projects) {
             for (plugin in project.value.getPlugins()) {
-                if (plugin.class.name == "FlutterPlugin") {
+                // Support multiple Flutter plugin names
+                if (plugin.class.name == "FlutterPlugin" ||
+                    plugin.class.name == "dev.flutter.flutter-gradle-plugin" ||
+                    plugin.class.name.contains("FlutterPlugin") ||
+                    plugin.class.name.contains("flutter-gradle-plugin")) {
                     return plugin;
                 }
             }
@@ -103,18 +107,40 @@ class CargoKitPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        println "=== CargoKit Plugin Debug ==="
+        println "Project: ${project.name}"
+        println "Root project: ${project.rootProject.name}"
+        println "Child projects: ${project.rootProject.childProjects.keySet()}"
+
         def plugin = findFlutterPlugin(project.rootProject);
 
         project.extensions.create("cargokit", CargoKitExtension)
 
         if (plugin == null) {
-            print("Flutter plugin not found, CargoKit plugin will not be applied.")
+            println "Flutter plugin not found, CargoKit plugin will not be applied."
+            println "Available plugins in root project:"
+            project.rootProject.plugins.each { p ->
+                println "  - ${p.class.name}"
+            }
+            println "Available plugins in child projects:"
+            project.rootProject.childProjects.each { name, childProject ->
+                println "  Project $name:"
+                childProject.plugins.each { p ->
+                    println "    - ${p.class.name}"
+                }
+            }
             return;
+        } else {
+            println "Found Flutter plugin: ${plugin.class.name}"
         }
 
         def cargoBuildDir = "${project.buildDir}/build"
 
-        plugin.project.android.applicationVariants.all { variant ->
+        // Determine if the project is an application or library
+        def isApplication = plugin.project.plugins.hasPlugin('com.android.application')
+        def variants = isApplication ? plugin.project.android.applicationVariants : plugin.project.android.libraryVariants
+
+        variants.all { variant ->
 
             final buildType = variant.buildType.name
 
@@ -122,7 +148,20 @@ class CargoKitPlugin implements Plugin<Project> {
             def jniLibs = project.android.sourceSets.maybeCreate(buildType).jniLibs;
             jniLibs.srcDir(new File(cargoOutputDir))
 
-            def platforms = plugin.getTargetPlatforms().collect()
+            def platforms = []
+            try {
+                // try new version API
+                platforms = plugin.getTargetPlatforms().collect()
+            } catch (Exception e) {
+                try {
+                    // try old version API
+                    platforms = plugin.targetPlatforms.collect()
+                } catch (Exception e2) {
+                    // if both fail, use defaults
+                    println "Warning: Could not get target platforms from Flutter plugin, using defaults"
+                    platforms = ["android-arm64", "android-arm", "android-x64"]
+                }
+            }
 
             // Same thing addFlutterDependencies does in flutter.gradle
             if (buildType == "debug") {

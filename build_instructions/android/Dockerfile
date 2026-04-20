@@ -1,6 +1,6 @@
-FROM rust:1.79
+FROM rust:1.89
 
-ARG NDK_NUM=25.1.8937393
+ARG NDK_NUM=27.0.12077973
 ARG NDK_NAME=android-ndk-r25b
 ARG FLUTTER=flutter_linux_3.29.2-stable
 

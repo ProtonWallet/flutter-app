@@ -145,10 +145,8 @@ devtools_options.yaml
 env.var.g.dart
 .env
 
-
 # tmp databases
 *.sqlite
-
 
 # ui tests
 test/snapshot/*/failures/
@@ -157,3 +155,6 @@ cobertura.xml
 coverage
 build_rs_cov.profraw
 test_proton_wallet_rust_db.*
+
+# FVM Version Cache
+.fvm/

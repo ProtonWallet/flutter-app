@@ -11,7 +11,7 @@ export SENTRY_API_KEY=""
 # 1. Configure Android SDK and NDK paths
 echo "Configuring Android SDK and NDK paths..."
 echo 'sdk.dir=/opt/android/sdk' >> ./android/local.properties
-echo 'ndk.dir=/opt/android/sdk/ndk/25.1.8937393' >> ./android/local.properties
+echo 'ndk.dir=/opt/android/sdk/ndk/27.0.12077973' >> ./android/local.properties
 
 # 2. Environment check
 echo "Checking environment..."

@@ -6,4 +6,14 @@ part of 'wallet.user.settings.queries.dart';
 mixin _$WalletUserSettingsQueriesMixin on DatabaseAccessor<AppDatabase> {
   $WalletUserSettingsTableTable get walletUserSettingsTable =>
       attachedDatabase.walletUserSettingsTable;
+  WalletUserSettingsQueriesManager get managers =>
+      WalletUserSettingsQueriesManager(this);
+}
+
+class WalletUserSettingsQueriesManager {
+  final _$WalletUserSettingsQueriesMixin _db;
+  WalletUserSettingsQueriesManager(this._db);
+  $$WalletUserSettingsTableTableTableManager get walletUserSettingsTable =>
+      $$WalletUserSettingsTableTableTableManager(
+          _db.attachedDatabase, _db.walletUserSettingsTable);
 }
