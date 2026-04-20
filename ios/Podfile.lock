@@ -1,7 +1,6 @@
 PODS:
   - connectivity_plus (0.0.1):
     - Flutter
-    - FlutterMacOS
   - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.9):
@@ -41,10 +40,13 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
+  - flutter_keyboard_visibility_temp_fork (0.0.1):
+    - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_secure_storage (6.0.0):
+  - flutter_secure_storage_darwin (10.0.0):
     - Flutter
+    - FlutterMacOS
   - fluttertoast (0.0.2):
     - Flutter
   - in_app_review (2.0.0):
@@ -58,9 +60,6 @@ PODS:
     - ScreenProtectorKit (~> 1.3.1)
   - package_info_plus (0.4.5):
     - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - permission_handler_apple (9.3.0):
     - Flutter
   - qr_code_scanner (0.2.0):
@@ -81,28 +80,9 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sqflite (0.0.3):
+  - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.49.2):
-    - sqlite3/common (= 3.49.2)
-  - sqlite3/common (3.49.2)
-  - sqlite3/dbstatvtab (3.49.2):
-    - sqlite3/common
-  - sqlite3/fts5 (3.49.2):
-    - sqlite3/common
-  - sqlite3/perf-threadsafe (3.49.2):
-    - sqlite3/common
-  - sqlite3/rtree (3.49.2):
-    - sqlite3/common
-  - sqlite3_flutter_libs (0.0.1):
-    - Flutter
-    - FlutterMacOS
-    - sqlite3 (~> 3.49.1)
-    - sqlite3/dbstatvtab
-    - sqlite3/fts5
-    - sqlite3/perf-threadsafe
-    - sqlite3/rtree
   - SwiftyGif (5.4.5)
   - system_boot_time (0.0.1):
     - Flutter
@@ -110,21 +90,22 @@ PODS:
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
-  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/darwin`)
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_keyboard_visibility_temp_fork (from `.symlinks/plugins/flutter_keyboard_visibility_temp_fork/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - no_screenshot (from `.symlinks/plugins/no_screenshot/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - Ramp (from `https://github.com/RampNetwork/ramp-sdk-ios`, tag `4.0.2`)
@@ -132,11 +113,10 @@ DEPENDENCIES:
   - rust_builder (from `.symlinks/plugins/rust_builder/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqflite (from `.symlinks/plugins/sqflite/darwin`)
-  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
+  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
   - system_boot_time (from `.symlinks/plugins/system_boot_time/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -145,12 +125,11 @@ SPEC REPOS:
     - MTBBarcodeScanner
     - ScreenProtectorKit
     - SDWebImage
-    - sqlite3
     - SwiftyGif
 
 EXTERNAL SOURCES:
   connectivity_plus:
-    :path: ".symlinks/plugins/connectivity_plus/darwin"
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
@@ -159,10 +138,12 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_keyboard_visibility_temp_fork:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility_temp_fork/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_secure_storage:
-    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_secure_storage_darwin:
+    :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   in_app_review:
@@ -173,8 +154,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/no_screenshot/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   qr_code_scanner:
@@ -190,16 +169,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  sqflite:
-    :path: ".symlinks/plugins/sqflite/darwin"
-  sqlite3_flutter_libs:
-    :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
+  sqflite_darwin:
+    :path: ".symlinks/plugins/sqflite_darwin/darwin"
   system_boot_time:
     :path: ".symlinks/plugins/system_boot_time/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 CHECKOUT OPTIONS:
   Ramp:
@@ -207,38 +184,36 @@ CHECKOUT OPTIONS:
     :tag: 4.0.2
 
 SPEC CHECKSUMS:
-  connectivity_plus: 3f6c9057f4cd64198dc826edfb0542892f825343
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
-  flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
-  flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
+  flutter_keyboard_visibility_temp_fork: 95b2d534bacf6ac62e7fcbe5c2a9e2c2a17ce06f
+  flutter_local_notifications: 643a3eda1ce1c0599413ca31672536d423dee214
+  flutter_secure_storage_darwin: acdb3f316ed05a3e68f856e0353b133eec373a23
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
-  in_app_review: 5596fe56fab799e8edb3561c03d053363ab13457
-  local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391
+  in_app_review: 7dd1ea365263f834b8464673f9df72c80c17c937
+  local_auth_darwin: c3ee6cce0a8d56be34c8ccb66ba31f7f180aaebb
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   no_screenshot: 7db61a27b3d64967745fa7a268f85a3314df5384
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   qr_code_scanner: d77f94ecc9abf96d9b9b8fc04ef13f611e5a147a
   Ramp: fb07b544581cc9ad0eb8b56b43c9d59ef6204ca2
-  ramp_flutter: 68112b21b5f29537df8cb6b0d233053586e1cdda
+  ramp_flutter: 9811ca74c3348e29fb5331bdc47c6cc9f1ebf8a5
   rust_builder: aa3db59f427a2b0b0a901e85c2759608e724fa6f
   ScreenProtectorKit: 83a6281b02c7a5902ee6eac4f5045f674e902ae4
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
-  sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3
-  sqlite3: 3c950dc86011117c307eb0b28c4a7bb449dce9f1
-  sqlite3_flutter_libs: f8fc13346870e73fe35ebf6dbb997fbcd156b241
+  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   system_boot_time: c02e6f8a4243c5e47c82b6006f7f4bf15824c7cc
-  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
-  webview_flutter_wkwebview: 45a041c7831641076618876de3ba75c712860c6b
+  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
+  webview_flutter_wkwebview: 8ebf4fded22593026f7dbff1fbff31ea98573c8d
 
 PODFILE CHECKSUM: 1faac139bb416a69b255a42100e6966f0b60ac0e
 

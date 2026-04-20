@@ -23,7 +23,7 @@ import UIKit
 import flutter_local_notifications
 
 @main
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
 
     /// native code and this need to be refactored later
     private var apiService: PMAPIService?
@@ -48,16 +48,30 @@ import flutter_local_notifications
             options.debug = true  // Enabled debug when first installing is always helpful
             // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
             options.tracesSampleRate = 1.0
-            options.enableTracing = true
         }
 
         // Inject crypto with the default implementation.
         injectDefaultCryptoImplementation()
-        let rootViewController = self.window?.rootViewController as! FlutterViewController
+        Brand.currentBrand = .wallet
+
+        // FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        //     GeneratedPluginRegistrant.register(with: registry)
+        // }
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+        }
+
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+
+    func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+        GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+
+        let messenger = engineBridge.applicationRegistrar.messenger()
 
         let nativeViewChannel = FlutterMethodChannel(
             name: "me.proton.wallet/native.views",
-            binaryMessenger: rootViewController.binaryMessenger)
+            binaryMessenger: messenger)
         nativeViewChannel.setMethodCallHandler { [weak self] (call, result) in
             guard let self = self else { return }
             switch call.method {
@@ -97,7 +111,6 @@ import flutter_local_notifications
                 if let arguments = call.arguments as? [String: Any] {
                     let environment = Environment(from: arguments)
                     AppVersionHeader.shared.parseFlutterData(from: arguments)
-                    PMLog.setEnvironment(environment: environment.type.title)
                     self.initAPIService(env: environment)
                     self.fetchUnauthFeatureFlags()
                 } else {
@@ -139,7 +152,7 @@ import flutter_local_notifications
 
         let moonPayChannel = FlutterMethodChannel(
             name: "me.proton.wallet/onramp.moon.pay",
-            binaryMessenger: rootViewController.binaryMessenger)
+            binaryMessenger: messenger)
         moonPayChannel.setMethodCallHandler { [weak self] (call, result) in
             guard let self = self else { return }
             switch call.method {
@@ -210,19 +223,7 @@ import flutter_local_notifications
 
         navigationChannel = FlutterMethodChannel(
             name: "me.proton.wallet/app.view",
-            binaryMessenger: rootViewController.binaryMessenger)
-        Brand.currentBrand = .wallet
-
-        // FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-        //     GeneratedPluginRegistrant.register(with: registry)
-        // }
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
-        }
-
-        // disable
-        GeneratedPluginRegistrant.register(with: self)
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+            binaryMessenger: messenger)
     }
 
     func initAPIService(env: Environment) {
@@ -363,7 +364,7 @@ import flutter_local_notifications
     }
 
     func switchToSignIn() {
-        guard let rootViewController = self.window.rootViewController else {
+        guard let rootViewController = self.rootViewController else {
             PMLog.error("rootViewController must be set before calling \(#function)")
             return
         }
@@ -379,7 +380,7 @@ import flutter_local_notifications
     }
 
     func switchToSignUp() {
-        guard let rootViewController = self.window.rootViewController else {
+        guard let rootViewController = self.rootViewController else {
             PMLog.error("rootViewController must be set before calling \(#function)")
             return
         }
@@ -463,7 +464,7 @@ import flutter_local_notifications
     }
 
     func switchToBugReport(username: String, email: String) {
-        guard let rootViewController = self.window.rootViewController else {
+        guard let rootViewController = self.rootViewController else {
             PMLog.error("rootViewController must be set before calling \(#function)")
             return
         }
@@ -488,6 +489,27 @@ import flutter_local_notifications
         throw NSError(
             domain: "SimulatedErrorDomain", code: 1,
             userInfo: [NSLocalizedDescriptionKey: "Simulated failure"])
+    }
+    
+    /// Gets the root view controller from the active scene's window
+    /// This is needed for UIScene-based apps where AppDelegate no longer manages the window
+    private var rootViewController: UIViewController? {
+        guard
+            let windowScene = UIApplication.shared.connectedScenes
+                .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+            let window = windowScene.windows.first(where: { $0.isKeyWindow })
+        else {
+            // Fallback: try to get any window from any connected scene
+            for scene in UIApplication.shared.connectedScenes {
+                if let windowScene = scene as? UIWindowScene,
+                    let window = windowScene.windows.first
+                {
+                    return window.rootViewController
+                }
+            }
+            return nil
+        }
+        return window.rootViewController
     }
 
 }

@@ -115,6 +115,9 @@ final class PaymentsManager {
         case let .apiMightBeBlocked(message, originalError: error):
             PMLog.info("\(message), error \(error)")
             completion(.failure(error))
+        case .planAlreadyPurchased(error: let error):
+            PMLog.info("error \(error)")
+            completion(.failure(error))
         }
     }
 }

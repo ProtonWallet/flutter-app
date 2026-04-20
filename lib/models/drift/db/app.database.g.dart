@@ -1988,22 +1988,216 @@ typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
   Value<String?> displayName,
 });
 
+class $$UsersTableTableFilterComposer
+    extends Composer<_$AppDatabase, $UsersTableTable> {
+  $$UsersTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<BigInt> get usedSpace => $composableBuilder(
+      column: $table.usedSpace, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get credit => $composableBuilder(
+      column: $table.credit, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<BigInt> get createTime => $composableBuilder(
+      column: $table.createTime, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<BigInt> get maxSpace => $composableBuilder(
+      column: $table.maxSpace, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<BigInt> get maxUpload => $composableBuilder(
+      column: $table.maxUpload, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get role => $composableBuilder(
+      column: $table.role, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get private => $composableBuilder(
+      column: $table.private, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get subscribed => $composableBuilder(
+      column: $table.subscribed, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get services => $composableBuilder(
+      column: $table.services, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get delinquent => $composableBuilder(
+      column: $table.delinquent, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get organizationPrivateKey => $composableBuilder(
+      column: $table.organizationPrivateKey,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get displayName => $composableBuilder(
+      column: $table.displayName, builder: (column) => ColumnFilters(column));
+}
+
+class $$UsersTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $UsersTableTable> {
+  $$UsersTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<BigInt> get usedSpace => $composableBuilder(
+      column: $table.usedSpace, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get currency => $composableBuilder(
+      column: $table.currency, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get credit => $composableBuilder(
+      column: $table.credit, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<BigInt> get createTime => $composableBuilder(
+      column: $table.createTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<BigInt> get maxSpace => $composableBuilder(
+      column: $table.maxSpace, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<BigInt> get maxUpload => $composableBuilder(
+      column: $table.maxUpload, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get role => $composableBuilder(
+      column: $table.role, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get private => $composableBuilder(
+      column: $table.private, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get subscribed => $composableBuilder(
+      column: $table.subscribed, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get services => $composableBuilder(
+      column: $table.services, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get delinquent => $composableBuilder(
+      column: $table.delinquent, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get organizationPrivateKey => $composableBuilder(
+      column: $table.organizationPrivateKey,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get email => $composableBuilder(
+      column: $table.email, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get displayName => $composableBuilder(
+      column: $table.displayName, builder: (column) => ColumnOrderings(column));
+}
+
+class $$UsersTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UsersTableTable> {
+  $$UsersTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get usedSpace =>
+      $composableBuilder(column: $table.usedSpace, builder: (column) => column);
+
+  GeneratedColumn<String> get currency =>
+      $composableBuilder(column: $table.currency, builder: (column) => column);
+
+  GeneratedColumn<int> get credit =>
+      $composableBuilder(column: $table.credit, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get createTime => $composableBuilder(
+      column: $table.createTime, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get maxSpace =>
+      $composableBuilder(column: $table.maxSpace, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get maxUpload =>
+      $composableBuilder(column: $table.maxUpload, builder: (column) => column);
+
+  GeneratedColumn<int> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
+
+  GeneratedColumn<int> get private =>
+      $composableBuilder(column: $table.private, builder: (column) => column);
+
+  GeneratedColumn<int> get subscribed => $composableBuilder(
+      column: $table.subscribed, builder: (column) => column);
+
+  GeneratedColumn<int> get services =>
+      $composableBuilder(column: $table.services, builder: (column) => column);
+
+  GeneratedColumn<int> get delinquent => $composableBuilder(
+      column: $table.delinquent, builder: (column) => column);
+
+  GeneratedColumn<String> get organizationPrivateKey => $composableBuilder(
+      column: $table.organizationPrivateKey, builder: (column) => column);
+
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
+
+  GeneratedColumn<String> get displayName => $composableBuilder(
+      column: $table.displayName, builder: (column) => column);
+}
+
 class $$UsersTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UsersTableTable,
     DriftProtonUser,
     $$UsersTableTableFilterComposer,
     $$UsersTableTableOrderingComposer,
+    $$UsersTableTableAnnotationComposer,
     $$UsersTableTableCreateCompanionBuilder,
-    $$UsersTableTableUpdateCompanionBuilder> {
+    $$UsersTableTableUpdateCompanionBuilder,
+    (
+      DriftProtonUser,
+      BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>
+    ),
+    DriftProtonUser,
+    PrefetchHooks Function()> {
   $$UsersTableTableTableManager(_$AppDatabase db, $UsersTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$UsersTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$UsersTableTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$UsersTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UsersTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UsersTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
             Value<String> userId = const Value.absent(),
@@ -2080,188 +2274,28 @@ class $$UsersTableTableTableManager extends RootTableManager<
             email: email,
             displayName: displayName,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
         ));
 }
 
-class $$UsersTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $UsersTableTable> {
-  $$UsersTableTableFilterComposer(super.$state);
-  ColumnFilters<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<BigInt> get usedSpace => $state.composableBuilder(
-      column: $state.table.usedSpace,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get currency => $state.composableBuilder(
-      column: $state.table.currency,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get credit => $state.composableBuilder(
-      column: $state.table.credit,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<BigInt> get createTime => $state.composableBuilder(
-      column: $state.table.createTime,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<BigInt> get maxSpace => $state.composableBuilder(
-      column: $state.table.maxSpace,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<BigInt> get maxUpload => $state.composableBuilder(
-      column: $state.table.maxUpload,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get role => $state.composableBuilder(
-      column: $state.table.role,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get private => $state.composableBuilder(
-      column: $state.table.private,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get subscribed => $state.composableBuilder(
-      column: $state.table.subscribed,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get services => $state.composableBuilder(
-      column: $state.table.services,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get delinquent => $state.composableBuilder(
-      column: $state.table.delinquent,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get organizationPrivateKey => $state.composableBuilder(
-      column: $state.table.organizationPrivateKey,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get email => $state.composableBuilder(
-      column: $state.table.email,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get displayName => $state.composableBuilder(
-      column: $state.table.displayName,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$UsersTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $UsersTableTable> {
-  $$UsersTableTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<BigInt> get usedSpace => $state.composableBuilder(
-      column: $state.table.usedSpace,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get currency => $state.composableBuilder(
-      column: $state.table.currency,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get credit => $state.composableBuilder(
-      column: $state.table.credit,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<BigInt> get createTime => $state.composableBuilder(
-      column: $state.table.createTime,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<BigInt> get maxSpace => $state.composableBuilder(
-      column: $state.table.maxSpace,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<BigInt> get maxUpload => $state.composableBuilder(
-      column: $state.table.maxUpload,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get role => $state.composableBuilder(
-      column: $state.table.role,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get private => $state.composableBuilder(
-      column: $state.table.private,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get subscribed => $state.composableBuilder(
-      column: $state.table.subscribed,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get services => $state.composableBuilder(
-      column: $state.table.services,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get delinquent => $state.composableBuilder(
-      column: $state.table.delinquent,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get organizationPrivateKey =>
-      $state.composableBuilder(
-          column: $state.table.organizationPrivateKey,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get email => $state.composableBuilder(
-      column: $state.table.email,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get displayName => $state.composableBuilder(
-      column: $state.table.displayName,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
+typedef $$UsersTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $UsersTableTable,
+    DriftProtonUser,
+    $$UsersTableTableFilterComposer,
+    $$UsersTableTableOrderingComposer,
+    $$UsersTableTableAnnotationComposer,
+    $$UsersTableTableCreateCompanionBuilder,
+    $$UsersTableTableUpdateCompanionBuilder,
+    (
+      DriftProtonUser,
+      BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>
+    ),
+    DriftProtonUser,
+    PrefetchHooks Function()>;
 typedef $$UserKeysTableTableCreateCompanionBuilder = UserKeysTableCompanion
     Function({
   required String keyId,
@@ -2289,22 +2323,146 @@ typedef $$UserKeysTableTableUpdateCompanionBuilder = UserKeysTableCompanion
   Value<int> rowid,
 });
 
+class $$UserKeysTableTableFilterComposer
+    extends Composer<_$AppDatabase, $UserKeysTableTable> {
+  $$UserKeysTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get keyId => $composableBuilder(
+      column: $table.keyId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get version => $composableBuilder(
+      column: $table.version, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get privateKey => $composableBuilder(
+      column: $table.privateKey, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get token => $composableBuilder(
+      column: $table.token, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get fingerprint => $composableBuilder(
+      column: $table.fingerprint, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get recoverySecret => $composableBuilder(
+      column: $table.recoverySecret,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get recoverySecretSignature => $composableBuilder(
+      column: $table.recoverySecretSignature,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get primary => $composableBuilder(
+      column: $table.primary, builder: (column) => ColumnFilters(column));
+}
+
+class $$UserKeysTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserKeysTableTable> {
+  $$UserKeysTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get keyId => $composableBuilder(
+      column: $table.keyId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get version => $composableBuilder(
+      column: $table.version, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get privateKey => $composableBuilder(
+      column: $table.privateKey, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get token => $composableBuilder(
+      column: $table.token, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get fingerprint => $composableBuilder(
+      column: $table.fingerprint, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get recoverySecret => $composableBuilder(
+      column: $table.recoverySecret,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get recoverySecretSignature => $composableBuilder(
+      column: $table.recoverySecretSignature,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get primary => $composableBuilder(
+      column: $table.primary, builder: (column) => ColumnOrderings(column));
+}
+
+class $$UserKeysTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserKeysTableTable> {
+  $$UserKeysTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get keyId =>
+      $composableBuilder(column: $table.keyId, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<int> get version =>
+      $composableBuilder(column: $table.version, builder: (column) => column);
+
+  GeneratedColumn<String> get privateKey => $composableBuilder(
+      column: $table.privateKey, builder: (column) => column);
+
+  GeneratedColumn<String> get token =>
+      $composableBuilder(column: $table.token, builder: (column) => column);
+
+  GeneratedColumn<String> get fingerprint => $composableBuilder(
+      column: $table.fingerprint, builder: (column) => column);
+
+  GeneratedColumn<String> get recoverySecret => $composableBuilder(
+      column: $table.recoverySecret, builder: (column) => column);
+
+  GeneratedColumn<String> get recoverySecretSignature => $composableBuilder(
+      column: $table.recoverySecretSignature, builder: (column) => column);
+
+  GeneratedColumn<int> get primary =>
+      $composableBuilder(column: $table.primary, builder: (column) => column);
+}
+
 class $$UserKeysTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UserKeysTableTable,
     DriftUserKey,
     $$UserKeysTableTableFilterComposer,
     $$UserKeysTableTableOrderingComposer,
+    $$UserKeysTableTableAnnotationComposer,
     $$UserKeysTableTableCreateCompanionBuilder,
-    $$UserKeysTableTableUpdateCompanionBuilder> {
+    $$UserKeysTableTableUpdateCompanionBuilder,
+    (
+      DriftUserKey,
+      BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>
+    ),
+    DriftUserKey,
+    PrefetchHooks Function()> {
   $$UserKeysTableTableTableManager(_$AppDatabase db, $UserKeysTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$UserKeysTableTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$UserKeysTableTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$UserKeysTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserKeysTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserKeysTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> keyId = const Value.absent(),
             Value<String> userId = const Value.absent(),
@@ -2353,108 +2511,28 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
             primary: primary,
             rowid: rowid,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
         ));
 }
 
-class $$UserKeysTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $UserKeysTableTable> {
-  $$UserKeysTableTableFilterComposer(super.$state);
-  ColumnFilters<String> get keyId => $state.composableBuilder(
-      column: $state.table.keyId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get version => $state.composableBuilder(
-      column: $state.table.version,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get privateKey => $state.composableBuilder(
-      column: $state.table.privateKey,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get token => $state.composableBuilder(
-      column: $state.table.token,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get fingerprint => $state.composableBuilder(
-      column: $state.table.fingerprint,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get recoverySecret => $state.composableBuilder(
-      column: $state.table.recoverySecret,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get recoverySecretSignature => $state.composableBuilder(
-      column: $state.table.recoverySecretSignature,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<int> get primary => $state.composableBuilder(
-      column: $state.table.primary,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$UserKeysTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $UserKeysTableTable> {
-  $$UserKeysTableTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get keyId => $state.composableBuilder(
-      column: $state.table.keyId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get version => $state.composableBuilder(
-      column: $state.table.version,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get privateKey => $state.composableBuilder(
-      column: $state.table.privateKey,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get token => $state.composableBuilder(
-      column: $state.table.token,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get fingerprint => $state.composableBuilder(
-      column: $state.table.fingerprint,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get recoverySecret => $state.composableBuilder(
-      column: $state.table.recoverySecret,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get recoverySecretSignature =>
-      $state.composableBuilder(
-          column: $state.table.recoverySecretSignature,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<int> get primary => $state.composableBuilder(
-      column: $state.table.primary,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-}
-
+typedef $$UserKeysTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $UserKeysTableTable,
+    DriftUserKey,
+    $$UserKeysTableTableFilterComposer,
+    $$UserKeysTableTableOrderingComposer,
+    $$UserKeysTableTableAnnotationComposer,
+    $$UserKeysTableTableCreateCompanionBuilder,
+    $$UserKeysTableTableUpdateCompanionBuilder,
+    (
+      DriftUserKey,
+      BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>
+    ),
+    DriftUserKey,
+    PrefetchHooks Function()>;
 typedef $$WalletUserSettingsTableTableCreateCompanionBuilder
     = WalletUserSettingsTableCompanion Function({
   required String userId,
@@ -2484,23 +2562,174 @@ typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder
   Value<int> rowid,
 });
 
+class $$WalletUserSettingsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $WalletUserSettingsTableTable> {
+  $$WalletUserSettingsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get bitcoinUnit => $composableBuilder(
+      column: $table.bitcoinUnit, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get fiatCurrency => $composableBuilder(
+      column: $table.fiatCurrency, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get hideEmptyUsedAddresses => $composableBuilder(
+      column: $table.hideEmptyUsedAddresses,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get showWalletRecovery => $composableBuilder(
+      column: $table.showWalletRecovery,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get twoFactorAmountThreshold => $composableBuilder(
+      column: $table.twoFactorAmountThreshold,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get receiveInviterNotification => $composableBuilder(
+      column: $table.receiveInviterNotification,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get receiveEmailIntegrationNotification =>
+      $composableBuilder(
+          column: $table.receiveEmailIntegrationNotification,
+          builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get walletCreated => $composableBuilder(
+      column: $table.walletCreated, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get acceptTermsAndConditions => $composableBuilder(
+      column: $table.acceptTermsAndConditions,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $$WalletUserSettingsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $WalletUserSettingsTableTable> {
+  $$WalletUserSettingsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+      column: $table.userId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get bitcoinUnit => $composableBuilder(
+      column: $table.bitcoinUnit, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get fiatCurrency => $composableBuilder(
+      column: $table.fiatCurrency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get hideEmptyUsedAddresses => $composableBuilder(
+      column: $table.hideEmptyUsedAddresses,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get showWalletRecovery => $composableBuilder(
+      column: $table.showWalletRecovery,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get twoFactorAmountThreshold => $composableBuilder(
+      column: $table.twoFactorAmountThreshold,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get receiveInviterNotification => $composableBuilder(
+      column: $table.receiveInviterNotification,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get receiveEmailIntegrationNotification =>
+      $composableBuilder(
+          column: $table.receiveEmailIntegrationNotification,
+          builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get walletCreated => $composableBuilder(
+      column: $table.walletCreated,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get acceptTermsAndConditions => $composableBuilder(
+      column: $table.acceptTermsAndConditions,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$WalletUserSettingsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletUserSettingsTableTable> {
+  $$WalletUserSettingsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get bitcoinUnit => $composableBuilder(
+      column: $table.bitcoinUnit, builder: (column) => column);
+
+  GeneratedColumn<String> get fiatCurrency => $composableBuilder(
+      column: $table.fiatCurrency, builder: (column) => column);
+
+  GeneratedColumn<bool> get hideEmptyUsedAddresses => $composableBuilder(
+      column: $table.hideEmptyUsedAddresses, builder: (column) => column);
+
+  GeneratedColumn<bool> get showWalletRecovery => $composableBuilder(
+      column: $table.showWalletRecovery, builder: (column) => column);
+
+  GeneratedColumn<double> get twoFactorAmountThreshold => $composableBuilder(
+      column: $table.twoFactorAmountThreshold, builder: (column) => column);
+
+  GeneratedColumn<bool> get receiveInviterNotification => $composableBuilder(
+      column: $table.receiveInviterNotification, builder: (column) => column);
+
+  GeneratedColumn<bool> get receiveEmailIntegrationNotification =>
+      $composableBuilder(
+          column: $table.receiveEmailIntegrationNotification,
+          builder: (column) => column);
+
+  GeneratedColumn<bool> get walletCreated => $composableBuilder(
+      column: $table.walletCreated, builder: (column) => column);
+
+  GeneratedColumn<bool> get acceptTermsAndConditions => $composableBuilder(
+      column: $table.acceptTermsAndConditions, builder: (column) => column);
+}
+
 class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
     _$AppDatabase,
     $WalletUserSettingsTableTable,
     WalletUserSettings,
     $$WalletUserSettingsTableTableFilterComposer,
     $$WalletUserSettingsTableTableOrderingComposer,
+    $$WalletUserSettingsTableTableAnnotationComposer,
     $$WalletUserSettingsTableTableCreateCompanionBuilder,
-    $$WalletUserSettingsTableTableUpdateCompanionBuilder> {
+    $$WalletUserSettingsTableTableUpdateCompanionBuilder,
+    (
+      WalletUserSettings,
+      BaseReferences<_$AppDatabase, $WalletUserSettingsTableTable,
+          WalletUserSettings>
+    ),
+    WalletUserSettings,
+    PrefetchHooks Function()> {
   $$WalletUserSettingsTableTableTableManager(
       _$AppDatabase db, $WalletUserSettingsTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer: $$WalletUserSettingsTableTableFilterComposer(
-              ComposerState(db, table)),
-          orderingComposer: $$WalletUserSettingsTableTableOrderingComposer(
-              ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$WalletUserSettingsTableTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletUserSettingsTableTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletUserSettingsTableTableAnnotationComposer(
+                  $db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> userId = const Value.absent(),
             Value<String> bitcoinUnit = const Value.absent(),
@@ -2556,123 +2785,30 @@ class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
             acceptTermsAndConditions: acceptTermsAndConditions,
             rowid: rowid,
           ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
         ));
 }
 
-class $$WalletUserSettingsTableTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $WalletUserSettingsTableTable> {
-  $$WalletUserSettingsTableTableFilterComposer(super.$state);
-  ColumnFilters<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get bitcoinUnit => $state.composableBuilder(
-      column: $state.table.bitcoinUnit,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<String> get fiatCurrency => $state.composableBuilder(
-      column: $state.table.fiatCurrency,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get hideEmptyUsedAddresses => $state.composableBuilder(
-      column: $state.table.hideEmptyUsedAddresses,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get showWalletRecovery => $state.composableBuilder(
-      column: $state.table.showWalletRecovery,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<double> get twoFactorAmountThreshold =>
-      $state.composableBuilder(
-          column: $state.table.twoFactorAmountThreshold,
-          builder: (column, joinBuilders) =>
-              ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get receiveInviterNotification =>
-      $state.composableBuilder(
-          column: $state.table.receiveInviterNotification,
-          builder: (column, joinBuilders) =>
-              ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get receiveEmailIntegrationNotification =>
-      $state.composableBuilder(
-          column: $state.table.receiveEmailIntegrationNotification,
-          builder: (column, joinBuilders) =>
-              ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get walletCreated => $state.composableBuilder(
-      column: $state.table.walletCreated,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<bool> get acceptTermsAndConditions => $state.composableBuilder(
-      column: $state.table.acceptTermsAndConditions,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-}
-
-class $$WalletUserSettingsTableTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $WalletUserSettingsTableTable> {
-  $$WalletUserSettingsTableTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get userId => $state.composableBuilder(
-      column: $state.table.userId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get bitcoinUnit => $state.composableBuilder(
-      column: $state.table.bitcoinUnit,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<String> get fiatCurrency => $state.composableBuilder(
-      column: $state.table.fiatCurrency,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get hideEmptyUsedAddresses => $state.composableBuilder(
-      column: $state.table.hideEmptyUsedAddresses,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get showWalletRecovery => $state.composableBuilder(
-      column: $state.table.showWalletRecovery,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<double> get twoFactorAmountThreshold =>
-      $state.composableBuilder(
-          column: $state.table.twoFactorAmountThreshold,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get receiveInviterNotification =>
-      $state.composableBuilder(
-          column: $state.table.receiveInviterNotification,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get receiveEmailIntegrationNotification =>
-      $state.composableBuilder(
-          column: $state.table.receiveEmailIntegrationNotification,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get walletCreated => $state.composableBuilder(
-      column: $state.table.walletCreated,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<bool> get acceptTermsAndConditions =>
-      $state.composableBuilder(
-          column: $state.table.acceptTermsAndConditions,
-          builder: (column, joinBuilders) =>
-              ColumnOrderings(column, joinBuilders: joinBuilders));
-}
+typedef $$WalletUserSettingsTableTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $WalletUserSettingsTableTable,
+        WalletUserSettings,
+        $$WalletUserSettingsTableTableFilterComposer,
+        $$WalletUserSettingsTableTableOrderingComposer,
+        $$WalletUserSettingsTableTableAnnotationComposer,
+        $$WalletUserSettingsTableTableCreateCompanionBuilder,
+        $$WalletUserSettingsTableTableUpdateCompanionBuilder,
+        (
+          WalletUserSettings,
+          BaseReferences<_$AppDatabase, $WalletUserSettingsTableTable,
+              WalletUserSettings>
+        ),
+        WalletUserSettings,
+        PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

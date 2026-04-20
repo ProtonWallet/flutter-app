@@ -1,4 +1,4 @@
-import com.android.build.api.dsl.VariantDimension
+// import com.android.build.api.dsl.VariantDimension
 import groovy.json.JsonSlurper
 // TODO: https://developer.android.com/build/migrate-to-kotlin-dsl
 plugins {
@@ -8,10 +8,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.serialization")
-    // Uncomment when needed
-    //id("com.google.gms.google-services") // for FCM
-    //id("io.sentry.android.gradle")
-    //alias(libs.plugins.proton.environmentConfig)
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 def localProperties = new Properties()
@@ -115,7 +112,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.compiler.get()
+        kotlinCompilerExtensionVersion libs.versions.androidx.compose.compiler.get()
     }
 
     kotlinOptions {
@@ -132,9 +129,9 @@ android {
 
     packagingOptions{
        pickFirst '**'
-        // jniLibs {
-        //     useLegacyPackaging = true
-        // }
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
     flavorDimensions "default"
@@ -182,8 +179,6 @@ dependencies {
     // Init rust context
     implementation(libs.rustls.platform.verifier)
 
-    implementation files("libs/gopenpgp.aar")
-
     coreLibraryDesugaring(libs.desugaring.jdk.libs)
     // implementation(platform(libs.firebase.bom))
     // implementation(libs.firebase.messaging)
@@ -226,9 +221,11 @@ dependencies {
 
     implementation(libs.core.account)
     implementation(libs.core.accountManager)
+    implementation(libs.core.deviceMigration)
     implementation(libs.core.accountRecovery)
     implementation(libs.core.auth)
     implementation(libs.core.authFido)
+    implementation(libs.core.biometric)
     implementation(libs.core.challenge)
     implementation(libs.core.config.data)
     implementation(libs.core.country)
@@ -243,6 +240,8 @@ dependencies {
     implementation(libs.core.network)
     implementation(libs.core.notification)
     implementation(libs.core.observability)
+    implementation(libs.core.passValidator)
+    implementation(libs.core.passValidatorDagger)
     implementation(libs.core.payment)
     implementation(libs.core.paymentIap)
     implementation(libs.core.plan.data)
