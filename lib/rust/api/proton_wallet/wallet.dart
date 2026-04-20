@@ -19,14 +19,15 @@ abstract class FrbProtonWallet implements RustOpaqueInterface {
   FrbProtonRecovery getProtonRecoveryFeature();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<FrbProtonWallet> newInstance(
-          {required String dbPath,
-          required FrbUserKeyStore userKeyTore,
-          required FrbWalletKeyStore walletKeyStore,
-          required FrbWalletMnemonicStore walletMnemonicStore}) =>
-      RustLib.instance.api.crateApiProtonWalletWalletFrbProtonWalletNew(
-          dbPath: dbPath,
-          userKeyTore: userKeyTore,
-          walletKeyStore: walletKeyStore,
-          walletMnemonicStore: walletMnemonicStore);
+  static Future<FrbProtonWallet> newInstance({
+    required String dbPath,
+    required FrbUserKeyStore userKeyTore,
+    required FrbWalletKeyStore walletKeyStore,
+    required FrbWalletMnemonicStore walletMnemonicStore,
+  }) => RustLib.instance.api.crateApiProtonWalletWalletFrbProtonWalletNew(
+    dbPath: dbPath,
+    userKeyTore: userKeyTore,
+    walletKeyStore: walletKeyStore,
+    walletMnemonicStore: walletMnemonicStore,
+  );
 }

@@ -11,32 +11,36 @@ import 'proton_api_service.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<OnRampGatewayClient>>
 abstract class OnRampGatewayClient implements RustOpaqueInterface {
-  Future<String> createOnRampCheckout(
-      {required String amount,
-      required String btcAddress,
-      required String fiatCurrency,
-      required PaymentMethod paymentMethod,
-      required GatewayProvider provider});
+  Future<String> createOnRampCheckout({
+    required String amount,
+    required String btcAddress,
+    required String fiatCurrency,
+    required PaymentMethod paymentMethod,
+    required GatewayProvider provider,
+  });
 
   Future<Map<GatewayProvider, List<ApiCountry>>> getCountries();
 
   Future<Map<GatewayProvider, List<ApiSimpleFiatCurrency>>> getFiatCurrencies();
 
-  Future<Map<GatewayProvider, List<PaymentMethod>>> getPaymentMethods(
-      {required String fiatSymbol});
+  Future<Map<GatewayProvider, List<PaymentMethod>>> getPaymentMethods({
+    required String fiatSymbol,
+  });
 
   Future<String> getPublicApiKey({required GatewayProvider provider});
 
-  Future<Map<GatewayProvider, List<Quote>>> getQuotes(
-      {required double amount,
-      required String fiatCurrency,
-      PaymentMethod? payMethod,
-      GatewayProvider? provider});
+  Future<Map<GatewayProvider, List<Quote>>> getQuotes({
+    required double amount,
+    required String fiatCurrency,
+    PaymentMethod? payMethod,
+    GatewayProvider? provider,
+  });
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<OnRampGatewayClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceOnrampGatewayClientOnRampGatewayClientNew(
-              service: service);
+  static Future<OnRampGatewayClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api
+      .crateApiApiServiceOnrampGatewayClientOnRampGatewayClientNew(
+        service: service,
+      );
 }

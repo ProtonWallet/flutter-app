@@ -16,34 +16,37 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class ProtonWalletAuthStore implements RustOpaqueInterface {
   Future<void> clearAuthDartCallback();
 
-  static ProtonWalletAuthStore fromSession(
-          {required String env,
-          required String userId,
-          required String uid,
-          required String access,
-          required String refresh,
-          required List<String> scopes}) =>
-      RustLib.instance.api
-          .crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSession(
-              env: env,
-              userId: userId,
-              uid: uid,
-              access: access,
-              refresh: refresh,
-              scopes: scopes);
+  static ProtonWalletAuthStore fromSession({
+    required String env,
+    required String userId,
+    required String uid,
+    required String access,
+    required String refresh,
+    required List<String> scopes,
+  }) => RustLib.instance.api
+      .crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreFromSession(
+        env: env,
+        userId: userId,
+        uid: uid,
+        access: access,
+        refresh: refresh,
+        scopes: scopes,
+      );
 
   Future<void> logout();
 
   factory ProtonWalletAuthStore({required String env}) => RustLib.instance.api
       .crateApiApiServiceWalletAuthStoreProtonWalletAuthStoreNew(env: env);
 
-  Future<void> setAuthDartCallback(
-      {required FutureOr<String> Function(ChildSession) callback});
+  Future<void> setAuthDartCallback({
+    required FutureOr<String> Function(ChildSession) callback,
+  });
 
-  void setAuthSync(
-      {required String userId,
-      required String uid,
-      required String access,
-      required String refresh,
-      required List<String> scopes});
+  void setAuthSync({
+    required String userId,
+    required String uid,
+    required String access,
+    required String refresh,
+    required List<String> scopes,
+  });
 }

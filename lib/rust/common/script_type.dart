@@ -18,5 +18,4 @@ enum ScriptType {
 
   /// Taproot scripts : https://bips.dev/341/
   taproot,
-  ;
 }

@@ -22,8 +22,9 @@ abstract class FrbAppDatabase implements RustOpaqueInterface {
 
   Future<List<AccountModel>> getAllWalletAccounts();
 
-  Future<List<AccountModel>> getAllWalletAccountsByWalletId(
-      {required String walletId});
+  Future<List<AccountModel>> getAllWalletAccountsByWalletId({
+    required String walletId,
+  });
 
   Future<List<WalletModel>> getAllWallets();
 
@@ -34,8 +35,9 @@ abstract class FrbAppDatabase implements RustOpaqueInterface {
   /// Expose functions in accountDao
   /// We can remove these functions once we migrate the function call from Dart data provider
   /// to Rust data provider
-  Future<AccountModel?> getWalletAccountByAccountId(
-      {required String accountId});
+  Future<AccountModel?> getWalletAccountByAccountId({
+    required String accountId,
+  });
 
   /// Expose functions in walletDao
   /// We can remove these functions once we migrate the function call from Dart data provider
@@ -44,7 +46,8 @@ abstract class FrbAppDatabase implements RustOpaqueInterface {
 
   factory FrbAppDatabase({required String databaseUrl}) => RustLib.instance.api
       .crateApiProtonWalletDbAppDatabaseHelperFrbAppDatabaseNew(
-          databaseUrl: databaseUrl);
+        databaseUrl: databaseUrl,
+      );
 
   Future<WalletModel?> upsertWallet({required WalletModel wallet});
 

@@ -14,8 +14,9 @@ abstract class FrbUnleashClient implements RustOpaqueInterface {
   Future<UnleashResponse> fetchToggles();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<FrbUnleashClient> newInstance(
-          {required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceUnleashClientFrbUnleashClientNew(service: service);
+  static Future<FrbUnleashClient> newInstance({
+    required ProtonApiService service,
+  }) => RustLib.instance.api.crateApiApiServiceUnleashClientFrbUnleashClientNew(
+    service: service,
+  );
 }

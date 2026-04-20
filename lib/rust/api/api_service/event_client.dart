@@ -26,6 +26,7 @@ abstract class EventClient implements RustOpaqueInterface {
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<EventClient> newInstance({required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiApiServiceEventClientEventClientNew(service: service);
+      RustLib.instance.api.crateApiApiServiceEventClientEventClientNew(
+        service: service,
+      );
 }

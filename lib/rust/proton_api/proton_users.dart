@@ -141,10 +141,7 @@ class HighSecuritySettings {
   final int eligible;
   final int value;
 
-  const HighSecuritySettings({
-    required this.eligible,
-    required this.value,
-  });
+  const HighSecuritySettings({required this.eligible, required this.value});
 
   @override
   int get hashCode => eligible.hashCode ^ value.hashCode;
@@ -190,10 +187,7 @@ class MnemonicUserKey {
   final String id;
   final String privateKey;
 
-  const MnemonicUserKey({
-    required this.id,
-    required this.privateKey,
-  });
+  const MnemonicUserKey({required this.id, required this.privateKey});
 
   @override
   int get hashCode => id.hashCode ^ privateKey.hashCode;
@@ -521,23 +515,18 @@ class ReferralSettings {
 
 class SetTwoFaTOTPRequestBody {
   final String totpConfirmation;
-  final String totpSharedSecret;
 
-  const SetTwoFaTOTPRequestBody({
-    required this.totpConfirmation,
-    required this.totpSharedSecret,
-  });
+  const SetTwoFaTOTPRequestBody({required this.totpConfirmation});
 
   @override
-  int get hashCode => totpConfirmation.hashCode ^ totpSharedSecret.hashCode;
+  int get hashCode => totpConfirmation.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SetTwoFaTOTPRequestBody &&
           runtimeType == other.runtimeType &&
-          totpConfirmation == other.totpConfirmation &&
-          totpSharedSecret == other.totpSharedSecret;
+          totpConfirmation == other.totpConfirmation;
 }
 
 class SetTwoFaTOTPResponseBody {
@@ -568,9 +557,7 @@ class SetTwoFaTOTPResponseBody {
 class TwoFA {
   final int enabled;
 
-  const TwoFA({
-    required this.enabled,
-  });
+  const TwoFA({required this.enabled});
 
   @override
   int get hashCode => enabled.hashCode;
@@ -587,10 +574,7 @@ class TwoFASettings {
   final int enabled;
   final int allowed;
 
-  const TwoFASettings({
-    required this.enabled,
-    required this.allowed,
-  });
+  const TwoFASettings({required this.enabled, required this.allowed});
 
   @override
   int get hashCode => enabled.hashCode ^ allowed.hashCode;

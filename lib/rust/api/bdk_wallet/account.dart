@@ -25,29 +25,35 @@ import 'transaction_details.dart';
 abstract class FrbAccount implements RustOpaqueInterface {
   Future<FrbTxBuilder> buildTx();
 
-  Future<FrbPsbt> bumpTransactionsFees(
-      {required String txid, required BigInt fees, required Network network});
+  Future<FrbPsbt> bumpTransactionsFees({
+    required String txid,
+    required BigInt fees,
+    required Network network,
+  });
 
   Future<FrbAddressInfo> getAddress({int? index});
 
-  Future<FrbAddressDetails?> getAddressFromGraph(
-      {required Network network,
-      required String addressStr,
-      required FrbBlockchainClient client,
-      required bool sync_});
+  Future<FrbAddressDetails?> getAddressFromGraph({
+    required Network network,
+    required String addressStr,
+    required FrbBlockchainClient client,
+    required bool sync_,
+  });
 
-  Future<List<FrbAddressDetails>> getAddressesFromGraph(
-      {required Pagination pagination,
-      required FrbBlockchainClient client,
-      required KeychainKind keychain,
-      required bool sync_});
+  Future<List<FrbAddressDetails>> getAddressesFromGraph({
+    required Pagination pagination,
+    required FrbBlockchainClient client,
+    required KeychainKind keychain,
+    required bool sync_,
+  });
 
   Future<FrbBalance> getBalance();
 
   Future<String> getDerivationPath();
 
-  Future<int?> getHighestUsedAddressIndexInOutput(
-      {required KeychainKind keychain});
+  Future<int?> getHighestUsedAddressIndexInOutput({
+    required KeychainKind keychain,
+  });
 
   Future<int?> getMaximumGapSize({required KeychainKind keychain});
 
@@ -57,8 +63,10 @@ abstract class FrbAccount implements RustOpaqueInterface {
 
   Future<FrbTransactionDetails> getTransaction({required String txid});
 
-  Future<List<FrbTransactionDetails>> getTransactions(
-      {SortOrder? sort, required TransactionFilter filter});
+  Future<List<FrbTransactionDetails>> getTransactions({
+    SortOrder? sort,
+    required TransactionFilter filter,
+  });
 
   Future<List<FrbLocalOutput>> getUtxos();
 

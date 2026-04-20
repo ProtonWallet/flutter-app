@@ -15,10 +15,13 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 abstract class FrbAccountSyncer implements RustOpaqueInterface {
   Future<void> fullSync({BigInt? stopGap});
 
-  factory FrbAccountSyncer(
-          {required FrbBlockchainClient client, required FrbAccount account}) =>
-      RustLib.instance.api.crateApiBdkWalletAccountSyncerFrbAccountSyncerNew(
-          client: client, account: account);
+  factory FrbAccountSyncer({
+    required FrbBlockchainClient client,
+    required FrbAccount account,
+  }) => RustLib.instance.api.crateApiBdkWalletAccountSyncerFrbAccountSyncerNew(
+    client: client,
+    account: account,
+  );
 
   Future<void> partialSync();
 

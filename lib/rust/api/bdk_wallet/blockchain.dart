@@ -16,25 +16,27 @@ import 'psbt.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbBlockchainClient>>
 abstract class FrbBlockchainClient implements RustOpaqueInterface {
-  Future<String> broadcastPsbt(
-      {required FrbPsbt psbt,
-      required String walletId,
-      required String walletAccountId,
-      String? label,
-      String? exchangeRateId,
-      String? transactionTime,
-      String? addressId,
-      String? body,
-      BroadcastMessage? message,
-      Map<String, String>? recipients,
-      int? isAnonymous,
-      int? isPaperWallet});
+  Future<String> broadcastPsbt({
+    required FrbPsbt psbt,
+    required String walletId,
+    required String walletAccountId,
+    String? label,
+    String? exchangeRateId,
+    String? transactionTime,
+    String? addressId,
+    String? body,
+    BroadcastMessage? message,
+    Map<String, String>? recipients,
+    int? isAnonymous,
+    int? isPaperWallet,
+  });
 
   Future<Map<String, double>> getFeesEstimation();
 
   Future<RecommendedFees> getRecommendedFees();
 
-  factory FrbBlockchainClient({required ProtonApiService service}) =>
-      RustLib.instance.api
-          .crateApiBdkWalletBlockchainFrbBlockchainClientNew(service: service);
+  factory FrbBlockchainClient({required ProtonApiService service}) => RustLib
+      .instance
+      .api
+      .crateApiBdkWalletBlockchainFrbBlockchainClientNew(service: service);
 }
