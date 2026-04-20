@@ -239,6 +239,7 @@
   "account_deleted": "Account deleted",
   "account_label": "Account Name",
   "accounts": "Accounts",
+  "n_accounts": "{acc_count} accounts",
   "delete": "Delete",
   "history": "History",
   "sync": "Sync",
