@@ -31,7 +31,7 @@ impl From<FrbTransaction> for String {
     fn from(tx: FrbTransaction) -> Self {
         match serde_json::to_string(&tx.inner) {
             Ok(e) => e,
-            Err(e) => panic!("Unable to deserialize the Tranaction {:?}", e),
+            Err(e) => panic!("Unable to deserialize the Tranaction {e:?}"),
         }
     }
 }

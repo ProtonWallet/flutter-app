@@ -39,7 +39,7 @@ impl<Provider: PGPProviderSync> PublicKeys<Provider> {
         Ok(())
     }
 
-    /// placeholder for future implementation we dont need it for now no use cases
+    // placeholder for future implementation we dont need it for now no use cases
     // pub fn add_api_address_keys(
     //     &mut self,
     //     provider: &Provider,

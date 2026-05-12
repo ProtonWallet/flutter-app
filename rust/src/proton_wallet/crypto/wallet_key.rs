@@ -231,7 +231,7 @@ impl LockedWalletKey {
     /// # Parameters:
     /// - `provider`: The cryptographic provider that will handle decryption and signature verification.
     /// - `user_keys`: The decrypted user keys that will be used to decrypt the encrypted wallet data.
-    ///    This is passed as a reference to an array of decrypted keys.
+    ///   This is passed as a reference to an array of decrypted keys.
     ///
     /// # Returns:
     /// - `Ok(UnlockedWalletKey)`: On success, returns the decrypted wallet key.
@@ -487,7 +487,7 @@ mod test {
         let error = unlocked_wallet_key.err();
         match error {
             Some(WalletCryptoError::CryptoError(err)) => {
-                println!("{}", err);
+                println!("{err}");
             }
             _ => panic!("Expected WalletCryptoError::CryptoError"),
         }
@@ -505,7 +505,7 @@ mod test {
         let error = unlocked_wallet_key.err();
         match error {
             Some(WalletCryptoError::CryptoSignatureVerify(err)) => {
-                println!("{}", err);
+                println!("{err}");
             }
             _ => panic!("Expected WalletCryptoError::CryptoSignatureVerify"),
         }

@@ -137,7 +137,7 @@ mod tests {
     fn test_compute_key_password_success() {
         let salt_bytes: [u8; 16] = generate_secure_random_bytes();
         let result = SrpClient::compute_key_password("password", salt_bytes.to_vec());
-        println!("{:?}", result);
+        println!("{result:?}");
         assert!(result.is_ok());
         let mailboxpwd = result.unwrap();
         assert_eq!(mailboxpwd.len(), 31); // Expected length of mailbox password suffix
