@@ -368,7 +368,7 @@ mod tests {
         )
         .unwrap();
 
-        println!("{}", signature);
+        println!("{signature}");
 
         let is_ok = FrbTransitionLayer::verify_signature(
             vec![addr_key.private_key.unwrap()],
@@ -427,7 +427,7 @@ mod tests {
             None,
         )
         .unwrap();
-        println!("{}", encrypted_message);
+        println!("{encrypted_message}");
         assert!(!encrypted_message.is_empty());
 
         let user_keys = vec![get_test_user_2_locked_proton_user_key()];

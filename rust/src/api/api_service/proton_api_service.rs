@@ -292,7 +292,7 @@ mod test {
         let settings_client = client.get_settings_client();
         let res = settings_client.get_user_settings().await.unwrap();
 
-        println!("{:?}", res);
+        println!("{res:?}");
     }
 
     #[tokio::test]
@@ -315,7 +315,7 @@ mod test {
                 println!("{:?}", res.user_id);
             }
             Err(err) => {
-                println!("{:?}", err);
+                println!("{err:?}");
             }
         }
         Ok(())

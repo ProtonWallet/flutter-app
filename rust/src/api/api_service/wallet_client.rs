@@ -212,7 +212,6 @@ impl WalletClient {
     }
 
     /// Wallet transaction related
-
     pub async fn get_wallet_transactions(
         &self,
         wallet_id: String,

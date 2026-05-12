@@ -1,11 +1,11 @@
 use chrono::Local;
-use tracing::{error, info};
 use std::{
     fs::{File, OpenOptions},
     io::{self, Write},
     path::Path,
     sync::{Arc, Mutex},
 };
+use tracing::{error, info};
 use tracing_subscriber::fmt::MakeWriter;
 
 // File size limit in bytes (50 MB)
@@ -19,10 +19,10 @@ pub(crate) struct RotatingFileWriter {
 
 impl RotatingFileWriter {
     pub(crate) fn new(file_folder: &str, file_name: &str) -> Self {
-        let file_path = format!("{}/{}", file_folder, file_name);
+        let file_path = format!("{file_folder}/{file_name}");
         let file = Arc::new(Mutex::new(
             Self::open_log_file(&file_path)
-                .unwrap_or_else(|err| panic!("Failed to open initial log file: {:?}", err)),
+                .unwrap_or_else(|err| panic!("Failed to open initial log file: {err:?}")),
         ));
         Self {
             file,

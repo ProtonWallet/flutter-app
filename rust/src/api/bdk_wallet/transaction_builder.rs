@@ -149,7 +149,6 @@ impl FrbTxBuilder {
     /**
      * Fees
      */
-
     pub async fn set_fee_rate(&self, sat_per_vb: u64) -> Self {
         let inner = self.inner.set_fee_rate(sat_per_vb);
         FrbTxBuilder { inner }
@@ -173,7 +172,6 @@ impl FrbTxBuilder {
     /**
      * Final
      */
-
     pub async fn create_pbst(&mut self, network: Network) -> Result<FrbPsbt, BridgeError> {
         let psbt = self.inner.create_psbt(false, false, false).await?;
 

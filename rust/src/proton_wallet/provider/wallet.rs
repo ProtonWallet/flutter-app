@@ -179,7 +179,7 @@ impl WalletDataProviderImpl {
         coin_type: u32,
         account_index: u32,
     ) -> String {
-        format!("{}'/{}'/{}'", bip_version, coin_type, account_index)
+        format!("{bip_version}'/{coin_type}'/{account_index}'")
     }
 }
 
