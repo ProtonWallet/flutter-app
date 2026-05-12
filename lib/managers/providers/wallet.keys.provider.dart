@@ -23,11 +23,7 @@ class WalletKeysProvider extends DataProvider {
   /// memory caches
   List<WalletKey>? walletKeys;
 
-  WalletKeysProvider(
-    this.userManager,
-    this.walletKeyStore,
-    this.walletClient,
-  );
+  WalletKeysProvider(this.userManager, this.walletKeyStore, this.walletClient);
 
   /// trying to get wallet key from secure store and decrypt it use userKey
   Future<FrbUnlockedWalletKey> getWalletSecretKey(String serverWalletID) async {
@@ -39,10 +35,11 @@ class WalletKeysProvider extends DataProvider {
     final userKey = await userManager.getUserKeyForTL(walletKey.userKeyId);
     final passphrase = userManager.getUserKeyPassphrase();
 
-    final frbUnlockedWalletKey = FrbTransitionLayer.decryptWalletKey(
-        walletKey: walletKey.toApiWalletKey(),
-        userKey: userKey,
-        userKeyPassphrase: passphrase);
+    final frbUnlockedWalletKey = await FrbTransitionLayer.decryptWalletKey(
+      walletKey: walletKey.toApiWalletKey(),
+      userKey: userKey,
+      userKeyPassphrase: passphrase,
+    );
 
     return frbUnlockedWalletKey;
   }

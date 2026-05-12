@@ -11,6 +11,8 @@ import 'package:wallet/managers/preferences/preferences.keys.dart';
 import 'package:wallet/managers/preferences/preferences.manager.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/data.provider.manager.dart';
+import 'package:wallet/managers/providers/user.data.provider.dart'
+    show UserDataProvider;
 import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/managers/services/service.dart';
 import 'package:wallet/managers/users/user.manager.dart';
@@ -181,14 +183,21 @@ class EventLoop extends Service implements Manager {
         latestEventId: latestEventId,
       );
       for (final event in events) {
+        if (_needsProtonUserStateReload(event)) {
+          await _reloadProtonUserStateFromApi();
+          dataProviderManager.walletDataProvider.notifyUpdates(
+            "user state Updated",
+          );
+        }
+
         // check wallet key events
         if (event.walletKeyEvents != null) {
           for (final walletKeyEvent in event.walletKeyEvents!) {
             final ApiWalletKey? walletKey = walletKeyEvent.walletKey;
             if (walletKey != null) {
-              await dataProviderManager.walletKeysProvider.saveApiWalletKeys(
-                [walletKey],
-              );
+              await dataProviderManager.walletKeysProvider.saveApiWalletKeys([
+                walletKey,
+              ]);
             }
           }
         }
@@ -238,17 +247,17 @@ class EventLoop extends Service implements Manager {
             if (account != null) {
               await dataProviderManager.walletDataProvider
                   .insertOrUpdateAccount(
-                account.walletId,
-                account.label,
-                account.scriptType,
-                account.derivationPath,
-                account.id,
-                account.fiatCurrency,
-                account.poolSize,
-                account.priority,
-                account.lastUsedIndex,
-                account.stopGap,
-              );
+                    account.walletId,
+                    account.label,
+                    account.scriptType,
+                    account.derivationPath,
+                    account.id,
+                    account.fiatCurrency,
+                    account.poolSize,
+                    account.priority,
+                    account.lastUsedIndex,
+                    account.stopGap,
+                  );
             }
           }
         }
@@ -259,16 +268,18 @@ class EventLoop extends Service implements Manager {
             if (walletSettings != null) {
               await dataProviderManager.walletDataProvider
                   .updateShowWalletRecovery(
-                walletID: walletSettings.walletId,
-                showWalletRecovery: walletSettings.showWalletRecovery ?? true,
-              );
+                    walletID: walletSettings.walletId,
+                    showWalletRecovery:
+                        walletSettings.showWalletRecovery ?? true,
+                  );
             }
           }
         }
         if (event.walletUserSettings != null) {
           final ApiWalletUserSettings settings = event.walletUserSettings!;
-          await dataProviderManager.userSettingsDataProvider
-              .insertUpdate(settings);
+          await dataProviderManager.userSettingsDataProvider.insertUpdate(
+            settings,
+          );
         }
         if (event.walletTransactionEvents != null) {
           for (final walletTransactionEvent in event.walletTransactionEvents!) {
@@ -282,9 +293,9 @@ class EventLoop extends Service implements Manager {
             }
             await dataProviderManager.serverTransactionDataProvider
                 .handleWalletTransaction(
-              walletTransaction,
-              notifyDataUpdate: true,
-            );
+                  walletTransaction,
+                  notifyDataUpdate: true,
+                );
           }
         }
 
@@ -306,22 +317,6 @@ class EventLoop extends Service implements Manager {
           if (hasAction) {
             await dataProviderManager.contactsDataProvider.reloadCache();
           }
-        }
-
-        if (event.protonUserSettings != null) {
-          /// reload protonUserSettings directly since it should not change often
-          /// we can add local db if needed
-          await dataProviderManager.userDataProvider.syncProtonUserSettings();
-
-          /// the deviceRecovery in userSetting will also affect enabledRecovery status
-          /// so need to sync protonUser to see if we need to update the enabledRecovery status
-          await dataProviderManager.userDataProvider.syncProtonUser();
-        }
-
-        if (event.protonUser != null) {
-          /// reload protonUser directly since it should not change often
-          /// we can add local db if needed
-          await dataProviderManager.userDataProvider.syncProtonUser();
         }
 
         /// update event id
@@ -385,7 +380,9 @@ class EventLoop extends Service implements Manager {
         );
 
         await walletManager.ensureReceivedAddressNotGotReused(
-            account!, accountModel);
+          account!,
+          accountModel,
+        );
 
         /// resync the email address in case that user update it on web
         /// and mobile didn't get event loop yet
@@ -411,10 +408,7 @@ class EventLoop extends Service implements Manager {
             accountModel.accountID,
           );
         } catch (e, stacktrace) {
-          await Sentry.captureException(
-            e,
-            stackTrace: stacktrace,
-          );
+          await Sentry.captureException(e, stackTrace: stacktrace);
           logger.e("handleBitcoinAddressRequests error: $e");
         }
         try {
@@ -424,14 +418,26 @@ class EventLoop extends Service implements Manager {
             accountModel.accountID,
           );
         } catch (e, stacktrace) {
-          await Sentry.captureException(
-            e,
-            stackTrace: stacktrace,
-          );
+          await Sentry.captureException(e, stackTrace: stacktrace);
           logger.e("bitcoinAddressPoolHealthCheck error: $e");
         }
       }
     }
+  }
+
+  /// Reload Proton account state when the API
+  /// sets [ProtonEvent.refresh] or includes user / user-settings payloads.
+  bool _needsProtonUserStateReload(ProtonEvent event) =>
+      event.refresh != 0 ||
+      event.protonUser != null ||
+      event.protonUserSettings != null;
+
+  /// [UserDataProvider.syncProtonUser] depends on cached user settings
+  /// (e.g. device recovery), so settings are always refreshed first.
+  Future<void> _reloadProtonUserStateFromApi() async {
+    await dataProviderManager.userDataProvider.syncProtonUser(cache: true);
+    await dataProviderManager.userDataProvider.syncProtonUserSettings();
+    await dataProviderManager.addressKeyProvider.reload();
   }
 
   Future<void> setLatestEventId(String latestEventId) async {

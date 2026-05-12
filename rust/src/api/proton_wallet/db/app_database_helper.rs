@@ -34,7 +34,6 @@ impl FrbAppDatabase {
     /// Expose functions in walletDao
     /// We can remove these functions once we migrate the function call from Dart data provider
     /// to Rust data provider
-
     pub async fn get_wallet_by_wallet_id(
         &self,
         wallet_id: &str,
