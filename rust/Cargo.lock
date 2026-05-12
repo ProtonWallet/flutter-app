@@ -587,6 +587,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "bcrypt"
+version = "0.17.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "abaf6da45c74385272ddf00e1ac074c7d8a6c1a1dda376902bd6a427522a8b2c"
+dependencies = [
+ "base64 0.22.1",
+ "blowfish",
+ "getrandom 0.3.2",
+ "subtle",
+ "zeroize",
+]
+
+[[package]]
 name = "bdk_chain"
 version = "0.21.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2444,9 +2457,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73fea8450eea4bac3940448fb7ae50d91f034f941199fcd9d909a5a07aa455f0"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
  "r-efi",
  "wasi 0.14.2+wasi-0.2.4",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -2507,9 +2522,9 @@ dependencies = [
 
 [[package]]
 name = "gopenpgp-sys"
-version = "0.3.1"
+version = "0.3.5"
 source = "sparse+https://rust-registry.proton.me/index/"
-checksum = "603618c7b7067b8f3bc91029ddfe55c8bee672590bed9061217a8e17cddd6726"
+checksum = "52136c2eb4a3663c77250f92d7571fbf9b9055097cdcfc48d475acf151b5af16"
 dependencies = [
  "base64 0.22.1",
  "bindgen 0.72.0",
@@ -3417,7 +3432,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -4193,7 +4208,7 @@ dependencies = [
  "aes-gcm",
  "aes-kw",
  "argon2",
- "base64 0.22.1",
+ "base64 0.21.7",
  "bitfield",
  "block-padding",
  "blowfish",
@@ -4519,14 +4534,14 @@ dependencies = [
 
 [[package]]
 name = "proton-crypto"
-version = "0.5.1"
+version = "0.8.0"
 source = "sparse+https://rust-registry.proton.me/index/"
-checksum = "afb9e00acb482e56050995bba659ddb0a5692fc3cd32c9c348537281e2b31f3d"
+checksum = "fec2d3598fa2b1757afd8bd26a45122926bd878e428b24b2daf2a78f1e6b5db6"
 dependencies = [
  "gopenpgp-sys",
  "hex",
  "parking_lot",
- "proton-srp 0.7.0",
+ "proton-srp 0.8.2",
  "rand 0.8.5",
  "serde",
  "subtle",
@@ -4535,9 +4550,9 @@ dependencies = [
 
 [[package]]
 name = "proton-crypto-account"
-version = "0.11.1"
+version = "0.13.0"
 source = "sparse+https://rust-registry.proton.me/index/"
-checksum = "8c0d894bb20ec547a6887da80bbcd3703f3dd5b5cd4125457bedf34ea3676a5f"
+checksum = "172ac10ea77d50f4326b04c46062e2929c259fc2d3df57b1ae64334f5f63b658"
 dependencies = [
  "base64 0.22.1",
  "derive_more 2.0.1",
@@ -4559,7 +4574,7 @@ source = "sparse+https://rust-registry.proton.me/index/"
 checksum = "272780b99ce9e7c4b11e19e0e6a70734bba9b575434e7c46c16f15401bc2a50e"
 dependencies = [
  "base64 0.22.1",
- "bcrypt",
+ "bcrypt 0.15.1",
  "crypto-bigint",
  "pgp",
  "rand 0.8.5",
@@ -4570,14 +4585,17 @@ dependencies = [
 
 [[package]]
 name = "proton-srp"
-version = "0.7.0"
+version = "0.8.2"
 source = "sparse+https://rust-registry.proton.me/index/"
-checksum = "dc3c8c19e85a279efb4d6bd4187e07fa46ab63d2a3d90959ea8be31a959f6222"
+checksum = "91efa4e2584cfe6a5aa420dd46c46355c673c68166c13f3d9f230ac0309eea9b"
 dependencies = [
  "base64 0.22.1",
- "bcrypt",
+ "bcrypt 0.17.1",
  "crypto-bigint",
- "pgp",
+ "getrandom 0.2.15",
+ "getrandom 0.3.2",
+ "hex",
+ "md-5",
  "rand 0.8.5",
  "sha2",
  "thiserror 1.0.69",
@@ -4606,7 +4624,7 @@ dependencies = [
  "openssl",
  "proton-crypto",
  "proton-crypto-account",
- "proton-srp 0.7.0",
+ "proton-srp 0.8.2",
  "rand 0.8.5",
  "rusqlite",
  "secrecy",
@@ -5468,9 +5486,9 @@ dependencies = [
 
 [[package]]
 name = "sha2"
-version = "0.10.8"
+version = "0.10.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "793db75ad2bcafc3ffa7c68b215fee268f537982cd901d132f89c6343f3a3dc8"
+checksum = "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283"
 dependencies = [
  "cfg-if",
  "cpufeatures",
@@ -6981,7 +6999,7 @@ version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
 dependencies = [
- "windows-sys 0.59.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]

@@ -88,12 +88,12 @@ class WalletsDataProvider extends DataProvider {
     if (wallets.isNotEmpty) {
       /// return in List<WalletData> if we can find wallets from db
       for (WalletModel walletModel in wallets) {
-        retWallet.add(WalletData(
-          wallet: walletModel,
-          accounts: await accountDao.findAllByWalletID(
-            walletModel.walletID,
+        retWallet.add(
+          WalletData(
+            wallet: walletModel,
+            accounts: await accountDao.findAllByWalletID(walletModel.walletID),
           ),
-        ));
+        );
       }
       return retWallet;
     }
@@ -235,8 +235,9 @@ class WalletsDataProvider extends DataProvider {
 
   Future<ApiWalletData> createWallet(CreateWalletReq request) async {
     /// execute createWallet api calls, if failed it will throw error
-    final ApiWalletData walletData =
-        await walletClient.createWallet(walletReq: request);
+    final ApiWalletData walletData = await walletClient.createWallet(
+      walletReq: request,
+    );
 
     await _processApiWalletData(walletData);
 
@@ -411,7 +412,11 @@ class WalletsDataProvider extends DataProvider {
   }
 
   void notifyUpdateEmailIntegration() {
-    dataUpdateController.add(DataUpdated("email integration Updated"));
+    notifyUpdates("email integration Updated");
+  }
+
+  void notifyUpdates(String updateType) {
+    dataUpdateController.add(DataUpdated(updateType));
   }
 
   void updateSelected(String? serverWalletID, String? serverAccountID) {
@@ -489,18 +494,13 @@ class WalletsDataProvider extends DataProvider {
       }
     } catch (e, stacktrace) {
       /// this should only happened before production api get deployed
-      await Sentry.captureException(
-        e,
-        stackTrace: stacktrace,
-      );
+      await Sentry.captureException(e, stackTrace: stacktrace);
       logger.e(e.toString());
     }
   }
 
   /// send api request to remove BvE from backend
-  Future<void> removeEmailAddressOnWalletAccount(
-    String serverAccountID,
-  ) async {
+  Future<void> removeEmailAddressOnWalletAccount(String serverAccountID) async {
     await addressDao.deleteByServerAccountID(serverAccountID);
   }
 
@@ -529,8 +529,10 @@ class WalletsDataProvider extends DataProvider {
     }
   }
 
-  Future<void> updateShowWalletRecovery(
-      {required String walletID, required bool showWalletRecovery}) async {
+  Future<void> updateShowWalletRecovery({
+    required String walletID,
+    required bool showWalletRecovery,
+  }) async {
     final WalletModel? wallet = await walletDao.findByServerID(walletID);
     if (wallet != null) {
       wallet.showWalletRecovery = showWalletRecovery ? 1 : 0;
@@ -710,8 +712,9 @@ class WalletsDataProvider extends DataProvider {
       walletAccountId: accountID,
       newFiatCurrency: newFiatCurrency,
     );
-    final AccountModel? accountModel =
-        await accountDao.findByServerID(accountID);
+    final AccountModel? accountModel = await accountDao.findByServerID(
+      accountID,
+    );
     if (accountModel != null) {
       final newFiatCurrency = walletAccount.fiatCurrency.name.toUpperCase();
       if (accountModel.fiatCurrency != newFiatCurrency) {

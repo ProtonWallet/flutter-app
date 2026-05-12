@@ -72,16 +72,19 @@ extension ProtonAddressJson on ProtonAddress {
 
 extension ProtonAddressListJson on List<ProtonAddress> {
   String toJsonString() {
-    final List<Map<String, dynamic>> jsonObj =
-        map((pAddress) => pAddress.toJson()).toList();
+    final List<Map<String, dynamic>> jsonObj = map(
+      (pAddress) => pAddress.toJson(),
+    ).toList();
     return jsonEncode(jsonObj);
   }
 
-  static List<ProtonAddress> fromJsonString(jsonString) {
+  static List<ProtonAddress> fromJsonString(String jsonString) {
     final decodedJsonList = json.decode(jsonString) as List<dynamic>;
     return decodedJsonList
-        .map((jsonItem) =>
-            ProtonAddressJson.fromJson(jsonItem as Map<String, dynamic>))
+        .map(
+          (jsonItem) =>
+              ProtonAddressJson.fromJson(jsonItem as Map<String, dynamic>),
+        )
         .toList();
   }
 }
@@ -133,10 +136,12 @@ class AddressKeyProvider extends DataProvider {
   Future<ProtonAddressKey?> getPrimaryAddressKey(String addressID) async {
     final addresses = await getAddresses();
     try {
-      final protonAddress =
-          addresses.firstWhere((element) => element.id == addressID);
-      return protonAddress.keys
-          ?.firstWhere((element) => (element.primary == 1));
+      final protonAddress = addresses.firstWhere(
+        (element) => element.id == addressID,
+      );
+      return protonAddress.keys?.firstWhere(
+        (element) => (element.primary == 1),
+      );
     } catch (e) {
       /// no element found, skip the error and return null
       return null;
@@ -181,7 +186,6 @@ class AddressKeyProvider extends DataProvider {
 
   @override
   Future<void> reload() async {
-    addresses.clear();
     await _fetchFromServer();
     dataUpdateController.add(DataUpdated(DateTime.now()));
   }

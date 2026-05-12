@@ -97,11 +97,11 @@ impl FrbWallet {
         &self,
         pagination: Option<Pagination>,
         sort: Option<SortOrder>,
-        TransactionFilter: TransactionFilter,
+        transaction_filter: TransactionFilter,
     ) -> Result<Vec<FrbTransactionDetails>, BridgeError> {
         let transactions = self
             .inner
-            .get_transactions(pagination, sort, TransactionFilter)
+            .get_transactions(pagination, sort, transaction_filter)
             .await?;
 
         let out_transactions = transactions
@@ -161,7 +161,7 @@ mod test {
         let mut frb_wallet = FrbWallet::new(network, bip39_mnemonic, None).unwrap();
 
         let fingerprint = frb_wallet.get_fingerprint();
-        println!("fingerprint: {}", fingerprint);
+        println!("fingerprint: {fingerprint}");
         assert!(!fingerprint.is_empty());
 
         let external_path = "m/84'/1'/0'".to_string();
@@ -174,7 +174,7 @@ mod test {
             .unwrap();
         let path = frb_account.get_derivation_path().unwrap();
         assert!(external_path.contains(&path));
-        println!("path: {}", path);
+        println!("path: {path}");
 
         let app_version = "android-wallet@1.0.0.72".to_string();
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
@@ -192,7 +192,7 @@ mod test {
         let wallet_sync = FrbAccountSyncer::new(&block_client, &frb_account);
 
         let result = wallet_sync.should_sync().await.unwrap();
-        println!("should sync: {}", result);
+        println!("should sync: {result}");
 
         if result {
             let now = Instant::now();
@@ -200,7 +200,7 @@ mod test {
             wallet_sync.full_sync(Some(20)).await.unwrap();
 
             let elapsed = now.elapsed();
-            println!("sync end: {:.2?}", elapsed);
+            println!("sync end: {elapsed:.2?}");
             let balance = frb_account.get_balance().await.total();
             println!("balance: {}", balance.to_btc());
         }
@@ -209,7 +209,7 @@ mod test {
         println!("start partial syncing");
         wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
-        println!("sync end: {:.2?}", elapsed);
+        println!("sync end: {elapsed:.2?}");
         let balance = frb_account.get_balance().await;
         println!("\nBALANCE");
         println!("confirmed: {}", balance.inner.confirmed);
@@ -232,7 +232,7 @@ mod test {
         println!("start partial syncing");
         wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
-        println!("sync end: {:.2?}", elapsed);
+        println!("sync end: {elapsed:.2?}");
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
@@ -268,7 +268,7 @@ mod test {
         let mut frb_wallet = FrbWallet::new(network, bip39_mnemonic, None).unwrap();
 
         let fingerprint = frb_wallet.get_fingerprint();
-        println!("fingerprint: {}", fingerprint);
+        println!("fingerprint: {fingerprint}");
         assert!(!fingerprint.is_empty());
 
         let external_path = "m/84'/0'/1'".to_string();
@@ -281,7 +281,7 @@ mod test {
             .unwrap();
         let path = frb_account.get_derivation_path().unwrap();
         assert!(external_path.contains(&path));
-        println!("path: {}", path);
+        println!("path: {path}");
 
         let app_version = "android-wallet@1.0.0.77-dev".to_string();
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
@@ -299,7 +299,7 @@ mod test {
         let wallet_sync = FrbAccountSyncer::new(&block_client, &frb_account);
 
         let result = wallet_sync.should_sync().await.unwrap();
-        println!("should sync: {}", result);
+        println!("should sync: {result}");
 
         if result {
             let now = Instant::now();
@@ -307,7 +307,7 @@ mod test {
             wallet_sync.full_sync(Some(20)).await.unwrap();
 
             let elapsed = now.elapsed();
-            println!("sync end: {:.2?}", elapsed);
+            println!("sync end: {elapsed:.2?}");
             let balance = frb_account.get_balance().await.total();
             println!("balance: {}", balance.to_btc());
         }
@@ -316,7 +316,7 @@ mod test {
         println!("start partial syncing");
         wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
-        println!("sync end: {:.2?}", elapsed);
+        println!("sync end: {elapsed:.2?}");
         let balance = frb_account.get_balance().await;
         println!("\nBALANCE");
         println!("confirmed: {}", balance.inner.confirmed);
@@ -345,7 +345,7 @@ mod test {
         println!("start partial syncing");
         wallet_sync.partial_sync().await.unwrap();
         let elapsed = now.elapsed();
-        println!("sync end: {:.2?}", elapsed);
+        println!("sync end: {elapsed:.2?}");
         let balance = frb_account.get_balance().await.total();
         println!("balance: {}", balance.to_btc());
 
@@ -364,11 +364,11 @@ mod test {
         tx_builder = tx_builder.set_fee_rate(2).await;
         let frb_psbt = tx_builder.create_draft_psbt(network, None).await.unwrap();
         let fee = frb_psbt.fee().unwrap().to_sat();
-        println!("fee: {}", fee);
+        println!("fee: {fee}");
 
         let mut frb_psbt = tx_builder.create_pbst(network).await.unwrap();
         let fee = frb_psbt.fee().unwrap().to_sat();
-        println!("fee: {}", fee);
+        println!("fee: {fee}");
 
         frb_psbt = frb_account.sign(&mut frb_psbt, network).await.unwrap();
         // frb_psbt = frb_account.sign(network).await.unwrap();

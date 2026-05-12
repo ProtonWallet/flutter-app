@@ -29,10 +29,7 @@ class ProtonWalletUser {
   bool enabled2FA;
   bool enabledRecovery;
 
-  ProtonWalletUser({
-    this.enabled2FA = false,
-    this.enabledRecovery = false,
-  });
+  ProtonWalletUser({this.enabled2FA = false, this.enabledRecovery = false});
 }
 
 class UserDataProvider extends DataProvider {
@@ -65,9 +62,13 @@ class UserDataProvider extends DataProvider {
     await syncProtonUser(); // init Proton Recovery status
   }
 
-  Future<void> syncProtonUser() async {
-    user.protonUser = await protonUsersClient.getUserInfo();
-    final status = user.protonUser?.mnemonicStatus;
+  Future<void> syncProtonUser({bool cache = false}) async {
+    final userinfo = await protonUsersClient.getUserInfo();
+    user.protonUser = userinfo;
+    if (cache) {
+      await saveToCache(userinfo);
+    }
+    final status = userinfo.mnemonicStatus;
 
     /// status codes:
     /// 0 - Mnemonic is disabled
@@ -145,15 +146,9 @@ class UserDataProvider extends DataProvider {
     return null;
   }
 
-  Future<void> fetchFromServer(String userID) async {
-    final userinfo = await protonUsersClient.getUserInfo();
-
-    if (userinfo.id != userID) {
-      logger.e('User ID does not match');
-      const Assert('User ID does not match');
-    }
-
-    userQueries.insertOrUpdateItem(DriftProtonUser(
+  Future<void> saveToCache(ProtonUser userinfo) async {
+    userQueries.insertOrUpdateItem(
+      DriftProtonUser(
         id: 0,
         userId: userinfo.id,
         name: userinfo.name ?? "",
@@ -170,23 +165,36 @@ class UserDataProvider extends DataProvider {
         delinquent: userinfo.delinquent,
         organizationPrivateKey: userinfo.organizationPrivateKey,
         email: userinfo.email,
-        displayName: userinfo.displayName));
+        displayName: userinfo.displayName,
+      ),
+    );
     final keys = userinfo.keys;
     if (keys != null) {
       for (var key in keys) {
-        userKeysQueries.insertOrUpdateItem(DriftUserKey(
-          keyId: key.id,
-          userId: userID,
-          version: key.version,
-          privateKey: key.privateKey,
-          token: key.token,
-          fingerprint: key.fingerprint,
-          recoverySecret: key.recoverySecret,
-          recoverySecretSignature: key.recoverySecretSignature,
-          primary: key.primary,
-        ));
+        userKeysQueries.insertOrUpdateItem(
+          DriftUserKey(
+            keyId: key.id,
+            userId: userinfo.id,
+            version: key.version,
+            privateKey: key.privateKey,
+            token: key.token,
+            fingerprint: key.fingerprint,
+            recoverySecret: key.recoverySecret,
+            recoverySecretSignature: key.recoverySecretSignature,
+            primary: key.primary,
+          ),
+        );
       }
     }
+  }
+
+  Future<void> fetchFromServer(String userID) async {
+    final userinfo = await protonUsersClient.getUserInfo();
+    if (userinfo.id != userID) {
+      logger.e('User ID does not match');
+      const Assert('User ID does not match');
+    }
+    await saveToCache(userinfo);
   }
 
   @override

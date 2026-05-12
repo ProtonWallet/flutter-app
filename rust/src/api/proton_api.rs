@@ -268,7 +268,7 @@ mod test {
         .unwrap();
         client.set_proton_api().unwrap();
         let forked_session = fork(&app_version, &user_agent, "ios-wallet").await.unwrap();
-        println!("forked session: {:?}", forked_session);
+        println!("forked session: {forked_session:?}");
         assert!(!forked_session.access_token.is_empty())
     }
 
@@ -295,7 +295,7 @@ mod test {
         client.set_proton_api().unwrap();
 
         let forked_session = fork(&app_version, &user_agent, "ios-wallet").await.unwrap();
-        println!("forked session: {:?}", forked_session);
+        println!("forked session: {forked_session:?}");
         assert!(!forked_session.access_token.is_empty())
     }
 }
