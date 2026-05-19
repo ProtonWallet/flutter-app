@@ -5,7 +5,6 @@ import 'package:wallet/helper/logger.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/local.auth.manager.dart';
 import 'package:wallet/models/unlock.type.dart';
-import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.navigatior.identifiers.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/lock.overlay/lock.overlay.coordinator.dart';
@@ -21,6 +20,12 @@ abstract class LockOverlayViewModel extends ViewModel<LockOverlayCoordinator> {
   bool isLockTimerNeedUnlock = false;
   bool needUnlock = true;
   String error = "";
+
+  Route<dynamic>? lockRoute;
+
+  void captureLockRouteIfNeeded(BuildContext context) {
+    lockRoute ??= ModalRoute.of(context);
+  }
 
   Future<void> unlock();
 
@@ -154,11 +159,17 @@ class LockOverlayViewModelImpl extends LockOverlayViewModel
   void unlockSuccess() {
     appStateManager.isLocked = false;
 
-    /// pop this lock overlay
-    final BuildContext? context = Coordinator.rootNavigatorKey.currentContext;
-    if (context != null && context.mounted) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
+    /// Remove the lock overlay rout in the navigator stack.
+    final route = lockRoute;
+    lockRoute = null;
+    if (route != null && route.isActive) {
+      final navigator = route.navigator;
+      if (navigator != null) {
+        if (route.isCurrent) {
+          navigator.pop();
+        } else {
+          navigator.removeRoute(route);
+        }
       }
     }
   }

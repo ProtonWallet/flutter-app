@@ -16,6 +16,7 @@ class LockOverlayView extends ViewBase<LockOverlayViewModel> {
 
   @override
   Widget build(BuildContext context) {
+    viewModel.captureLockRouteIfNeeded(context);
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       transitionBuilder: (Widget child, Animation<double> animation) {
