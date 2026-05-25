@@ -158,3 +158,6 @@ test_proton_wallet_rust_db.*
 
 # FVM Version Cache
 .fvm/
+
+# Jupyter Notebook checkpoints
+**/.ipynb_checkpoints/
