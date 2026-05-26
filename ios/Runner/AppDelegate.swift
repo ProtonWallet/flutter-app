@@ -302,16 +302,6 @@ import flutter_local_notifications
             ))
     }
 
-    private var getAdditionalWork: WorkBeforeFlow? {
-        return WorkBeforeFlow(stepName: "Additional work creation...") {
-            loginData, flowCompletion in
-            DispatchQueue.global(qos: .userInitiated).async {
-                sleep(10)
-                flowCompletion(.success(()))
-            }
-        }
-    }
-
     func showAlert(
         title: String,
         message: String,
@@ -374,7 +364,6 @@ import flutter_local_notifications
         login?.presentLoginFlow(
             over: rootViewController,
             customization: LoginCustomizationOptions(
-                performBeforeFlow: getAdditionalWork,
                 inAppTheme: getInAppTheme
             ), updateBlock: processLoginResult)
     }
@@ -390,7 +379,6 @@ import flutter_local_notifications
         login?.presentSignupFlow(
             over: rootViewController,
             customization: LoginCustomizationOptions(
-                performBeforeFlow: getAdditionalWork,
                 inAppTheme: getInAppTheme
             ), updateBlock: processLoginResult)
     }
