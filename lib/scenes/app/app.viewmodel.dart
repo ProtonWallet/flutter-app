@@ -166,7 +166,7 @@ class AppViewModelImpl extends AppViewModel {
       userManager,
       dbPath,
     );
-    protonWalletManager.init();
+    await protonWalletManager.init();
     serviceManager.register(protonWalletManager);
 
     /// event loop

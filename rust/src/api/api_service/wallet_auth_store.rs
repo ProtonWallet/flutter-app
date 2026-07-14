@@ -1,9 +1,9 @@
-use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreError, Tokens, WalletAuthStore};
-use async_trait::async_trait;
+use andromeda_api::{Auth, ChildSession, Tokens, WalletAuthStore};
 use flutter_rust_bridge::frb;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tracing::info;
+
 pub type DartCallback = dyn Fn(ChildSession) -> DartFnFuture<String> + Send + Sync;
 
 use crate::proton_wallet::common::callbacks::DartFnFuture;
@@ -15,7 +15,6 @@ lazy_static::lazy_static! {
 
 #[derive(Debug, Clone)]
 #[frb(opaque)]
-// Define a new struct that wraps WalletAuthStore
 pub struct ProtonWalletAuthStore {
     pub(crate) inner: WalletAuthStore,
 }
@@ -33,7 +32,8 @@ impl ProtonWalletAuthStore {
         auth: Arc<std::sync::Mutex<Auth>>,
     ) -> Result<Self, BridgeError> {
         info!("from_auth start");
-        let store = WalletAuthStore::from_env_str(env.to_string(), auth);
+        let mut store = WalletAuthStore::from_env_str(env.to_string(), auth);
+        store.set_auth_listener(Arc::new(refresh_auth_credential));
         Ok(Self { inner: store })
     }
 
@@ -62,7 +62,8 @@ impl ProtonWalletAuthStore {
     ) -> Result<(), BridgeError> {
         info!("set_auth_sync start");
         let auth = Auth::internal(user_id, uid, Tokens::access(access, refresh, scopes));
-        let _ = self.inner.set_auth(auth);
+        let mut old_auth = self.inner.auth.lock()?;
+        *old_auth = auth;
         Ok(())
     }
 
@@ -87,50 +88,37 @@ impl ProtonWalletAuthStore {
         info!("logout");
         let mut cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
         *cb = None;
-        let mut old_auth = self.inner.auth.lock()?;
-        *old_auth = Auth::None;
-
+        let mut auth = self.inner.auth.lock()?;
+        *auth = Auth::None;
         Ok(())
-    }
-
-    fn refresh_auth_credential(&self, auth: Auth) {
-        info!("refresh_auth_credential- start:");
-        tokio::spawn(async move {
-            // Assuming `self` is accessible here
-            info!("refresh_auth_credential run block on");
-            let cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
-            if let Some(callback) = cb.as_ref() {
-                info!("refresh_auth_credential found callback and calling it");
-                let session = ChildSession {
-                    scopes: auth.scopes().unwrap_or_default().to_vec(),
-                    session_id: auth.uid().unwrap_or_default().to_string(),
-                    access_token: auth.acc_tok().unwrap_or_default().to_string(),
-                    refresh_token: auth.ref_tok().unwrap_or_default().to_string(),
-                };
-                let msg = callback(session).await;
-                info!("refresh_auth_credential messageFromDart: {}", msg);
-            }
-        });
-        info!("refresh_auth_credential- end");
     }
 }
 
-#[async_trait]
-impl Store for ProtonWalletAuthStore {
-    fn env(&self) -> EnvId {
-        info!("ProtonWalletAuthStore env");
-        self.inner.env()
-    }
+fn refresh_auth_credential(auth: Auth) {
+    info!("refresh_auth_credential start");
+    let Ok(handle) = tokio::runtime::Handle::try_current() else {
+        info!("refresh_auth_credential skipped: no tokio runtime");
+        return;
+    };
 
-    async fn get_auth(&self) -> Auth {
-        info!("ProtonWalletAuthStore get_auth");
-        self.inner.get_auth().await
-    }
-
-    async fn set_auth(&mut self, auth: Auth) -> std::result::Result<Auth, StoreError> {
-        info!("Custom set_auth: {:?}", auth.clone());
-        let result = self.inner.set_auth(auth.clone()).await?;
-        self.refresh_auth_credential(auth.clone());
-        Ok(result)
-    }
+    handle.spawn(async move {
+        tokio::task::yield_now().await;
+        info!("refresh_auth_credential run deferred callback");
+        let cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+        if let Some(callback) = cb.as_ref() {
+            info!("refresh_auth_credential found callback and calling it");
+            let session = ChildSession {
+                scopes: auth
+                    .scopes()
+                    .map(|s| s.iter().cloned().collect())
+                    .unwrap_or_default(),
+                session_id: auth.uid().unwrap_or_default().to_string(),
+                access_token: auth.acc_tok().unwrap_or_default().to_string(),
+                refresh_token: auth.ref_tok().unwrap_or_default().to_string(),
+            };
+            let msg = callback(session).await;
+            info!("refresh_auth_credential messageFromDart: {}", msg);
+        }
+    });
+    info!("refresh_auth_credential end");
 }

@@ -7,15 +7,15 @@ part of 'wallet.key.dart';
 // **************************************************************************
 
 WalletKey _$WalletKeyFromJson(Map<String, dynamic> json) => WalletKey(
-      json['walletId'] as String,
-      json['userKeyId'] as String,
-      json['walletKey'] as String,
-      json['walletKeySignature'] as String,
-    );
+  json['walletId'] as String,
+  json['userKeyId'] as String,
+  json['walletKey'] as String,
+  json['walletKeySignature'] as String,
+);
 
 Map<String, dynamic> _$WalletKeyToJson(WalletKey instance) => <String, dynamic>{
-      'walletId': instance.walletId,
-      'userKeyId': instance.userKeyId,
-      'walletKey': instance.walletKey,
-      'walletKeySignature': instance.walletKeySignature,
-    };
+  'walletId': instance.walletId,
+  'userKeyId': instance.userKeyId,
+  'walletKey': instance.walletKey,
+  'walletKeySignature': instance.walletKeySignature,
+};

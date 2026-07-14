@@ -57,14 +57,10 @@ import 'package:wallet/scenes/home.v3/sub.views/wallet.account.xpub.info/wallet.
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeViewBase_0<V extends _i1.ViewModel<_i2.Coordinator>>
-    extends _i3.SmartFake implements _i4.ViewBase<V> {
-  _FakeViewBase_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i3.SmartFake
+    implements _i4.ViewBase<V> {
+  _FakeViewBase_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i5.DiagnosticLevel? minLevel = _i5.DiagnosticLevel.info}) =>
@@ -72,129 +68,70 @@ class _FakeViewBase_0<V extends _i1.ViewModel<_i2.Coordinator>>
 }
 
 class _FakeAccountModel_1 extends _i3.SmartFake implements _i6.AccountModel {
-  _FakeAccountModel_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAccountModel_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeGlobalKey_2<T extends _i5.State<_i5.StatefulWidget>>
-    extends _i3.SmartFake implements _i5.GlobalKey<T> {
-  _FakeGlobalKey_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i3.SmartFake
+    implements _i5.GlobalKey<T> {
+  _FakeGlobalKey_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeManagerFactory_3 extends _i3.SmartFake
     implements _i7.ManagerFactory {
-  _FakeManagerFactory_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeManagerFactory_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBdkLibrary_4 extends _i3.SmartFake implements _i8.BdkLibrary {
-  _FakeBdkLibrary_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBdkLibrary_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserManager_5 extends _i3.SmartFake implements _i9.UserManager {
-  _FakeUserManager_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserManager_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeDataProviderManager_6 extends _i3.SmartFake
     implements _i10.DataProviderManager {
-  _FakeDataProviderManager_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeDataProviderManager_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBDKBalanceData_7 extends _i3.SmartFake
     implements _i11.BDKBalanceData {
-  _FakeBDKBalanceData_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBDKBalanceData_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbTxBuilder_8 extends _i3.SmartFake implements _i12.FrbTxBuilder {
-  _FakeFrbTxBuilder_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbTxBuilder_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbPsbt_9 extends _i3.SmartFake implements _i13.FrbPsbt {
-  _FakeFrbPsbt_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbPsbt_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbAddressInfo_10 extends _i3.SmartFake
     implements _i14.FrbAddressInfo {
-  _FakeFrbAddressInfo_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbAddressInfo_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbBalance_11 extends _i3.SmartFake implements _i15.FrbBalance {
-  _FakeFrbBalance_11(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbBalance_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbTransactionDetails_12 extends _i3.SmartFake
     implements _i16.FrbTransactionDetails {
-  _FakeFrbTransactionDetails_12(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbTransactionDetails_12(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [WalletAccountXpubInfoCoodinator].
@@ -205,108 +142,101 @@ class MockWalletAccountXpubInfoCoodinator extends _i3.Mock
   @override
   _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>> get widget =>
       (super.noSuchMethod(
-        Invocation.getter(#widget),
-        returnValue: _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
-          this,
-          Invocation.getter(#widget),
-        ),
-        returnValueForMissingStub:
-            _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
-          this,
-          Invocation.getter(#widget),
-        ),
-      ) as _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>>);
+            Invocation.getter(#widget),
+            returnValue: _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
+              this,
+              Invocation.getter(#widget),
+            ),
+            returnValueForMissingStub:
+                _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
+                  this,
+                  Invocation.getter(#widget),
+                ),
+          )
+          as _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>>);
 
   @override
-  _i6.AccountModel get accountModel => (super.noSuchMethod(
-        Invocation.getter(#accountModel),
-        returnValue: _FakeAccountModel_1(
-          this,
-          Invocation.getter(#accountModel),
-        ),
-        returnValueForMissingStub: _FakeAccountModel_1(
-          this,
-          Invocation.getter(#accountModel),
-        ),
-      ) as _i6.AccountModel);
+  _i6.AccountModel get accountModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountModel),
+            returnValue: _FakeAccountModel_1(
+              this,
+              Invocation.getter(#accountModel),
+            ),
+            returnValueForMissingStub: _FakeAccountModel_1(
+              this,
+              Invocation.getter(#accountModel),
+            ),
+          )
+          as _i6.AccountModel);
 
   @override
   set widget(_i4.ViewBase<_i1.ViewModel<_i2.Coordinator>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #widget,
-          value,
-        ),
+        Invocation.setter(#widget, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i5.GlobalKey<_i5.NavigatorState> get navigatorKey => (super.noSuchMethod(
-        Invocation.getter(#navigatorKey),
-        returnValue: _FakeGlobalKey_2<_i5.NavigatorState>(
-          this,
-          Invocation.getter(#navigatorKey),
-        ),
-        returnValueForMissingStub: _FakeGlobalKey_2<_i5.NavigatorState>(
-          this,
-          Invocation.getter(#navigatorKey),
-        ),
-      ) as _i5.GlobalKey<_i5.NavigatorState>);
+  _i5.GlobalKey<_i5.NavigatorState> get navigatorKey =>
+      (super.noSuchMethod(
+            Invocation.getter(#navigatorKey),
+            returnValue: _FakeGlobalKey_2<_i5.NavigatorState>(
+              this,
+              Invocation.getter(#navigatorKey),
+            ),
+            returnValueForMissingStub: _FakeGlobalKey_2<_i5.NavigatorState>(
+              this,
+              Invocation.getter(#navigatorKey),
+            ),
+          )
+          as _i5.GlobalKey<_i5.NavigatorState>);
 
   @override
-  _i7.ManagerFactory get serviceManager => (super.noSuchMethod(
-        Invocation.getter(#serviceManager),
-        returnValue: _FakeManagerFactory_3(
-          this,
-          Invocation.getter(#serviceManager),
-        ),
-        returnValueForMissingStub: _FakeManagerFactory_3(
-          this,
-          Invocation.getter(#serviceManager),
-        ),
-      ) as _i7.ManagerFactory);
+  _i7.ManagerFactory get serviceManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#serviceManager),
+            returnValue: _FakeManagerFactory_3(
+              this,
+              Invocation.getter(#serviceManager),
+            ),
+            returnValueForMissingStub: _FakeManagerFactory_3(
+              this,
+              Invocation.getter(#serviceManager),
+            ),
+          )
+          as _i7.ManagerFactory);
 
   @override
   void end() => super.noSuchMethod(
-        Invocation.method(
-          #end,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#end, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>> start() => (super.noSuchMethod(
-        Invocation.method(
-          #start,
-          [],
-        ),
-        returnValue: _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
-          this,
-          Invocation.method(
-            #start,
-            [],
-          ),
-        ),
-        returnValueForMissingStub:
-            _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
-          this,
-          Invocation.method(
-            #start,
-            [],
-          ),
-        ),
-      ) as _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>>);
+  _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>> start() =>
+      (super.noSuchMethod(
+            Invocation.method(#start, []),
+            returnValue: _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
+              this,
+              Invocation.method(#start, []),
+            ),
+            returnValueForMissingStub:
+                _FakeViewBase_0<_i1.ViewModel<_i2.Coordinator>>(
+                  this,
+                  Invocation.method(#start, []),
+                ),
+          )
+          as _i4.ViewBase<_i1.ViewModel<_i2.Coordinator>>);
 
   @override
-  List<_i5.Widget> starts() => (super.noSuchMethod(
-        Invocation.method(
-          #starts,
-          [],
-        ),
-        returnValue: <_i5.Widget>[],
-        returnValueForMissingStub: <_i5.Widget>[],
-      ) as List<_i5.Widget>);
+  List<_i5.Widget> starts() =>
+      (super.noSuchMethod(
+            Invocation.method(#starts, []),
+            returnValue: <_i5.Widget>[],
+            returnValueForMissingStub: <_i5.Widget>[],
+          )
+          as List<_i5.Widget>);
 
   @override
   _i18.Future<bool> showInBottomSheet(
@@ -318,26 +248,24 @@ class MockWalletAccountXpubInfoCoodinator extends _i3.Mock
     bool? canPop = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showInBottomSheet,
-          [view],
-          {
-            #backgroundColor: backgroundColor,
-            #fullScreen: fullScreen,
-            #enableDrag: enableDrag,
-            #isDismissible: isDismissible,
-            #canPop: canPop,
-          },
-        ),
-        returnValue: _i18.Future<bool>.value(false),
-        returnValueForMissingStub: _i18.Future<bool>.value(false),
-      ) as _i18.Future<bool>);
+            Invocation.method(
+              #showInBottomSheet,
+              [view],
+              {
+                #backgroundColor: backgroundColor,
+                #fullScreen: fullScreen,
+                #enableDrag: enableDrag,
+                #isDismissible: isDismissible,
+                #canPop: canPop,
+              },
+            ),
+            returnValue: _i18.Future<bool>.value(false),
+            returnValueForMissingStub: _i18.Future<bool>.value(false),
+          )
+          as _i18.Future<bool>);
 
   @override
-  void pushReplacement(
-    _i5.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushReplacement(_i5.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushReplacement,
@@ -351,44 +279,30 @@ class MockWalletAccountXpubInfoCoodinator extends _i3.Mock
   void pushReplacementRemoveAll(
     _i5.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementRemoveAll,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementRemoveAll,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void push(
-    _i5.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void push(_i5.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
-        Invocation.method(
-          #push,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
+        Invocation.method(#push, [view], {#fullscreenDialog: fullscreenDialog}),
         returnValueForMissingStub: null,
       );
 
   @override
   void pop() => super.noSuchMethod(
-        Invocation.method(
-          #pop,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#pop, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void pushCustom(
-    _i5.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushCustom(_i5.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushCustom,
@@ -402,24 +316,20 @@ class MockWalletAccountXpubInfoCoodinator extends _i3.Mock
   void pushReplacementCustom(
     _i5.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementCustom,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementCustom,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showDialog1(_i5.Widget? view) => super.noSuchMethod(
-        Invocation.method(
-          #showDialog1,
-          [view],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showDialog1, [view]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletManager].
@@ -427,43 +337,46 @@ class MockWalletAccountXpubInfoCoodinator extends _i3.Mock
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
   @override
-  _i8.BdkLibrary get bdkLib => (super.noSuchMethod(
-        Invocation.getter(#bdkLib),
-        returnValue: _FakeBdkLibrary_4(
-          this,
-          Invocation.getter(#bdkLib),
-        ),
-        returnValueForMissingStub: _FakeBdkLibrary_4(
-          this,
-          Invocation.getter(#bdkLib),
-        ),
-      ) as _i8.BdkLibrary);
+  _i8.BdkLibrary get bdkLib =>
+      (super.noSuchMethod(
+            Invocation.getter(#bdkLib),
+            returnValue: _FakeBdkLibrary_4(this, Invocation.getter(#bdkLib)),
+            returnValueForMissingStub: _FakeBdkLibrary_4(
+              this,
+              Invocation.getter(#bdkLib),
+            ),
+          )
+          as _i8.BdkLibrary);
 
   @override
-  _i9.UserManager get userManager => (super.noSuchMethod(
-        Invocation.getter(#userManager),
-        returnValue: _FakeUserManager_5(
-          this,
-          Invocation.getter(#userManager),
-        ),
-        returnValueForMissingStub: _FakeUserManager_5(
-          this,
-          Invocation.getter(#userManager),
-        ),
-      ) as _i9.UserManager);
+  _i9.UserManager get userManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#userManager),
+            returnValue: _FakeUserManager_5(
+              this,
+              Invocation.getter(#userManager),
+            ),
+            returnValueForMissingStub: _FakeUserManager_5(
+              this,
+              Invocation.getter(#userManager),
+            ),
+          )
+          as _i9.UserManager);
 
   @override
-  _i10.DataProviderManager get dataProviderManager => (super.noSuchMethod(
-        Invocation.getter(#dataProviderManager),
-        returnValue: _FakeDataProviderManager_6(
-          this,
-          Invocation.getter(#dataProviderManager),
-        ),
-        returnValueForMissingStub: _FakeDataProviderManager_6(
-          this,
-          Invocation.getter(#dataProviderManager),
-        ),
-      ) as _i10.DataProviderManager);
+  _i10.DataProviderManager get dataProviderManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#dataProviderManager),
+            returnValue: _FakeDataProviderManager_6(
+              this,
+              Invocation.getter(#dataProviderManager),
+            ),
+            returnValueForMissingStub: _FakeDataProviderManager_6(
+              this,
+              Invocation.getter(#dataProviderManager),
+            ),
+          )
+          as _i10.DataProviderManager);
 
   @override
   _i18.Future<_i21.FrbAccount?> loadWalletWithID(
@@ -472,17 +385,15 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     int? serverScriptType,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadWalletWithID,
-          [
-            walletID,
-            accountID,
-          ],
-          {#serverScriptType: serverScriptType},
-        ),
-        returnValue: _i18.Future<_i21.FrbAccount?>.value(),
-        returnValueForMissingStub: _i18.Future<_i21.FrbAccount?>.value(),
-      ) as _i18.Future<_i21.FrbAccount?>);
+            Invocation.method(
+              #loadWalletWithID,
+              [walletID, accountID],
+              {#serverScriptType: serverScriptType},
+            ),
+            returnValue: _i18.Future<_i21.FrbAccount?>.value(),
+            returnValueForMissingStub: _i18.Future<_i21.FrbAccount?>.value(),
+          )
+          as _i18.Future<_i21.FrbAccount?>);
 
   @override
   _i18.Future<_i11.BDKBalanceData> getBDKBalanceDataByWalletAccount(
@@ -490,56 +401,48 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     _i6.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBDKBalanceDataByWalletAccount,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue:
-            _i18.Future<_i11.BDKBalanceData>.value(_FakeBDKBalanceData_7(
-          this,
-          Invocation.method(
-            #getBDKBalanceDataByWalletAccount,
-            [
+            Invocation.method(#getBDKBalanceDataByWalletAccount, [
               walletModel,
               accountModel,
-            ],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i11.BDKBalanceData>.value(_FakeBDKBalanceData_7(
-          this,
-          Invocation.method(
-            #getBDKBalanceDataByWalletAccount,
-            [
-              walletModel,
-              accountModel,
-            ],
-          ),
-        )),
-      ) as _i18.Future<_i11.BDKBalanceData>);
+            ]),
+            returnValue: _i18.Future<_i11.BDKBalanceData>.value(
+              _FakeBDKBalanceData_7(
+                this,
+                Invocation.method(#getBDKBalanceDataByWalletAccount, [
+                  walletModel,
+                  accountModel,
+                ]),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<_i11.BDKBalanceData>.value(
+              _FakeBDKBalanceData_7(
+                this,
+                Invocation.method(#getBDKBalanceDataByWalletAccount, [
+                  walletModel,
+                  accountModel,
+                ]),
+              ),
+            ),
+          )
+          as _i18.Future<_i11.BDKBalanceData>);
 
   @override
-  _i18.Future<void> cleanBDKCache() => (super.noSuchMethod(
-        Invocation.method(
-          #cleanBDKCache,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> cleanBDKCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#cleanBDKCache, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i18.Future<void> cleanSharedPreference() => (super.noSuchMethod(
-        Invocation.method(
-          #cleanSharedPreference,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> cleanSharedPreference() =>
+      (super.noSuchMethod(
+            Invocation.method(#cleanSharedPreference, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<String> getFingerPrintFromMnemonic(
@@ -547,40 +450,42 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? passphrase,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getFingerPrintFromMnemonic,
-          [strMnemonic],
-          {#passphrase: passphrase},
-        ),
-        returnValue: _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFingerPrintFromMnemonic,
-            [strMnemonic],
-            {#passphrase: passphrase},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFingerPrintFromMnemonic,
-            [strMnemonic],
-            {#passphrase: passphrase},
-          ),
-        )),
-      ) as _i18.Future<String>);
+            Invocation.method(
+              #getFingerPrintFromMnemonic,
+              [strMnemonic],
+              {#passphrase: passphrase},
+            ),
+            returnValue: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(
+                  #getFingerPrintFromMnemonic,
+                  [strMnemonic],
+                  {#passphrase: passphrase},
+                ),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(
+                  #getFingerPrintFromMnemonic,
+                  [strMnemonic],
+                  {#passphrase: passphrase},
+                ),
+              ),
+            ),
+          )
+          as _i18.Future<String>);
 
   @override
   _i18.Future<String?> getDerivationPathWithID(String? accountID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getDerivationPathWithID,
-          [accountID],
-        ),
-        returnValue: _i18.Future<String?>.value(),
-        returnValueForMissingStub: _i18.Future<String?>.value(),
-      ) as _i18.Future<String?>);
+            Invocation.method(#getDerivationPathWithID, [accountID]),
+            returnValue: _i18.Future<String?>.value(),
+            returnValueForMissingStub: _i18.Future<String?>.value(),
+          )
+          as _i18.Future<String?>);
 
   @override
   _i18.Future<int> getWalletAccountBalance(
@@ -588,71 +493,60 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? walletAccountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletAccountBalance,
-          [
-            walletID,
-            walletAccountID,
-          ],
-        ),
-        returnValue: _i18.Future<int>.value(0),
-        returnValueForMissingStub: _i18.Future<int>.value(0),
-      ) as _i18.Future<int>);
+            Invocation.method(#getWalletAccountBalance, [
+              walletID,
+              walletAccountID,
+            ]),
+            returnValue: _i18.Future<int>.value(0),
+            returnValueForMissingStub: _i18.Future<int>.value(0),
+          )
+          as _i18.Future<int>);
 
   @override
-  _i18.Future<double> getWalletBalance(String? walletID) => (super.noSuchMethod(
-        Invocation.method(
-          #getWalletBalance,
-          [walletID],
-        ),
-        returnValue: _i18.Future<double>.value(0.0),
-        returnValueForMissingStub: _i18.Future<double>.value(0.0),
-      ) as _i18.Future<double>);
+  _i18.Future<double> getWalletBalance(String? walletID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getWalletBalance, [walletID]),
+            returnValue: _i18.Future<double>.value(0.0),
+            returnValueForMissingStub: _i18.Future<double>.value(0.0),
+          )
+          as _i18.Future<double>);
 
   @override
   _i18.Future<String> getMnemonicWithID(String? walletID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getMnemonicWithID,
-          [walletID],
-        ),
-        returnValue: _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getMnemonicWithID,
-            [walletID],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getMnemonicWithID,
-            [walletID],
-          ),
-        )),
-      ) as _i18.Future<String>);
+            Invocation.method(#getMnemonicWithID, [walletID]),
+            returnValue: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getMnemonicWithID, [walletID]),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getMnemonicWithID, [walletID]),
+              ),
+            ),
+          )
+          as _i18.Future<String>);
 
   @override
-  _i18.Future<void> deleteAddress(String? addressID) => (super.noSuchMethod(
-        Invocation.method(
-          #deleteAddress,
-          [addressID],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> deleteAddress(String? addressID) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteAddress, [addressID]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<void> autoBindEmailAddresses(String? userID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #autoBindEmailAddresses,
-          [userID],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#autoBindEmailAddresses, [userID]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<void> addEmailAddress(
@@ -661,59 +555,58 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? serverAddressID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addEmailAddress,
-          [
-            serverWalletID,
-            serverAccountID,
-            serverAddressID,
-          ],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#addEmailAddress, [
+              serverWalletID,
+              serverAccountID,
+              serverAddressID,
+            ]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<_i24.EmailIntegrationBitcoinAddress?> lookupBitcoinAddress(
-          String? email) =>
+    String? email,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #lookupBitcoinAddress,
-          [email],
-        ),
-        returnValue: _i18.Future<_i24.EmailIntegrationBitcoinAddress?>.value(),
-        returnValueForMissingStub:
-            _i18.Future<_i24.EmailIntegrationBitcoinAddress?>.value(),
-      ) as _i18.Future<_i24.EmailIntegrationBitcoinAddress?>);
+            Invocation.method(#lookupBitcoinAddress, [email]),
+            returnValue:
+                _i18.Future<_i24.EmailIntegrationBitcoinAddress?>.value(),
+            returnValueForMissingStub:
+                _i18.Future<_i24.EmailIntegrationBitcoinAddress?>.value(),
+          )
+          as _i18.Future<_i24.EmailIntegrationBitcoinAddress?>);
 
   @override
   _i18.Future<List<_i25.ProtonAddressKey>> getAddressKeysForTL() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressKeysForTL,
-          [],
-        ),
-        returnValue: _i18.Future<List<_i25.ProtonAddressKey>>.value(
-            <_i25.ProtonAddressKey>[]),
-        returnValueForMissingStub:
-            _i18.Future<List<_i25.ProtonAddressKey>>.value(
-                <_i25.ProtonAddressKey>[]),
-      ) as _i18.Future<List<_i25.ProtonAddressKey>>);
+            Invocation.method(#getAddressKeysForTL, []),
+            returnValue: _i18.Future<List<_i25.ProtonAddressKey>>.value(
+              <_i25.ProtonAddressKey>[],
+            ),
+            returnValueForMissingStub:
+                _i18.Future<List<_i25.ProtonAddressKey>>.value(
+                  <_i25.ProtonAddressKey>[],
+                ),
+          )
+          as _i18.Future<List<_i25.ProtonAddressKey>>);
 
   @override
   _i18.Future<List<_i25.ProtonAddressKey>> getAddressKeysForTLAddressID(
-          List<String>? addressIDs) =>
+    List<String>? addressIDs,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressKeysForTLAddressID,
-          [addressIDs],
-        ),
-        returnValue: _i18.Future<List<_i25.ProtonAddressKey>>.value(
-            <_i25.ProtonAddressKey>[]),
-        returnValueForMissingStub:
-            _i18.Future<List<_i25.ProtonAddressKey>>.value(
-                <_i25.ProtonAddressKey>[]),
-      ) as _i18.Future<List<_i25.ProtonAddressKey>>);
+            Invocation.method(#getAddressKeysForTLAddressID, [addressIDs]),
+            returnValue: _i18.Future<List<_i25.ProtonAddressKey>>.value(
+              <_i25.ProtonAddressKey>[],
+            ),
+            returnValueForMissingStub:
+                _i18.Future<List<_i25.ProtonAddressKey>>.value(
+                  <_i25.ProtonAddressKey>[],
+                ),
+          )
+          as _i18.Future<List<_i25.ProtonAddressKey>>);
 
   @override
   _i18.Future<bool> checkFingerprint(
@@ -721,16 +614,11 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? passphrase,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #checkFingerprint,
-          [
-            walletModel,
-            passphrase,
-          ],
-        ),
-        returnValue: _i18.Future<bool>.value(false),
-        returnValueForMissingStub: _i18.Future<bool>.value(false),
-      ) as _i18.Future<bool>);
+            Invocation.method(#checkFingerprint, [walletModel, passphrase]),
+            returnValue: _i18.Future<bool>.value(false),
+            returnValueForMissingStub: _i18.Future<bool>.value(false),
+          )
+          as _i18.Future<bool>);
 
   @override
   _i18.Future<void> handleBitcoinAddressRequests(
@@ -739,17 +627,15 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? serverAccountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #handleBitcoinAddressRequests,
-          [
-            account,
-            serverWalletID,
-            serverAccountID,
-          ],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#handleBitcoinAddressRequests, [
+              account,
+              serverWalletID,
+              serverAccountID,
+            ]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<_i24.ApiWalletBitcoinAddress?> refillBitcoinAddress(
@@ -757,17 +643,15 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     _i24.ApiWalletBitcoinAddress? walletBitcoinAddress,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #refillBitcoinAddress,
-          [
-            account,
-            walletBitcoinAddress,
-          ],
-        ),
-        returnValue: _i18.Future<_i24.ApiWalletBitcoinAddress?>.value(),
-        returnValueForMissingStub:
-            _i18.Future<_i24.ApiWalletBitcoinAddress?>.value(),
-      ) as _i18.Future<_i24.ApiWalletBitcoinAddress?>);
+            Invocation.method(#refillBitcoinAddress, [
+              account,
+              walletBitcoinAddress,
+            ]),
+            returnValue: _i18.Future<_i24.ApiWalletBitcoinAddress?>.value(),
+            returnValueForMissingStub:
+                _i18.Future<_i24.ApiWalletBitcoinAddress?>.value(),
+          )
+          as _i18.Future<_i24.ApiWalletBitcoinAddress?>);
 
   @override
   _i18.Future<void> ensureReceivedAddressNotGotReused(
@@ -775,16 +659,14 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     _i6.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #ensureReceivedAddressNotGotReused,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#ensureReceivedAddressNotGotReused, [
+              account,
+              accountModel,
+            ]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<void> bitcoinAddressPoolHealthCheck(
@@ -793,17 +675,15 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? serverAccountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #bitcoinAddressPoolHealthCheck,
-          [
-            account,
-            serverWalletID,
-            serverAccountID,
-          ],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#bitcoinAddressPoolHealthCheck, [
+              account,
+              serverWalletID,
+              serverAccountID,
+            ]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<String> getSignature(
@@ -812,38 +692,33 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? gpgContext,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getSignature,
-          [
-            serverAccountID,
-            bitcoinAddress,
-            gpgContext,
-          ],
-        ),
-        returnValue: _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getSignature,
-            [
+            Invocation.method(#getSignature, [
               serverAccountID,
               bitcoinAddress,
               gpgContext,
-            ],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getSignature,
-            [
-              serverAccountID,
-              bitcoinAddress,
-              gpgContext,
-            ],
-          ),
-        )),
-      ) as _i18.Future<String>);
+            ]),
+            returnValue: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getSignature, [
+                  serverAccountID,
+                  bitcoinAddress,
+                  gpgContext,
+                ]),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getSignature, [
+                  serverAccountID,
+                  bitcoinAddress,
+                  gpgContext,
+                ]),
+              ),
+            ),
+          )
+          as _i18.Future<String>);
 
   @override
   _i18.Future<bool> isMineBitcoinAddress(
@@ -851,76 +726,65 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
     String? bitcoinAddress,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #isMineBitcoinAddress,
-          [
-            account,
-            bitcoinAddress,
-          ],
-        ),
-        returnValue: _i18.Future<bool>.value(false),
-        returnValueForMissingStub: _i18.Future<bool>.value(false),
-      ) as _i18.Future<bool>);
+            Invocation.method(#isMineBitcoinAddress, [account, bitcoinAddress]),
+            returnValue: _i18.Future<bool>.value(false),
+            returnValueForMissingStub: _i18.Future<bool>.value(false),
+          )
+          as _i18.Future<bool>);
 
   @override
-  _i18.Future<void> dispose() => (super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i18.Future<void> init() => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> init() =>
+      (super.noSuchMethod(
+            Invocation.method(#init, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i18.Future<void> logout() => (super.noSuchMethod(
-        Invocation.method(
-          #logout,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i18.Future<void> login(String? userID) => (super.noSuchMethod(
-        Invocation.method(
-          #login,
-          [userID],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> login(String? userID) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userID]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i18.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+  _i18.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i26.Priority getPriority() => (super.noSuchMethod(
-        Invocation.method(
-          #getPriority,
-          [],
-        ),
-        returnValue: _i26.Priority.level1,
-        returnValueForMissingStub: _i26.Priority.level1,
-      ) as _i26.Priority);
+  _i26.Priority getPriority() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPriority, []),
+            returnValue: _i26.Priority.level1,
+            returnValueForMissingStub: _i26.Priority.level1,
+          )
+          as _i26.Priority);
 }
 
 /// A class which mocks [AccountModel].
@@ -928,305 +792,286 @@ class MockWalletManager extends _i3.Mock implements _i20.WalletManager {
 /// See the documentation for Mockito's code generation for more information.
 class MockAccountModel extends _i3.Mock implements _i6.AccountModel {
   @override
-  int get id => (super.noSuchMethod(
-        Invocation.getter(#id),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get id =>
+      (super.noSuchMethod(
+            Invocation.getter(#id),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  String get accountID => (super.noSuchMethod(
-        Invocation.getter(#accountID),
-        returnValue: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#accountID),
-        ),
-        returnValueForMissingStub: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#accountID),
-        ),
-      ) as String);
+  String get accountID =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountID),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#accountID),
+            ),
+            returnValueForMissingStub: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#accountID),
+            ),
+          )
+          as String);
 
   @override
-  String get walletID => (super.noSuchMethod(
-        Invocation.getter(#walletID),
-        returnValue: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#walletID),
-        ),
-        returnValueForMissingStub: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#walletID),
-        ),
-      ) as String);
+  String get walletID =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletID),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#walletID),
+            ),
+            returnValueForMissingStub: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#walletID),
+            ),
+          )
+          as String);
 
   @override
-  String get derivationPath => (super.noSuchMethod(
-        Invocation.getter(#derivationPath),
-        returnValue: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#derivationPath),
-        ),
-        returnValueForMissingStub: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#derivationPath),
-        ),
-      ) as String);
+  String get derivationPath =>
+      (super.noSuchMethod(
+            Invocation.getter(#derivationPath),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#derivationPath),
+            ),
+            returnValueForMissingStub: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#derivationPath),
+            ),
+          )
+          as String);
 
   @override
-  _i27.Uint8List get label => (super.noSuchMethod(
-        Invocation.getter(#label),
-        returnValue: _i27.Uint8List(0),
-        returnValueForMissingStub: _i27.Uint8List(0),
-      ) as _i27.Uint8List);
+  _i27.Uint8List get label =>
+      (super.noSuchMethod(
+            Invocation.getter(#label),
+            returnValue: _i27.Uint8List(0),
+            returnValueForMissingStub: _i27.Uint8List(0),
+          )
+          as _i27.Uint8List);
 
   @override
-  int get scriptType => (super.noSuchMethod(
-        Invocation.getter(#scriptType),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get scriptType =>
+      (super.noSuchMethod(
+            Invocation.getter(#scriptType),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  int get createTime => (super.noSuchMethod(
-        Invocation.getter(#createTime),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get createTime =>
+      (super.noSuchMethod(
+            Invocation.getter(#createTime),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  int get modifyTime => (super.noSuchMethod(
-        Invocation.getter(#modifyTime),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get modifyTime =>
+      (super.noSuchMethod(
+            Invocation.getter(#modifyTime),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  String get fiatCurrency => (super.noSuchMethod(
-        Invocation.getter(#fiatCurrency),
-        returnValue: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#fiatCurrency),
-        ),
-        returnValueForMissingStub: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#fiatCurrency),
-        ),
-      ) as String);
+  String get fiatCurrency =>
+      (super.noSuchMethod(
+            Invocation.getter(#fiatCurrency),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#fiatCurrency),
+            ),
+            returnValueForMissingStub: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#fiatCurrency),
+            ),
+          )
+          as String);
 
   @override
-  int get priority => (super.noSuchMethod(
-        Invocation.getter(#priority),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get priority =>
+      (super.noSuchMethod(
+            Invocation.getter(#priority),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  int get lastUsedIndex => (super.noSuchMethod(
-        Invocation.getter(#lastUsedIndex),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get lastUsedIndex =>
+      (super.noSuchMethod(
+            Invocation.getter(#lastUsedIndex),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  int get poolSize => (super.noSuchMethod(
-        Invocation.getter(#poolSize),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get poolSize =>
+      (super.noSuchMethod(
+            Invocation.getter(#poolSize),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  int get stopGap => (super.noSuchMethod(
-        Invocation.getter(#stopGap),
-        returnValue: 0,
-        returnValueForMissingStub: 0,
-      ) as int);
+  int get stopGap =>
+      (super.noSuchMethod(
+            Invocation.getter(#stopGap),
+            returnValue: 0,
+            returnValueForMissingStub: 0,
+          )
+          as int);
 
   @override
-  String get labelDecrypt => (super.noSuchMethod(
-        Invocation.getter(#labelDecrypt),
-        returnValue: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#labelDecrypt),
-        ),
-        returnValueForMissingStub: _i23.dummyValue<String>(
-          this,
-          Invocation.getter(#labelDecrypt),
-        ),
-      ) as String);
+  String get labelDecrypt =>
+      (super.noSuchMethod(
+            Invocation.getter(#labelDecrypt),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#labelDecrypt),
+            ),
+            returnValueForMissingStub: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#labelDecrypt),
+            ),
+          )
+          as String);
 
   @override
-  double get balance => (super.noSuchMethod(
-        Invocation.getter(#balance),
-        returnValue: 0.0,
-        returnValueForMissingStub: 0.0,
-      ) as double);
+  double get balance =>
+      (super.noSuchMethod(
+            Invocation.getter(#balance),
+            returnValue: 0.0,
+            returnValueForMissingStub: 0.0,
+          )
+          as double);
 
   @override
   set id(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #id,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#id, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set accountID(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #accountID,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#accountID, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set walletID(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #walletID,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#walletID, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set derivationPath(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #derivationPath,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#derivationPath, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set label(_i27.Uint8List? value) => super.noSuchMethod(
-        Invocation.setter(
-          #label,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#label, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set scriptType(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #scriptType,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#scriptType, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set createTime(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #createTime,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#createTime, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set modifyTime(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #modifyTime,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#modifyTime, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set fiatCurrency(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #fiatCurrency,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#fiatCurrency, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set priority(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #priority,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#priority, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set lastUsedIndex(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #lastUsedIndex,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#lastUsedIndex, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set poolSize(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #poolSize,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#poolSize, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set stopGap(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #stopGap,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#stopGap, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set labelDecrypt(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #labelDecrypt,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#labelDecrypt, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set balance(double? value) => super.noSuchMethod(
-        Invocation.setter(
-          #balance,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#balance, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-        returnValueForMissingStub: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+            returnValueForMissingStub: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
   _i18.Future<void> decrypt(_i28.FrbUnlockedWalletKey? unlockedWalletKey) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #decrypt,
-          [unlockedWalletKey],
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#decrypt, [unlockedWalletKey]),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
-  _i29.FiatCurrency getFiatCurrency() => (super.noSuchMethod(
-        Invocation.method(
-          #getFiatCurrency,
-          [],
-        ),
-        returnValue: _i29.FiatCurrency.all,
-        returnValueForMissingStub: _i29.FiatCurrency.all,
-      ) as _i29.FiatCurrency);
+  _i29.FiatCurrency getFiatCurrency() =>
+      (super.noSuchMethod(
+            Invocation.method(#getFiatCurrency, []),
+            returnValue: _i29.FiatCurrency.all,
+            returnValueForMissingStub: _i29.FiatCurrency.all,
+          )
+          as _i29.FiatCurrency);
 }
 
 /// A class which mocks [FrbAccount].
@@ -1234,34 +1079,26 @@ class MockAccountModel extends _i3.Mock implements _i6.AccountModel {
 /// See the documentation for Mockito's code generation for more information.
 class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
   @override
-  bool get isDisposed => (super.noSuchMethod(
-        Invocation.getter(#isDisposed),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get isDisposed =>
+      (super.noSuchMethod(
+            Invocation.getter(#isDisposed),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  _i18.Future<_i12.FrbTxBuilder> buildTx() => (super.noSuchMethod(
-        Invocation.method(
-          #buildTx,
-          [],
-        ),
-        returnValue: _i18.Future<_i12.FrbTxBuilder>.value(_FakeFrbTxBuilder_8(
-          this,
-          Invocation.method(
-            #buildTx,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i12.FrbTxBuilder>.value(_FakeFrbTxBuilder_8(
-          this,
-          Invocation.method(
-            #buildTx,
-            [],
-          ),
-        )),
-      ) as _i18.Future<_i12.FrbTxBuilder>);
+  _i18.Future<_i12.FrbTxBuilder> buildTx() =>
+      (super.noSuchMethod(
+            Invocation.method(#buildTx, []),
+            returnValue: _i18.Future<_i12.FrbTxBuilder>.value(
+              _FakeFrbTxBuilder_8(this, Invocation.method(#buildTx, [])),
+            ),
+            returnValueForMissingStub: _i18.Future<_i12.FrbTxBuilder>.value(
+              _FakeFrbTxBuilder_8(this, Invocation.method(#buildTx, [])),
+            ),
+          )
+          as _i18.Future<_i12.FrbTxBuilder>);
 
   @override
   _i18.Future<_i13.FrbPsbt> bumpTransactionsFees({
@@ -1270,69 +1107,52 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
     required _i30.Network? network,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #bumpTransactionsFees,
-          [],
-          {
-            #txid: txid,
-            #fees: fees,
-            #network: network,
-          },
-        ),
-        returnValue: _i18.Future<_i13.FrbPsbt>.value(_FakeFrbPsbt_9(
-          this,
-          Invocation.method(
-            #bumpTransactionsFees,
-            [],
-            {
+            Invocation.method(#bumpTransactionsFees, [], {
               #txid: txid,
               #fees: fees,
               #network: network,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i13.FrbPsbt>.value(_FakeFrbPsbt_9(
-          this,
-          Invocation.method(
-            #bumpTransactionsFees,
-            [],
-            {
-              #txid: txid,
-              #fees: fees,
-              #network: network,
-            },
-          ),
-        )),
-      ) as _i18.Future<_i13.FrbPsbt>);
+            }),
+            returnValue: _i18.Future<_i13.FrbPsbt>.value(
+              _FakeFrbPsbt_9(
+                this,
+                Invocation.method(#bumpTransactionsFees, [], {
+                  #txid: txid,
+                  #fees: fees,
+                  #network: network,
+                }),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<_i13.FrbPsbt>.value(
+              _FakeFrbPsbt_9(
+                this,
+                Invocation.method(#bumpTransactionsFees, [], {
+                  #txid: txid,
+                  #fees: fees,
+                  #network: network,
+                }),
+              ),
+            ),
+          )
+          as _i18.Future<_i13.FrbPsbt>);
 
   @override
   _i18.Future<_i14.FrbAddressInfo> getAddress({int? index}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddress,
-          [],
-          {#index: index},
-        ),
-        returnValue:
-            _i18.Future<_i14.FrbAddressInfo>.value(_FakeFrbAddressInfo_10(
-          this,
-          Invocation.method(
-            #getAddress,
-            [],
-            {#index: index},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i14.FrbAddressInfo>.value(_FakeFrbAddressInfo_10(
-          this,
-          Invocation.method(
-            #getAddress,
-            [],
-            {#index: index},
-          ),
-        )),
-      ) as _i18.Future<_i14.FrbAddressInfo>);
+            Invocation.method(#getAddress, [], {#index: index}),
+            returnValue: _i18.Future<_i14.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_10(
+                this,
+                Invocation.method(#getAddress, [], {#index: index}),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<_i14.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_10(
+                this,
+                Invocation.method(#getAddress, [], {#index: index}),
+              ),
+            ),
+          )
+          as _i18.Future<_i14.FrbAddressInfo>);
 
   @override
   _i18.Future<_i31.FrbAddressDetails?> getAddressFromGraph({
@@ -1342,19 +1162,17 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
     required bool? sync_,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressFromGraph,
-          [],
-          {
-            #network: network,
-            #addressStr: addressStr,
-            #client: client,
-            #sync_: sync_,
-          },
-        ),
-        returnValue: _i18.Future<_i31.FrbAddressDetails?>.value(),
-        returnValueForMissingStub: _i18.Future<_i31.FrbAddressDetails?>.value(),
-      ) as _i18.Future<_i31.FrbAddressDetails?>);
+            Invocation.method(#getAddressFromGraph, [], {
+              #network: network,
+              #addressStr: addressStr,
+              #client: client,
+              #sync_: sync_,
+            }),
+            returnValue: _i18.Future<_i31.FrbAddressDetails?>.value(),
+            returnValueForMissingStub:
+                _i18.Future<_i31.FrbAddressDetails?>.value(),
+          )
+          as _i18.Future<_i31.FrbAddressDetails?>);
 
   @override
   _i18.Future<List<_i31.FrbAddressDetails>> getAddressesFromGraph({
@@ -1364,160 +1182,125 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
     required bool? sync_,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressesFromGraph,
-          [],
-          {
-            #pagination: pagination,
-            #client: client,
-            #keychain: keychain,
-            #sync_: sync_,
-          },
-        ),
-        returnValue: _i18.Future<List<_i31.FrbAddressDetails>>.value(
-            <_i31.FrbAddressDetails>[]),
-        returnValueForMissingStub:
-            _i18.Future<List<_i31.FrbAddressDetails>>.value(
-                <_i31.FrbAddressDetails>[]),
-      ) as _i18.Future<List<_i31.FrbAddressDetails>>);
+            Invocation.method(#getAddressesFromGraph, [], {
+              #pagination: pagination,
+              #client: client,
+              #keychain: keychain,
+              #sync_: sync_,
+            }),
+            returnValue: _i18.Future<List<_i31.FrbAddressDetails>>.value(
+              <_i31.FrbAddressDetails>[],
+            ),
+            returnValueForMissingStub:
+                _i18.Future<List<_i31.FrbAddressDetails>>.value(
+                  <_i31.FrbAddressDetails>[],
+                ),
+          )
+          as _i18.Future<List<_i31.FrbAddressDetails>>);
 
   @override
-  _i18.Future<_i15.FrbBalance> getBalance() => (super.noSuchMethod(
-        Invocation.method(
-          #getBalance,
-          [],
-        ),
-        returnValue: _i18.Future<_i15.FrbBalance>.value(_FakeFrbBalance_11(
-          this,
-          Invocation.method(
-            #getBalance,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i15.FrbBalance>.value(_FakeFrbBalance_11(
-          this,
-          Invocation.method(
-            #getBalance,
-            [],
-          ),
-        )),
-      ) as _i18.Future<_i15.FrbBalance>);
-
-  @override
-  _i18.Future<String> getDerivationPath() => (super.noSuchMethod(
-        Invocation.method(
-          #getDerivationPath,
-          [],
-        ),
-        returnValue: _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDerivationPath,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<String>.value(_i23.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getDerivationPath,
-            [],
-          ),
-        )),
-      ) as _i18.Future<String>);
-
-  @override
-  _i18.Future<int?> getHighestUsedAddressIndexInOutput(
-          {required _i34.KeychainKind? keychain}) =>
+  _i18.Future<_i15.FrbBalance> getBalance() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getHighestUsedAddressIndexInOutput,
-          [],
-          {#keychain: keychain},
-        ),
-        returnValue: _i18.Future<int?>.value(),
-        returnValueForMissingStub: _i18.Future<int?>.value(),
-      ) as _i18.Future<int?>);
+            Invocation.method(#getBalance, []),
+            returnValue: _i18.Future<_i15.FrbBalance>.value(
+              _FakeFrbBalance_11(this, Invocation.method(#getBalance, [])),
+            ),
+            returnValueForMissingStub: _i18.Future<_i15.FrbBalance>.value(
+              _FakeFrbBalance_11(this, Invocation.method(#getBalance, [])),
+            ),
+          )
+          as _i18.Future<_i15.FrbBalance>);
+
+  @override
+  _i18.Future<String> getDerivationPath() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDerivationPath, []),
+            returnValue: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getDerivationPath, []),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<String>.value(
+              _i23.dummyValue<String>(
+                this,
+                Invocation.method(#getDerivationPath, []),
+              ),
+            ),
+          )
+          as _i18.Future<String>);
+
+  @override
+  _i18.Future<int?> getHighestUsedAddressIndexInOutput({
+    required _i34.KeychainKind? keychain,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#getHighestUsedAddressIndexInOutput, [], {
+              #keychain: keychain,
+            }),
+            returnValue: _i18.Future<int?>.value(),
+            returnValueForMissingStub: _i18.Future<int?>.value(),
+          )
+          as _i18.Future<int?>);
 
   @override
   _i18.Future<int?> getMaximumGapSize({required _i34.KeychainKind? keychain}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getMaximumGapSize,
-          [],
-          {#keychain: keychain},
-        ),
-        returnValue: _i18.Future<int?>.value(),
-        returnValueForMissingStub: _i18.Future<int?>.value(),
-      ) as _i18.Future<int?>);
+            Invocation.method(#getMaximumGapSize, [], {#keychain: keychain}),
+            returnValue: _i18.Future<int?>.value(),
+            returnValueForMissingStub: _i18.Future<int?>.value(),
+          )
+          as _i18.Future<int?>);
 
   @override
   _i18.Future<_i14.FrbAddressInfo> getNextReceiveAddress() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getNextReceiveAddress,
-          [],
-        ),
-        returnValue:
-            _i18.Future<_i14.FrbAddressInfo>.value(_FakeFrbAddressInfo_10(
-          this,
-          Invocation.method(
-            #getNextReceiveAddress,
-            [],
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i14.FrbAddressInfo>.value(_FakeFrbAddressInfo_10(
-          this,
-          Invocation.method(
-            #getNextReceiveAddress,
-            [],
-          ),
-        )),
-      ) as _i18.Future<_i14.FrbAddressInfo>);
+            Invocation.method(#getNextReceiveAddress, []),
+            returnValue: _i18.Future<_i14.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_10(
+                this,
+                Invocation.method(#getNextReceiveAddress, []),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<_i14.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_10(
+                this,
+                Invocation.method(#getNextReceiveAddress, []),
+              ),
+            ),
+          )
+          as _i18.Future<_i14.FrbAddressInfo>);
 
   @override
   _i18.Future<int> getStopGapRange({required int? maxGap}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getStopGapRange,
-          [],
-          {#maxGap: maxGap},
-        ),
-        returnValue: _i18.Future<int>.value(0),
-        returnValueForMissingStub: _i18.Future<int>.value(0),
-      ) as _i18.Future<int>);
+            Invocation.method(#getStopGapRange, [], {#maxGap: maxGap}),
+            returnValue: _i18.Future<int>.value(0),
+            returnValueForMissingStub: _i18.Future<int>.value(0),
+          )
+          as _i18.Future<int>);
 
   @override
-  _i18.Future<_i16.FrbTransactionDetails> getTransaction(
-          {required String? txid}) =>
+  _i18.Future<_i16.FrbTransactionDetails> getTransaction({
+    required String? txid,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getTransaction,
-          [],
-          {#txid: txid},
-        ),
-        returnValue: _i18.Future<_i16.FrbTransactionDetails>.value(
-            _FakeFrbTransactionDetails_12(
-          this,
-          Invocation.method(
-            #getTransaction,
-            [],
-            {#txid: txid},
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i16.FrbTransactionDetails>.value(
-                _FakeFrbTransactionDetails_12(
-          this,
-          Invocation.method(
-            #getTransaction,
-            [],
-            {#txid: txid},
-          ),
-        )),
-      ) as _i18.Future<_i16.FrbTransactionDetails>);
+            Invocation.method(#getTransaction, [], {#txid: txid}),
+            returnValue: _i18.Future<_i16.FrbTransactionDetails>.value(
+              _FakeFrbTransactionDetails_12(
+                this,
+                Invocation.method(#getTransaction, [], {#txid: txid}),
+              ),
+            ),
+            returnValueForMissingStub:
+                _i18.Future<_i16.FrbTransactionDetails>.value(
+                  _FakeFrbTransactionDetails_12(
+                    this,
+                    Invocation.method(#getTransaction, [], {#txid: txid}),
+                  ),
+                ),
+          )
+          as _i18.Future<_i16.FrbTransactionDetails>);
 
   @override
   _i18.Future<List<_i16.FrbTransactionDetails>> getTransactions({
@@ -1525,82 +1308,72 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
     required _i33.TransactionFilter? filter,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getTransactions,
-          [],
-          {
-            #sort: sort,
-            #filter: filter,
-          },
-        ),
-        returnValue: _i18.Future<List<_i16.FrbTransactionDetails>>.value(
-            <_i16.FrbTransactionDetails>[]),
-        returnValueForMissingStub:
-            _i18.Future<List<_i16.FrbTransactionDetails>>.value(
-                <_i16.FrbTransactionDetails>[]),
-      ) as _i18.Future<List<_i16.FrbTransactionDetails>>);
+            Invocation.method(#getTransactions, [], {
+              #sort: sort,
+              #filter: filter,
+            }),
+            returnValue: _i18.Future<List<_i16.FrbTransactionDetails>>.value(
+              <_i16.FrbTransactionDetails>[],
+            ),
+            returnValueForMissingStub:
+                _i18.Future<List<_i16.FrbTransactionDetails>>.value(
+                  <_i16.FrbTransactionDetails>[],
+                ),
+          )
+          as _i18.Future<List<_i16.FrbTransactionDetails>>);
 
   @override
-  _i18.Future<List<_i35.FrbLocalOutput>> getUtxos() => (super.noSuchMethod(
-        Invocation.method(
-          #getUtxos,
-          [],
-        ),
-        returnValue: _i18.Future<List<_i35.FrbLocalOutput>>.value(
-            <_i35.FrbLocalOutput>[]),
-        returnValueForMissingStub: _i18.Future<List<_i35.FrbLocalOutput>>.value(
-            <_i35.FrbLocalOutput>[]),
-      ) as _i18.Future<List<_i35.FrbLocalOutput>>);
+  _i18.Future<List<_i35.FrbLocalOutput>> getUtxos() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUtxos, []),
+            returnValue: _i18.Future<List<_i35.FrbLocalOutput>>.value(
+              <_i35.FrbLocalOutput>[],
+            ),
+            returnValueForMissingStub:
+                _i18.Future<List<_i35.FrbLocalOutput>>.value(
+                  <_i35.FrbLocalOutput>[],
+                ),
+          )
+          as _i18.Future<List<_i35.FrbLocalOutput>>);
 
   @override
-  _i18.Future<String?> getXpub() => (super.noSuchMethod(
-        Invocation.method(
-          #getXpub,
-          [],
-        ),
-        returnValue: _i18.Future<String?>.value(),
-        returnValueForMissingStub: _i18.Future<String?>.value(),
-      ) as _i18.Future<String?>);
+  _i18.Future<String?> getXpub() =>
+      (super.noSuchMethod(
+            Invocation.method(#getXpub, []),
+            returnValue: _i18.Future<String?>.value(),
+            returnValueForMissingStub: _i18.Future<String?>.value(),
+          )
+          as _i18.Future<String?>);
 
   @override
-  _i18.Future<bool> hasSyncData() => (super.noSuchMethod(
-        Invocation.method(
-          #hasSyncData,
-          [],
-        ),
-        returnValue: _i18.Future<bool>.value(false),
-        returnValueForMissingStub: _i18.Future<bool>.value(false),
-      ) as _i18.Future<bool>);
+  _i18.Future<bool> hasSyncData() =>
+      (super.noSuchMethod(
+            Invocation.method(#hasSyncData, []),
+            returnValue: _i18.Future<bool>.value(false),
+            returnValueForMissingStub: _i18.Future<bool>.value(false),
+          )
+          as _i18.Future<bool>);
 
   @override
   _i18.Future<bool> isMine({required _i31.FrbAddress? address}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #isMine,
-          [],
-          {#address: address},
-        ),
-        returnValue: _i18.Future<bool>.value(false),
-        returnValueForMissingStub: _i18.Future<bool>.value(false),
-      ) as _i18.Future<bool>);
+            Invocation.method(#isMine, [], {#address: address}),
+            returnValue: _i18.Future<bool>.value(false),
+            returnValueForMissingStub: _i18.Future<bool>.value(false),
+          )
+          as _i18.Future<bool>);
 
   @override
-  _i18.Future<void> markReceiveAddressesUsedTo({
-    required int? from,
-    int? to,
-  }) =>
+  _i18.Future<void> markReceiveAddressesUsedTo({required int? from, int? to}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #markReceiveAddressesUsedTo,
-          [],
-          {
-            #from: from,
-            #to: to,
-          },
-        ),
-        returnValue: _i18.Future<void>.value(),
-        returnValueForMissingStub: _i18.Future<void>.value(),
-      ) as _i18.Future<void>);
+            Invocation.method(#markReceiveAddressesUsedTo, [], {
+              #from: from,
+              #to: to,
+            }),
+            returnValue: _i18.Future<void>.value(),
+            returnValueForMissingStub: _i18.Future<void>.value(),
+          )
+          as _i18.Future<void>);
 
   @override
   _i18.Future<_i13.FrbPsbt> sign({
@@ -1608,45 +1381,25 @@ class MockFrbAccount extends _i3.Mock implements _i21.FrbAccount {
     required _i30.Network? network,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #sign,
-          [],
-          {
-            #psbt: psbt,
-            #network: network,
-          },
-        ),
-        returnValue: _i18.Future<_i13.FrbPsbt>.value(_FakeFrbPsbt_9(
-          this,
-          Invocation.method(
-            #sign,
-            [],
-            {
-              #psbt: psbt,
-              #network: network,
-            },
-          ),
-        )),
-        returnValueForMissingStub:
-            _i18.Future<_i13.FrbPsbt>.value(_FakeFrbPsbt_9(
-          this,
-          Invocation.method(
-            #sign,
-            [],
-            {
-              #psbt: psbt,
-              #network: network,
-            },
-          ),
-        )),
-      ) as _i18.Future<_i13.FrbPsbt>);
+            Invocation.method(#sign, [], {#psbt: psbt, #network: network}),
+            returnValue: _i18.Future<_i13.FrbPsbt>.value(
+              _FakeFrbPsbt_9(
+                this,
+                Invocation.method(#sign, [], {#psbt: psbt, #network: network}),
+              ),
+            ),
+            returnValueForMissingStub: _i18.Future<_i13.FrbPsbt>.value(
+              _FakeFrbPsbt_9(
+                this,
+                Invocation.method(#sign, [], {#psbt: psbt, #network: network}),
+              ),
+            ),
+          )
+          as _i18.Future<_i13.FrbPsbt>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 }

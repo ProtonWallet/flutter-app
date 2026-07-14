@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:wallet/constants/app.config.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/script_type.dart';
@@ -31,6 +32,9 @@ import 'package:wallet/rust/proton_api/wallet_account.dart';
 class WalletManager implements Manager {
   final BdkLibrary bdkLib = BdkLibrary();
 
+  /// gopenpgp / BDK init is not safe concurrently on iOS debug builds.
+  static final Lock _loadWalletLock = Lock();
+
   final UserManager userManager;
   final DataProviderManager dataProviderManager;
 
@@ -39,6 +43,20 @@ class WalletManager implements Manager {
   // HashMap<String, FrbWallet> frbWallets = HashMap<String, FrbWallet>();
 
   Future<FrbAccount?> loadWalletWithID(
+    String walletID,
+    String accountID, {
+    int? serverScriptType,
+  }) {
+    return _loadWalletLock.synchronized(
+      () => _loadWalletWithIDUnlocked(
+        walletID,
+        accountID,
+        serverScriptType: serverScriptType,
+      ),
+    );
+  }
+
+  Future<FrbAccount?> _loadWalletWithIDUnlocked(
     String walletID,
     String accountID, {
     int? serverScriptType,

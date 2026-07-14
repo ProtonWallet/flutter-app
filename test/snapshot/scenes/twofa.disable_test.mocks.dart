@@ -36,23 +36,13 @@ import 'package:wallet/scenes/two.factor.auth.disable/two.factor.auth.disable.vi
 
 class _FakeTextEditingController_0 extends _i1.SmartFake
     implements _i2.TextEditingController {
-  _FakeTextEditingController_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeTextEditingController_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFocusNode_1 extends _i1.SmartFake implements _i2.FocusNode {
-  _FakeFocusNode_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFocusNode_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i2.DiagnosticLevel? minLevel = _i2.DiagnosticLevel.info}) =>
@@ -60,24 +50,15 @@ class _FakeFocusNode_1 extends _i1.SmartFake implements _i2.FocusNode {
 }
 
 class _FakeCoordinator_2 extends _i1.SmartFake implements _i3.Coordinator {
-  _FakeCoordinator_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeCoordinator_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeViewBase_3<V extends _i4.ViewModel<_i3.Coordinator>>
-    extends _i1.SmartFake implements _i5.ViewBase<V> {
-  _FakeViewBase_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i5.ViewBase<V> {
+  _FakeViewBase_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i2.DiagnosticLevel? minLevel = _i2.DiagnosticLevel.info}) =>
@@ -85,25 +66,16 @@ class _FakeViewBase_3<V extends _i4.ViewModel<_i3.Coordinator>>
 }
 
 class _FakeGlobalKey_4<T extends _i2.State<_i2.StatefulWidget>>
-    extends _i1.SmartFake implements _i2.GlobalKey<T> {
-  _FakeGlobalKey_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i2.GlobalKey<T> {
+  _FakeGlobalKey_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeManagerFactory_5 extends _i1.SmartFake
     implements _i6.ManagerFactory {
-  _FakeManagerFactory_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeManagerFactory_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [TwoFactorAuthDisableViewModel].
@@ -116,201 +88,181 @@ class MockTwoFactorAuthDisableViewModel extends _i1.Mock
   }
 
   @override
-  List<_i2.TextEditingController> get digitControllers => (super.noSuchMethod(
-        Invocation.getter(#digitControllers),
-        returnValue: <_i2.TextEditingController>[],
-      ) as List<_i2.TextEditingController>);
+  List<_i2.TextEditingController> get digitControllers =>
+      (super.noSuchMethod(
+            Invocation.getter(#digitControllers),
+            returnValue: <_i2.TextEditingController>[],
+          )
+          as List<_i2.TextEditingController>);
 
   @override
-  _i2.TextEditingController get passwordController => (super.noSuchMethod(
-        Invocation.getter(#passwordController),
-        returnValue: _FakeTextEditingController_0(
-          this,
-          Invocation.getter(#passwordController),
-        ),
-      ) as _i2.TextEditingController);
+  _i2.TextEditingController get passwordController =>
+      (super.noSuchMethod(
+            Invocation.getter(#passwordController),
+            returnValue: _FakeTextEditingController_0(
+              this,
+              Invocation.getter(#passwordController),
+            ),
+          )
+          as _i2.TextEditingController);
 
   @override
-  _i2.FocusNode get passphraseFocusNode => (super.noSuchMethod(
-        Invocation.getter(#passphraseFocusNode),
-        returnValue: _FakeFocusNode_1(
-          this,
-          Invocation.getter(#passphraseFocusNode),
-        ),
-      ) as _i2.FocusNode);
+  _i2.FocusNode get passphraseFocusNode =>
+      (super.noSuchMethod(
+            Invocation.getter(#passphraseFocusNode),
+            returnValue: _FakeFocusNode_1(
+              this,
+              Invocation.getter(#passphraseFocusNode),
+            ),
+          )
+          as _i2.FocusNode);
 
   @override
-  String get error => (super.noSuchMethod(
-        Invocation.getter(#error),
-        returnValue: _i8.dummyValue<String>(
-          this,
-          Invocation.getter(#error),
-        ),
-      ) as String);
+  String get error =>
+      (super.noSuchMethod(
+            Invocation.getter(#error),
+            returnValue: _i8.dummyValue<String>(
+              this,
+              Invocation.getter(#error),
+            ),
+          )
+          as String);
 
   @override
   set digitControllers(List<_i2.TextEditingController>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #digitControllers,
-          value,
-        ),
+        Invocation.setter(#digitControllers, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set passwordController(_i2.TextEditingController? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #passwordController,
-          value,
-        ),
+        Invocation.setter(#passwordController, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set passphraseFocusNode(_i2.FocusNode? value) => super.noSuchMethod(
-        Invocation.setter(
-          #passphraseFocusNode,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#passphraseFocusNode, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set error(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #error,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#error, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i3.Coordinator get coordinator => (super.noSuchMethod(
-        Invocation.getter(#coordinator),
-        returnValue: _FakeCoordinator_2(
-          this,
-          Invocation.getter(#coordinator),
-        ),
-      ) as _i3.Coordinator);
+  _i3.Coordinator get coordinator =>
+      (super.noSuchMethod(
+            Invocation.getter(#coordinator),
+            returnValue: _FakeCoordinator_2(
+              this,
+              Invocation.getter(#coordinator),
+            ),
+          )
+          as _i3.Coordinator);
 
   @override
   _i9.Stream<_i4.ViewModel<_i3.Coordinator>> get datasourceChanged =>
       (super.noSuchMethod(
-        Invocation.getter(#datasourceChanged),
-        returnValue: _i9.Stream<_i4.ViewModel<_i3.Coordinator>>.empty(),
-      ) as _i9.Stream<_i4.ViewModel<_i3.Coordinator>>);
+            Invocation.getter(#datasourceChanged),
+            returnValue: _i9.Stream<_i4.ViewModel<_i3.Coordinator>>.empty(),
+          )
+          as _i9.Stream<_i4.ViewModel<_i3.Coordinator>>);
 
   @override
-  bool get isMobileSize => (super.noSuchMethod(
-        Invocation.getter(#isMobileSize),
-        returnValue: false,
-      ) as bool);
+  bool get isMobileSize =>
+      (super.noSuchMethod(Invocation.getter(#isMobileSize), returnValue: false)
+          as bool);
 
   @override
-  bool get keepAlive => (super.noSuchMethod(
-        Invocation.getter(#keepAlive),
-        returnValue: false,
-      ) as bool);
+  bool get keepAlive =>
+      (super.noSuchMethod(Invocation.getter(#keepAlive), returnValue: false)
+          as bool);
 
   @override
-  bool get mobile => (super.noSuchMethod(
-        Invocation.getter(#mobile),
-        returnValue: false,
-      ) as bool);
+  bool get mobile =>
+      (super.noSuchMethod(Invocation.getter(#mobile), returnValue: false)
+          as bool);
 
   @override
-  bool get desktop => (super.noSuchMethod(
-        Invocation.getter(#desktop),
-        returnValue: false,
-      ) as bool);
+  bool get desktop =>
+      (super.noSuchMethod(Invocation.getter(#desktop), returnValue: false)
+          as bool);
 
   @override
-  bool get android => (super.noSuchMethod(
-        Invocation.getter(#android),
-        returnValue: false,
-      ) as bool);
+  bool get android =>
+      (super.noSuchMethod(Invocation.getter(#android), returnValue: false)
+          as bool);
 
   @override
-  bool get iOS => (super.noSuchMethod(
-        Invocation.getter(#iOS),
-        returnValue: false,
-      ) as bool);
+  bool get iOS =>
+      (super.noSuchMethod(Invocation.getter(#iOS), returnValue: false) as bool);
 
   @override
-  bool get macOS => (super.noSuchMethod(
-        Invocation.getter(#macOS),
-        returnValue: false,
-      ) as bool);
+  bool get macOS =>
+      (super.noSuchMethod(Invocation.getter(#macOS), returnValue: false)
+          as bool);
 
   @override
-  bool get apple => (super.noSuchMethod(
-        Invocation.getter(#apple),
-        returnValue: false,
-      ) as bool);
+  bool get apple =>
+      (super.noSuchMethod(Invocation.getter(#apple), returnValue: false)
+          as bool);
 
   @override
-  bool get screenSizeState => (super.noSuchMethod(
-        Invocation.getter(#screenSizeState),
-        returnValue: false,
-      ) as bool);
+  bool get screenSizeState =>
+      (super.noSuchMethod(
+            Invocation.getter(#screenSizeState),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   set currentSize(_i5.ViewSize? value) => super.noSuchMethod(
-        Invocation.setter(
-          #currentSize,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#currentSize, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.Future<bool> disable2FA() => (super.noSuchMethod(
-        Invocation.method(
-          #disable2FA,
-          [],
-        ),
-        returnValue: _i9.Future<bool>.value(false),
-      ) as _i9.Future<bool>);
+  _i9.Future<bool> disable2FA() =>
+      (super.noSuchMethod(
+            Invocation.method(#disable2FA, []),
+            returnValue: _i9.Future<bool>.value(false),
+          )
+          as _i9.Future<bool>);
 
   @override
   void sinkAddSafe() => super.noSuchMethod(
-        Invocation.method(
-          #sinkAddSafe,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#sinkAddSafe, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.Future<void> loadData() => (super.noSuchMethod(
-        Invocation.method(
-          #loadData,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> loadData() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadData, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.Future<void> move(_i10.NavID? to) => (super.noSuchMethod(
-        Invocation.method(
-          #move,
-          [to],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> move(_i10.NavID? to) =>
+      (super.noSuchMethod(
+            Invocation.method(#move, [to]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 }
 
 /// A class which mocks [TwoFactorAuthDisableCoordinator].
@@ -325,73 +277,67 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
   @override
   _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>> get widget =>
       (super.noSuchMethod(
-        Invocation.getter(#widget),
-        returnValue: _FakeViewBase_3<_i4.ViewModel<_i3.Coordinator>>(
-          this,
-          Invocation.getter(#widget),
-        ),
-      ) as _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>>);
+            Invocation.getter(#widget),
+            returnValue: _FakeViewBase_3<_i4.ViewModel<_i3.Coordinator>>(
+              this,
+              Invocation.getter(#widget),
+            ),
+          )
+          as _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>>);
 
   @override
   set widget(_i5.ViewBase<_i4.ViewModel<_i3.Coordinator>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #widget,
-          value,
-        ),
+        Invocation.setter(#widget, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i2.GlobalKey<_i2.NavigatorState> get navigatorKey => (super.noSuchMethod(
-        Invocation.getter(#navigatorKey),
-        returnValue: _FakeGlobalKey_4<_i2.NavigatorState>(
-          this,
-          Invocation.getter(#navigatorKey),
-        ),
-      ) as _i2.GlobalKey<_i2.NavigatorState>);
+  _i2.GlobalKey<_i2.NavigatorState> get navigatorKey =>
+      (super.noSuchMethod(
+            Invocation.getter(#navigatorKey),
+            returnValue: _FakeGlobalKey_4<_i2.NavigatorState>(
+              this,
+              Invocation.getter(#navigatorKey),
+            ),
+          )
+          as _i2.GlobalKey<_i2.NavigatorState>);
 
   @override
-  _i6.ManagerFactory get serviceManager => (super.noSuchMethod(
-        Invocation.getter(#serviceManager),
-        returnValue: _FakeManagerFactory_5(
-          this,
-          Invocation.getter(#serviceManager),
-        ),
-      ) as _i6.ManagerFactory);
+  _i6.ManagerFactory get serviceManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#serviceManager),
+            returnValue: _FakeManagerFactory_5(
+              this,
+              Invocation.getter(#serviceManager),
+            ),
+          )
+          as _i6.ManagerFactory);
 
   @override
   void end() => super.noSuchMethod(
-        Invocation.method(
-          #end,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#end, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>> start() => (super.noSuchMethod(
-        Invocation.method(
-          #start,
-          [],
-        ),
-        returnValue: _FakeViewBase_3<_i4.ViewModel<_i3.Coordinator>>(
-          this,
-          Invocation.method(
-            #start,
-            [],
-          ),
-        ),
-      ) as _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>>);
+  _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>> start() =>
+      (super.noSuchMethod(
+            Invocation.method(#start, []),
+            returnValue: _FakeViewBase_3<_i4.ViewModel<_i3.Coordinator>>(
+              this,
+              Invocation.method(#start, []),
+            ),
+          )
+          as _i5.ViewBase<_i4.ViewModel<_i3.Coordinator>>);
 
   @override
-  List<_i2.Widget> starts() => (super.noSuchMethod(
-        Invocation.method(
-          #starts,
-          [],
-        ),
-        returnValue: <_i2.Widget>[],
-      ) as List<_i2.Widget>);
+  List<_i2.Widget> starts() =>
+      (super.noSuchMethod(
+            Invocation.method(#starts, []),
+            returnValue: <_i2.Widget>[],
+          )
+          as List<_i2.Widget>);
 
   @override
   _i9.Future<bool> showInBottomSheet(
@@ -403,25 +349,23 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
     bool? canPop = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showInBottomSheet,
-          [view],
-          {
-            #backgroundColor: backgroundColor,
-            #fullScreen: fullScreen,
-            #enableDrag: enableDrag,
-            #isDismissible: isDismissible,
-            #canPop: canPop,
-          },
-        ),
-        returnValue: _i9.Future<bool>.value(false),
-      ) as _i9.Future<bool>);
+            Invocation.method(
+              #showInBottomSheet,
+              [view],
+              {
+                #backgroundColor: backgroundColor,
+                #fullScreen: fullScreen,
+                #enableDrag: enableDrag,
+                #isDismissible: isDismissible,
+                #canPop: canPop,
+              },
+            ),
+            returnValue: _i9.Future<bool>.value(false),
+          )
+          as _i9.Future<bool>);
 
   @override
-  void pushReplacement(
-    _i2.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushReplacement(_i2.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushReplacement,
@@ -435,44 +379,30 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
   void pushReplacementRemoveAll(
     _i2.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementRemoveAll,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementRemoveAll,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void push(
-    _i2.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void push(_i2.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
-        Invocation.method(
-          #push,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
+        Invocation.method(#push, [view], {#fullscreenDialog: fullscreenDialog}),
         returnValueForMissingStub: null,
       );
 
   @override
   void pop() => super.noSuchMethod(
-        Invocation.method(
-          #pop,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#pop, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void pushCustom(
-    _i2.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushCustom(_i2.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushCustom,
@@ -486,22 +416,18 @@ class MockTwoFactorAuthDisableCoordinator extends _i1.Mock
   void pushReplacementCustom(
     _i2.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementCustom,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementCustom,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showDialog1(_i2.Widget? view) => super.noSuchMethod(
-        Invocation.method(
-          #showDialog1,
-          [view],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showDialog1, [view]),
+    returnValueForMissingStub: null,
+  );
 }

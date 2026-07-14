@@ -35,40 +35,39 @@ class MockNativeViewChannel extends _i1.Mock implements _i2.NativeViewChannel {
   }
 
   @override
-  _i3.Stream<_i4.NativeLoginState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i3.Stream<_i4.NativeLoginState>.empty(),
-      ) as _i3.Stream<_i4.NativeLoginState>);
+  _i3.Stream<_i4.NativeLoginState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i3.Stream<_i4.NativeLoginState>.empty(),
+          )
+          as _i3.Stream<_i4.NativeLoginState>);
 
   @override
-  _i3.Future<void> switchToNativeSignup() => (super.noSuchMethod(
-        Invocation.method(
-          #switchToNativeSignup,
-          [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> switchToNativeSignup() =>
+      (super.noSuchMethod(
+            Invocation.method(#switchToNativeSignup, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> switchToNativeLogin() => (super.noSuchMethod(
-        Invocation.method(
-          #switchToNativeLogin,
-          [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> switchToNativeLogin() =>
+      (super.noSuchMethod(
+            Invocation.method(#switchToNativeLogin, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> restartNative() => (super.noSuchMethod(
-        Invocation.method(
-          #restartNative,
-          [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+  _i3.Future<void> restartNative() =>
+      (super.noSuchMethod(
+            Invocation.method(#restartNative, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> initalNativeApiEnv(
@@ -77,53 +76,40 @@ class MockNativeViewChannel extends _i1.Mock implements _i2.NativeViewChannel {
     String? userAgent,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #initalNativeApiEnv,
-          [
-            env,
-            appVersion,
-            userAgent,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#initalNativeApiEnv, [
+              env,
+              appVersion,
+              userAgent,
+            ]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> switchToUpgrade(_i6.FlutterSession? session) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #switchToUpgrade,
-          [session],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#switchToUpgrade, [session]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> nativeLogout() => (super.noSuchMethod(
-        Invocation.method(
-          #nativeLogout,
-          [],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<void> nativeReportBugs(
-    String? username,
-    String? email,
-  ) =>
+  _i3.Future<void> nativeLogout() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #nativeReportBugs,
-          [
-            username,
-            email,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#nativeLogout, []),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<void> nativeReportBugs(String? username, String? email) =>
+      (super.noSuchMethod(
+            Invocation.method(#nativeReportBugs, [username, email]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 }

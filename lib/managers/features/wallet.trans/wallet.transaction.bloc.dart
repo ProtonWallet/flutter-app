@@ -85,9 +85,7 @@ class UpdateWalletSyncCancelled extends WalletTransactionEvent {
 class UpdateWalletError extends WalletTransactionEvent {
   final String errorMessage;
 
-  UpdateWalletError(
-    this.errorMessage,
-  );
+  UpdateWalletError(this.errorMessage);
 
   @override
   List<Object> get props => [errorMessage];
@@ -137,12 +135,12 @@ class WalletTransactionState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isSyncing,
-        historyTransaction,
-        bitcoinAddresses,
-        syncedWithError,
-        errorMessage,
-      ];
+    isSyncing,
+    historyTransaction,
+    bitcoinAddresses,
+    syncedWithError,
+    errorMessage,
+  ];
 }
 
 extension WalletTransactionStateCopyWith on WalletTransactionState {
@@ -196,13 +194,15 @@ class WalletTransactionBloc
     this.localBitcoinAddressDataProvider,
     this.walletsDataProvider,
     this.userSettingsDataProvider,
-  ) : super(const WalletTransactionState(
+  ) : super(
+        const WalletTransactionState(
           isSyncing: false,
           historyTransaction: [],
           bitcoinAddresses: [],
           syncedWithError: false,
           errorMessage: "",
-        )) {
+        ),
+      ) {
     /// currentWalletModel and currentAccountModel are used to identify if the process need to be continue or not
     /// for example, if user select Wallet A, then it will start generating transactions for wallet A
     /// if user change to Wallet B immediately, then we need to stop the process that generating transactions for wallet A
@@ -211,71 +211,81 @@ class WalletTransactionBloc
     AccountModel? currentAccountModel;
 
     walletsDataSubscription = walletsDataProvider
-        .selectedWalletUpdateController.stream
+        .selectedWalletUpdateController
+        .stream
         .listen((onData) async {
-      final WalletData? walletData =
-          await walletsDataProvider.getWalletByServerWalletID(
-              walletsDataProvider.selectedServerWalletID);
-      if (walletData != null) {
-        final WalletMenuModel walletMenuModel =
-            WalletMenuModel(walletData.wallet);
-        walletMenuModel.accounts =
-            walletData.accounts.map(AccountMenuModel.new).toList();
-        if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
-          /// check if we need lag sync on freshStart
-          /// this is a workaround since networking will be occupied when we do partial sync
-          /// can be removed after verify the networking part (muon)
-          bool lagSync = false;
-          if (firstStart) {
-            firstStart = false;
-            lagSync = true;
-          }
+          final WalletData? walletData = await walletsDataProvider
+              .getWalletByServerWalletID(
+                walletsDataProvider.selectedServerWalletID,
+              );
+          if (walletData != null) {
+            final WalletMenuModel walletMenuModel = WalletMenuModel(
+              walletData.wallet,
+            );
+            walletMenuModel.accounts = walletData.accounts
+                .map(AccountMenuModel.new)
+                .toList();
+            if (walletsDataProvider.selectedServerWalletAccountID.isEmpty) {
+              /// check if we need lag sync on freshStart
+              /// this is a workaround since networking will be occupied when we do partial sync
+              /// can be removed after verify the networking part (muon)
+              bool lagSync = false;
+              if (firstStart) {
+                firstStart = false;
+                lagSync = true;
+              }
 
-          /// wallet view
-          if (currentWalletModel?.walletID !=
-                  walletsDataProvider.selectedServerWalletID ||
-              currentAccountModel?.accountID !=
-                  walletsDataProvider.selectedServerWalletAccountID) {
-            add(SelectWallet(
-              walletMenuModel,
-              skipSyncWallet: false, // need to sync wallet
-              lagSync: lagSync,
-            ));
-          }
-        } else {
-          /// wallet account view
-          if (currentWalletModel?.walletID !=
-                  walletsDataProvider.selectedServerWalletID ||
-              currentAccountModel?.accountID !=
-                  walletsDataProvider.selectedServerWalletAccountID) {
-            for (AccountMenuModel accountMenuModel
-                in walletMenuModel.accounts) {
-              if (accountMenuModel.accountModel.accountID ==
-                  walletsDataProvider.selectedServerWalletAccountID) {
-                add(SelectAccount(
-                  walletMenuModel,
-                  accountMenuModel,
-                  skipSyncWallet: false, // need to sync wallet
-                ));
-                break;
+              /// wallet view
+              if (currentWalletModel?.walletID !=
+                      walletsDataProvider.selectedServerWalletID ||
+                  currentAccountModel?.accountID !=
+                      walletsDataProvider.selectedServerWalletAccountID) {
+                add(
+                  SelectWallet(
+                    walletMenuModel,
+                    skipSyncWallet: false, // need to sync wallet
+                    lagSync: lagSync,
+                  ),
+                );
+              }
+            } else {
+              /// wallet account view
+              if (currentWalletModel?.walletID !=
+                      walletsDataProvider.selectedServerWalletID ||
+                  currentAccountModel?.accountID !=
+                      walletsDataProvider.selectedServerWalletAccountID) {
+                for (AccountMenuModel accountMenuModel
+                    in walletMenuModel.accounts) {
+                  if (accountMenuModel.accountModel.accountID ==
+                      walletsDataProvider.selectedServerWalletAccountID) {
+                    add(
+                      SelectAccount(
+                        walletMenuModel,
+                        accountMenuModel,
+                        skipSyncWallet: false, // need to sync wallet
+                      ),
+                    );
+                    break;
+                  }
+                }
               }
             }
+          } else {
+            /// no wallets
+            /// clear all
+            add(StartLoading());
           }
-        }
-      } else {
-        /// no wallets
-        /// clear all
-        add(StartLoading());
-      }
-    });
+        });
     fiatCurrencySettingSubscription = userSettingsDataProvider
-        .fiatCurrencyUpdateController.stream
+        .fiatCurrencyUpdateController
+        .stream
         .listen((_) {
-      handleTransactionDataProviderUpdate();
-    });
+          handleTransactionDataProviderUpdate();
+        });
 
-    bdkTransactionDataSubscription =
-        bdkTransactionDataProvider.stream.listen((state) {
+    bdkTransactionDataSubscription = bdkTransactionDataProvider.stream.listen((
+      state,
+    ) {
       if (state is BDKSyncUpdated) {
         handleTransactionDataProviderUpdate();
         if (this.state.errorMessage.isNotEmpty) {
@@ -292,44 +302,50 @@ class WalletTransactionBloc
     });
 
     newBroadcastTransactionSubscription = walletsDataProvider
-        .newBroadcastTransactionController.stream
+        .newBroadcastTransactionController
+        .stream
         .listen((_) {
-      syncWallet(forceSync: true, heightChanged: false);
-    });
+          unawaited(syncWallet(forceSync: true, heightChanged: false));
+        });
 
     serverTransactionDataSubscription = serverTransactionDataProvider
-        .dataUpdateController.stream
+        .dataUpdateController
+        .stream
         .listen((onData) {
-      handleTransactionDataProviderUpdate();
+          handleTransactionDataProviderUpdate();
 
-      if (onData.updatedData == UpdateType.inserted) {
-        syncWallet(forceSync: true, heightChanged: false);
-      }
+          if (onData.updatedData == UpdateType.inserted) {
+            unawaited(syncWallet(forceSync: true, heightChanged: false));
+          }
 
-      /// syncWallet so that balance can get update
-    });
+          /// syncWallet so that balance can get update
+        });
 
     on<StartLoading>((event, emit) async {
       emit(state.copyWith(historyTransaction: []));
     });
 
     on<SyncWallet>((event, emit) async {
-      emit(state.copyWith(
-        isSyncing: true,
-        historyTransaction: state.historyTransaction,
-        bitcoinAddresses: state.bitcoinAddresses,
-      ));
+      emit(
+        state.copyWith(
+          isSyncing: true,
+          historyTransaction: state.historyTransaction,
+          bitcoinAddresses: state.bitcoinAddresses,
+        ),
+      );
     });
 
     on<SelectWallet>((event, emit) async {
       if (currentWalletModel?.walletID !=
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel != null) {
-        emit(state.copyWith(
-          historyTransaction: [],
-          bitcoinAddresses: [],
-          isSyncing: true,
-        ));
+        emit(
+          state.copyWith(
+            historyTransaction: [],
+            bitcoinAddresses: [],
+            isSyncing: true,
+          ),
+        );
       }
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = null;
@@ -392,11 +408,13 @@ class WalletTransactionBloc
       }
 
       if (event.lagSync && anyAccountFullSynced) {
-        emit(state.copyWith(
-          isSyncing: isSyncing,
-          historyTransaction: historyTransaction,
-          bitcoinAddresses: [],
-        ));
+        emit(
+          state.copyWith(
+            isSyncing: isSyncing,
+            historyTransaction: historyTransaction,
+            bitcoinAddresses: [],
+          ),
+        );
         await Future.delayed(const Duration(seconds: 5));
       }
 
@@ -406,25 +424,28 @@ class WalletTransactionBloc
       for (AccountMenuModel accountMenuModel
           in event.walletMenuModel.accounts) {
         if (!event.skipSyncWallet) {
-          bdkTransactionDataProvider.syncWallet(
+          await bdkTransactionDataProvider.syncWallet(
             event.walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: false,
             heightChanged: false,
           );
         }
-        isSyncing = isSyncing ||
+        isSyncing =
+            isSyncing ||
             bdkTransactionDataProvider.isSyncing(
               walletModel,
               accountMenuModel.accountModel,
             );
       }
 
-      emit(state.copyWith(
-        isSyncing: isSyncing,
-        historyTransaction: historyTransaction,
-        bitcoinAddresses: [],
-      ));
+      emit(
+        state.copyWith(
+          isSyncing: isSyncing,
+          historyTransaction: historyTransaction,
+          bitcoinAddresses: [],
+        ),
+      );
     });
 
     on<SelectAccount>((event, emit) async {
@@ -432,11 +453,13 @@ class WalletTransactionBloc
               event.walletMenuModel.walletModel.walletID ||
           currentAccountModel?.accountID !=
               event.accountMenuModel.accountModel.accountID) {
-        emit(state.copyWith(
-          historyTransaction: [],
-          bitcoinAddresses: [],
-          isSyncing: true,
-        ));
+        emit(
+          state.copyWith(
+            historyTransaction: [],
+            bitcoinAddresses: [],
+            isSyncing: true,
+          ),
+        );
       }
       currentWalletModel = event.walletMenuModel.walletModel;
       currentAccountModel = event.accountMenuModel.accountModel;
@@ -452,10 +475,10 @@ class WalletTransactionBloc
       try {
         final List<HistoryTransaction> historyTransactionsInAccount =
             await getHistoryTransactions(
-          walletModel,
-          event.accountMenuModel,
-          unlockedWalletKey,
-        );
+              walletModel,
+              event.accountMenuModel,
+              unlockedWalletKey,
+            );
         newHistoryTransactions += historyTransactionsInAccount;
       } catch (e, stacktrace) {
         logger.e("getHistoryTransactions error: $e stacktrace: $stacktrace");
@@ -484,7 +507,7 @@ class WalletTransactionBloc
       /// then if bdk data update, it will trigger handleTransactionDataProviderUpdate() to update
       bool isSyncing = false;
       if (!event.skipSyncWallet) {
-        bdkTransactionDataProvider.syncWallet(
+        await bdkTransactionDataProvider.syncWallet(
           event.walletMenuModel.walletModel,
           event.accountMenuModel.accountModel,
           forceSync: false,
@@ -493,26 +516,26 @@ class WalletTransactionBloc
       }
 
       isSyncing = bdkTransactionDataProvider.isSyncing(
-          walletModel, event.accountMenuModel.accountModel);
-      emit(state.copyWith(
-        isSyncing: isSyncing,
-        historyTransaction: historyTransaction,
-        bitcoinAddresses: [],
-      ));
+        walletModel,
+        event.accountMenuModel.accountModel,
+      );
+      emit(
+        state.copyWith(
+          isSyncing: isSyncing,
+          historyTransaction: historyTransaction,
+          bitcoinAddresses: [],
+        ),
+      );
     });
 
     on<UpdateWalletError>((event, emit) async {
-      emit(state.copyWith(
-        syncedWithError: true,
-        errorMessage: event.errorMessage,
-      ));
+      emit(
+        state.copyWith(syncedWithError: true, errorMessage: event.errorMessage),
+      );
     });
 
     on<UpdateWalletDone>((event, emit) async {
-      emit(state.copyWith(
-        syncedWithError: false,
-        errorMessage: "",
-      ));
+      emit(state.copyWith(syncedWithError: false, errorMessage: ""));
     });
   }
 
@@ -520,17 +543,16 @@ class WalletTransactionBloc
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
         final SelectWallet selectWallet = (lastEvent! as SelectWallet);
-        add(SelectWallet(
-          selectWallet.walletMenuModel,
-          skipSyncWallet: true,
-        ));
+        add(SelectWallet(selectWallet.walletMenuModel, skipSyncWallet: true));
       } else if (lastEvent is SelectAccount) {
         final SelectAccount selectAccount = (lastEvent! as SelectAccount);
-        add(SelectAccount(
-          selectAccount.walletMenuModel,
-          selectAccount.accountMenuModel,
-          skipSyncWallet: true,
-        ));
+        add(
+          SelectAccount(
+            selectAccount.walletMenuModel,
+            selectAccount.accountMenuModel,
+            skipSyncWallet: true,
+          ),
+        );
       }
     }
   }
@@ -569,17 +591,20 @@ class WalletTransactionBloc
   }
 
   List<HistoryTransaction> applyHistoryTransactionFilterAndKeyword(
-      String filter,
-      String keyword,
-      List<HistoryTransaction> historyTransactions) {
+    String filter,
+    String keyword,
+    List<HistoryTransaction> historyTransactions,
+  ) {
     List<HistoryTransaction> newHistoryTransactions = [];
     if (filter.isNotEmpty) {
       if (filter == "receive") {
-        newHistoryTransactions =
-            historyTransactions.where((t) => t.amountInSATS >= 0).toList();
+        newHistoryTransactions = historyTransactions
+            .where((t) => t.amountInSATS >= 0)
+            .toList();
       } else if (filter == "send") {
-        newHistoryTransactions =
-            historyTransactions.where((t) => t.amountInSATS < 0).toList();
+        newHistoryTransactions = historyTransactions
+            .where((t) => t.amountInSATS < 0)
+            .toList();
       }
     } else {
       newHistoryTransactions = historyTransactions;
@@ -616,19 +641,16 @@ class WalletTransactionBloc
     final AccountModel accountModel = accountMenuModel.accountModel;
     final BDKTransactionData bdkTransactionData =
         await bdkTransactionDataProvider.getBDKTransactionDataByWalletAccount(
-      walletModel,
-      accountModel,
-    );
+          walletModel,
+          accountModel,
+        );
     if (bdkTransactionData.transactions.isEmpty) {
       /// return empty when no transactions in bdk so that we can avoid api call
       return [];
     }
     final ServerTransactionData serverTransactionData =
         await serverTransactionDataProvider
-            .getServerTransactionDataByWalletAccount(
-      walletModel,
-      accountModel,
-    );
+            .getServerTransactionDataByWalletAccount(walletModel, accountModel);
 
     final FrbAccount? account = await walletManager.loadWalletWithID(
       walletModel.walletID,
@@ -639,11 +661,11 @@ class WalletTransactionBloc
     final customStopgap = await userSettingsDataProvider.getCustomStopgap();
     final Map<String, FrbAddressInfo> selfBitcoinAddressInfo =
         await localBitcoinAddressDataProvider.getBitcoinAddress(
-      walletModel,
-      accountMenuModel.accountModel,
-      account,
-      maxAddressIndex: accountModel.lastUsedIndex + customStopgap,
-    );
+          walletModel,
+          accountMenuModel.accountModel,
+          account,
+          maxAddressIndex: accountModel.lastUsedIndex + customStopgap,
+        );
 
     final userKeys = await userManager.getUserKeysForTL();
     final addrKeys = await addressKeyProvider.getAddressKeysForTL();
@@ -653,8 +675,8 @@ class WalletTransactionBloc
       userKeys: userKeys,
       addrKeys: addrKeys,
       userKeyPassword: userKeyPassword,
-      encTransactionIds:
-          serverTransactionData.transactions.toFrbTLEncryptedTransactionID(),
+      encTransactionIds: serverTransactionData.transactions
+          .toFrbTLEncryptedTransactionID(),
     );
 
     for (final transactionModel in serverTransactionData.transactions) {
@@ -677,20 +699,26 @@ class WalletTransactionBloc
           continue;
         }
         bitcoinAddressesInTransaction.add(bitcoinAddress);
-        final bool isMineAddress = await account?.isMine(
-                address: FrbAddress(
-                    address: bitcoinAddress,
-                    network: appConfig.coinType.network)) ??
+        final bool isMineAddress =
+            await account?.isMine(
+              address: FrbAddress(
+                address: bitcoinAddress,
+                network: appConfig.coinType.network,
+              ),
+            ) ??
             false;
         if (isMineAddress) {
           BitcoinAddressModel? bitcoinAddressModel =
               await localBitcoinAddressDataProvider.findBitcoinAddressInAccount(
-                  bitcoinAddress, accountModel.accountID);
+                bitcoinAddress,
+                accountModel.accountID,
+              );
           if (bitcoinAddressModel != null) {
             if (bitcoinAddressModel.used != 1) {
               bitcoinAddressModel.used = 1;
-              await localBitcoinAddressDataProvider
-                  .insertOrUpdate(bitcoinAddressModel);
+              await localBitcoinAddressDataProvider.insertOrUpdate(
+                bitcoinAddressModel,
+              );
             }
           } else if (selfBitcoinAddressInfo.containsKey(bitcoinAddress)) {
             bitcoinAddressModel = BitcoinAddressModel(
@@ -707,8 +735,9 @@ class WalletTransactionBloc
               inEmailIntegrationPool: 0,
               used: 1,
             );
-            await localBitcoinAddressDataProvider
-                .insertOrUpdate(bitcoinAddressModel);
+            await localBitcoinAddressDataProvider.insertOrUpdate(
+              bitcoinAddressModel,
+            );
           }
         } else {
           recipientBitcoinAddresses.add(bitcoinAddress);
@@ -756,7 +785,8 @@ class WalletTransactionBloc
         sender = decryptedBoday.sender;
         body = decryptedBoday.body;
 
-        isInternalTransaction = (transactionModel.type ==
+        isInternalTransaction =
+            (transactionModel.type ==
                 TransactionType.protonToProtonSend.index ||
             transactionModel.type ==
                 TransactionType.protonToProtonReceive.index);
@@ -792,10 +822,11 @@ class WalletTransactionBloc
         sender: sender.isNotEmpty
             ? sender
             : isInternalTransaction
-                ? "Anonymous sender"
-                : "Unknown",
-        toList:
-            toList.isNotEmpty ? toList : recipientBitcoinAddresses.join(", "),
+            ? "Anonymous sender"
+            : "Unknown",
+        toList: toList.isNotEmpty
+            ? toList
+            : recipientBitcoinAddresses.join(", "),
         feeInSATS: (transactionDetail.fees ?? BigInt.zero).toInt(),
         label: userLabel,
         inProgress: time == null,
@@ -811,7 +842,8 @@ class WalletTransactionBloc
   }
 
   Future<ProtonExchangeRate> getExchangeRateFromTransactionModel(
-      TransactionModel? transactionModel) async {
+    TransactionModel? transactionModel,
+  ) async {
     ProtonExchangeRate? exchangeRate;
     if (transactionModel != null &&
         transactionModel.exchangeRateID.isNotEmpty) {
@@ -820,15 +852,17 @@ class WalletTransactionBloc
           .findByServerID(transactionModel.exchangeRateID);
       if (exchangeRateModel != null) {
         final BitcoinUnit bitcoinUnit = BitcoinUnit.values.firstWhere(
-            (v) =>
-                v.name.toUpperCase() ==
-                exchangeRateModel.bitcoinUnit.toUpperCase(),
-            orElse: () => defaultBitcoinUnit);
+          (v) =>
+              v.name.toUpperCase() ==
+              exchangeRateModel.bitcoinUnit.toUpperCase(),
+          orElse: () => defaultBitcoinUnit,
+        );
         final FiatCurrency fiatCurrency = FiatCurrency.values.firstWhere(
-            (v) =>
-                v.name.toUpperCase() ==
-                exchangeRateModel.fiatCurrency.toUpperCase(),
-            orElse: () => defaultFiatCurrency);
+          (v) =>
+              v.name.toUpperCase() ==
+              exchangeRateModel.fiatCurrency.toUpperCase(),
+          orElse: () => defaultFiatCurrency,
+        );
         exchangeRate = ProtonExchangeRate(
           id: exchangeRateModel.serverID,
           bitcoinUnit: bitcoinUnit,
@@ -851,9 +885,7 @@ class WalletTransactionBloc
   Future<FrbUnlockedWalletKey> getUnlockedWalletKey(
     WalletModel walletModel,
   ) async {
-    return walletKeysProvider.getWalletSecretKey(
-      walletModel.walletID,
-    );
+    return walletKeysProvider.getWalletSecretKey(walletModel.walletID);
   }
 
   void init() {
@@ -861,10 +893,7 @@ class WalletTransactionBloc
   }
 
   void selectWallet(WalletMenuModel walletMenuModel) {
-    add(SelectWallet(
-      walletMenuModel,
-      skipSyncWallet: false,
-    ));
+    add(SelectWallet(walletMenuModel, skipSyncWallet: false));
   }
 
   void selectAccount(
@@ -872,14 +901,15 @@ class WalletTransactionBloc
     AccountMenuModel accountMenuModel,
   ) {
     // select wallet first. unblock account
-    add(SelectAccount(
-      walletMenuModel,
-      accountMenuModel,
-      skipSyncWallet: false,
-    ));
+    add(
+      SelectAccount(walletMenuModel, accountMenuModel, skipSyncWallet: false),
+    );
   }
 
-  void syncWallet({required bool forceSync, required bool heightChanged}) {
+  Future<void> syncWallet({
+    required bool forceSync,
+    required bool heightChanged,
+  }) async {
     if (lastEvent != null) {
       if (lastEvent is SelectWallet) {
         final WalletMenuModel walletMenuModel =
@@ -891,7 +921,7 @@ class WalletTransactionBloc
             accountMenuModel.accountModel,
           );
           if (!isAccountSyncing) {
-            bdkTransactionDataProvider.syncWallet(
+            await bdkTransactionDataProvider.syncWallet(
               walletMenuModel.walletModel,
               accountMenuModel.accountModel,
               forceSync: forceSync,
@@ -914,7 +944,7 @@ class WalletTransactionBloc
           accountMenuModel.accountModel,
         );
         if (!isAccountSyncing) {
-          bdkTransactionDataProvider.syncWallet(
+          await bdkTransactionDataProvider.syncWallet(
             walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: forceSync,

@@ -14,8 +14,9 @@ FlutterSession _$FlutterSessionFromJson(Map<String, dynamic> json) =>
       passphrase: json['passphrase'] as String,
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
-      scopes:
-          (json['scopes'] as List<dynamic>).map((e) => e as String).toList(),
+      scopes: (json['scopes'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$FlutterSessionToJson(FlutterSession instance) =>
@@ -30,29 +31,29 @@ Map<String, dynamic> _$FlutterSessionToJson(FlutterSession instance) =>
     };
 
 UserInfo _$UserInfoFromJson(Map<String, dynamic> json) => UserInfo(
-      userId: json['userId'] as String,
-      userMail: json['userMail'] as String,
-      userName: json['userName'] as String,
-      userDisplayName: json['userDisplayName'] as String,
-      sessionId: json['sessionId'] as String,
-      accessToken: json['accessToken'] as String,
-      refreshToken: json['refreshToken'] as String,
-      scopes: json['scopes'] as String,
-      userKeyID: json['userKeyID'] as String,
-      userPrivateKey: json['userPrivateKey'] as String,
-      userPassphrase: json['userPassphrase'] as String,
-    );
+  userId: json['userId'] as String,
+  userMail: json['userMail'] as String,
+  userName: json['userName'] as String,
+  userDisplayName: json['userDisplayName'] as String,
+  sessionId: json['sessionId'] as String,
+  accessToken: json['accessToken'] as String,
+  refreshToken: json['refreshToken'] as String,
+  scopes: json['scopes'] as String,
+  userKeyID: json['userKeyID'] as String,
+  userPrivateKey: json['userPrivateKey'] as String,
+  userPassphrase: json['userPassphrase'] as String,
+);
 
 Map<String, dynamic> _$UserInfoToJson(UserInfo instance) => <String, dynamic>{
-      'userId': instance.userId,
-      'userMail': instance.userMail,
-      'userName': instance.userName,
-      'userDisplayName': instance.userDisplayName,
-      'sessionId': instance.sessionId,
-      'accessToken': instance.accessToken,
-      'refreshToken': instance.refreshToken,
-      'scopes': instance.scopes,
-      'userKeyID': instance.userKeyID,
-      'userPrivateKey': instance.userPrivateKey,
-      'userPassphrase': instance.userPassphrase,
-    };
+  'userId': instance.userId,
+  'userMail': instance.userMail,
+  'userName': instance.userName,
+  'userDisplayName': instance.userDisplayName,
+  'sessionId': instance.sessionId,
+  'accessToken': instance.accessToken,
+  'refreshToken': instance.refreshToken,
+  'scopes': instance.scopes,
+  'userKeyID': instance.userKeyID,
+  'userPrivateKey': instance.userPrivateKey,
+  'userPassphrase': instance.userPassphrase,
+};

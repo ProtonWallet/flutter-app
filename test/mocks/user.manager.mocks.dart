@@ -41,118 +41,63 @@ import 'package:wallet/rust/proton_api/proton_users.dart' as _i10;
 
 class _FakeSecureStorageManager_0 extends _i1.SmartFake
     implements _i2.SecureStorageManager {
-  _FakeSecureStorageManager_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSecureStorageManager_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePreferencesManager_1 extends _i1.SmartFake
     implements _i3.PreferencesManager {
-  _FakePreferencesManager_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePreferencesManager_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAppDatabase_2 extends _i1.SmartFake implements _i4.AppDatabase {
-  _FakeAppDatabase_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAppDatabase_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiEnv_3 extends _i1.SmartFake implements _i5.ApiEnv {
-  _FakeApiEnv_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiEnv_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserInfo_4 extends _i1.SmartFake implements _i6.UserInfo {
-  _FakeUserInfo_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserInfo_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonApiServiceManager_5 extends _i1.SmartFake
     implements _i7.ProtonApiServiceManager {
-  _FakeProtonApiServiceManager_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonApiServiceManager_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserDataProvider_6 extends _i1.SmartFake
     implements _i8.UserDataProvider {
-  _FakeUserDataProvider_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserDataProvider_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserManagerState_7 extends _i1.SmartFake
     implements _i9.UserManagerState {
-  _FakeUserManagerState_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserManagerState_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFlutterSession_8 extends _i1.SmartFake
     implements _i6.FlutterSession {
-  _FakeFlutterSession_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFlutterSession_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonUserKey_9 extends _i1.SmartFake implements _i10.ProtonUserKey {
-  _FakeProtonUserKey_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonUserKey_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserKey_10 extends _i1.SmartFake implements _i11.UserKey {
-  _FakeUserKey_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserKey_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [UserManager].
@@ -164,494 +109,410 @@ class MockUserManager extends _i1.Mock implements _i12.UserManager {
   }
 
   @override
-  _i2.SecureStorageManager get storage => (super.noSuchMethod(
-        Invocation.getter(#storage),
-        returnValue: _FakeSecureStorageManager_0(
-          this,
-          Invocation.getter(#storage),
-        ),
-      ) as _i2.SecureStorageManager);
+  _i2.SecureStorageManager get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSecureStorageManager_0(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i2.SecureStorageManager);
 
   @override
-  _i3.PreferencesManager get shared => (super.noSuchMethod(
-        Invocation.getter(#shared),
-        returnValue: _FakePreferencesManager_1(
-          this,
-          Invocation.getter(#shared),
-        ),
-      ) as _i3.PreferencesManager);
+  _i3.PreferencesManager get shared =>
+      (super.noSuchMethod(
+            Invocation.getter(#shared),
+            returnValue: _FakePreferencesManager_1(
+              this,
+              Invocation.getter(#shared),
+            ),
+          )
+          as _i3.PreferencesManager);
 
   @override
-  _i4.AppDatabase get dbConnection => (super.noSuchMethod(
-        Invocation.getter(#dbConnection),
-        returnValue: _FakeAppDatabase_2(
-          this,
-          Invocation.getter(#dbConnection),
-        ),
-      ) as _i4.AppDatabase);
+  _i4.AppDatabase get dbConnection =>
+      (super.noSuchMethod(
+            Invocation.getter(#dbConnection),
+            returnValue: _FakeAppDatabase_2(
+              this,
+              Invocation.getter(#dbConnection),
+            ),
+          )
+          as _i4.AppDatabase);
 
   @override
-  _i5.ApiEnv get apiEnv => (super.noSuchMethod(
-        Invocation.getter(#apiEnv),
-        returnValue: _FakeApiEnv_3(
-          this,
-          Invocation.getter(#apiEnv),
-        ),
-      ) as _i5.ApiEnv);
+  _i5.ApiEnv get apiEnv =>
+      (super.noSuchMethod(
+            Invocation.getter(#apiEnv),
+            returnValue: _FakeApiEnv_3(this, Invocation.getter(#apiEnv)),
+          )
+          as _i5.ApiEnv);
 
   @override
-  _i6.UserInfo get userInfo => (super.noSuchMethod(
-        Invocation.getter(#userInfo),
-        returnValue: _FakeUserInfo_4(
-          this,
-          Invocation.getter(#userInfo),
-        ),
-      ) as _i6.UserInfo);
+  _i6.UserInfo get userInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#userInfo),
+            returnValue: _FakeUserInfo_4(this, Invocation.getter(#userInfo)),
+          )
+          as _i6.UserInfo);
 
   @override
-  _i7.ProtonApiServiceManager get apiServiceManager => (super.noSuchMethod(
-        Invocation.getter(#apiServiceManager),
-        returnValue: _FakeProtonApiServiceManager_5(
-          this,
-          Invocation.getter(#apiServiceManager),
-        ),
-      ) as _i7.ProtonApiServiceManager);
+  _i7.ProtonApiServiceManager get apiServiceManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#apiServiceManager),
+            returnValue: _FakeProtonApiServiceManager_5(
+              this,
+              Invocation.getter(#apiServiceManager),
+            ),
+          )
+          as _i7.ProtonApiServiceManager);
 
   @override
-  _i8.UserDataProvider get userDataProvider => (super.noSuchMethod(
-        Invocation.getter(#userDataProvider),
-        returnValue: _FakeUserDataProvider_6(
-          this,
-          Invocation.getter(#userDataProvider),
-        ),
-      ) as _i8.UserDataProvider);
+  _i8.UserDataProvider get userDataProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#userDataProvider),
+            returnValue: _FakeUserDataProvider_6(
+              this,
+              Invocation.getter(#userDataProvider),
+            ),
+          )
+          as _i8.UserDataProvider);
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
   set userInfo(_i6.UserInfo? value) => super.noSuchMethod(
-        Invocation.setter(
-          #userInfo,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#userInfo, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set userDataProvider(_i8.UserDataProvider? value) => super.noSuchMethod(
-        Invocation.setter(
-          #userDataProvider,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#userDataProvider, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.UserManagerState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeUserManagerState_7(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i9.UserManagerState);
+  _i9.UserManagerState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeUserManagerState_7(
+              this,
+              Invocation.getter(#state),
+            ),
+          )
+          as _i9.UserManagerState);
 
   @override
-  _i14.Stream<_i9.UserManagerState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i14.Stream<_i9.UserManagerState>.empty(),
-      ) as _i14.Stream<_i9.UserManagerState>);
+  _i14.Stream<_i9.UserManagerState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i14.Stream<_i9.UserManagerState>.empty(),
+          )
+          as _i14.Stream<_i9.UserManagerState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i14.Future<bool> sessionExists() => (super.noSuchMethod(
-        Invocation.method(
-          #sessionExists,
-          [],
-        ),
-        returnValue: _i14.Future<bool>.value(false),
-      ) as _i14.Future<bool>);
+  _i14.Future<bool> sessionExists() =>
+      (super.noSuchMethod(
+            Invocation.method(#sessionExists, []),
+            returnValue: _i14.Future<bool>.value(false),
+          )
+          as _i14.Future<bool>);
 
   @override
-  _i14.Future<void> firstRun() => (super.noSuchMethod(
-        Invocation.method(
-          #firstRun,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> firstRun() =>
+      (super.noSuchMethod(
+            Invocation.method(#firstRun, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<_i6.FlutterSession> getChildSession() => (super.noSuchMethod(
-        Invocation.method(
-          #getChildSession,
-          [],
-        ),
-        returnValue:
-            _i14.Future<_i6.FlutterSession>.value(_FakeFlutterSession_8(
-          this,
-          Invocation.method(
-            #getChildSession,
-            [],
-          ),
-        )),
-      ) as _i14.Future<_i6.FlutterSession>);
+  _i14.Future<_i6.FlutterSession> getChildSession() =>
+      (super.noSuchMethod(
+            Invocation.method(#getChildSession, []),
+            returnValue: _i14.Future<_i6.FlutterSession>.value(
+              _FakeFlutterSession_8(
+                this,
+                Invocation.method(#getChildSession, []),
+              ),
+            ),
+          )
+          as _i14.Future<_i6.FlutterSession>);
 
   @override
   _i14.Future<void> flutterLogin(_i15.AuthCredential? auth) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #flutterLogin,
-          [auth],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+            Invocation.method(#flutterLogin, [auth]),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> nativeLogin(_i6.UserInfo? userInfo) => (super.noSuchMethod(
-        Invocation.method(
-          #nativeLogin,
-          [userInfo],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> nativeLogin(_i6.UserInfo? userInfo) =>
+      (super.noSuchMethod(
+            Invocation.method(#nativeLogin, [userInfo]),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> tryRestoreUserInfo() => (super.noSuchMethod(
-        Invocation.method(
-          #tryRestoreUserInfo,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> tryRestoreUserInfo() =>
+      (super.noSuchMethod(
+            Invocation.method(#tryRestoreUserInfo, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> trySaveUserInfo() => (super.noSuchMethod(
-        Invocation.method(
-          #trySaveUserInfo,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> trySaveUserInfo() =>
+      (super.noSuchMethod(
+            Invocation.method(#trySaveUserInfo, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<_i10.ProtonUserKey> getDefaultKey() => (super.noSuchMethod(
-        Invocation.method(
-          #getDefaultKey,
-          [],
-        ),
-        returnValue: _i14.Future<_i10.ProtonUserKey>.value(_FakeProtonUserKey_9(
-          this,
-          Invocation.method(
-            #getDefaultKey,
-            [],
-          ),
-        )),
-      ) as _i14.Future<_i10.ProtonUserKey>);
+  _i14.Future<_i10.ProtonUserKey> getDefaultKey() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDefaultKey, []),
+            returnValue: _i14.Future<_i10.ProtonUserKey>.value(
+              _FakeProtonUserKey_9(this, Invocation.method(#getDefaultKey, [])),
+            ),
+          )
+          as _i14.Future<_i10.ProtonUserKey>);
 
   @override
-  _i14.Future<_i10.ProtonUserKey> getPrimaryKeyForTL() => (super.noSuchMethod(
-        Invocation.method(
-          #getPrimaryKeyForTL,
-          [],
-        ),
-        returnValue: _i14.Future<_i10.ProtonUserKey>.value(_FakeProtonUserKey_9(
-          this,
-          Invocation.method(
-            #getPrimaryKeyForTL,
-            [],
-          ),
-        )),
-      ) as _i14.Future<_i10.ProtonUserKey>);
+  _i14.Future<_i10.ProtonUserKey> getPrimaryKeyForTL() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPrimaryKeyForTL, []),
+            returnValue: _i14.Future<_i10.ProtonUserKey>.value(
+              _FakeProtonUserKey_9(
+                this,
+                Invocation.method(#getPrimaryKeyForTL, []),
+              ),
+            ),
+          )
+          as _i14.Future<_i10.ProtonUserKey>);
 
   @override
-  _i14.Future<_i11.UserKey> getPrimaryKey() => (super.noSuchMethod(
-        Invocation.method(
-          #getPrimaryKey,
-          [],
-        ),
-        returnValue: _i14.Future<_i11.UserKey>.value(_FakeUserKey_10(
-          this,
-          Invocation.method(
-            #getPrimaryKey,
-            [],
-          ),
-        )),
-      ) as _i14.Future<_i11.UserKey>);
+  _i14.Future<_i11.UserKey> getPrimaryKey() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPrimaryKey, []),
+            returnValue: _i14.Future<_i11.UserKey>.value(
+              _FakeUserKey_10(this, Invocation.method(#getPrimaryKey, [])),
+            ),
+          )
+          as _i14.Future<_i11.UserKey>);
 
   @override
-  _i14.Future<_i11.UserKey> getUserKey(String? keyID) => (super.noSuchMethod(
-        Invocation.method(
-          #getUserKey,
-          [keyID],
-        ),
-        returnValue: _i14.Future<_i11.UserKey>.value(_FakeUserKey_10(
-          this,
-          Invocation.method(
-            #getUserKey,
-            [keyID],
-          ),
-        )),
-      ) as _i14.Future<_i11.UserKey>);
+  _i14.Future<_i11.UserKey> getUserKey(String? keyID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserKey, [keyID]),
+            returnValue: _i14.Future<_i11.UserKey>.value(
+              _FakeUserKey_10(this, Invocation.method(#getUserKey, [keyID])),
+            ),
+          )
+          as _i14.Future<_i11.UserKey>);
 
   @override
   _i14.Future<List<_i10.ProtonUserKey>> getUserKeysForTL() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getUserKeysForTL,
-          [],
-        ),
-        returnValue:
-            _i14.Future<List<_i10.ProtonUserKey>>.value(<_i10.ProtonUserKey>[]),
-      ) as _i14.Future<List<_i10.ProtonUserKey>>);
+            Invocation.method(#getUserKeysForTL, []),
+            returnValue: _i14.Future<List<_i10.ProtonUserKey>>.value(
+              <_i10.ProtonUserKey>[],
+            ),
+          )
+          as _i14.Future<List<_i10.ProtonUserKey>>);
 
   @override
   _i14.Future<_i10.ProtonUserKey> getUserKeyForTL(String? keyID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getUserKeyForTL,
-          [keyID],
-        ),
-        returnValue: _i14.Future<_i10.ProtonUserKey>.value(_FakeProtonUserKey_9(
-          this,
-          Invocation.method(
-            #getUserKeyForTL,
-            [keyID],
-          ),
-        )),
-      ) as _i14.Future<_i10.ProtonUserKey>);
+            Invocation.method(#getUserKeyForTL, [keyID]),
+            returnValue: _i14.Future<_i10.ProtonUserKey>.value(
+              _FakeProtonUserKey_9(
+                this,
+                Invocation.method(#getUserKeyForTL, [keyID]),
+              ),
+            ),
+          )
+          as _i14.Future<_i10.ProtonUserKey>);
 
   @override
-  String getUserKeyPassphrase() => (super.noSuchMethod(
-        Invocation.method(
-          #getUserKeyPassphrase,
-          [],
-        ),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getUserKeyPassphrase,
-            [],
-          ),
-        ),
-      ) as String);
+  String getUserKeyPassphrase() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserKeyPassphrase, []),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.method(#getUserKeyPassphrase, []),
+            ),
+          )
+          as String);
 
   @override
-  _i14.Future<List<_i11.UserKey>> getUserKeys() => (super.noSuchMethod(
-        Invocation.method(
-          #getUserKeys,
-          [],
-        ),
-        returnValue: _i14.Future<List<_i11.UserKey>>.value(<_i11.UserKey>[]),
-      ) as _i14.Future<List<_i11.UserKey>>);
+  _i14.Future<List<_i11.UserKey>> getUserKeys() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserKeys, []),
+            returnValue: _i14.Future<List<_i11.UserKey>>.value(
+              <_i11.UserKey>[],
+            ),
+          )
+          as _i14.Future<List<_i11.UserKey>>);
 
   @override
-  _i14.Future<void> init() => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> init() =>
+      (super.noSuchMethod(
+            Invocation.method(#init, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> dispose() => (super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> logout() => (super.noSuchMethod(
-        Invocation.method(
-          #logout,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<void> login(String? userID) => (super.noSuchMethod(
-        Invocation.method(
-          #login,
-          [userID],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> login(String? userID) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userID]),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i16.Priority getPriority() => (super.noSuchMethod(
-        Invocation.method(
-          #getPriority,
-          [],
-        ),
-        returnValue: _i16.Priority.level1,
-      ) as _i16.Priority);
+  _i16.Priority getPriority() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPriority, []),
+            returnValue: _i16.Priority.level1,
+          )
+          as _i16.Priority);
 
   @override
   void add(_i17.UserManagerEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i17.UserManagerEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i9.UserManagerState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i17.UserManagerEvent>(
     _i18.EventHandler<E, _i9.UserManagerState>? handler, {
     _i18.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i18.Transition<_i17.UserManagerEvent, _i9.UserManagerState>?
-              transition) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i18.Transition<_i17.UserManagerEvent, _i9.UserManagerState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onDone(
     _i17.UserManagerEvent? event, [
     Object? error,
     StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  ]) => super.noSuchMethod(
+    Invocation.method(#onDone, [event, error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i14.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
   void onChange(_i18.Change<_i9.UserManagerState>? change) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
+        Invocation.method(#onChange, [change]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [UserInfo].
@@ -663,110 +524,131 @@ class MockUserInfo extends _i1.Mock implements _i6.UserInfo {
   }
 
   @override
-  String get userId => (super.noSuchMethod(
-        Invocation.getter(#userId),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userId),
-        ),
-      ) as String);
+  String get userId =>
+      (super.noSuchMethod(
+            Invocation.getter(#userId),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userId),
+            ),
+          )
+          as String);
 
   @override
-  String get userMail => (super.noSuchMethod(
-        Invocation.getter(#userMail),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userMail),
-        ),
-      ) as String);
+  String get userMail =>
+      (super.noSuchMethod(
+            Invocation.getter(#userMail),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userMail),
+            ),
+          )
+          as String);
 
   @override
-  String get userName => (super.noSuchMethod(
-        Invocation.getter(#userName),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userName),
-        ),
-      ) as String);
+  String get userName =>
+      (super.noSuchMethod(
+            Invocation.getter(#userName),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userName),
+            ),
+          )
+          as String);
 
   @override
-  String get userDisplayName => (super.noSuchMethod(
-        Invocation.getter(#userDisplayName),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userDisplayName),
-        ),
-      ) as String);
+  String get userDisplayName =>
+      (super.noSuchMethod(
+            Invocation.getter(#userDisplayName),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userDisplayName),
+            ),
+          )
+          as String);
 
   @override
-  String get sessionId => (super.noSuchMethod(
-        Invocation.getter(#sessionId),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#sessionId),
-        ),
-      ) as String);
+  String get sessionId =>
+      (super.noSuchMethod(
+            Invocation.getter(#sessionId),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#sessionId),
+            ),
+          )
+          as String);
 
   @override
-  String get accessToken => (super.noSuchMethod(
-        Invocation.getter(#accessToken),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#accessToken),
-        ),
-      ) as String);
+  String get accessToken =>
+      (super.noSuchMethod(
+            Invocation.getter(#accessToken),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#accessToken),
+            ),
+          )
+          as String);
 
   @override
-  String get refreshToken => (super.noSuchMethod(
-        Invocation.getter(#refreshToken),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#refreshToken),
-        ),
-      ) as String);
+  String get refreshToken =>
+      (super.noSuchMethod(
+            Invocation.getter(#refreshToken),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#refreshToken),
+            ),
+          )
+          as String);
 
   @override
-  String get scopes => (super.noSuchMethod(
-        Invocation.getter(#scopes),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#scopes),
-        ),
-      ) as String);
+  String get scopes =>
+      (super.noSuchMethod(
+            Invocation.getter(#scopes),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#scopes),
+            ),
+          )
+          as String);
 
   @override
-  String get userKeyID => (super.noSuchMethod(
-        Invocation.getter(#userKeyID),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userKeyID),
-        ),
-      ) as String);
+  String get userKeyID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userKeyID),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userKeyID),
+            ),
+          )
+          as String);
 
   @override
-  String get userPrivateKey => (super.noSuchMethod(
-        Invocation.getter(#userPrivateKey),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userPrivateKey),
-        ),
-      ) as String);
+  String get userPrivateKey =>
+      (super.noSuchMethod(
+            Invocation.getter(#userPrivateKey),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userPrivateKey),
+            ),
+          )
+          as String);
 
   @override
-  String get userPassphrase => (super.noSuchMethod(
-        Invocation.getter(#userPassphrase),
-        returnValue: _i13.dummyValue<String>(
-          this,
-          Invocation.getter(#userPassphrase),
-        ),
-      ) as String);
+  String get userPassphrase =>
+      (super.noSuchMethod(
+            Invocation.getter(#userPassphrase),
+            returnValue: _i13.dummyValue<String>(
+              this,
+              Invocation.getter(#userPassphrase),
+            ),
+          )
+          as String);
 
   @override
-  Map<String, dynamic> toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }

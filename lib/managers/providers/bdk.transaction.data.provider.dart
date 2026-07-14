@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:sentry/sentry.dart';
+import 'package:synchronized/synchronized.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/exceptions.dart';
 import 'package:wallet/helper/extension/datetime.dart';
@@ -41,10 +42,7 @@ class BDKTransactionData {
   final AccountModel accountModel;
   List<FrbTransactionDetails> transactions = [];
 
-  BDKTransactionData({
-    required this.accountModel,
-    required this.transactions,
-  });
+  BDKTransactionData({required this.accountModel, required this.transactions});
 }
 
 class BDKSyncUpdated extends DataUpdated<String> {
@@ -99,12 +97,15 @@ class BDKTransactionDataProvider extends DataProvider {
   Map<String, bool> isWalletSyncing = {};
   Map<String, int> lastSyncedTime = {};
 
+  /// Only one BDK sync at a time — parallel fullSync + gopenpgp decrypt crashes debug iOS.
+  static final Lock _syncLock = Lock();
+
   Future<void> init(List<WalletModel> wallets) async {
     resetErrorCount();
     for (WalletModel walletModel in wallets) {
       final accounts = await accountDao.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accounts) {
-        syncWallet(
+        await syncWallet(
           walletModel,
           accountModel,
           forceSync: false,
@@ -125,21 +126,30 @@ class BDKTransactionDataProvider extends DataProvider {
     );
     List<FrbTransactionDetails> transactions = [];
     if (account != null) {
-      transactions = await account.getTransactions(filter: TransactionFilter.all);
+      transactions = await account.getTransactions(
+        filter: TransactionFilter.all,
+      );
     }
     return BDKTransactionData(
-        accountModel: accountModel, transactions: transactions);
+      accountModel: accountModel,
+      transactions: transactions,
+    );
   }
 
   Future<BDKTransactionData> getBDKTransactionDataByWalletAccount(
-      WalletModel walletModel, AccountModel accountModel) async {
-    final BDKTransactionData bdkTransactionData =
-        await _getBDKTransactionData(walletModel, accountModel);
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
+    final BDKTransactionData bdkTransactionData = await _getBDKTransactionData(
+      walletModel,
+      accountModel,
+    );
     return bdkTransactionData;
   }
 
   bool lastSyncTimeCheck(WalletModel walletModel, AccountModel accountModel) {
-    final int timeDiff = DateTime.now().millisecondsSinceEpoch -
+    final int timeDiff =
+        DateTime.now().millisecondsSinceEpoch -
         (lastSyncedTime[accountModel.accountID] ?? 0);
     if (timeDiff > reSyncTime) {
       return true;
@@ -152,7 +162,9 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   String getPositiveBalanceCheckID(
-      WalletModel walletModel, AccountModel accountModel) {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) {
     final String serverWalletID = walletModel.walletID;
     final String serverAccountID = accountModel.accountID;
     final String checkID =
@@ -161,14 +173,18 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   Future<bool> getHasPositiveBalance(
-      WalletModel walletModel, AccountModel accountModel) async {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
     final String checkID = getPositiveBalanceCheckID(walletModel, accountModel);
     return await shared.read(checkID) ?? false;
   }
 
   Future<void> setHasPositiveBalance(
-      WalletModel walletModel, AccountModel accountModel,
-      {required bool hasPositiveBalance}) async {
+    WalletModel walletModel,
+    AccountModel accountModel, {
+    required bool hasPositiveBalance,
+  }) async {
     final String checkID = getPositiveBalanceCheckID(walletModel, accountModel);
     await shared.write(checkID, hasPositiveBalance);
   }
@@ -196,26 +212,48 @@ class BDKTransactionDataProvider extends DataProvider {
   }
 
   Future<bool> hasFullSynced(
-      WalletModel walletModel, AccountModel accountModel) async {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
     final String syncCheckID = getSyncCheckID(walletModel, accountModel);
     return await shared.read(syncCheckID) ?? false;
   }
 
   Future<bool> hasUsedServerStopgap(
-      WalletModel walletModel, AccountModel accountModel) async {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
     final String syncCheckID =
         "${getSyncCheckID(walletModel, accountModel)}_ServerStopgap";
     return await shared.read(syncCheckID) ?? false;
   }
 
   Future<void> setUsedServerStopgap(
-      WalletModel walletModel, AccountModel accountModel) async {
+    WalletModel walletModel,
+    AccountModel accountModel,
+  ) async {
     final String syncCheckID =
         "${getSyncCheckID(walletModel, accountModel)}_ServerStopgap";
     await shared.write(syncCheckID, true);
   }
 
   Future<void> syncWallet(
+    WalletModel walletModel,
+    AccountModel accountModel, {
+    required bool forceSync,
+    required bool heightChanged,
+  }) async {
+    await _syncLock.synchronized(() async {
+      await _syncWalletUnlocked(
+        walletModel,
+        accountModel,
+        forceSync: forceSync,
+        heightChanged: heightChanged,
+      );
+    });
+  }
+
+  Future<void> _syncWalletUnlocked(
     WalletModel walletModel,
     AccountModel accountModel, {
     required bool forceSync,
@@ -271,20 +309,24 @@ class BDKTransactionDataProvider extends DataProvider {
           );
           if (!isSynced || forceSync) {
             // when force sync reset the timmer and status. incase task failed cant restart
-            final String syncCheckID =
-                getSyncCheckID(walletModel, accountModel);
+            final String syncCheckID = getSyncCheckID(
+              walletModel,
+              accountModel,
+            );
             await shared.write(syncCheckID, false);
             lastSyncedTime[accountModel.accountID] = 0;
             final timeStart = DateTime.now().secondsSinceEpoch();
             logger.i("Bdk wallet full sync start time: $timeStart");
-            int customStopgap =
-                await userSettingsDataProvider.getCustomStopgap();
+            int customStopgap = await userSettingsDataProvider
+                .getCustomStopgap();
 
             /// use max(customStopgap, accountModel.stopGap)
             /// for first full sync
             /// so we can find transactions in far index
-            final bool hasUseServerGap =
-                await hasUsedServerStopgap(walletModel, accountModel);
+            final bool hasUseServerGap = await hasUsedServerStopgap(
+              walletModel,
+              accountModel,
+            );
             if (!hasUseServerGap) {
               customStopgap = max(customStopgap, accountModel.stopGap);
               await setUsedServerStopgap(walletModel, accountModel);
@@ -310,8 +352,8 @@ class BDKTransactionDataProvider extends DataProvider {
             logger.i("Bdk wallet partial sync end time: $timeEnd");
             syncSuccess = true;
           }
-          lastSyncedTime[accountModel.accountID] =
-              DateTime.now().secondsSinceEpoch();
+          lastSyncedTime[accountModel.accountID] = DateTime.now()
+              .secondsSinceEpoch();
           await resetErrorCount();
         }
       } on BridgeError catch (e, stacktrace) {
@@ -331,10 +373,7 @@ class BDKTransactionDataProvider extends DataProvider {
           // CommonHelper.showErrorDialog(errorMessage);
         }
         if (!ifMuonClientError(e)) {
-          Sentry.captureException(
-            e,
-            stackTrace: stacktrace,
-          );
+          Sentry.captureException(e, stackTrace: stacktrace);
         }
       } catch (e, stacktrace) {
         final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
@@ -360,8 +399,9 @@ class BDKTransactionDataProvider extends DataProvider {
       serverScriptType: accountModel.scriptType,
     );
     if (account != null && syncSuccess) {
-      final int? maximumGapSize =
-          await account.getMaximumGapSize(keychain: KeychainKind.external_);
+      final int? maximumGapSize = await account.getMaximumGapSize(
+        keychain: KeychainKind.external_,
+      );
       if (maximumGapSize != null) {
         final int rangedStopgap = await account.getStopGapRange(
           maxGap: maximumGapSize,
@@ -369,9 +409,10 @@ class BDKTransactionDataProvider extends DataProvider {
         if (rangedStopgap != accountModel.stopGap) {
           try {
             final _ = await walletClient.updateWalletAccountStopGap(
-                walletId: walletModel.walletID,
-                walletAccountId: accountModel.accountID,
-                stopGap: rangedStopgap);
+              walletId: walletModel.walletID,
+              walletAccountId: accountModel.accountID,
+              stopGap: rangedStopgap,
+            );
           } catch (e, stacktrace) {
             logger.e("Update stopgap error: $e stacktrace: $stacktrace");
             Sentry.captureException(e, stackTrace: stacktrace);
@@ -386,12 +427,17 @@ class BDKTransactionDataProvider extends DataProvider {
         final balance = await account.getBalance();
         final hasPositiveBalance =
             balance.trustedSpendable().toSat().toInt() > 0;
-        final hasPositiveBalanceInCache =
-            await getHasPositiveBalance(walletModel, accountModel);
+        final hasPositiveBalanceInCache = await getHasPositiveBalance(
+          walletModel,
+          accountModel,
+        );
         if (hasPositiveBalance != hasPositiveBalanceInCache) {
           /// update cache to avoid spam
-          await setHasPositiveBalance(walletModel, accountModel,
-              hasPositiveBalance: hasPositiveBalance);
+          await setHasPositiveBalance(
+            walletModel,
+            accountModel,
+            hasPositiveBalance: hasPositiveBalance,
+          );
           await walletClient.sendWalletAccountMetrics(
             walletId: walletModel.walletID,
             walletAccountId: accountModel.accountID,
@@ -399,8 +445,9 @@ class BDKTransactionDataProvider extends DataProvider {
           );
         }
       } catch (e, stacktrace) {
-        logger
-            .e("Send Wallet Account Metrics error: $e stacktrace: $stacktrace");
+        logger.e(
+          "Send Wallet Account Metrics error: $e stacktrace: $stacktrace",
+        );
         Sentry.captureException(e, stackTrace: stacktrace);
       }
     }
@@ -438,7 +485,8 @@ class BDKTransactionDataProvider extends DataProvider {
   Future<void> updateErrorCount() async {
     final count = await shared.read(PreferenceKeys.syncErrorCount) ?? 0;
     await shared.write(PreferenceKeys.syncErrorCount, count + 1);
-    final newTimeer = DateTime.now().secondsSinceEpoch() +
+    final newTimeer =
+        DateTime.now().secondsSinceEpoch() +
         _getNextBackoffDuration(count, minSeconds: 120, maxSeconds: 300);
     await shared.write(PreferenceKeys.syncErrorTimer, newTimeer);
   }

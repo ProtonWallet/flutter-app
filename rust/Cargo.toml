@@ -9,7 +9,7 @@ assert_matches = "1.5.0"
 mockall = "0.13.0"
 
 [build-dependencies]
-flutter_rust_bridge_codegen = { version = "2.6.0" }
+flutter_rust_bridge_codegen = { version = "2.12.0" }
 
 [dependencies]
 ##
@@ -33,7 +33,7 @@ tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 ## 
-flutter_rust_bridge = { version = "=2.11.1" } 
+flutter_rust_bridge = { version = "=2.12.0" } 
 
 ##
 rand = "0.8.5" #could be removed with small change. when remove ask crypto team to review
@@ -61,6 +61,20 @@ proton-crypto-account = { registry = "proton_public", version = "0.13.0" }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
+jni = "0.21"
+rustls = { version = "0.23.31", default-features = false, features = [
+    "ring",
+    "std",
+] }
+rustls-platform-verifier = "0.7.0"
+async-compat = "0.2.4"
+
+[target.'cfg(target_os = "ios")'.dependencies]
+rustls = { version = "0.23.31", default-features = false, features = [
+    "ring",
+    "std",
+] }
+rustls-platform-verifier = "0.7.0"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 openssl = { version = "*", features = ["vendored"] }
