@@ -33,10 +33,7 @@ import 'package:wallet/scenes/core/viewmodel.dart';
 import 'package:wallet/scenes/import/import.coordinator.dart';
 
 abstract class ImportViewModel extends ViewModel<ImportCoordinator> {
-  ImportViewModel(
-    super.coordinator,
-    this.dataProviderManager,
-  );
+  ImportViewModel(super.coordinator, this.dataProviderManager);
 
   final DataProviderManager dataProviderManager;
   late TextEditingController mnemonicTextController;
@@ -99,8 +96,9 @@ class ImportViewModelImpl extends ImportViewModel {
     passphraseFocusNode = FocusNode();
     fiatCurrencyNotifier = ValueNotifier(defaultFiatCurrency);
     nameTextController.text = preInputWalletName;
-    final WalletUserSettings? walletUserSettings =
-        await dataProviderManager.userSettingsDataProvider.getSettings();
+    final WalletUserSettings? walletUserSettings = await dataProviderManager
+        .userSettingsDataProvider
+        .getSettings();
     if (walletUserSettings != null) {
       acceptTermsAndConditions = walletUserSettings.acceptTermsAndConditions;
     }
@@ -108,11 +106,13 @@ class ImportViewModelImpl extends ImportViewModel {
     final addresses = await protonEmailAddressClient.getProtonAddress();
 
     /// filter active address
-    protonAddresses =
-        addresses.where((element) => element.status == 1).toList();
+    protonAddresses = addresses
+        .where((element) => element.status == 1)
+        .toList();
 
-    final List<WalletData>? wallets =
-        await dataProviderManager.walletDataProvider.getWallets();
+    final List<WalletData>? wallets = await dataProviderManager
+        .walletDataProvider
+        .getWallets();
     if (wallets == null || wallets.isEmpty) {
       /// set flag for first wallet, we will need to show T&C page for first wallet import
       isFirstWallet = true;
@@ -147,10 +147,11 @@ class ImportViewModelImpl extends ImportViewModel {
       final dbPath = await getDatabaseFolderPath();
       final storage = WalletMobilePersisterFactory(folderPath: dbPath);
       final foundAccounts = await frbWallet.discoverAccount(
-          apiService: apiService.getArc(),
-          factory_: storage,
-          accountStopGap: 1,
-          addressStopGap: BigInt.from(10));
+        apiService: apiService.getArc(),
+        factory_: storage,
+        accountStopGap: 1,
+        addressStopGap: BigInt.from(10),
+      );
 
       if (foundAccounts.isNotEmpty) {
         var count = 1;
@@ -193,9 +194,7 @@ class ImportViewModelImpl extends ImportViewModel {
         );
         final String walletID = apiWallet.wallet.id;
         final String accountID = apiWalletAccount.id;
-        final walletModel = await DBHelper.walletDao!.findByServerID(
-          walletID,
-        );
+        final walletModel = await DBHelper.walletDao!.findByServerID(walletID);
         final accountModel = await DBHelper.accountDao!.findByServerID(
           accountID,
         );
@@ -307,14 +306,15 @@ class ImportViewModelImpl extends ImportViewModel {
     final length = mnemonicLength.length;
     for (var i = 0; i < mnemonicLength.length; i++) {
       final word = mnemonicLength[i];
-      if (!FrbMnemonic.getWordsAutocomplete(wordStart: word)
-          .contains(mnemonicLength[i])) {
+      if (!FrbMnemonic.getWordsAutocomplete(
+        wordStart: word,
+      ).contains(mnemonicLength[i])) {
         final pending = "\nWord: `$word`";
         return (false, pending);
       }
     }
     if (length != 12 && length != 18 && length != 24) {
-      logger.i("length not match! ($mnemonicLength)");
+      logger.i("length not match! ($length)");
       final pending = "\nLength: $length";
       return (false, pending);
     }
