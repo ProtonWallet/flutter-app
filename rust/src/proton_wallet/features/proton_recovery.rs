@@ -61,7 +61,7 @@ impl ProtonRecovery {
         let mnemonic_words = mnemonic.as_words();
         let recovery_password = BASE64_STANDARD.encode(random_entropy_bytes);
 
-        info!("Enabling recovery: 3 {}", mnemonic_words.join(" "));
+        info!("Enabling recovery: 3 mnemonic generated");
 
         let new_hashed_password =
             SrpClient::compute_key_password_as_secret(&recovery_password, salt_bytes.to_vec())?;
@@ -153,7 +153,7 @@ impl ProtonRecovery {
         let mnemonic_words = mnemonic.as_words();
         let recovery_password = BASE64_STANDARD.encode(random_entropy_bytes);
 
-        info!("Reactive recovery: 3 {}", mnemonic_words.join(" "));
+        info!("Reactive recovery: 3 mnemonic generated");
         let new_hashed_password =
             SrpClient::compute_key_password_as_secret(&recovery_password, salt_bytes.to_vec())?;
 
