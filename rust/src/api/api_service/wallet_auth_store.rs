@@ -1,6 +1,12 @@
-use andromeda_api::{Auth, ChildSession, Tokens, WalletAuthStore};
+use andromeda_api::{
+    Auth, ChildSession, EnvId, Store, StoreError, Tokens, WalletAuthStore,
+};
+use async_trait::async_trait;
 use flutter_rust_bridge::frb;
-use std::sync::Arc;
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc,
+};
 use tokio::sync::Mutex;
 use tracing::info;
 
@@ -13,6 +19,76 @@ lazy_static::lazy_static! {
     static ref GLOBAL_SESSION_DART_CALLBACK: Mutex<Option<Arc<DartCallback>>> = Mutex::new(None);
 }
 
+static API_CLIENT_INITIALIZING: AtomicBool = AtomicBool::new(false);
+
+pub(crate) fn set_api_client_initializing(initializing: bool) {
+    API_CLIENT_INITIALIZING.store(initializing, Ordering::SeqCst);
+}
+
+fn is_api_client_initializing() -> bool {
+    API_CLIENT_INITIALIZING.load(Ordering::SeqCst)
+}
+
+fn auth_session_changed(previous: &Auth, updated: &Auth) -> bool {
+    if matches!(updated, Auth::None) {
+        return false;
+    }
+    previous.uid() != updated.uid()
+        || previous.acc_tok() != updated.acc_tok()
+        || previous.ref_tok() != updated.ref_tok()
+        || previous.scopes() != updated.scopes()
+}
+
+/// Wraps [`WalletAuthStore`] to notify Dart when muon refreshes auth tokens.
+struct CallbackWalletAuthStore {
+    inner: WalletAuthStore,
+}
+
+impl CallbackWalletAuthStore {
+    fn new(inner: WalletAuthStore) -> Self {
+        Self { inner }
+    }
+}
+
+#[async_trait]
+impl Store<()> for CallbackWalletAuthStore {
+    fn env(&self) -> EnvId {
+        self.inner.env()
+    }
+
+    async fn get_auth(&self, key: &()) -> Result<Auth, StoreError> {
+        self.inner.get_auth(key).await
+    }
+
+    async fn set_auth(&mut self, key: &(), auth: Auth) -> Result<(), StoreError> {
+        let previous = self.inner.get_auth(key).await.unwrap_or(Auth::None);
+        self.inner.set_auth(key, auth.clone()).await?;
+        if auth_session_changed(&previous, &auth) && !is_api_client_initializing() {
+            refresh_auth_credential(auth);
+        }
+        Ok(())
+    }
+
+    async fn remove_auth(&mut self, key: &()) -> Result<Option<Auth>, StoreError> {
+        self.inner.remove_auth(key).await
+    }
+
+    async fn get_all_auth(&self) -> Result<std::collections::HashMap<(), Auth>, StoreError> {
+        self.inner.get_all_auth().await
+    }
+
+    async fn set_all_auth(
+        &mut self,
+        auth: std::collections::HashMap<(), Auth>,
+    ) -> Result<(), StoreError> {
+        self.inner.set_all_auth(auth).await
+    }
+
+    async fn remove_all_auth(&mut self) -> Result<(), StoreError> {
+        self.inner.remove_all_auth().await
+    }
+}
+
 #[derive(Debug, Clone)]
 #[frb(opaque)]
 pub struct ProtonWalletAuthStore {
@@ -20,6 +96,10 @@ pub struct ProtonWalletAuthStore {
 }
 
 impl ProtonWalletAuthStore {
+    pub(crate) fn callback_store(&self) -> Box<dyn Store<()>> {
+        Box::new(CallbackWalletAuthStore::new(self.inner.clone()))
+    }
+
     #[frb(sync)]
     pub fn new(env: &str) -> Result<Self, BridgeError> {
         let auth = Arc::new(std::sync::Mutex::new(Auth::None));
@@ -32,8 +112,7 @@ impl ProtonWalletAuthStore {
         auth: Arc<std::sync::Mutex<Auth>>,
     ) -> Result<Self, BridgeError> {
         info!("from_auth start");
-        let mut store = WalletAuthStore::from_env_str(env.to_string(), auth);
-        store.set_auth_listener(Arc::new(refresh_auth_credential));
+        let store = WalletAuthStore::from_env_str(env.to_string(), auth);
         Ok(Self { inner: store })
     }
 

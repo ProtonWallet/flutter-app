@@ -17,7 +17,8 @@ use super::{
     proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
     proton_settings_client::ProtonSettingsClient, proton_users_client::ProtonUsersClient,
     settings_client::SettingsClient, transaction_client::TransactionClient,
-    unleash_client::FrbUnleashClient, wallet_auth_store::ProtonWalletAuthStore,
+    unleash_client::FrbUnleashClient,
+    wallet_auth_store::{set_api_client_initializing, ProtonWalletAuthStore},
     wallet_client::WalletClient,
 };
 use crate::{
@@ -53,7 +54,7 @@ impl ProtonAPIService {
             auth: None,
             url_prefix: None,
             env: Some(env),
-            store: Some(store.inner.clone()),
+            store: Some(store.callback_store()),
             // proxy: Some(ProxyConfig {
             //     host: "192.168.1.138".into(),
             //     port: 9090,
@@ -61,7 +62,15 @@ impl ProtonAPIService {
             proxy: None,
         };
 
-        let inner_api = ProtonWalletApiClient::from_config(config).await?;
+        set_api_client_initializing(true);
+        struct ApiClientInitializingGuard;
+        impl Drop for ApiClientInitializingGuard {
+            fn drop(&mut self) {
+                set_api_client_initializing(false);
+            }
+        }
+        let _initializing_guard = ApiClientInitializingGuard;
+        let inner_api = ProtonWalletApiClient::from_config_async(config).await?;
         let api: ProtonAPIService = ProtonAPIService {
             inner: Arc::new(inner_api),
             store: Arc::new(store),
