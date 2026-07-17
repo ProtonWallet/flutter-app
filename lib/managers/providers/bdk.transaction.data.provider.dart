@@ -97,15 +97,12 @@ class BDKTransactionDataProvider extends DataProvider {
   Map<String, bool> isWalletSyncing = {};
   Map<String, int> lastSyncedTime = {};
 
-  /// Only one BDK sync at a time — parallel fullSync + gopenpgp decrypt crashes debug iOS.
-  static final Lock _syncLock = Lock();
-
   Future<void> init(List<WalletModel> wallets) async {
     resetErrorCount();
     for (WalletModel walletModel in wallets) {
       final accounts = await accountDao.findAllByWalletID(walletModel.walletID);
       for (AccountModel accountModel in accounts) {
-        await syncWallet(
+        syncWallet(
           walletModel,
           accountModel,
           forceSync: false,
@@ -243,14 +240,12 @@ class BDKTransactionDataProvider extends DataProvider {
     required bool forceSync,
     required bool heightChanged,
   }) async {
-    await _syncLock.synchronized(() async {
-      await _syncWalletUnlocked(
-        walletModel,
-        accountModel,
-        forceSync: forceSync,
-        heightChanged: heightChanged,
-      );
-    });
+    await _syncWalletUnlocked(
+      walletModel,
+      accountModel,
+      forceSync: forceSync,
+      heightChanged: heightChanged,
+    );
   }
 
   Future<void> _syncWalletUnlocked(

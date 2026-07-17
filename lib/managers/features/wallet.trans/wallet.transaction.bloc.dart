@@ -921,7 +921,7 @@ class WalletTransactionBloc
             accountMenuModel.accountModel,
           );
           if (!isAccountSyncing) {
-            await bdkTransactionDataProvider.syncWallet(
+            bdkTransactionDataProvider.syncWallet(
               walletMenuModel.walletModel,
               accountMenuModel.accountModel,
               forceSync: forceSync,
@@ -944,7 +944,7 @@ class WalletTransactionBloc
           accountMenuModel.accountModel,
         );
         if (!isAccountSyncing) {
-          await bdkTransactionDataProvider.syncWallet(
+          bdkTransactionDataProvider.syncWallet(
             walletMenuModel.walletModel,
             accountMenuModel.accountModel,
             forceSync: forceSync,

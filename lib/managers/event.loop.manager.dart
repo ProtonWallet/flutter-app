@@ -379,8 +379,12 @@ class EventLoop extends Service implements Manager {
           serverScriptType: accountModel.scriptType,
         );
 
+        if (account == null) {
+          continue;
+        }
+
         await walletManager.ensureReceivedAddressNotGotReused(
-          account!,
+          account,
           accountModel,
         );
 
