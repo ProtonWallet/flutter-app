@@ -42,6 +42,7 @@ import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/history.transaction.dart';
+import 'package:wallet/models/unlock.type.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/rust/api/errors.dart';
@@ -134,6 +135,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
   bool showWalletRecovery = true;
   bool hadSetup2FA = false;
   bool hadSetupRecovery = false;
+  bool hadSetupBiometricUnlock = false;
   bool showSearchHistoryTextField = false;
   bool showSearchAddressTextField = false;
 
@@ -214,7 +216,7 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
     }
   }
 
-  int totalTodoSteps = 3;
+  int totalTodoSteps = 4;
   int currentTodoStep = 0;
   WalletDrawerStatus walletDrawerStatus = WalletDrawerStatus.close;
 
@@ -381,6 +383,8 @@ class HomeViewModelImpl extends HomeViewModel {
         showUpgradeErrorDialog(state.message, logout);
       } else if (state is AppCryptoFailed) {
         showAppCryptoErrorDialog(state.message);
+      } else if (state is UnlockTypeUpdated) {
+        checkPreference();
       }
     }, onError: (e, stacktrace) {
       Sentry.captureException(e, stackTrace: stacktrace);
@@ -725,6 +729,9 @@ class HomeViewModelImpl extends HomeViewModel {
     newTodoStep += showWalletRecovery ? 0 : 1;
     newTodoStep += hadSetup2FA ? 1 : 0;
     newTodoStep += hadSetupRecovery ? 1 : 0;
+    final unlock = await appStateManager.getUnlockType();
+    hadSetupBiometricUnlock = unlock.type == UnlockType.biometrics;
+    newTodoStep += hadSetupBiometricUnlock ? 1 : 0;
     currentTodoStep = newTodoStep;
     datasourceStreamSinkAdd();
   }
@@ -838,6 +845,7 @@ class HomeViewModelImpl extends HomeViewModel {
           hadSetupRecovery: hadSetupRecovery,
           showWalletRecovery: showWalletRecovery,
           hadSetup2FA: hadSetup2FA,
+          hadSetupBiometricUnlock: hadSetupBiometricUnlock,
         );
       case NavID.setupBackup:
         coordinator.showSetupBackup(selectedWallet?.walletModel.walletID ?? "");

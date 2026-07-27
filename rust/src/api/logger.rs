@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use tracing::info;
 use std::{env, sync::Mutex};
 use tracing_appender::non_blocking::WorkerGuard;
-use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::{layer::SubscriberExt, EnvFilter};
 
 use crate::common::logger::RotatingFileWriter;
 
@@ -13,8 +13,12 @@ lazy_static! {
 
 #[frb(sync)]
 pub fn init_rust_logging(file_path: &str, file_name: &str) {
-    // Set the RUST_LOG environment variable
-    env::set_var("RUST_LOG", "trace");
+    // Avoid muon/hyper/h2 TRACE spam in debug builds; it slows the UI thread
+    // and can trigger watchdog / fml task-queue crashes under LLDB.
+    env::set_var(
+        "RUST_LOG",
+        "info,proton_wallet_common=debug,andromeda_api=debug",
+    );
     info!("Initializing Rust logging with file: {}", file_path);
     // Acquire the lock on LOG_GUARD
     let guard_check = LOG_GUARD.lock().unwrap();
@@ -40,8 +44,12 @@ pub fn init_rust_logging(file_path: &str, file_name: &str) {
         .with_ansi(true) // Enable ANSI colors for console readability
         .with_level(true);
 
+    let env_filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("info,proton_wallet_common=debug,andromeda_api=debug"));
+
     // Set up a combined subscriber with both layers
     let subscriber = tracing_subscriber::registry()
+        .with(env_filter)
         .with(file_layer)
         .with(console_layer);
 

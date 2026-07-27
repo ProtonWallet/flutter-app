@@ -11,9 +11,9 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i53;
 import 'package:unleash_proxy_client_flutter/unleash_proxy_client_flutter.dart'
     as _i34;
-import 'package:wallet/constants/coin_type.dart' as _i75;
+import 'package:wallet/constants/coin_type.dart' as _i76;
 import 'package:wallet/constants/env.dart' as _i36;
-import 'package:wallet/constants/script_type.dart' as _i74;
+import 'package:wallet/constants/script_type.dart' as _i75;
 import 'package:wallet/managers/preferences/preferences.manager.dart' as _i13;
 import 'package:wallet/managers/providers/address.keys.provider.dart' as _i54;
 import 'package:wallet/managers/providers/bdk.transaction.data.provider.dart'
@@ -28,10 +28,10 @@ import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart'
 import 'package:wallet/managers/providers/gateway.data.provider.dart' as _i64;
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart'
     as _i26;
-import 'package:wallet/managers/providers/models/wallet.key.dart' as _i76;
-import 'package:wallet/managers/providers/models/wallet.mnemonic.dart' as _i73;
+import 'package:wallet/managers/providers/models/wallet.key.dart' as _i77;
+import 'package:wallet/managers/providers/models/wallet.mnemonic.dart' as _i74;
 import 'package:wallet/managers/providers/models/wallet.passphrase.dart'
-    as _i80;
+    as _i81;
 import 'package:wallet/managers/providers/pool.address.data.provider.dart'
     as _i67;
 import 'package:wallet/managers/providers/price.graph.data.provider.dart'
@@ -48,10 +48,10 @@ import 'package:wallet/managers/providers/user.settings.data.provider.dart'
 import 'package:wallet/managers/providers/wallet.data.provider.dart' as _i29;
 import 'package:wallet/managers/providers/wallet.keys.provider.dart' as _i47;
 import 'package:wallet/managers/providers/wallet.mnemonic.provider.dart'
-    as _i77;
-import 'package:wallet/managers/providers/wallet.name.provider.dart' as _i78;
+    as _i78;
+import 'package:wallet/managers/providers/wallet.name.provider.dart' as _i79;
 import 'package:wallet/managers/providers/wallet.passphrase.provider.dart'
-    as _i79;
+    as _i80;
 import 'package:wallet/managers/secure.storage/secure.storage.manager.dart'
     as _i6;
 import 'package:wallet/managers/users/user.manager.dart' as _i8;
@@ -97,6 +97,7 @@ import 'package:wallet/rust/proton_api/exchange_rate.dart' as _i5;
 import 'package:wallet/rust/proton_api/payment_gateway.dart' as _i23;
 import 'package:wallet/rust/proton_api/price_graph.dart' as _i49;
 import 'package:wallet/rust/proton_api/proton_address.dart' as _i55;
+import 'package:wallet/rust/proton_api/proton_users.dart' as _i73;
 import 'package:wallet/rust/proton_api/user_settings.dart' as _i50;
 import 'package:wallet/rust/proton_api/wallet.dart' as _i43;
 import 'package:wallet/rust/proton_api/wallet_account.dart' as _i44;
@@ -117,506 +118,271 @@ import 'package:wallet/rust/proton_api/wallet_account.dart' as _i44;
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeDataState_0 extends _i1.SmartFake implements _i2.DataState {
-  _FakeDataState_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeDataState_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeExchangeRateClient_1 extends _i1.SmartFake
     implements _i3.ExchangeRateClient {
-  _FakeExchangeRateClient_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeExchangeRateClient_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeStreamController_2<T> extends _i1.SmartFake
     implements _i4.StreamController<T> {
-  _FakeStreamController_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeStreamController_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonExchangeRate_3 extends _i1.SmartFake
     implements _i5.ProtonExchangeRate {
-  _FakeProtonExchangeRate_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonExchangeRate_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSecureStorageManager_4 extends _i1.SmartFake
     implements _i6.SecureStorageManager {
-  _FakeSecureStorageManager_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSecureStorageManager_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonEmailAddressClient_5 extends _i1.SmartFake
     implements _i7.ProtonEmailAddressClient {
-  _FakeProtonEmailAddressClient_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonEmailAddressClient_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserManager_6 extends _i1.SmartFake implements _i8.UserManager {
-  _FakeUserManager_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserManager_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletManager_7 extends _i1.SmartFake implements _i9.WalletManager {
-  _FakeWalletManager_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletManager_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAccountDao_8 extends _i1.SmartFake implements _i10.AccountDao {
-  _FakeAccountDao_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAccountDao_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletClient_9 extends _i1.SmartFake implements _i11.WalletClient {
-  _FakeWalletClient_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletClient_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbBlockchainClient_10 extends _i1.SmartFake
     implements _i12.FrbBlockchainClient {
-  _FakeFrbBlockchainClient_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbBlockchainClient_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakePreferencesManager_11 extends _i1.SmartFake
     implements _i13.PreferencesManager {
-  _FakePreferencesManager_11(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePreferencesManager_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserSettingsDataProvider_12 extends _i1.SmartFake
     implements _i14.UserSettingsDataProvider {
-  _FakeUserSettingsDataProvider_12(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserSettingsDataProvider_12(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUnleashDataProvider_13 extends _i1.SmartFake
     implements _i15.UnleashDataProvider {
-  _FakeUnleashDataProvider_13(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUnleashDataProvider_13(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBDKTransactionData_14 extends _i1.SmartFake
     implements _i16.BDKTransactionData {
-  _FakeBDKTransactionData_14(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBDKTransactionData_14(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBlockClient_15 extends _i1.SmartFake implements _i17.BlockClient {
-  _FakeBlockClient_15(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBlockClient_15(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeConnectivity_16 extends _i1.SmartFake implements _i18.Connectivity {
-  _FakeConnectivity_16(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeConnectivity_16(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeContactsClient_17 extends _i1.SmartFake
     implements _i19.ContactsClient {
-  _FakeContactsClient_17(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeContactsClient_17(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeContactsDao_18 extends _i1.SmartFake implements _i20.ContactsDao {
-  _FakeContactsDao_18(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeContactsDao_18(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeInviteClient_19 extends _i1.SmartFake implements _i21.InviteClient {
-  _FakeInviteClient_19(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeInviteClient_19(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeOnRampGatewayClient_20 extends _i1.SmartFake
     implements _i22.OnRampGatewayClient {
-  _FakeOnRampGatewayClient_20(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeOnRampGatewayClient_20(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiCountry_21 extends _i1.SmartFake implements _i23.ApiCountry {
-  _FakeApiCountry_21(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiCountry_21(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiSimpleFiatCurrency_22 extends _i1.SmartFake
     implements _i23.ApiSimpleFiatCurrency {
-  _FakeApiSimpleFiatCurrency_22(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiSimpleFiatCurrency_22(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletDao_23 extends _i1.SmartFake implements _i24.WalletDao {
-  _FakeWalletDao_23(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletDao_23(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBitcoinAddressDao_24 extends _i1.SmartFake
     implements _i25.BitcoinAddressDao {
-  _FakeBitcoinAddressDao_24(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBitcoinAddressDao_24(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeLocalBitcoinAddressData_25 extends _i1.SmartFake
     implements _i26.LocalBitcoinAddressData {
-  _FakeLocalBitcoinAddressData_25(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeLocalBitcoinAddressData_25(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBitcoinAddressClient_26 extends _i1.SmartFake
     implements _i27.BitcoinAddressClient {
-  _FakeBitcoinAddressClient_26(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBitcoinAddressClient_26(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAddressDao_27 extends _i1.SmartFake implements _i28.AddressDao {
-  _FakeAddressDao_27(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAddressDao_27(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletsDataProvider_28 extends _i1.SmartFake
     implements _i29.WalletsDataProvider {
-  _FakeWalletsDataProvider_28(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletsDataProvider_28(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbAddressInfo_29 extends _i1.SmartFake
     implements _i30.FrbAddressInfo {
-  _FakeFrbAddressInfo_29(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbAddressInfo_29(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeExchangeRateDao_30 extends _i1.SmartFake
     implements _i31.ExchangeRateDao {
-  _FakeExchangeRateDao_30(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeExchangeRateDao_30(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeTransactionDao_31 extends _i1.SmartFake
     implements _i32.TransactionDao {
-  _FakeTransactionDao_31(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeTransactionDao_31(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeServerTransactionData_32 extends _i1.SmartFake
     implements _i33.ServerTransactionData {
-  _FakeServerTransactionData_32(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeServerTransactionData_32(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUnleashClient_33 extends _i1.SmartFake
     implements _i34.UnleashClient {
-  _FakeUnleashClient_33(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUnleashClient_33(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbUnleashClient_34 extends _i1.SmartFake
     implements _i35.FrbUnleashClient {
-  _FakeFrbUnleashClient_34(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbUnleashClient_34(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiEnv_35 extends _i1.SmartFake implements _i36.ApiEnv {
-  _FakeApiEnv_35(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiEnv_35(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonWalletUser_36 extends _i1.SmartFake
     implements _i37.ProtonWalletUser {
-  _FakeProtonWalletUser_36(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonWalletUser_36(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonUsersClient_37 extends _i1.SmartFake
     implements _i38.ProtonUsersClient {
-  _FakeProtonUsersClient_37(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonUsersClient_37(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserQueries_38 extends _i1.SmartFake implements _i39.UserQueries {
-  _FakeUserQueries_38(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserQueries_38(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserKeysQueries_39 extends _i1.SmartFake
     implements _i40.UserKeysQueries {
-  _FakeUserKeysQueries_39(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserKeysQueries_39(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSettingsClient_40 extends _i1.SmartFake
     implements _i41.SettingsClient {
-  _FakeSettingsClient_40(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSettingsClient_40(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletUserSettingsQueries_41 extends _i1.SmartFake
     implements _i42.WalletUserSettingsQueries {
-  _FakeWalletUserSettingsQueries_41(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletUserSettingsQueries_41(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiWalletData_42 extends _i1.SmartFake
     implements _i43.ApiWalletData {
-  _FakeApiWalletData_42(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiWalletData_42(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiWalletAccount_43 extends _i1.SmartFake
     implements _i44.ApiWalletAccount {
-  _FakeApiWalletAccount_43(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiWalletAccount_43(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletKeyStore_44 extends _i1.SmartFake
     implements _i45.WalletKeyStore {
-  _FakeWalletKeyStore_44(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletKeyStore_44(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbUnlockedWalletKey_45 extends _i1.SmartFake
     implements _i46.FrbUnlockedWalletKey {
-  _FakeFrbUnlockedWalletKey_45(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbUnlockedWalletKey_45(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletKeysProvider_46 extends _i1.SmartFake
     implements _i47.WalletKeysProvider {
-  _FakeWalletKeysProvider_46(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletKeysProvider_46(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [PriceGraphDataProvider].
@@ -629,25 +395,25 @@ class MockPriceGraphDataProvider extends _i1.Mock
   }
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<_i49.PriceGraph?> getPriceGraph({
@@ -655,166 +421,106 @@ class MockPriceGraphDataProvider extends _i1.Mock
     required _i49.Timeframe? timeFrame,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPriceGraph,
-          [],
-          {
-            #fiatCurrency: fiatCurrency,
-            #timeFrame: timeFrame,
-          },
-        ),
-        returnValue: _i4.Future<_i49.PriceGraph?>.value(),
-      ) as _i4.Future<_i49.PriceGraph?>);
+            Invocation.method(#getPriceGraph, [], {
+              #fiatCurrency: fiatCurrency,
+              #timeFrame: timeFrame,
+            }),
+            returnValue: _i4.Future<_i49.PriceGraph?>.value(),
+          )
+          as _i4.Future<_i49.PriceGraph?>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ExchangeDataProvider].
@@ -827,87 +533,79 @@ class MockExchangeDataProvider extends _i1.Mock
   }
 
   @override
-  _i3.ExchangeRateClient get exchangeRateClient => (super.noSuchMethod(
-        Invocation.getter(#exchangeRateClient),
-        returnValue: _FakeExchangeRateClient_1(
-          this,
-          Invocation.getter(#exchangeRateClient),
-        ),
-      ) as _i3.ExchangeRateClient);
+  _i3.ExchangeRateClient get exchangeRateClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#exchangeRateClient),
+            returnValue: _FakeExchangeRateClient_1(
+              this,
+              Invocation.getter(#exchangeRateClient),
+            ),
+          )
+          as _i3.ExchangeRateClient);
 
   @override
   Map<String, _i5.ProtonExchangeRate> get fiatCurrency2exchangeRate =>
       (super.noSuchMethod(
-        Invocation.getter(#fiatCurrency2exchangeRate),
-        returnValue: <String, _i5.ProtonExchangeRate>{},
-      ) as Map<String, _i5.ProtonExchangeRate>);
+            Invocation.getter(#fiatCurrency2exchangeRate),
+            returnValue: <String, _i5.ProtonExchangeRate>{},
+          )
+          as Map<String, _i5.ProtonExchangeRate>);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set fiatCurrency2exchangeRate(Map<String, _i5.ProtonExchangeRate>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #fiatCurrency2exchangeRate,
-          value,
-        ),
+        Invocation.setter(#fiatCurrency2exchangeRate, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
-
-  @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
-
-  @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  _i4.Future<void> runOnce(
-    _i50.FiatCurrency? fiatCurrency, {
-    int? time,
-  }) =>
+  _i2.DataState get state =>
       (super.noSuchMethod(
-        Invocation.method(
-          #runOnce,
-          [fiatCurrency],
-          {#time: time},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
+
+  @override
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
+
+  @override
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+
+  @override
+  _i4.Future<void> runOnce(_i50.FiatCurrency? fiatCurrency, {int? time}) =>
+      (super.noSuchMethod(
+            Invocation.method(#runOnce, [fiatCurrency], {#time: time}),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<_i5.ProtonExchangeRate> getExchangeRate(
@@ -915,200 +613,132 @@ class MockExchangeDataProvider extends _i1.Mock
     int? time,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getExchangeRate,
-          [fiatCurrency],
-          {#time: time},
-        ),
-        returnValue:
-            _i4.Future<_i5.ProtonExchangeRate>.value(_FakeProtonExchangeRate_3(
-          this,
-          Invocation.method(
-            #getExchangeRate,
-            [fiatCurrency],
-            {#time: time},
-          ),
-        )),
-      ) as _i4.Future<_i5.ProtonExchangeRate>);
+            Invocation.method(#getExchangeRate, [fiatCurrency], {#time: time}),
+            returnValue: _i4.Future<_i5.ProtonExchangeRate>.value(
+              _FakeProtonExchangeRate_3(
+                this,
+                Invocation.method(
+                  #getExchangeRate,
+                  [fiatCurrency],
+                  {#time: time},
+                ),
+              ),
+            ),
+          )
+          as _i4.Future<_i5.ProtonExchangeRate>);
 
   @override
   _i5.ProtonExchangeRate? getExchangeRateOrNull(
-          _i50.FiatCurrency? fiatCurrency) =>
-      (super.noSuchMethod(Invocation.method(
-        #getExchangeRateOrNull,
-        [fiatCurrency],
-      )) as _i5.ProtonExchangeRate?);
-
-  @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
-
-  @override
-  String getKey(
-    _i50.FiatCurrency? fiatCurrency, {
-    int? time,
-  }) =>
+    _i50.FiatCurrency? fiatCurrency,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getKey,
-          [fiatCurrency],
-          {#time: time},
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getKey,
-            [fiatCurrency],
-            {#time: time},
-          ),
-        ),
-      ) as String);
+            Invocation.method(#getExchangeRateOrNull, [fiatCurrency]),
+          )
+          as _i5.ProtonExchangeRate?);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  String getKey(_i50.FiatCurrency? fiatCurrency, {int? time}) =>
+      (super.noSuchMethod(
+            Invocation.method(#getKey, [fiatCurrency], {#time: time}),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#getKey, [fiatCurrency], {#time: time}),
+            ),
+          )
+          as String);
+
+  @override
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [AddressKeyProvider].
@@ -1121,118 +751,119 @@ class MockAddressKeyProvider extends _i1.Mock
   }
 
   @override
-  _i6.SecureStorageManager get storage => (super.noSuchMethod(
-        Invocation.getter(#storage),
-        returnValue: _FakeSecureStorageManager_4(
-          this,
-          Invocation.getter(#storage),
-        ),
-      ) as _i6.SecureStorageManager);
+  _i6.SecureStorageManager get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSecureStorageManager_4(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i6.SecureStorageManager);
 
   @override
-  String get key => (super.noSuchMethod(
-        Invocation.getter(#key),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#key),
-        ),
-      ) as String);
+  String get key =>
+      (super.noSuchMethod(
+            Invocation.getter(#key),
+            returnValue: _i53.dummyValue<String>(this, Invocation.getter(#key)),
+          )
+          as String);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   _i7.ProtonEmailAddressClient get protonEmailAddressClient =>
       (super.noSuchMethod(
-        Invocation.getter(#protonEmailAddressClient),
-        returnValue: _FakeProtonEmailAddressClient_5(
-          this,
-          Invocation.getter(#protonEmailAddressClient),
-        ),
-      ) as _i7.ProtonEmailAddressClient);
+            Invocation.getter(#protonEmailAddressClient),
+            returnValue: _FakeProtonEmailAddressClient_5(
+              this,
+              Invocation.getter(#protonEmailAddressClient),
+            ),
+          )
+          as _i7.ProtonEmailAddressClient);
 
   @override
-  _i8.UserManager get userManager => (super.noSuchMethod(
-        Invocation.getter(#userManager),
-        returnValue: _FakeUserManager_6(
-          this,
-          Invocation.getter(#userManager),
-        ),
-      ) as _i8.UserManager);
+  _i8.UserManager get userManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#userManager),
+            returnValue: _FakeUserManager_6(
+              this,
+              Invocation.getter(#userManager),
+            ),
+          )
+          as _i8.UserManager);
 
   @override
-  List<_i55.ProtonAddress> get addresses => (super.noSuchMethod(
-        Invocation.getter(#addresses),
-        returnValue: <_i55.ProtonAddress>[],
-      ) as List<_i55.ProtonAddress>);
+  List<_i55.ProtonAddress> get addresses =>
+      (super.noSuchMethod(
+            Invocation.getter(#addresses),
+            returnValue: <_i55.ProtonAddress>[],
+          )
+          as List<_i55.ProtonAddress>);
 
   @override
   set addresses(List<_i55.ProtonAddress>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #addresses,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#addresses, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<List<_i55.ProtonAddressKey>> getAddressKeysForTL() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressKeysForTL,
-          [],
-        ),
-        returnValue: _i4.Future<List<_i55.ProtonAddressKey>>.value(
-            <_i55.ProtonAddressKey>[]),
-      ) as _i4.Future<List<_i55.ProtonAddressKey>>);
+            Invocation.method(#getAddressKeysForTL, []),
+            returnValue: _i4.Future<List<_i55.ProtonAddressKey>>.value(
+              <_i55.ProtonAddressKey>[],
+            ),
+          )
+          as _i4.Future<List<_i55.ProtonAddressKey>>);
 
   @override
   _i4.Future<_i55.ProtonAddressKey?> getPrimaryAddressKey(String? addressID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPrimaryAddressKey,
-          [addressID],
-        ),
-        returnValue: _i4.Future<_i55.ProtonAddressKey?>.value(),
-      ) as _i4.Future<_i55.ProtonAddressKey?>);
+            Invocation.method(#getPrimaryAddressKey, [addressID]),
+            returnValue: _i4.Future<_i55.ProtonAddressKey?>.value(),
+          )
+          as _i4.Future<_i55.ProtonAddressKey?>);
 
   @override
-  _i4.Future<List<_i55.ProtonAddress>> getAddresses() => (super.noSuchMethod(
-        Invocation.method(
-          #getAddresses,
-          [],
-        ),
-        returnValue:
-            _i4.Future<List<_i55.ProtonAddress>>.value(<_i55.ProtonAddress>[]),
-      ) as _i4.Future<List<_i55.ProtonAddress>>);
+  _i4.Future<List<_i55.ProtonAddress>> getAddresses() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAddresses, []),
+            returnValue: _i4.Future<List<_i55.ProtonAddress>>.value(
+              <_i55.ProtonAddress>[],
+            ),
+          )
+          as _i4.Future<List<_i55.ProtonAddress>>);
 
   @override
   _i4.Future<List<_i55.AllKeyAddressKey>> getAllPublicKeys(
@@ -1240,164 +871,109 @@ class MockAddressKeyProvider extends _i1.Mock
     required int? internalOnly,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAllPublicKeys,
-          [email],
-          {#internalOnly: internalOnly},
-        ),
-        returnValue: _i4.Future<List<_i55.AllKeyAddressKey>>.value(
-            <_i55.AllKeyAddressKey>[]),
-      ) as _i4.Future<List<_i55.AllKeyAddressKey>>);
+            Invocation.method(
+              #getAllPublicKeys,
+              [email],
+              {#internalOnly: internalOnly},
+            ),
+            returnValue: _i4.Future<List<_i55.AllKeyAddressKey>>.value(
+              <_i55.AllKeyAddressKey>[],
+            ),
+          )
+          as _i4.Future<List<_i55.AllKeyAddressKey>>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [BDKTransactionDataProvider].
@@ -1410,129 +986,139 @@ class MockBDKTransactionDataProvider extends _i1.Mock
   }
 
   @override
-  _i9.WalletManager get walletManager => (super.noSuchMethod(
-        Invocation.getter(#walletManager),
-        returnValue: _FakeWalletManager_7(
-          this,
-          Invocation.getter(#walletManager),
-        ),
-      ) as _i9.WalletManager);
+  _i9.WalletManager get walletManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletManager),
+            returnValue: _FakeWalletManager_7(
+              this,
+              Invocation.getter(#walletManager),
+            ),
+          )
+          as _i9.WalletManager);
 
   @override
-  _i10.AccountDao get accountDao => (super.noSuchMethod(
-        Invocation.getter(#accountDao),
-        returnValue: _FakeAccountDao_8(
-          this,
-          Invocation.getter(#accountDao),
-        ),
-      ) as _i10.AccountDao);
+  _i10.AccountDao get accountDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountDao),
+            returnValue: _FakeAccountDao_8(
+              this,
+              Invocation.getter(#accountDao),
+            ),
+          )
+          as _i10.AccountDao);
 
   @override
-  _i11.WalletClient get walletClient => (super.noSuchMethod(
-        Invocation.getter(#walletClient),
-        returnValue: _FakeWalletClient_9(
-          this,
-          Invocation.getter(#walletClient),
-        ),
-      ) as _i11.WalletClient);
+  _i11.WalletClient get walletClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletClient),
+            returnValue: _FakeWalletClient_9(
+              this,
+              Invocation.getter(#walletClient),
+            ),
+          )
+          as _i11.WalletClient);
 
   @override
-  _i12.FrbBlockchainClient get blockchainClient => (super.noSuchMethod(
-        Invocation.getter(#blockchainClient),
-        returnValue: _FakeFrbBlockchainClient_10(
-          this,
-          Invocation.getter(#blockchainClient),
-        ),
-      ) as _i12.FrbBlockchainClient);
+  _i12.FrbBlockchainClient get blockchainClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#blockchainClient),
+            returnValue: _FakeFrbBlockchainClient_10(
+              this,
+              Invocation.getter(#blockchainClient),
+            ),
+          )
+          as _i12.FrbBlockchainClient);
 
   @override
-  _i13.PreferencesManager get shared => (super.noSuchMethod(
-        Invocation.getter(#shared),
-        returnValue: _FakePreferencesManager_11(
-          this,
-          Invocation.getter(#shared),
-        ),
-      ) as _i13.PreferencesManager);
+  _i13.PreferencesManager get shared =>
+      (super.noSuchMethod(
+            Invocation.getter(#shared),
+            returnValue: _FakePreferencesManager_11(
+              this,
+              Invocation.getter(#shared),
+            ),
+          )
+          as _i13.PreferencesManager);
 
   @override
   _i14.UserSettingsDataProvider get userSettingsDataProvider =>
       (super.noSuchMethod(
-        Invocation.getter(#userSettingsDataProvider),
-        returnValue: _FakeUserSettingsDataProvider_12(
-          this,
-          Invocation.getter(#userSettingsDataProvider),
-        ),
-      ) as _i14.UserSettingsDataProvider);
+            Invocation.getter(#userSettingsDataProvider),
+            returnValue: _FakeUserSettingsDataProvider_12(
+              this,
+              Invocation.getter(#userSettingsDataProvider),
+            ),
+          )
+          as _i14.UserSettingsDataProvider);
 
   @override
-  _i15.UnleashDataProvider get unleashDataProvider => (super.noSuchMethod(
-        Invocation.getter(#unleashDataProvider),
-        returnValue: _FakeUnleashDataProvider_13(
-          this,
-          Invocation.getter(#unleashDataProvider),
-        ),
-      ) as _i15.UnleashDataProvider);
+  _i15.UnleashDataProvider get unleashDataProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#unleashDataProvider),
+            returnValue: _FakeUnleashDataProvider_13(
+              this,
+              Invocation.getter(#unleashDataProvider),
+            ),
+          )
+          as _i15.UnleashDataProvider);
 
   @override
-  Map<String, bool> get isWalletSyncing => (super.noSuchMethod(
-        Invocation.getter(#isWalletSyncing),
-        returnValue: <String, bool>{},
-      ) as Map<String, bool>);
+  Map<String, bool> get isWalletSyncing =>
+      (super.noSuchMethod(
+            Invocation.getter(#isWalletSyncing),
+            returnValue: <String, bool>{},
+          )
+          as Map<String, bool>);
 
   @override
-  Map<String, int> get lastSyncedTime => (super.noSuchMethod(
-        Invocation.getter(#lastSyncedTime),
-        returnValue: <String, int>{},
-      ) as Map<String, int>);
+  Map<String, int> get lastSyncedTime =>
+      (super.noSuchMethod(
+            Invocation.getter(#lastSyncedTime),
+            returnValue: <String, int>{},
+          )
+          as Map<String, int>);
 
   @override
   set isWalletSyncing(Map<String, bool>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #isWalletSyncing,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#isWalletSyncing, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set lastSyncedTime(Map<String, int>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #lastSyncedTime,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#lastSyncedTime, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> init(List<_i56.WalletModel>? wallets) => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [wallets],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> init(List<_i56.WalletModel>? wallets) =>
+      (super.noSuchMethod(
+            Invocation.method(#init, [wallets]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<_i16.BDKTransactionData> getBDKTransactionDataByWalletAccount(
@@ -1540,25 +1126,21 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBDKTransactionDataByWalletAccount,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<_i16.BDKTransactionData>.value(
-            _FakeBDKTransactionData_14(
-          this,
-          Invocation.method(
-            #getBDKTransactionDataByWalletAccount,
-            [
+            Invocation.method(#getBDKTransactionDataByWalletAccount, [
               walletModel,
               accountModel,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i16.BDKTransactionData>);
+            ]),
+            returnValue: _i4.Future<_i16.BDKTransactionData>.value(
+              _FakeBDKTransactionData_14(
+                this,
+                Invocation.method(#getBDKTransactionDataByWalletAccount, [
+                  walletModel,
+                  accountModel,
+                ]),
+              ),
+            ),
+          )
+          as _i4.Future<_i16.BDKTransactionData>);
 
   @override
   bool lastSyncTimeCheck(
@@ -1566,15 +1148,10 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #lastSyncTimeCheck,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: false,
-      ) as bool);
+            Invocation.method(#lastSyncTimeCheck, [walletModel, accountModel]),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   bool isSyncing(
@@ -1582,15 +1159,10 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #isSyncing,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: false,
-      ) as bool);
+            Invocation.method(#isSyncing, [walletModel, accountModel]),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   String getPositiveBalanceCheckID(
@@ -1598,24 +1170,19 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPositiveBalanceCheckID,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getPositiveBalanceCheckID,
-            [
+            Invocation.method(#getPositiveBalanceCheckID, [
               walletModel,
               accountModel,
-            ],
-          ),
-        ),
-      ) as String);
+            ]),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#getPositiveBalanceCheckID, [
+                walletModel,
+                accountModel,
+              ]),
+            ),
+          )
+          as String);
 
   @override
   _i4.Future<bool> getHasPositiveBalance(
@@ -1623,15 +1190,13 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getHasPositiveBalance,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+            Invocation.method(#getHasPositiveBalance, [
+              walletModel,
+              accountModel,
+            ]),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 
   @override
   _i4.Future<void> setHasPositiveBalance(
@@ -1640,17 +1205,15 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     required bool? hasPositiveBalance,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setHasPositiveBalance,
-          [
-            walletModel,
-            accountModel,
-          ],
-          {#hasPositiveBalance: hasPositiveBalance},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #setHasPositiveBalance,
+              [walletModel, accountModel],
+              {#hasPositiveBalance: hasPositiveBalance},
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   String getSyncCheckID(
@@ -1658,33 +1221,21 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getSyncCheckID,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getSyncCheckID,
-            [
-              walletModel,
-              accountModel,
-            ],
-          ),
-        ),
-      ) as String);
+            Invocation.method(#getSyncCheckID, [walletModel, accountModel]),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#getSyncCheckID, [walletModel, accountModel]),
+            ),
+          )
+          as String);
 
   @override
-  bool anyFullSyncedDone() => (super.noSuchMethod(
-        Invocation.method(
-          #anyFullSyncedDone,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool anyFullSyncedDone() =>
+      (super.noSuchMethod(
+            Invocation.method(#anyFullSyncedDone, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   _i4.Future<bool> hasFullSynced(
@@ -1692,15 +1243,10 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #hasFullSynced,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+            Invocation.method(#hasFullSynced, [walletModel, accountModel]),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 
   @override
   _i4.Future<bool> hasUsedServerStopgap(
@@ -1708,15 +1254,13 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #hasUsedServerStopgap,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+            Invocation.method(#hasUsedServerStopgap, [
+              walletModel,
+              accountModel,
+            ]),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 
   @override
   _i4.Future<void> setUsedServerStopgap(
@@ -1724,16 +1268,14 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setUsedServerStopgap,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#setUsedServerStopgap, [
+              walletModel,
+              accountModel,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> syncWallet(
@@ -1743,199 +1285,132 @@ class MockBDKTransactionDataProvider extends _i1.Mock
     required bool? heightChanged,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #syncWallet,
-          [
-            walletModel,
-            accountModel,
-          ],
-          {
-            #forceSync: forceSync,
-            #heightChanged: heightChanged,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #syncWallet,
+              [walletModel, accountModel],
+              {#forceSync: forceSync, #heightChanged: heightChanged},
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void notifyCacheCleared() => super.noSuchMethod(
-        Invocation.method(
-          #notifyCacheCleared,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#notifyCacheCleared, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i4.Future<void> updateErrorCount() => (super.noSuchMethod(
-        Invocation.method(
-          #updateErrorCount,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> updateErrorCount() =>
+      (super.noSuchMethod(
+            Invocation.method(#updateErrorCount, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> resetErrorCount() => (super.noSuchMethod(
-        Invocation.method(
-          #resetErrorCount,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> resetErrorCount() =>
+      (super.noSuchMethod(
+            Invocation.method(#resetErrorCount, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [BlockInfoDataProvider].
@@ -1948,229 +1423,169 @@ class MockBlockInfoDataProvider extends _i1.Mock
   }
 
   @override
-  _i17.BlockClient get blockClient => (super.noSuchMethod(
-        Invocation.getter(#blockClient),
-        returnValue: _FakeBlockClient_15(
-          this,
-          Invocation.getter(#blockClient),
-        ),
-      ) as _i17.BlockClient);
+  _i17.BlockClient get blockClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#blockClient),
+            returnValue: _FakeBlockClient_15(
+              this,
+              Invocation.getter(#blockClient),
+            ),
+          )
+          as _i17.BlockClient);
 
   @override
-  int get blockHeight => (super.noSuchMethod(
-        Invocation.getter(#blockHeight),
-        returnValue: 0,
-      ) as int);
+  int get blockHeight =>
+      (super.noSuchMethod(Invocation.getter(#blockHeight), returnValue: 0)
+          as int);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set blockHeight(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #blockHeight,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#blockHeight, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> syncBlockHeight() => (super.noSuchMethod(
-        Invocation.method(
-          #syncBlockHeight,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> syncBlockHeight() =>
+      (super.noSuchMethod(
+            Invocation.method(#syncBlockHeight, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> preLoad() => (super.noSuchMethod(
-        Invocation.method(
-          #preLoad,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> preLoad() =>
+      (super.noSuchMethod(
+            Invocation.method(#preLoad, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ConnectivityProvider].
@@ -2183,219 +1598,161 @@ class MockConnectivityProvider extends _i1.Mock
   }
 
   @override
-  _i18.Connectivity get connectivity => (super.noSuchMethod(
-        Invocation.getter(#connectivity),
-        returnValue: _FakeConnectivity_16(
-          this,
-          Invocation.getter(#connectivity),
-        ),
-      ) as _i18.Connectivity);
+  _i18.Connectivity get connectivity =>
+      (super.noSuchMethod(
+            Invocation.getter(#connectivity),
+            returnValue: _FakeConnectivity_16(
+              this,
+              Invocation.getter(#connectivity),
+            ),
+          )
+          as _i18.Connectivity);
 
   @override
-  List<_i18.ConnectivityResult> get connectivityResult => (super.noSuchMethod(
-        Invocation.getter(#connectivityResult),
-        returnValue: <_i18.ConnectivityResult>[],
-      ) as List<_i18.ConnectivityResult>);
+  List<_i18.ConnectivityResult> get connectivityResult =>
+      (super.noSuchMethod(
+            Invocation.getter(#connectivityResult),
+            returnValue: <_i18.ConnectivityResult>[],
+          )
+          as List<_i18.ConnectivityResult>);
 
   @override
   set connectivityResult(List<_i18.ConnectivityResult>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #connectivityResult,
-          value,
-        ),
+        Invocation.setter(#connectivityResult, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> initConnectivity() => (super.noSuchMethod(
-        Invocation.method(
-          #initConnectivity,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> initConnectivity() =>
+      (super.noSuchMethod(
+            Invocation.method(#initConnectivity, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<bool> hasConnectivity() => (super.noSuchMethod(
-        Invocation.method(
-          #hasConnectivity,
-          [],
-        ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+  _i4.Future<bool> hasConnectivity() =>
+      (super.noSuchMethod(
+            Invocation.method(#hasConnectivity, []),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ContactsDataProvider].
@@ -2408,301 +1765,237 @@ class MockContactsDataProvider extends _i1.Mock
   }
 
   @override
-  _i19.ContactsClient get contactClient => (super.noSuchMethod(
-        Invocation.getter(#contactClient),
-        returnValue: _FakeContactsClient_17(
-          this,
-          Invocation.getter(#contactClient),
-        ),
-      ) as _i19.ContactsClient);
+  _i19.ContactsClient get contactClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#contactClient),
+            returnValue: _FakeContactsClient_17(
+              this,
+              Invocation.getter(#contactClient),
+            ),
+          )
+          as _i19.ContactsClient);
 
   @override
-  _i20.ContactsDao get contactsDao => (super.noSuchMethod(
-        Invocation.getter(#contactsDao),
-        returnValue: _FakeContactsDao_18(
-          this,
-          Invocation.getter(#contactsDao),
-        ),
-      ) as _i20.ContactsDao);
+  _i20.ContactsDao get contactsDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#contactsDao),
+            returnValue: _FakeContactsDao_18(
+              this,
+              Invocation.getter(#contactsDao),
+            ),
+          )
+          as _i20.ContactsDao);
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set contactsData(List<_i61.ContactsModel>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #contactsData,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#contactsData, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> fetchFromServer() => (super.noSuchMethod(
-        Invocation.method(
-          #fetchFromServer,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> fetchFromServer() =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchFromServer, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reloadCache() => (super.noSuchMethod(
-        Invocation.method(
-          #reloadCache,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reloadCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#reloadCache, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<List<_i61.ContactsModel>?> getContacts() => (super.noSuchMethod(
-        Invocation.method(
-          #getContacts,
-          [],
-        ),
-        returnValue: _i4.Future<List<_i61.ContactsModel>?>.value(),
-      ) as _i4.Future<List<_i61.ContactsModel>?>);
+  _i4.Future<List<_i61.ContactsModel>?> getContacts() =>
+      (super.noSuchMethod(
+            Invocation.method(#getContacts, []),
+            returnValue: _i4.Future<List<_i61.ContactsModel>?>.value(),
+          )
+          as _i4.Future<List<_i61.ContactsModel>?>);
 
   @override
-  _i4.Future<String?> getContactName(String? email) => (super.noSuchMethod(
-        Invocation.method(
-          #getContactName,
-          [email],
-        ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+  _i4.Future<String?> getContactName(String? email) =>
+      (super.noSuchMethod(
+            Invocation.method(#getContactName, [email]),
+            returnValue: _i4.Future<String?>.value(),
+          )
+          as _i4.Future<String?>);
 
   @override
   _i4.Future<void> insertUpdate(_i62.ApiContactEmails? contactEmail) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertUpdate,
-          [contactEmail],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#insertUpdate, [contactEmail]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> delete(String? contactID) => (super.noSuchMethod(
-        Invocation.method(
-          #delete,
-          [contactID],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> delete(String? contactID) =>
+      (super.noSuchMethod(
+            Invocation.method(#delete, [contactID]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> preLoad() => (super.noSuchMethod(
-        Invocation.method(
-          #preLoad,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> preLoad() =>
+      (super.noSuchMethod(
+            Invocation.method(#preLoad, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ExclusiveInviteDataProvider].
@@ -2715,225 +2008,166 @@ class MockExclusiveInviteDataProvider extends _i1.Mock
   }
 
   @override
-  _i21.InviteClient get inviteClient => (super.noSuchMethod(
-        Invocation.getter(#inviteClient),
-        returnValue: _FakeInviteClient_19(
-          this,
-          Invocation.getter(#inviteClient),
-        ),
-      ) as _i21.InviteClient);
+  _i21.InviteClient get inviteClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#inviteClient),
+            returnValue: _FakeInviteClient_19(
+              this,
+              Invocation.getter(#inviteClient),
+            ),
+          )
+          as _i21.InviteClient);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> updateData() => (super.noSuchMethod(
-        Invocation.method(
-          #updateData,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> updateData() =>
+      (super.noSuchMethod(
+            Invocation.method(#updateData, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> preLoad() => (super.noSuchMethod(
-        Invocation.method(
-          #preLoad,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> preLoad() =>
+      (super.noSuchMethod(
+            Invocation.method(#preLoad, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [GatewayDataProvider].
@@ -2946,129 +2180,123 @@ class MockGatewayDataProvider extends _i1.Mock
   }
 
   @override
-  _i22.OnRampGatewayClient get onRampGatewayClient => (super.noSuchMethod(
-        Invocation.getter(#onRampGatewayClient),
-        returnValue: _FakeOnRampGatewayClient_20(
-          this,
-          Invocation.getter(#onRampGatewayClient),
-        ),
-      ) as _i22.OnRampGatewayClient);
+  _i22.OnRampGatewayClient get onRampGatewayClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#onRampGatewayClient),
+            returnValue: _FakeOnRampGatewayClient_20(
+              this,
+              Invocation.getter(#onRampGatewayClient),
+            ),
+          )
+          as _i22.OnRampGatewayClient);
 
   @override
   Map<_i23.GatewayProvider, List<_i23.ApiCountry>> get countries =>
       (super.noSuchMethod(
-        Invocation.getter(#countries),
-        returnValue: <_i23.GatewayProvider, List<_i23.ApiCountry>>{},
-      ) as Map<_i23.GatewayProvider, List<_i23.ApiCountry>>);
+            Invocation.getter(#countries),
+            returnValue: <_i23.GatewayProvider, List<_i23.ApiCountry>>{},
+          )
+          as Map<_i23.GatewayProvider, List<_i23.ApiCountry>>);
 
   @override
   Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>
-      get fiatCurrencies => (super.noSuchMethod(
+  get fiatCurrencies =>
+      (super.noSuchMethod(
             Invocation.getter(#fiatCurrencies),
-            returnValue: <_i23.GatewayProvider,
-                List<_i23.ApiSimpleFiatCurrency>>{},
-          ) as Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>);
+            returnValue:
+                <_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>{},
+          )
+          as Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>);
 
   @override
   Map<_i23.GatewayProvider, List<_i23.PaymentMethod>> get paymentMethods =>
       (super.noSuchMethod(
-        Invocation.getter(#paymentMethods),
-        returnValue: <_i23.GatewayProvider, List<_i23.PaymentMethod>>{},
-      ) as Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>);
+            Invocation.getter(#paymentMethods),
+            returnValue: <_i23.GatewayProvider, List<_i23.PaymentMethod>>{},
+          )
+          as Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>);
 
   @override
-  List<_i23.GatewayProvider> get supportedProviders => (super.noSuchMethod(
-        Invocation.getter(#supportedProviders),
-        returnValue: <_i23.GatewayProvider>[],
-      ) as List<_i23.GatewayProvider>);
+  List<_i23.GatewayProvider> get supportedProviders =>
+      (super.noSuchMethod(
+            Invocation.getter(#supportedProviders),
+            returnValue: <_i23.GatewayProvider>[],
+          )
+          as List<_i23.GatewayProvider>);
 
   @override
-  Map<_i23.GatewayProvider, List<_i23.Quote>> get quoted => (super.noSuchMethod(
-        Invocation.getter(#quoted),
-        returnValue: <_i23.GatewayProvider, List<_i23.Quote>>{},
-      ) as Map<_i23.GatewayProvider, List<_i23.Quote>>);
+  Map<_i23.GatewayProvider, List<_i23.Quote>> get quoted =>
+      (super.noSuchMethod(
+            Invocation.getter(#quoted),
+            returnValue: <_i23.GatewayProvider, List<_i23.Quote>>{},
+          )
+          as Map<_i23.GatewayProvider, List<_i23.Quote>>);
 
   @override
   set countries(Map<_i23.GatewayProvider, List<_i23.ApiCountry>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #countries,
-          value,
-        ),
+        Invocation.setter(#countries, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set fiatCurrencies(
-          Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #fiatCurrencies,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Map<_i23.GatewayProvider, List<_i23.ApiSimpleFiatCurrency>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#fiatCurrencies, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set paymentMethods(
-          Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #paymentMethods,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Map<_i23.GatewayProvider, List<_i23.PaymentMethod>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#paymentMethods, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set supportedProviders(List<_i23.GatewayProvider>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #supportedProviders,
-          value,
-        ),
+        Invocation.setter(#supportedProviders, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set quoted(Map<_i23.GatewayProvider, List<_i23.Quote>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #quoted,
-          value,
-        ),
+        Invocation.setter(#quoted, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<List<String>> getCountries() => (super.noSuchMethod(
-        Invocation.method(
-          #getCountries,
-          [],
-        ),
-        returnValue: _i4.Future<List<String>>.value(<String>[]),
-      ) as _i4.Future<List<String>>);
+  _i4.Future<List<String>> getCountries() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCountries, []),
+            returnValue: _i4.Future<List<String>>.value(<String>[]),
+          )
+          as _i4.Future<List<String>>);
 
   @override
   _i23.ApiCountry getApiCountry(
@@ -3076,24 +2304,13 @@ class MockGatewayDataProvider extends _i1.Mock
     String? localCode,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getApiCountry,
-          [
-            provider,
-            localCode,
-          ],
-        ),
-        returnValue: _FakeApiCountry_21(
-          this,
-          Invocation.method(
-            #getApiCountry,
-            [
-              provider,
-              localCode,
-            ],
-          ),
-        ),
-      ) as _i23.ApiCountry);
+            Invocation.method(#getApiCountry, [provider, localCode]),
+            returnValue: _FakeApiCountry_21(
+              this,
+              Invocation.method(#getApiCountry, [provider, localCode]),
+            ),
+          )
+          as _i23.ApiCountry);
 
   @override
   _i4.Future<List<String>> getCurrencies(
@@ -3101,15 +2318,10 @@ class MockGatewayDataProvider extends _i1.Mock
     String? localCode,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getCurrencies,
-          [
-            provider,
-            localCode,
-          ],
-        ),
-        returnValue: _i4.Future<List<String>>.value(<String>[]),
-      ) as _i4.Future<List<String>>);
+            Invocation.method(#getCurrencies, [provider, localCode]),
+            returnValue: _i4.Future<List<String>>.value(<String>[]),
+          )
+          as _i4.Future<List<String>>);
 
   @override
   _i23.ApiSimpleFiatCurrency getApiCountryFiatCurrency(
@@ -3117,35 +2329,28 @@ class MockGatewayDataProvider extends _i1.Mock
     String? fiatCurrency,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getApiCountryFiatCurrency,
-          [
-            provider,
-            fiatCurrency,
-          ],
-        ),
-        returnValue: _FakeApiSimpleFiatCurrency_22(
-          this,
-          Invocation.method(
-            #getApiCountryFiatCurrency,
-            [
+            Invocation.method(#getApiCountryFiatCurrency, [
               provider,
               fiatCurrency,
-            ],
-          ),
-        ),
-      ) as _i23.ApiSimpleFiatCurrency);
+            ]),
+            returnValue: _FakeApiSimpleFiatCurrency_22(
+              this,
+              Invocation.method(#getApiCountryFiatCurrency, [
+                provider,
+                fiatCurrency,
+              ]),
+            ),
+          )
+          as _i23.ApiSimpleFiatCurrency);
 
   @override
   _i4.Future<void> getPaymentMethods(_i50.FiatCurrency? fiatCurrency) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getPaymentMethods,
-          [fiatCurrency],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#getPaymentMethods, [fiatCurrency]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>> getQuotes(
@@ -3154,18 +2359,13 @@ class MockGatewayDataProvider extends _i1.Mock
     List<_i23.GatewayProvider>? providers,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getQuotes,
-          [
-            fiatCurrency,
-            amount,
-            providers,
-          ],
-        ),
-        returnValue:
-            _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>.value(
-                <_i23.GatewayProvider, List<_i23.Quote>>{}),
-      ) as _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>);
+            Invocation.method(#getQuotes, [fiatCurrency, amount, providers]),
+            returnValue:
+                _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>.value(
+                  <_i23.GatewayProvider, List<_i23.Quote>>{},
+                ),
+          )
+          as _i4.Future<Map<_i23.GatewayProvider, List<_i23.Quote>>>);
 
   @override
   _i4.Future<List<_i23.Quote>?> getCachedQuote(
@@ -3174,16 +2374,14 @@ class MockGatewayDataProvider extends _i1.Mock
     _i23.GatewayProvider? provider,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getCachedQuote,
-          [
-            fiatCurrency,
-            amount,
-            provider,
-          ],
-        ),
-        returnValue: _i4.Future<List<_i23.Quote>?>.value(),
-      ) as _i4.Future<List<_i23.Quote>?>);
+            Invocation.method(#getCachedQuote, [
+              fiatCurrency,
+              amount,
+              provider,
+            ]),
+            returnValue: _i4.Future<List<_i23.Quote>?>.value(),
+          )
+          as _i4.Future<List<_i23.Quote>?>);
 
   @override
   _i4.Future<String> checkout(
@@ -3194,180 +2392,120 @@ class MockGatewayDataProvider extends _i1.Mock
     _i23.GatewayProvider? provider,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #checkout,
-          [
-            amount,
-            btcAddress,
-            fiatCurrency,
-            payMethod,
-            provider,
-          ],
-        ),
-        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #checkout,
-            [
+            Invocation.method(#checkout, [
               amount,
               btcAddress,
               fiatCurrency,
               payMethod,
               provider,
-            ],
-          ),
-        )),
-      ) as _i4.Future<String>);
+            ]),
+            returnValue: _i4.Future<String>.value(
+              _i53.dummyValue<String>(
+                this,
+                Invocation.method(#checkout, [
+                  amount,
+                  btcAddress,
+                  fiatCurrency,
+                  payMethod,
+                  provider,
+                ]),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [LocalBitcoinAddressDataProvider].
@@ -3380,88 +2518,93 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
   }
 
   @override
-  _i24.WalletDao get walletDao => (super.noSuchMethod(
-        Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_23(
-          this,
-          Invocation.getter(#walletDao),
-        ),
-      ) as _i24.WalletDao);
+  _i24.WalletDao get walletDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDao),
+            returnValue: _FakeWalletDao_23(this, Invocation.getter(#walletDao)),
+          )
+          as _i24.WalletDao);
 
   @override
-  _i10.AccountDao get accountDao => (super.noSuchMethod(
-        Invocation.getter(#accountDao),
-        returnValue: _FakeAccountDao_8(
-          this,
-          Invocation.getter(#accountDao),
-        ),
-      ) as _i10.AccountDao);
+  _i10.AccountDao get accountDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountDao),
+            returnValue: _FakeAccountDao_8(
+              this,
+              Invocation.getter(#accountDao),
+            ),
+          )
+          as _i10.AccountDao);
 
   @override
-  _i25.BitcoinAddressDao get bitcoinAddressDao => (super.noSuchMethod(
-        Invocation.getter(#bitcoinAddressDao),
-        returnValue: _FakeBitcoinAddressDao_24(
-          this,
-          Invocation.getter(#bitcoinAddressDao),
-        ),
-      ) as _i25.BitcoinAddressDao);
+  _i25.BitcoinAddressDao get bitcoinAddressDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#bitcoinAddressDao),
+            returnValue: _FakeBitcoinAddressDao_24(
+              this,
+              Invocation.getter(#bitcoinAddressDao),
+            ),
+          )
+          as _i25.BitcoinAddressDao);
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
-  _i9.WalletManager get walletManager => (super.noSuchMethod(
-        Invocation.getter(#walletManager),
-        returnValue: _FakeWalletManager_7(
-          this,
-          Invocation.getter(#walletManager),
-        ),
-      ) as _i9.WalletManager);
+  _i9.WalletManager get walletManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletManager),
+            returnValue: _FakeWalletManager_7(
+              this,
+              Invocation.getter(#walletManager),
+            ),
+          )
+          as _i9.WalletManager);
 
   @override
   Map<String, _i26.AccountBitcoinAddressesInfo> get accountID2AddressesInfo =>
       (super.noSuchMethod(
-        Invocation.getter(#accountID2AddressesInfo),
-        returnValue: <String, _i26.AccountBitcoinAddressesInfo>{},
-      ) as Map<String, _i26.AccountBitcoinAddressesInfo>);
+            Invocation.getter(#accountID2AddressesInfo),
+            returnValue: <String, _i26.AccountBitcoinAddressesInfo>{},
+          )
+          as Map<String, _i26.AccountBitcoinAddressesInfo>);
 
   @override
   set accountID2AddressesInfo(
-          Map<String, _i26.AccountBitcoinAddressesInfo>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #accountID2AddressesInfo,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Map<String, _i26.AccountBitcoinAddressesInfo>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#accountID2AddressesInfo, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<Map<String, _i30.FrbAddressInfo>> getBitcoinAddress(
@@ -3471,18 +2614,16 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
     int? maxAddressIndex = 200,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getBitcoinAddress,
-          [
-            walletModel,
-            accountModel,
-            account,
-          ],
-          {#maxAddressIndex: maxAddressIndex},
-        ),
-        returnValue: _i4.Future<Map<String, _i30.FrbAddressInfo>>.value(
-            <String, _i30.FrbAddressInfo>{}),
-      ) as _i4.Future<Map<String, _i30.FrbAddressInfo>>);
+            Invocation.method(
+              #getBitcoinAddress,
+              [walletModel, accountModel, account],
+              {#maxAddressIndex: maxAddressIndex},
+            ),
+            returnValue: _i4.Future<Map<String, _i30.FrbAddressInfo>>.value(
+              <String, _i30.FrbAddressInfo>{},
+            ),
+          )
+          as _i4.Future<Map<String, _i30.FrbAddressInfo>>);
 
   @override
   _i4.Future<int> getLastUsedIndex(
@@ -3490,15 +2631,10 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getLastUsedIndex,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+            Invocation.method(#getLastUsedIndex, [walletModel, accountModel]),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
   _i4.Future<_i26.LocalBitcoinAddressData> getDataByWalletAccount(
@@ -3506,37 +2642,32 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getDataByWalletAccount,
-          [
-            walletModel,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<_i26.LocalBitcoinAddressData>.value(
-            _FakeLocalBitcoinAddressData_25(
-          this,
-          Invocation.method(
-            #getDataByWalletAccount,
-            [
+            Invocation.method(#getDataByWalletAccount, [
               walletModel,
               accountModel,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i26.LocalBitcoinAddressData>);
+            ]),
+            returnValue: _i4.Future<_i26.LocalBitcoinAddressData>.value(
+              _FakeLocalBitcoinAddressData_25(
+                this,
+                Invocation.method(#getDataByWalletAccount, [
+                  walletModel,
+                  accountModel,
+                ]),
+              ),
+            ),
+          )
+          as _i4.Future<_i26.LocalBitcoinAddressData>);
 
   @override
   _i4.Future<void> insertOrUpdate(
-          _i66.BitcoinAddressModel? bitcoinAddressModel) =>
+    _i66.BitcoinAddressModel? bitcoinAddressModel,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertOrUpdate,
-          [bitcoinAddressModel],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#insertOrUpdate, [bitcoinAddressModel]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<_i66.BitcoinAddressModel?> findBitcoinAddressInAccount(
@@ -3544,165 +2675,106 @@ class MockLocalBitcoinAddressDataProvider extends _i1.Mock
     String? serverAccountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #findBitcoinAddressInAccount,
-          [
-            bitcoinAddress,
-            serverAccountID,
-          ],
-        ),
-        returnValue: _i4.Future<_i66.BitcoinAddressModel?>.value(),
-      ) as _i4.Future<_i66.BitcoinAddressModel?>);
+            Invocation.method(#findBitcoinAddressInAccount, [
+              bitcoinAddress,
+              serverAccountID,
+            ]),
+            returnValue: _i4.Future<_i66.BitcoinAddressModel?>.value(),
+          )
+          as _i4.Future<_i66.BitcoinAddressModel?>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [PoolAddressDataProvider].
@@ -3715,55 +2787,55 @@ class MockPoolAddressDataProvider extends _i1.Mock
   }
 
   @override
-  _i27.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
-        Invocation.getter(#bitcoinAddressClient),
-        returnValue: _FakeBitcoinAddressClient_26(
-          this,
-          Invocation.getter(#bitcoinAddressClient),
-        ),
-      ) as _i27.BitcoinAddressClient);
+  _i27.BitcoinAddressClient get bitcoinAddressClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#bitcoinAddressClient),
+            returnValue: _FakeBitcoinAddressClient_26(
+              this,
+              Invocation.getter(#bitcoinAddressClient),
+            ),
+          )
+          as _i27.BitcoinAddressClient);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<List<_i43.ApiWalletBitcoinAddress>> getWalletBitcoinAddresses(
@@ -3772,167 +2844,109 @@ class MockPoolAddressDataProvider extends _i1.Mock
     int? onlyRequest,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletBitcoinAddresses,
-          [
-            walletID,
-            accountID,
-            onlyRequest,
-          ],
-        ),
-        returnValue: _i4.Future<List<_i43.ApiWalletBitcoinAddress>>.value(
-            <_i43.ApiWalletBitcoinAddress>[]),
-      ) as _i4.Future<List<_i43.ApiWalletBitcoinAddress>>);
+            Invocation.method(#getWalletBitcoinAddresses, [
+              walletID,
+              accountID,
+              onlyRequest,
+            ]),
+            returnValue: _i4.Future<List<_i43.ApiWalletBitcoinAddress>>.value(
+              <_i43.ApiWalletBitcoinAddress>[],
+            ),
+          )
+          as _i4.Future<List<_i43.ApiWalletBitcoinAddress>>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ProtonAddressProvider].
@@ -3945,194 +2959,137 @@ class MockProtonAddressProvider extends _i1.Mock
   }
 
   @override
-  _i28.AddressDao get addressDao => (super.noSuchMethod(
-        Invocation.getter(#addressDao),
-        returnValue: _FakeAddressDao_27(
-          this,
-          Invocation.getter(#addressDao),
-        ),
-      ) as _i28.AddressDao);
+  _i28.AddressDao get addressDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#addressDao),
+            returnValue: _FakeAddressDao_27(
+              this,
+              Invocation.getter(#addressDao),
+            ),
+          )
+          as _i28.AddressDao);
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<_i69.AddressModel?> getAddressModel(String? serverID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAddressModel,
-          [serverID],
-        ),
-        returnValue: _i4.Future<_i69.AddressModel?>.value(),
-      ) as _i4.Future<_i69.AddressModel?>);
+            Invocation.method(#getAddressModel, [serverID]),
+            returnValue: _i4.Future<_i69.AddressModel?>.value(),
+          )
+          as _i4.Future<_i69.AddressModel?>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ReceiveAddressDataProvider].
@@ -4145,88 +3102,96 @@ class MockReceiveAddressDataProvider extends _i1.Mock
   }
 
   @override
-  _i27.BitcoinAddressClient get bitcoinAddressClient => (super.noSuchMethod(
-        Invocation.getter(#bitcoinAddressClient),
-        returnValue: _FakeBitcoinAddressClient_26(
-          this,
-          Invocation.getter(#bitcoinAddressClient),
-        ),
-      ) as _i27.BitcoinAddressClient);
+  _i27.BitcoinAddressClient get bitcoinAddressClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#bitcoinAddressClient),
+            returnValue: _FakeBitcoinAddressClient_26(
+              this,
+              Invocation.getter(#bitcoinAddressClient),
+            ),
+          )
+          as _i27.BitcoinAddressClient);
 
   @override
-  _i11.WalletClient get walletClient => (super.noSuchMethod(
-        Invocation.getter(#walletClient),
-        returnValue: _FakeWalletClient_9(
-          this,
-          Invocation.getter(#walletClient),
-        ),
-      ) as _i11.WalletClient);
+  _i11.WalletClient get walletClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletClient),
+            returnValue: _FakeWalletClient_9(
+              this,
+              Invocation.getter(#walletClient),
+            ),
+          )
+          as _i11.WalletClient);
 
   @override
-  _i12.FrbBlockchainClient get blockChainClient => (super.noSuchMethod(
-        Invocation.getter(#blockChainClient),
-        returnValue: _FakeFrbBlockchainClient_10(
-          this,
-          Invocation.getter(#blockChainClient),
-        ),
-      ) as _i12.FrbBlockchainClient);
+  _i12.FrbBlockchainClient get blockChainClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#blockChainClient),
+            returnValue: _FakeFrbBlockchainClient_10(
+              this,
+              Invocation.getter(#blockChainClient),
+            ),
+          )
+          as _i12.FrbBlockchainClient);
 
   @override
-  Map<String, _i30.FrbAddressInfo> get id2AddressInfo => (super.noSuchMethod(
-        Invocation.getter(#id2AddressInfo),
-        returnValue: <String, _i30.FrbAddressInfo>{},
-      ) as Map<String, _i30.FrbAddressInfo>);
+  Map<String, _i30.FrbAddressInfo> get id2AddressInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#id2AddressInfo),
+            returnValue: <String, _i30.FrbAddressInfo>{},
+          )
+          as Map<String, _i30.FrbAddressInfo>);
 
   @override
-  _i29.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
-        Invocation.getter(#walletDataProvider),
-        returnValue: _FakeWalletsDataProvider_28(
-          this,
-          Invocation.getter(#walletDataProvider),
-        ),
-      ) as _i29.WalletsDataProvider);
+  _i29.WalletsDataProvider get walletDataProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDataProvider),
+            returnValue: _FakeWalletsDataProvider_28(
+              this,
+              Invocation.getter(#walletDataProvider),
+            ),
+          )
+          as _i29.WalletsDataProvider);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<void> handlePoolIndex(
@@ -4234,16 +3199,11 @@ class MockReceiveAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #handlePoolIndex,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#handlePoolIndex, [account, accountModel]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> handleLastUsedIndex(
@@ -4251,16 +3211,11 @@ class MockReceiveAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #handleLastUsedIndex,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#handleLastUsedIndex, [account, accountModel]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> initReceiveAddressForAccount(
@@ -4268,16 +3223,14 @@ class MockReceiveAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #initReceiveAddressForAccount,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#initReceiveAddressForAccount, [
+              account,
+              accountModel,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<_i30.FrbAddressInfo> getReceiveAddress(
@@ -4285,25 +3238,15 @@ class MockReceiveAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getReceiveAddress,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue:
-            _i4.Future<_i30.FrbAddressInfo>.value(_FakeFrbAddressInfo_29(
-          this,
-          Invocation.method(
-            #getReceiveAddress,
-            [
-              account,
-              accountModel,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i30.FrbAddressInfo>);
+            Invocation.method(#getReceiveAddress, [account, accountModel]),
+            returnValue: _i4.Future<_i30.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_29(
+                this,
+                Invocation.method(#getReceiveAddress, [account, accountModel]),
+              ),
+            ),
+          )
+          as _i4.Future<_i30.FrbAddressInfo>);
 
   @override
   _i4.Future<_i30.FrbAddressInfo> generateNewReceiveAddress(
@@ -4311,186 +3254,123 @@ class MockReceiveAddressDataProvider extends _i1.Mock
     _i57.AccountModel? accountModel,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #generateNewReceiveAddress,
-          [
-            account,
-            accountModel,
-          ],
-        ),
-        returnValue:
-            _i4.Future<_i30.FrbAddressInfo>.value(_FakeFrbAddressInfo_29(
-          this,
-          Invocation.method(
-            #generateNewReceiveAddress,
-            [
+            Invocation.method(#generateNewReceiveAddress, [
               account,
               accountModel,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i30.FrbAddressInfo>);
+            ]),
+            returnValue: _i4.Future<_i30.FrbAddressInfo>.value(
+              _FakeFrbAddressInfo_29(
+                this,
+                Invocation.method(#generateNewReceiveAddress, [
+                  account,
+                  accountModel,
+                ]),
+              ),
+            ),
+          )
+          as _i4.Future<_i30.FrbAddressInfo>);
 
   @override
   _i4.Future<void> updateLastUsedIndex(_i57.AccountModel? accountModel) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateLastUsedIndex,
-          [accountModel],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateLastUsedIndex, [accountModel]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [ServerTransactionDataProvider].
@@ -4505,157 +3385,154 @@ class MockServerTransactionDataProvider extends _i1.Mock
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
-  _i11.WalletClient get walletClient => (super.noSuchMethod(
-        Invocation.getter(#walletClient),
-        returnValue: _FakeWalletClient_9(
-          this,
-          Invocation.getter(#walletClient),
-        ),
-      ) as _i11.WalletClient);
+  _i11.WalletClient get walletClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletClient),
+            returnValue: _FakeWalletClient_9(
+              this,
+              Invocation.getter(#walletClient),
+            ),
+          )
+          as _i11.WalletClient);
 
   @override
-  _i24.WalletDao get walletDao => (super.noSuchMethod(
-        Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_23(
-          this,
-          Invocation.getter(#walletDao),
-        ),
-      ) as _i24.WalletDao);
+  _i24.WalletDao get walletDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDao),
+            returnValue: _FakeWalletDao_23(this, Invocation.getter(#walletDao)),
+          )
+          as _i24.WalletDao);
 
   @override
-  _i10.AccountDao get accountDao => (super.noSuchMethod(
-        Invocation.getter(#accountDao),
-        returnValue: _FakeAccountDao_8(
-          this,
-          Invocation.getter(#accountDao),
-        ),
-      ) as _i10.AccountDao);
+  _i10.AccountDao get accountDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountDao),
+            returnValue: _FakeAccountDao_8(
+              this,
+              Invocation.getter(#accountDao),
+            ),
+          )
+          as _i10.AccountDao);
 
   @override
-  _i31.ExchangeRateDao get exchangeRateDao => (super.noSuchMethod(
-        Invocation.getter(#exchangeRateDao),
-        returnValue: _FakeExchangeRateDao_30(
-          this,
-          Invocation.getter(#exchangeRateDao),
-        ),
-      ) as _i31.ExchangeRateDao);
+  _i31.ExchangeRateDao get exchangeRateDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#exchangeRateDao),
+            returnValue: _FakeExchangeRateDao_30(
+              this,
+              Invocation.getter(#exchangeRateDao),
+            ),
+          )
+          as _i31.ExchangeRateDao);
 
   @override
-  _i32.TransactionDao get transactionDao => (super.noSuchMethod(
-        Invocation.getter(#transactionDao),
-        returnValue: _FakeTransactionDao_31(
-          this,
-          Invocation.getter(#transactionDao),
-        ),
-      ) as _i32.TransactionDao);
+  _i32.TransactionDao get transactionDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#transactionDao),
+            returnValue: _FakeTransactionDao_31(
+              this,
+              Invocation.getter(#transactionDao),
+            ),
+          )
+          as _i32.TransactionDao);
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
   List<_i33.ServerTransactionData> get serverTransactionDataList =>
       (super.noSuchMethod(
-        Invocation.getter(#serverTransactionDataList),
-        returnValue: <_i33.ServerTransactionData>[],
-      ) as List<_i33.ServerTransactionData>);
+            Invocation.getter(#serverTransactionDataList),
+            returnValue: <_i33.ServerTransactionData>[],
+          )
+          as List<_i33.ServerTransactionData>);
 
   @override
-  bool get initialized => (super.noSuchMethod(
-        Invocation.getter(#initialized),
-        returnValue: false,
-      ) as bool);
+  bool get initialized =>
+      (super.noSuchMethod(Invocation.getter(#initialized), returnValue: false)
+          as bool);
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set serverTransactionDataList(List<_i33.ServerTransactionData>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #serverTransactionDataList,
-          value,
-        ),
+        Invocation.setter(#serverTransactionDataList, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set initialized(bool? value) => super.noSuchMethod(
-        Invocation.setter(
-          #initialized,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#initialized, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<_i33.ServerTransactionData>
-      getServerTransactionDataByWalletAccount(
+  getServerTransactionDataByWalletAccount(
     _i56.WalletModel? walletModel,
     _i57.AccountModel? accountModel,
   ) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #getServerTransactionDataByWalletAccount,
-              [
-                walletModel,
-                accountModel,
-              ],
-            ),
+      (super.noSuchMethod(
+            Invocation.method(#getServerTransactionDataByWalletAccount, [
+              walletModel,
+              accountModel,
+            ]),
             returnValue: _i4.Future<_i33.ServerTransactionData>.value(
-                _FakeServerTransactionData_32(
-              this,
-              Invocation.method(
-                #getServerTransactionDataByWalletAccount,
-                [
+              _FakeServerTransactionData_32(
+                this,
+                Invocation.method(#getServerTransactionDataByWalletAccount, [
                   walletModel,
                   accountModel,
-                ],
+                ]),
               ),
-            )),
-          ) as _i4.Future<_i33.ServerTransactionData>);
+            ),
+          )
+          as _i4.Future<_i33.ServerTransactionData>);
 
   @override
   _i4.Future<List<_i71.TransactionModel>> getTransByAccountID(
@@ -4663,27 +3540,22 @@ class MockServerTransactionDataProvider extends _i1.Mock
     String? accountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getTransByAccountID,
-          [
-            walletID,
-            accountID,
-          ],
-        ),
-        returnValue: _i4.Future<List<_i71.TransactionModel>>.value(
-            <_i71.TransactionModel>[]),
-      ) as _i4.Future<List<_i71.TransactionModel>>);
+            Invocation.method(#getTransByAccountID, [walletID, accountID]),
+            returnValue: _i4.Future<List<_i71.TransactionModel>>.value(
+              <_i71.TransactionModel>[],
+            ),
+          )
+          as _i4.Future<List<_i71.TransactionModel>>);
 
   @override
   _i4.Future<List<_i33.ServerTransactionData>> getServerTransactionData() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getServerTransactionData,
-          [],
-        ),
-        returnValue: _i4.Future<List<_i33.ServerTransactionData>>.value(
-            <_i33.ServerTransactionData>[]),
-      ) as _i4.Future<List<_i33.ServerTransactionData>>);
+            Invocation.method(#getServerTransactionData, []),
+            returnValue: _i4.Future<List<_i33.ServerTransactionData>>.value(
+              <_i33.ServerTransactionData>[],
+            ),
+          )
+          as _i4.Future<List<_i33.ServerTransactionData>>);
 
   @override
   _i4.Future<void> fetchTransactions(
@@ -4692,17 +3564,15 @@ class MockServerTransactionDataProvider extends _i1.Mock
     bool? isInitializeProcess = false,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #fetchTransactions,
-          [
-            walletID,
-            accountID,
-          ],
-          {#isInitializeProcess: isInitializeProcess},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #fetchTransactions,
+              [walletID, accountID],
+              {#isInitializeProcess: isInitializeProcess},
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> handleWalletTransaction(
@@ -4711,17 +3581,18 @@ class MockServerTransactionDataProvider extends _i1.Mock
     bool? isInitializeProcess = false,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #handleWalletTransaction,
-          [walletTransaction],
-          {
-            #notifyDataUpdate: notifyDataUpdate,
-            #isInitializeProcess: isInitializeProcess,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #handleWalletTransaction,
+              [walletTransaction],
+              {
+                #notifyDataUpdate: notifyDataUpdate,
+                #isInitializeProcess: isInitializeProcess,
+              },
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> insertOrUpdate(
@@ -4731,18 +3602,19 @@ class MockServerTransactionDataProvider extends _i1.Mock
     _i2.UpdateType? updateType,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertOrUpdate,
-          [transactionModel],
-          {
-            #notifyDataUpdate: notifyDataUpdate,
-            #isInitializeProcess: isInitializeProcess,
-            #updateType: updateType,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #insertOrUpdate,
+              [transactionModel],
+              {
+                #notifyDataUpdate: notifyDataUpdate,
+                #isInitializeProcess: isInitializeProcess,
+                #updateType: updateType,
+              },
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> reloadAccountTransactions(
@@ -4750,176 +3622,116 @@ class MockServerTransactionDataProvider extends _i1.Mock
     String? accountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #reloadAccountTransactions,
-          [
-            walletID,
-            accountID,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#reloadAccountTransactions, [
+              walletID,
+              accountID,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reset(String? walletId) => (super.noSuchMethod(
-        Invocation.method(
-          #reset,
-          [walletId],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reset(String? walletId) =>
+      (super.noSuchMethod(
+            Invocation.method(#reset, [walletId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [UnleashDataProvider].
@@ -4932,353 +3744,273 @@ class MockUnleashDataProvider extends _i1.Mock
   }
 
   @override
-  _i34.UnleashClient get unleashClient => (super.noSuchMethod(
-        Invocation.getter(#unleashClient),
-        returnValue: _FakeUnleashClient_33(
-          this,
-          Invocation.getter(#unleashClient),
-        ),
-      ) as _i34.UnleashClient);
+  _i34.UnleashClient get unleashClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#unleashClient),
+            returnValue: _FakeUnleashClient_33(
+              this,
+              Invocation.getter(#unleashClient),
+            ),
+          )
+          as _i34.UnleashClient);
 
   @override
-  _i35.FrbUnleashClient get frbUnleashClient => (super.noSuchMethod(
-        Invocation.getter(#frbUnleashClient),
-        returnValue: _FakeFrbUnleashClient_34(
-          this,
-          Invocation.getter(#frbUnleashClient),
-        ),
-      ) as _i35.FrbUnleashClient);
+  _i35.FrbUnleashClient get frbUnleashClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#frbUnleashClient),
+            returnValue: _FakeFrbUnleashClient_34(
+              this,
+              Invocation.getter(#frbUnleashClient),
+            ),
+          )
+          as _i35.FrbUnleashClient);
 
   @override
-  _i36.ApiEnv get apiEnv => (super.noSuchMethod(
-        Invocation.getter(#apiEnv),
-        returnValue: _FakeApiEnv_35(
-          this,
-          Invocation.getter(#apiEnv),
-        ),
-      ) as _i36.ApiEnv);
+  _i36.ApiEnv get apiEnv =>
+      (super.noSuchMethod(
+            Invocation.getter(#apiEnv),
+            returnValue: _FakeApiEnv_35(this, Invocation.getter(#apiEnv)),
+          )
+          as _i36.ApiEnv);
 
   @override
-  int get duration => (super.noSuchMethod(
-        Invocation.getter(#duration),
-        returnValue: 0,
-      ) as int);
+  int get duration =>
+      (super.noSuchMethod(Invocation.getter(#duration), returnValue: 0) as int);
 
   @override
   set unleashClient(_i34.UnleashClient? value) => super.noSuchMethod(
-        Invocation.setter(
-          #unleashClient,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#unleashClient, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set refreshTimer(_i4.Timer? value) => super.noSuchMethod(
-        Invocation.setter(
-          #refreshTimer,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#refreshTimer, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   void setupUnleashListeners() => super.noSuchMethod(
-        Invocation.method(
-          #setupUnleashListeners,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#setupUnleashListeners, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i4.Future<void> start() => (super.noSuchMethod(
-        Invocation.method(
-          #start,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> start() =>
+      (super.noSuchMethod(
+            Invocation.method(#start, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void startPeriodicRefresh() => super.noSuchMethod(
-        Invocation.method(
-          #startPeriodicRefresh,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#startPeriodicRefresh, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  bool isFeatureEnabled(_i15.UnleashFeature? feature) => (super.noSuchMethod(
-        Invocation.method(
-          #isFeatureEnabled,
-          [feature],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isFeatureEnabled(_i15.UnleashFeature? feature) =>
+      (super.noSuchMethod(
+            Invocation.method(#isFeatureEnabled, [feature]),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isTraceLoggerEnabled() => (super.noSuchMethod(
-        Invocation.method(
-          #isTraceLoggerEnabled,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isTraceLoggerEnabled() =>
+      (super.noSuchMethod(
+            Invocation.method(#isTraceLoggerEnabled, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isUsingMempoolFees() => (super.noSuchMethod(
-        Invocation.method(
-          #isUsingMempoolFees,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isUsingMempoolFees() =>
+      (super.noSuchMethod(
+            Invocation.method(#isUsingMempoolFees, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isMobileClientDebugMode() => (super.noSuchMethod(
-        Invocation.method(
-          #isMobileClientDebugMode,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isMobileClientDebugMode() =>
+      (super.noSuchMethod(
+            Invocation.method(#isMobileClientDebugMode, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isWalletEarlyAccess() => (super.noSuchMethod(
-        Invocation.method(
-          #isWalletEarlyAccess,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isWalletEarlyAccess() =>
+      (super.noSuchMethod(
+            Invocation.method(#isWalletEarlyAccess, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isBuyMobileDisabled() => (super.noSuchMethod(
-        Invocation.method(
-          #isBuyMobileDisabled,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isBuyMobileDisabled() =>
+      (super.noSuchMethod(
+            Invocation.method(#isBuyMobileDisabled, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isImportPaperWallet() => (super.noSuchMethod(
-        Invocation.method(
-          #isImportPaperWallet,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isImportPaperWallet() =>
+      (super.noSuchMethod(
+            Invocation.method(#isImportPaperWallet, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isWalletBackupAlert() => (super.noSuchMethod(
-        Invocation.method(
-          #isWalletBackupAlert,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isWalletBackupAlert() =>
+      (super.noSuchMethod(
+            Invocation.method(#isWalletBackupAlert, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isInAppReviewFreeUser() => (super.noSuchMethod(
-        Invocation.method(
-          #isInAppReviewFreeUser,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isInAppReviewFreeUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#isInAppReviewFreeUser, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isWalletMessageSigner() => (super.noSuchMethod(
-        Invocation.method(
-          #isWalletMessageSigner,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isWalletMessageSigner() =>
+      (super.noSuchMethod(
+            Invocation.method(#isWalletMessageSigner, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool isWalletExportTransaction() => (super.noSuchMethod(
-        Invocation.method(
-          #isWalletExportTransaction,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isWalletExportTransaction() =>
+      (super.noSuchMethod(
+            Invocation.method(#isWalletExportTransaction, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [UserDataProvider].
@@ -5290,318 +4022,260 @@ class MockUserDataProvider extends _i1.Mock implements _i37.UserDataProvider {
   }
 
   @override
-  _i37.ProtonWalletUser get user => (super.noSuchMethod(
-        Invocation.getter(#user),
-        returnValue: _FakeProtonWalletUser_36(
-          this,
-          Invocation.getter(#user),
-        ),
-      ) as _i37.ProtonWalletUser);
+  _i37.ProtonWalletUser get user =>
+      (super.noSuchMethod(
+            Invocation.getter(#user),
+            returnValue: _FakeProtonWalletUser_36(
+              this,
+              Invocation.getter(#user),
+            ),
+          )
+          as _i37.ProtonWalletUser);
 
   @override
-  _i38.ProtonUsersClient get protonUsersClient => (super.noSuchMethod(
-        Invocation.getter(#protonUsersClient),
-        returnValue: _FakeProtonUsersClient_37(
-          this,
-          Invocation.getter(#protonUsersClient),
-        ),
-      ) as _i38.ProtonUsersClient);
+  _i38.ProtonUsersClient get protonUsersClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#protonUsersClient),
+            returnValue: _FakeProtonUsersClient_37(
+              this,
+              Invocation.getter(#protonUsersClient),
+            ),
+          )
+          as _i38.ProtonUsersClient);
 
   @override
-  _i39.UserQueries get userQueries => (super.noSuchMethod(
-        Invocation.getter(#userQueries),
-        returnValue: _FakeUserQueries_38(
-          this,
-          Invocation.getter(#userQueries),
-        ),
-      ) as _i39.UserQueries);
+  _i39.UserQueries get userQueries =>
+      (super.noSuchMethod(
+            Invocation.getter(#userQueries),
+            returnValue: _FakeUserQueries_38(
+              this,
+              Invocation.getter(#userQueries),
+            ),
+          )
+          as _i39.UserQueries);
 
   @override
-  _i40.UserKeysQueries get userKeysQueries => (super.noSuchMethod(
-        Invocation.getter(#userKeysQueries),
-        returnValue: _FakeUserKeysQueries_39(
-          this,
-          Invocation.getter(#userKeysQueries),
-        ),
-      ) as _i40.UserKeysQueries);
+  _i40.UserKeysQueries get userKeysQueries =>
+      (super.noSuchMethod(
+            Invocation.getter(#userKeysQueries),
+            returnValue: _FakeUserKeysQueries_39(
+              this,
+              Invocation.getter(#userKeysQueries),
+            ),
+          )
+          as _i40.UserKeysQueries);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   set user(_i37.ProtonWalletUser? value) => super.noSuchMethod(
-        Invocation.setter(
-          #user,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#user, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> preLoad() => (super.noSuchMethod(
-        Invocation.method(
-          #preLoad,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> preLoad() =>
+      (super.noSuchMethod(
+            Invocation.method(#preLoad, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> syncProtonUser() => (super.noSuchMethod(
-        Invocation.method(
-          #syncProtonUser,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> syncProtonUser({bool? cache = false}) =>
+      (super.noSuchMethod(
+            Invocation.method(#syncProtonUser, [], {#cache: cache}),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> syncProtonUserSettings() => (super.noSuchMethod(
-        Invocation.method(
-          #syncProtonUserSettings,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> syncProtonUserSettings() =>
+      (super.noSuchMethod(
+            Invocation.method(#syncProtonUserSettings, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void enabled2FA(dynamic enable) => super.noSuchMethod(
-        Invocation.method(
-          #enabled2FA,
-          [enable],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#enabled2FA, [enable]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void enabledRecovery(dynamic enable) => super.noSuchMethod(
-        Invocation.method(
-          #enabledRecovery,
-          [enable],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#enabledRecovery, [enable]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void enabledShowWalletRecovery(dynamic enable) => super.noSuchMethod(
-        Invocation.method(
-          #enabledShowWalletRecovery,
-          [enable],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#enabledShowWalletRecovery, [enable]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i4.Future<List<_i72.DriftUserKey>> getUserKeys(String? userID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getUserKeys,
-          [userID],
-        ),
-        returnValue:
-            _i4.Future<List<_i72.DriftUserKey>>.value(<_i72.DriftUserKey>[]),
-      ) as _i4.Future<List<_i72.DriftUserKey>>);
+            Invocation.method(#getUserKeys, [userID]),
+            returnValue: _i4.Future<List<_i72.DriftUserKey>>.value(
+              <_i72.DriftUserKey>[],
+            ),
+          )
+          as _i4.Future<List<_i72.DriftUserKey>>);
 
   @override
   _i4.Future<_i72.DriftProtonUser?> getUser(String? userID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getUser,
-          [userID],
-        ),
-        returnValue: _i4.Future<_i72.DriftProtonUser?>.value(),
-      ) as _i4.Future<_i72.DriftProtonUser?>);
+            Invocation.method(#getUser, [userID]),
+            returnValue: _i4.Future<_i72.DriftProtonUser?>.value(),
+          )
+          as _i4.Future<_i72.DriftProtonUser?>);
 
   @override
-  _i4.Future<void> fetchFromServer(String? userID) => (super.noSuchMethod(
-        Invocation.method(
-          #fetchFromServer,
-          [userID],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> saveToCache(_i73.ProtonUser? userinfo) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveToCache, [userinfo]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> fetchFromServer(String? userID) =>
+      (super.noSuchMethod(
+            Invocation.method(#fetchFromServer, [userID]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [UserSettingsDataProvider].
@@ -5614,289 +4288,284 @@ class MockUserSettingsDataProvider extends _i1.Mock
   }
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
-  _i41.SettingsClient get settingsClient => (super.noSuchMethod(
-        Invocation.getter(#settingsClient),
-        returnValue: _FakeSettingsClient_40(
-          this,
-          Invocation.getter(#settingsClient),
-        ),
-      ) as _i41.SettingsClient);
+  _i41.SettingsClient get settingsClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#settingsClient),
+            returnValue: _FakeSettingsClient_40(
+              this,
+              Invocation.getter(#settingsClient),
+            ),
+          )
+          as _i41.SettingsClient);
 
   @override
-  _i13.PreferencesManager get shared => (super.noSuchMethod(
-        Invocation.getter(#shared),
-        returnValue: _FakePreferencesManager_11(
-          this,
-          Invocation.getter(#shared),
-        ),
-      ) as _i13.PreferencesManager);
+  _i13.PreferencesManager get shared =>
+      (super.noSuchMethod(
+            Invocation.getter(#shared),
+            returnValue: _FakePreferencesManager_11(
+              this,
+              Invocation.getter(#shared),
+            ),
+          )
+          as _i13.PreferencesManager);
 
   @override
-  bool get initializedExchangeRate => (super.noSuchMethod(
-        Invocation.getter(#initializedExchangeRate),
-        returnValue: false,
-      ) as bool);
+  bool get initializedExchangeRate =>
+      (super.noSuchMethod(
+            Invocation.getter(#initializedExchangeRate),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  bool get displayBalance => (super.noSuchMethod(
-        Invocation.getter(#displayBalance),
-        returnValue: false,
-      ) as bool);
+  bool get displayBalance =>
+      (super.noSuchMethod(
+            Invocation.getter(#displayBalance),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  _i42.WalletUserSettingsQueries get settingsQueries => (super.noSuchMethod(
-        Invocation.getter(#settingsQueries),
-        returnValue: _FakeWalletUserSettingsQueries_41(
-          this,
-          Invocation.getter(#settingsQueries),
-        ),
-      ) as _i42.WalletUserSettingsQueries);
+  _i42.WalletUserSettingsQueries get settingsQueries =>
+      (super.noSuchMethod(
+            Invocation.getter(#settingsQueries),
+            returnValue: _FakeWalletUserSettingsQueries_41(
+              this,
+              Invocation.getter(#settingsQueries),
+            ),
+          )
+          as _i42.WalletUserSettingsQueries);
 
   @override
-  int get customStopgap => (super.noSuchMethod(
-        Invocation.getter(#customStopgap),
-        returnValue: 0,
-      ) as int);
+  int get customStopgap =>
+      (super.noSuchMethod(Invocation.getter(#customStopgap), returnValue: 0)
+          as int);
 
   @override
-  _i5.ProtonExchangeRate get exchangeRate => (super.noSuchMethod(
-        Invocation.getter(#exchangeRate),
-        returnValue: _FakeProtonExchangeRate_3(
-          this,
-          Invocation.getter(#exchangeRate),
-        ),
-      ) as _i5.ProtonExchangeRate);
+  _i5.ProtonExchangeRate get exchangeRate =>
+      (super.noSuchMethod(
+            Invocation.getter(#exchangeRate),
+            returnValue: _FakeProtonExchangeRate_3(
+              this,
+              Invocation.getter(#exchangeRate),
+            ),
+          )
+          as _i5.ProtonExchangeRate);
 
   @override
-  _i50.BitcoinUnit get bitcoinUnit => (super.noSuchMethod(
-        Invocation.getter(#bitcoinUnit),
-        returnValue: _i50.BitcoinUnit.btc,
-      ) as _i50.BitcoinUnit);
+  _i50.BitcoinUnit get bitcoinUnit =>
+      (super.noSuchMethod(
+            Invocation.getter(#bitcoinUnit),
+            returnValue: _i50.BitcoinUnit.btc,
+          )
+          as _i50.BitcoinUnit);
 
   @override
-  _i50.FiatCurrency get fiatCurrency => (super.noSuchMethod(
-        Invocation.getter(#fiatCurrency),
-        returnValue: _i50.FiatCurrency.all,
-      ) as _i50.FiatCurrency);
+  _i50.FiatCurrency get fiatCurrency =>
+      (super.noSuchMethod(
+            Invocation.getter(#fiatCurrency),
+            returnValue: _i50.FiatCurrency.all,
+          )
+          as _i50.FiatCurrency);
 
   @override
   _i4.StreamController<_i14.UserSettingDataUpdated> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i14.UserSettingDataUpdated>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i14.UserSettingDataUpdated>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i14.UserSettingDataUpdated>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i14.UserSettingDataUpdated>);
 
   @override
   _i4.StreamController<_i14.ExchangeRateDataUpdated>
-      get exchangeRateUpdateController => (super.noSuchMethod(
+  get exchangeRateUpdateController =>
+      (super.noSuchMethod(
             Invocation.getter(#exchangeRateUpdateController),
             returnValue: _FakeStreamController_2<_i14.ExchangeRateDataUpdated>(
               this,
               Invocation.getter(#exchangeRateUpdateController),
             ),
-          ) as _i4.StreamController<_i14.ExchangeRateDataUpdated>);
+          )
+          as _i4.StreamController<_i14.ExchangeRateDataUpdated>);
 
   @override
   _i4.StreamController<_i14.FiatCurrencyDataUpdated>
-      get fiatCurrencyUpdateController => (super.noSuchMethod(
+  get fiatCurrencyUpdateController =>
+      (super.noSuchMethod(
             Invocation.getter(#fiatCurrencyUpdateController),
             returnValue: _FakeStreamController_2<_i14.FiatCurrencyDataUpdated>(
               this,
               Invocation.getter(#fiatCurrencyUpdateController),
             ),
-          ) as _i4.StreamController<_i14.FiatCurrencyDataUpdated>);
+          )
+          as _i4.StreamController<_i14.FiatCurrencyDataUpdated>);
 
   @override
   _i4.StreamController<_i14.BitcoinUnitDataUpdated>
-      get bitcoinUnitUpdateController => (super.noSuchMethod(
+  get bitcoinUnitUpdateController =>
+      (super.noSuchMethod(
             Invocation.getter(#bitcoinUnitUpdateController),
             returnValue: _FakeStreamController_2<_i14.BitcoinUnitDataUpdated>(
               this,
               Invocation.getter(#bitcoinUnitUpdateController),
             ),
-          ) as _i4.StreamController<_i14.BitcoinUnitDataUpdated>);
+          )
+          as _i4.StreamController<_i14.BitcoinUnitDataUpdated>);
 
   @override
   _i4.StreamController<_i14.DisplayBalanceUpdated>
-      get displayBalanceUpdateController => (super.noSuchMethod(
+  get displayBalanceUpdateController =>
+      (super.noSuchMethod(
             Invocation.getter(#displayBalanceUpdateController),
             returnValue: _FakeStreamController_2<_i14.DisplayBalanceUpdated>(
               this,
               Invocation.getter(#displayBalanceUpdateController),
             ),
-          ) as _i4.StreamController<_i14.DisplayBalanceUpdated>);
+          )
+          as _i4.StreamController<_i14.DisplayBalanceUpdated>);
 
   @override
   set initializedExchangeRate(bool? value) => super.noSuchMethod(
-        Invocation.setter(
-          #initializedExchangeRate,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#initializedExchangeRate, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set displayBalance(bool? value) => super.noSuchMethod(
-        Invocation.setter(
-          #displayBalance,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#displayBalance, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set customStopgap(int? value) => super.noSuchMethod(
-        Invocation.setter(
-          #customStopgap,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#customStopgap, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set exchangeRate(_i5.ProtonExchangeRate? value) => super.noSuchMethod(
-        Invocation.setter(
-          #exchangeRate,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#exchangeRate, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set bitcoinUnit(_i50.BitcoinUnit? value) => super.noSuchMethod(
-        Invocation.setter(
-          #bitcoinUnit,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#bitcoinUnit, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set fiatCurrency(_i50.FiatCurrency? value) => super.noSuchMethod(
-        Invocation.setter(
-          #fiatCurrency,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#fiatCurrency, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set settingsData(_i72.WalletUserSettings? value) => super.noSuchMethod(
-        Invocation.setter(
-          #settingsData,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#settingsData, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<void> loadFromServer() => (super.noSuchMethod(
-        Invocation.method(
-          #loadFromServer,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> loadFromServer() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadFromServer, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<_i72.WalletUserSettings?> getSettings() => (super.noSuchMethod(
-        Invocation.method(
-          #getSettings,
-          [],
-        ),
-        returnValue: _i4.Future<_i72.WalletUserSettings?>.value(),
-      ) as _i4.Future<_i72.WalletUserSettings?>);
+  _i4.Future<_i72.WalletUserSettings?> getSettings() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSettings, []),
+            returnValue: _i4.Future<_i72.WalletUserSettings?>.value(),
+          )
+          as _i4.Future<_i72.WalletUserSettings?>);
 
   @override
-  _i4.Future<void> setCustomStopgap(dynamic stopgap) => (super.noSuchMethod(
-        Invocation.method(
-          #setCustomStopgap,
-          [stopgap],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> setCustomStopgap(dynamic stopgap) =>
+      (super.noSuchMethod(
+            Invocation.method(#setCustomStopgap, [stopgap]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<int> getCustomStopgap() => (super.noSuchMethod(
-        Invocation.method(
-          #getCustomStopgap,
-          [],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+  _i4.Future<int> getCustomStopgap() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCustomStopgap, []),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
-  _i4.Future<void> setDisplayBalance(dynamic display) => (super.noSuchMethod(
-        Invocation.method(
-          #setDisplayBalance,
-          [display],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> setDisplayBalance(dynamic display) =>
+      (super.noSuchMethod(
+            Invocation.method(#setDisplayBalance, [display]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<bool> getDisplayBalance() => (super.noSuchMethod(
-        Invocation.method(
-          #getDisplayBalance,
-          [],
-        ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+  _i4.Future<bool> getDisplayBalance() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDisplayBalance, []),
+            returnValue: _i4.Future<bool>.value(false),
+          )
+          as _i4.Future<bool>);
 
   @override
   void updateBitcoinUnit(_i50.BitcoinUnit? bitcoinUnit) => super.noSuchMethod(
-        Invocation.method(
-          #updateBitcoinUnit,
-          [bitcoinUnit],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#updateBitcoinUnit, [bitcoinUnit]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i4.Future<void> acceptTermsAndConditions() => (super.noSuchMethod(
-        Invocation.method(
-          #acceptTermsAndConditions,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> acceptTermsAndConditions() =>
+      (super.noSuchMethod(
+            Invocation.method(#acceptTermsAndConditions, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> updateFiatCurrency(
@@ -5904,254 +4573,185 @@ class MockUserSettingsDataProvider extends _i1.Mock
     dynamic notify = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateFiatCurrency,
-          [fiatCurrency],
-          {#notify: notify},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(
+              #updateFiatCurrency,
+              [fiatCurrency],
+              {#notify: notify},
+            ),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> updateReceiveEmailIntegrationNotification(
-          dynamic isEnable) =>
+    dynamic isEnable,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateReceiveEmailIntegrationNotification,
-          [isEnable],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateReceiveEmailIntegrationNotification, [
+              isEnable,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> updateReceiveInviterNotification(dynamic isEnable) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateReceiveInviterNotification,
-          [isEnable],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateReceiveInviterNotification, [isEnable]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void updateExchangeRate(_i5.ProtonExchangeRate? exchangeRate) =>
       super.noSuchMethod(
-        Invocation.method(
-          #updateExchangeRate,
-          [exchangeRate],
-        ),
+        Invocation.method(#updateExchangeRate, [exchangeRate]),
         returnValueForMissingStub: null,
       );
 
   @override
   _i4.Future<void> insertUpdate(_i50.ApiWalletUserSettings? settings) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertUpdate,
-          [settings],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#insertUpdate, [settings]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   String getFiatCurrencyName({_i50.FiatCurrency? fiatCurrency}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getFiatCurrencyName,
-          [],
-          {#fiatCurrency: fiatCurrency},
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFiatCurrencyName,
-            [],
-            {#fiatCurrency: fiatCurrency},
-          ),
-        ),
-      ) as String);
+            Invocation.method(#getFiatCurrencyName, [], {
+              #fiatCurrency: fiatCurrency,
+            }),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#getFiatCurrencyName, [], {
+                #fiatCurrency: fiatCurrency,
+              }),
+            ),
+          )
+          as String);
 
   @override
   String getFiatCurrencySign({_i50.FiatCurrency? fiatCurrency}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getFiatCurrencySign,
-          [],
-          {#fiatCurrency: fiatCurrency},
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFiatCurrencySign,
-            [],
-            {#fiatCurrency: fiatCurrency},
-          ),
-        ),
-      ) as String);
+            Invocation.method(#getFiatCurrencySign, [], {
+              #fiatCurrency: fiatCurrency,
+            }),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#getFiatCurrencySign, [], {
+                #fiatCurrency: fiatCurrency,
+              }),
+            ),
+          )
+          as String);
 
   @override
-  _i4.Future<void> preLoad() => (super.noSuchMethod(
-        Invocation.method(
-          #preLoad,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> preLoad() =>
+      (super.noSuchMethod(
+            Invocation.method(#preLoad, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletsDataProvider].
@@ -6164,340 +4764,315 @@ class MockWalletsDataProvider extends _i1.Mock
   }
 
   @override
-  _i6.SecureStorageManager get storage => (super.noSuchMethod(
-        Invocation.getter(#storage),
-        returnValue: _FakeSecureStorageManager_4(
-          this,
-          Invocation.getter(#storage),
-        ),
-      ) as _i6.SecureStorageManager);
+  _i6.SecureStorageManager get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSecureStorageManager_4(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i6.SecureStorageManager);
 
   @override
-  String get key => (super.noSuchMethod(
-        Invocation.getter(#key),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#key),
-        ),
-      ) as String);
+  String get key =>
+      (super.noSuchMethod(
+            Invocation.getter(#key),
+            returnValue: _i53.dummyValue<String>(this, Invocation.getter(#key)),
+          )
+          as String);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
   _i4.StreamController<_i2.SelectedWalletUpdated>
-      get selectedWalletUpdateController => (super.noSuchMethod(
+  get selectedWalletUpdateController =>
+      (super.noSuchMethod(
             Invocation.getter(#selectedWalletUpdateController),
             returnValue: _FakeStreamController_2<_i2.SelectedWalletUpdated>(
               this,
               Invocation.getter(#selectedWalletUpdateController),
             ),
-          ) as _i4.StreamController<_i2.SelectedWalletUpdated>);
+          )
+          as _i4.StreamController<_i2.SelectedWalletUpdated>);
 
   @override
   _i4.StreamController<_i2.NewBroadcastTransaction>
-      get newBroadcastTransactionController => (super.noSuchMethod(
+  get newBroadcastTransactionController =>
+      (super.noSuchMethod(
             Invocation.getter(#newBroadcastTransactionController),
             returnValue: _FakeStreamController_2<_i2.NewBroadcastTransaction>(
               this,
               Invocation.getter(#newBroadcastTransactionController),
             ),
-          ) as _i4.StreamController<_i2.NewBroadcastTransaction>);
+          )
+          as _i4.StreamController<_i2.NewBroadcastTransaction>);
 
   @override
-  _i11.WalletClient get walletClient => (super.noSuchMethod(
-        Invocation.getter(#walletClient),
-        returnValue: _FakeWalletClient_9(
-          this,
-          Invocation.getter(#walletClient),
-        ),
-      ) as _i11.WalletClient);
+  _i11.WalletClient get walletClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletClient),
+            returnValue: _FakeWalletClient_9(
+              this,
+              Invocation.getter(#walletClient),
+            ),
+          )
+          as _i11.WalletClient);
 
   @override
-  _i24.WalletDao get walletDao => (super.noSuchMethod(
-        Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_23(
-          this,
-          Invocation.getter(#walletDao),
-        ),
-      ) as _i24.WalletDao);
+  _i24.WalletDao get walletDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDao),
+            returnValue: _FakeWalletDao_23(this, Invocation.getter(#walletDao)),
+          )
+          as _i24.WalletDao);
 
   @override
-  _i10.AccountDao get accountDao => (super.noSuchMethod(
-        Invocation.getter(#accountDao),
-        returnValue: _FakeAccountDao_8(
-          this,
-          Invocation.getter(#accountDao),
-        ),
-      ) as _i10.AccountDao);
+  _i10.AccountDao get accountDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountDao),
+            returnValue: _FakeAccountDao_8(
+              this,
+              Invocation.getter(#accountDao),
+            ),
+          )
+          as _i10.AccountDao);
 
   @override
-  _i28.AddressDao get addressDao => (super.noSuchMethod(
-        Invocation.getter(#addressDao),
-        returnValue: _FakeAddressDao_27(
-          this,
-          Invocation.getter(#addressDao),
-        ),
-      ) as _i28.AddressDao);
+  _i28.AddressDao get addressDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#addressDao),
+            returnValue: _FakeAddressDao_27(
+              this,
+              Invocation.getter(#addressDao),
+            ),
+          )
+          as _i28.AddressDao);
 
   @override
-  String get selectedServerWalletID => (super.noSuchMethod(
-        Invocation.getter(#selectedServerWalletID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#selectedServerWalletID),
-        ),
-      ) as String);
+  String get selectedServerWalletID =>
+      (super.noSuchMethod(
+            Invocation.getter(#selectedServerWalletID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#selectedServerWalletID),
+            ),
+          )
+          as String);
 
   @override
-  String get selectedServerWalletAccountID => (super.noSuchMethod(
-        Invocation.getter(#selectedServerWalletAccountID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#selectedServerWalletAccountID),
-        ),
-      ) as String);
+  String get selectedServerWalletAccountID =>
+      (super.noSuchMethod(
+            Invocation.getter(#selectedServerWalletAccountID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#selectedServerWalletAccountID),
+            ),
+          )
+          as String);
 
   @override
-  String get userID => (super.noSuchMethod(
-        Invocation.getter(#userID),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#userID),
-        ),
-      ) as String);
+  String get userID =>
+      (super.noSuchMethod(
+            Invocation.getter(#userID),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.getter(#userID),
+            ),
+          )
+          as String);
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set selectedWalletUpdateController(
-          _i4.StreamController<_i2.SelectedWalletUpdated>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #selectedWalletUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.SelectedWalletUpdated>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#selectedWalletUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set newBroadcastTransactionController(
-          _i4.StreamController<_i2.NewBroadcastTransaction>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #newBroadcastTransactionController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.NewBroadcastTransaction>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#newBroadcastTransactionController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set selectedServerWalletID(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #selectedServerWalletID,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#selectedServerWalletID, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set selectedServerWalletAccountID(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #selectedServerWalletAccountID,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#selectedServerWalletAccountID, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set walletsData(List<_i29.WalletData>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #walletsData,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#walletsData, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
-
-  @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
-
-  @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  _i4.Future<_i73.WalletMnemonic?> getWalletMnemonic(String? walletID) =>
+  _i2.DataState get state =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletMnemonic,
-          [walletID],
-        ),
-        returnValue: _i4.Future<_i73.WalletMnemonic?>.value(),
-      ) as _i4.Future<_i73.WalletMnemonic?>);
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Future<void> saveWalletMnemonics(List<_i73.WalletMnemonic>? values) =>
+  _i4.Stream<_i2.DataState> get stream =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveWalletMnemonics,
-          [values],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  _i4.Future<List<_i29.WalletData>?> getWallets() => (super.noSuchMethod(
-        Invocation.method(
-          #getWallets,
-          [],
-        ),
-        returnValue: _i4.Future<List<_i29.WalletData>?>.value(),
-      ) as _i4.Future<List<_i29.WalletData>?>);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
+
+  @override
+  _i4.Future<_i74.WalletMnemonic?> getWalletMnemonic(String? walletID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getWalletMnemonic, [walletID]),
+            returnValue: _i4.Future<_i74.WalletMnemonic?>.value(),
+          )
+          as _i4.Future<_i74.WalletMnemonic?>);
+
+  @override
+  _i4.Future<void> saveWalletMnemonics(List<_i74.WalletMnemonic>? values) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveWalletMnemonics, [values]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
+
+  @override
+  _i4.Future<List<_i29.WalletData>?> getWallets() =>
+      (super.noSuchMethod(
+            Invocation.method(#getWallets, []),
+            returnValue: _i4.Future<List<_i29.WalletData>?>.value(),
+          )
+          as _i4.Future<List<_i29.WalletData>?>);
 
   @override
   _i4.Future<_i29.WalletData?> getWallet(String? walletID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWallet,
-          [walletID],
-        ),
-        returnValue: _i4.Future<_i29.WalletData?>.value(),
-      ) as _i4.Future<_i29.WalletData?>);
+            Invocation.method(#getWallet, [walletID]),
+            returnValue: _i4.Future<_i29.WalletData?>.value(),
+          )
+          as _i4.Future<_i29.WalletData?>);
 
   @override
   _i4.Future<void> disableShowWalletRecovery(String? walletId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #disableShowWalletRecovery,
-          [walletId],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#disableShowWalletRecovery, [walletId]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<_i43.ApiWalletData> createWallet(_i43.CreateWalletReq? request) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createWallet,
-          [request],
-        ),
-        returnValue: _i4.Future<_i43.ApiWalletData>.value(_FakeApiWalletData_42(
-          this,
-          Invocation.method(
-            #createWallet,
-            [request],
-          ),
-        )),
-      ) as _i4.Future<_i43.ApiWalletData>);
+            Invocation.method(#createWallet, [request]),
+            returnValue: _i4.Future<_i43.ApiWalletData>.value(
+              _FakeApiWalletData_42(
+                this,
+                Invocation.method(#createWallet, [request]),
+              ),
+            ),
+          )
+          as _i4.Future<_i43.ApiWalletData>);
 
   @override
   _i4.Future<int> getNewDerivationAccountIndex(
     String? walletID,
-    _i74.ScriptTypeInfo? scriptType,
-    _i75.CoinType? coinType,
+    _i75.ScriptTypeInfo? scriptType,
+    _i76.CoinType? coinType,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getNewDerivationAccountIndex,
-          [
-            walletID,
-            scriptType,
-            coinType,
-          ],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+            Invocation.method(#getNewDerivationAccountIndex, [
+              walletID,
+              scriptType,
+              coinType,
+            ]),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
   _i4.Future<String> getNewDerivationPathBy(
     String? walletID,
-    _i74.ScriptTypeInfo? scriptType,
-    _i75.CoinType? coinType, {
+    _i75.ScriptTypeInfo? scriptType,
+    _i76.CoinType? coinType, {
     int? accountIndex,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getNewDerivationPathBy,
-          [
-            walletID,
-            scriptType,
-            coinType,
-          ],
-          {#accountIndex: accountIndex},
-        ),
-        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getNewDerivationPathBy,
-            [
-              walletID,
-              scriptType,
-              coinType,
-            ],
-            {#accountIndex: accountIndex},
-          ),
-        )),
-      ) as _i4.Future<String>);
+            Invocation.method(
+              #getNewDerivationPathBy,
+              [walletID, scriptType, coinType],
+              {#accountIndex: accountIndex},
+            ),
+            returnValue: _i4.Future<String>.value(
+              _i53.dummyValue<String>(
+                this,
+                Invocation.method(
+                  #getNewDerivationPathBy,
+                  [walletID, scriptType, coinType],
+                  {#accountIndex: accountIndex},
+                ),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 
   @override
   String formatDerivationPath(
-    _i74.ScriptTypeInfo? scriptType,
-    _i75.CoinType? coinType,
+    _i75.ScriptTypeInfo? scriptType,
+    _i76.CoinType? coinType,
     int? accountIndex,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #formatDerivationPath,
-          [
-            scriptType,
-            coinType,
-            accountIndex,
-          ],
-        ),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #formatDerivationPath,
-            [
+            Invocation.method(#formatDerivationPath, [
               scriptType,
               coinType,
               accountIndex,
-            ],
-          ),
-        ),
-      ) as String);
+            ]),
+            returnValue: _i53.dummyValue<String>(
+              this,
+              Invocation.method(#formatDerivationPath, [
+                scriptType,
+                coinType,
+                accountIndex,
+              ]),
+            ),
+          )
+          as String);
 
   @override
   _i4.Future<_i44.ApiWalletAccount> createWalletAccount(
@@ -6506,75 +5081,63 @@ class MockWalletsDataProvider extends _i1.Mock
     _i50.FiatCurrency? fiatCurrency,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createWalletAccount,
-          [
-            walletID,
-            request,
-            fiatCurrency,
-          ],
-        ),
-        returnValue:
-            _i4.Future<_i44.ApiWalletAccount>.value(_FakeApiWalletAccount_43(
-          this,
-          Invocation.method(
-            #createWalletAccount,
-            [
+            Invocation.method(#createWalletAccount, [
               walletID,
               request,
               fiatCurrency,
-            ],
-          ),
-        )),
-      ) as _i4.Future<_i44.ApiWalletAccount>);
+            ]),
+            returnValue: _i4.Future<_i44.ApiWalletAccount>.value(
+              _FakeApiWalletAccount_43(
+                this,
+                Invocation.method(#createWalletAccount, [
+                  walletID,
+                  request,
+                  fiatCurrency,
+                ]),
+              ),
+            ),
+          )
+          as _i4.Future<_i44.ApiWalletAccount>);
 
   @override
   _i4.Future<void> updateWallet({required _i56.WalletModel? wallet}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateWallet,
-          [],
-          {#wallet: wallet},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateWallet, [], {#wallet: wallet}),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> updateWalletAccount(
-          {required _i57.AccountModel? accountModel}) =>
+  _i4.Future<void> updateWalletAccount({
+    required _i57.AccountModel? accountModel,
+  }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateWalletAccount,
-          [],
-          {#accountModel: accountModel},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateWalletAccount, [], {
+              #accountModel: accountModel,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> deleteWalletByServerID(String? walletID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteWalletByServerID,
-          [walletID],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#deleteWalletByServerID, [walletID]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> deleteWallet({required _i56.WalletModel? wallet}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteWallet,
-          [],
-          {#wallet: wallet},
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#deleteWallet, [], {#wallet: wallet}),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> deleteWalletAccount({
@@ -6582,40 +5145,31 @@ class MockWalletsDataProvider extends _i1.Mock
     bool? addToStream = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #deleteWalletAccount,
-          [],
-          {
-            #accountID: accountID,
-            #addToStream: addToStream,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#deleteWalletAccount, [], {
+              #accountID: accountID,
+              #addToStream: addToStream,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void notifyUpdateEmailIntegration() => super.noSuchMethod(
-        Invocation.method(
-          #notifyUpdateEmailIntegration,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#notifyUpdateEmailIntegration, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void updateSelected(
-    String? serverWalletID,
-    String? serverAccountID,
-  ) =>
+  void notifyUpdates(String? updateType) => super.noSuchMethod(
+    Invocation.method(#notifyUpdates, [updateType]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void updateSelected(String? serverWalletID, String? serverAccountID) =>
       super.noSuchMethod(
-        Invocation.method(
-          #updateSelected,
-          [
-            serverWalletID,
-            serverAccountID,
-          ],
-        ),
+        Invocation.method(#updateSelected, [serverWalletID, serverAccountID]),
         returnValueForMissingStub: null,
       );
 
@@ -6625,27 +5179,25 @@ class MockWalletsDataProvider extends _i1.Mock
     String? serverAccountID,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #syncEmailAddresses,
-          [
-            serverWalletID,
-            serverAccountID,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#syncEmailAddresses, [
+              serverWalletID,
+              serverAccountID,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> removeEmailAddressOnWalletAccount(String? serverAccountID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #removeEmailAddressOnWalletAccount,
-          [serverAccountID],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#removeEmailAddressOnWalletAccount, [
+              serverAccountID,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> addEmailAddressToWalletAccount(
@@ -6654,17 +5206,15 @@ class MockWalletsDataProvider extends _i1.Mock
     _i44.ApiEmailAddress? address,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addEmailAddressToWalletAccount,
-          [
-            serverWalletID,
-            serverAccountID,
-            address,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#addEmailAddressToWalletAccount, [
+              serverWalletID,
+              serverAccountID,
+              address,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> updateShowWalletRecovery({
@@ -6672,17 +5222,14 @@ class MockWalletsDataProvider extends _i1.Mock
     required bool? showWalletRecovery,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateShowWalletRecovery,
-          [],
-          {
-            #walletID: walletID,
-            #showWalletRecovery: showWalletRecovery,
-          },
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateShowWalletRecovery, [], {
+              #walletID: walletID,
+              #showWalletRecovery: showWalletRecovery,
+            }),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<int> insertOrUpdateWallet({
@@ -6703,29 +5250,26 @@ class MockWalletsDataProvider extends _i1.Mock
     bool? initialize = false,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertOrUpdateWallet,
-          [],
-          {
-            #userID: userID,
-            #name: name,
-            #encryptedMnemonic: encryptedMnemonic,
-            #passphrase: passphrase,
-            #imported: imported,
-            #priority: priority,
-            #status: status,
-            #type: type,
-            #walletID: walletID,
-            #publickey: publickey,
-            #fingerprint: fingerprint,
-            #showWalletRecovery: showWalletRecovery,
-            #migrationRequired: migrationRequired,
-            #legacy: legacy,
-            #initialize: initialize,
-          },
-        ),
-        returnValue: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+            Invocation.method(#insertOrUpdateWallet, [], {
+              #userID: userID,
+              #name: name,
+              #encryptedMnemonic: encryptedMnemonic,
+              #passphrase: passphrase,
+              #imported: imported,
+              #priority: priority,
+              #status: status,
+              #type: type,
+              #walletID: walletID,
+              #publickey: publickey,
+              #fingerprint: fingerprint,
+              #showWalletRecovery: showWalletRecovery,
+              #migrationRequired: migrationRequired,
+              #legacy: legacy,
+              #initialize: initialize,
+            }),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
   _i4.Future<int> insertOrUpdateAccount(
@@ -6743,56 +5287,50 @@ class MockWalletsDataProvider extends _i1.Mock
     bool? notify = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #insertOrUpdateAccount,
-          [
-            walletID,
-            labelEncrypted,
-            scriptType,
-            derivationPath,
-            accountID,
-            fiatCurrency,
-            poolSize,
-            priority,
-            lastUsedIndex,
-            stopGap,
-          ],
-          {
-            #initialize: initialize,
-            #notify: notify,
-          },
-        ),
-        returnValue: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+            Invocation.method(
+              #insertOrUpdateAccount,
+              [
+                walletID,
+                labelEncrypted,
+                scriptType,
+                derivationPath,
+                accountID,
+                fiatCurrency,
+                poolSize,
+                priority,
+                lastUsedIndex,
+                stopGap,
+              ],
+              {#initialize: initialize, #notify: notify},
+            ),
+            returnValue: _i4.Future<int>.value(0),
+          )
+          as _i4.Future<int>);
 
   @override
-  _i4.Future<void> newBroadcastTransaction() => (super.noSuchMethod(
-        Invocation.method(
-          #newBroadcastTransaction,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> newBroadcastTransaction() =>
+      (super.noSuchMethod(
+            Invocation.method(#newBroadcastTransaction, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<_i29.WalletData?> getFirstPriorityWallet() => (super.noSuchMethod(
-        Invocation.method(
-          #getFirstPriorityWallet,
-          [],
-        ),
-        returnValue: _i4.Future<_i29.WalletData?>.value(),
-      ) as _i4.Future<_i29.WalletData?>);
+  _i4.Future<_i29.WalletData?> getFirstPriorityWallet() =>
+      (super.noSuchMethod(
+            Invocation.method(#getFirstPriorityWallet, []),
+            returnValue: _i4.Future<_i29.WalletData?>.value(),
+          )
+          as _i4.Future<_i29.WalletData?>);
 
   @override
   _i4.Future<_i29.WalletData?> getWalletByServerWalletID(String? walletID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletByServerWalletID,
-          [walletID],
-        ),
-        returnValue: _i4.Future<_i29.WalletData?>.value(),
-      ) as _i4.Future<_i29.WalletData?>);
+            Invocation.method(#getWalletByServerWalletID, [walletID]),
+            returnValue: _i4.Future<_i29.WalletData?>.value(),
+          )
+          as _i4.Future<_i29.WalletData?>);
 
   @override
   _i4.Future<void> updateWalletAccountFiatCurrency(
@@ -6801,177 +5339,117 @@ class MockWalletsDataProvider extends _i1.Mock
     _i50.FiatCurrency? newFiatCurrency,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateWalletAccountFiatCurrency,
-          [
-            walletID,
-            accountID,
-            newFiatCurrency,
-          ],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#updateWalletAccountFiatCurrency, [
+              walletID,
+              accountID,
+              newFiatCurrency,
+            ]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reset() => (super.noSuchMethod(
-        Invocation.method(
-          #reset,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reset() =>
+      (super.noSuchMethod(
+            Invocation.method(#reset, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletKeysProvider].
@@ -6984,982 +5462,743 @@ class MockWalletKeysProvider extends _i1.Mock
   }
 
   @override
-  _i8.UserManager get userManager => (super.noSuchMethod(
-        Invocation.getter(#userManager),
-        returnValue: _FakeUserManager_6(
-          this,
-          Invocation.getter(#userManager),
-        ),
-      ) as _i8.UserManager);
+  _i8.UserManager get userManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#userManager),
+            returnValue: _FakeUserManager_6(
+              this,
+              Invocation.getter(#userManager),
+            ),
+          )
+          as _i8.UserManager);
 
   @override
-  _i45.WalletKeyStore get walletKeyStore => (super.noSuchMethod(
-        Invocation.getter(#walletKeyStore),
-        returnValue: _FakeWalletKeyStore_44(
-          this,
-          Invocation.getter(#walletKeyStore),
-        ),
-      ) as _i45.WalletKeyStore);
+  _i45.WalletKeyStore get walletKeyStore =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletKeyStore),
+            returnValue: _FakeWalletKeyStore_44(
+              this,
+              Invocation.getter(#walletKeyStore),
+            ),
+          )
+          as _i45.WalletKeyStore);
 
   @override
-  _i11.WalletClient get walletClient => (super.noSuchMethod(
-        Invocation.getter(#walletClient),
-        returnValue: _FakeWalletClient_9(
-          this,
-          Invocation.getter(#walletClient),
-        ),
-      ) as _i11.WalletClient);
+  _i11.WalletClient get walletClient =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletClient),
+            returnValue: _FakeWalletClient_9(
+              this,
+              Invocation.getter(#walletClient),
+            ),
+          )
+          as _i11.WalletClient);
 
   @override
-  set walletKeys(List<_i76.WalletKey>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #walletKeys,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+  set walletKeys(List<_i77.WalletKey>? value) => super.noSuchMethod(
+    Invocation.setter(#walletKeys, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<_i46.FrbUnlockedWalletKey> getWalletSecretKey(
-          String? serverWalletID) =>
+    String? serverWalletID,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletSecretKey,
-          [serverWalletID],
-        ),
-        returnValue: _i4.Future<_i46.FrbUnlockedWalletKey>.value(
-            _FakeFrbUnlockedWalletKey_45(
-          this,
-          Invocation.method(
-            #getWalletSecretKey,
-            [serverWalletID],
-          ),
-        )),
-      ) as _i4.Future<_i46.FrbUnlockedWalletKey>);
+            Invocation.method(#getWalletSecretKey, [serverWalletID]),
+            returnValue: _i4.Future<_i46.FrbUnlockedWalletKey>.value(
+              _FakeFrbUnlockedWalletKey_45(
+                this,
+                Invocation.method(#getWalletSecretKey, [serverWalletID]),
+              ),
+            ),
+          )
+          as _i4.Future<_i46.FrbUnlockedWalletKey>);
 
   @override
-  _i4.Future<_i76.WalletKey?> getWalletKey(String? walletID) =>
+  _i4.Future<_i77.WalletKey?> getWalletKey(String? walletID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getWalletKey,
-          [walletID],
-        ),
-        returnValue: _i4.Future<_i76.WalletKey?>.value(),
-      ) as _i4.Future<_i76.WalletKey?>);
+            Invocation.method(#getWalletKey, [walletID]),
+            returnValue: _i4.Future<_i77.WalletKey?>.value(),
+          )
+          as _i4.Future<_i77.WalletKey?>);
 
   @override
-  _i4.Future<void> saveWalletKeys(List<_i76.WalletKey>? keys) =>
+  _i4.Future<void> saveWalletKeys(List<_i77.WalletKey>? keys) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveWalletKeys,
-          [keys],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#saveWalletKeys, [keys]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   _i4.Future<void> saveApiWalletKeys(List<_i43.ApiWalletKey>? items) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveApiWalletKeys,
-          [items],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#saveApiWalletKeys, [items]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reset() => (super.noSuchMethod(
-        Invocation.method(
-          #reset,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reset() =>
+      (super.noSuchMethod(
+            Invocation.method(#reset, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletMnemonicProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletMnemonicProvider extends _i1.Mock
-    implements _i77.WalletMnemonicProvider {
+    implements _i78.WalletMnemonicProvider {
   MockWalletMnemonicProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i47.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
-        Invocation.getter(#walletKeysProvider),
-        returnValue: _FakeWalletKeysProvider_46(
-          this,
-          Invocation.getter(#walletKeysProvider),
-        ),
-      ) as _i47.WalletKeysProvider);
+  _i47.WalletKeysProvider get walletKeysProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletKeysProvider),
+            returnValue: _FakeWalletKeysProvider_46(
+              this,
+              Invocation.getter(#walletKeysProvider),
+            ),
+          )
+          as _i47.WalletKeysProvider);
 
   @override
-  _i29.WalletsDataProvider get walletDataProvider => (super.noSuchMethod(
-        Invocation.getter(#walletDataProvider),
-        returnValue: _FakeWalletsDataProvider_28(
-          this,
-          Invocation.getter(#walletDataProvider),
-        ),
-      ) as _i29.WalletsDataProvider);
+  _i29.WalletsDataProvider get walletDataProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDataProvider),
+            returnValue: _FakeWalletsDataProvider_28(
+              this,
+              Invocation.getter(#walletDataProvider),
+            ),
+          )
+          as _i29.WalletsDataProvider);
 
   @override
-  _i8.UserManager get userManager => (super.noSuchMethod(
-        Invocation.getter(#userManager),
-        returnValue: _FakeUserManager_6(
-          this,
-          Invocation.getter(#userManager),
-        ),
-      ) as _i8.UserManager);
+  _i8.UserManager get userManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#userManager),
+            returnValue: _FakeUserManager_6(
+              this,
+              Invocation.getter(#userManager),
+            ),
+          )
+          as _i8.UserManager);
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<String> getMnemonicWithID(String? walletID) => (super.noSuchMethod(
-        Invocation.method(
-          #getMnemonicWithID,
-          [walletID],
-        ),
-        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getMnemonicWithID,
-            [walletID],
-          ),
-        )),
-      ) as _i4.Future<String>);
+  _i4.Future<String> getMnemonicWithID(String? walletID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getMnemonicWithID, [walletID]),
+            returnValue: _i4.Future<String>.value(
+              _i53.dummyValue<String>(
+                this,
+                Invocation.method(#getMnemonicWithID, [walletID]),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletNameProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletNameProvider extends _i1.Mock
-    implements _i78.WalletNameProvider {
+    implements _i79.WalletNameProvider {
   MockWalletNameProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i47.WalletKeysProvider get walletKeysProvider => (super.noSuchMethod(
-        Invocation.getter(#walletKeysProvider),
-        returnValue: _FakeWalletKeysProvider_46(
-          this,
-          Invocation.getter(#walletKeysProvider),
-        ),
-      ) as _i47.WalletKeysProvider);
+  _i47.WalletKeysProvider get walletKeysProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletKeysProvider),
+            returnValue: _FakeWalletKeysProvider_46(
+              this,
+              Invocation.getter(#walletKeysProvider),
+            ),
+          )
+          as _i47.WalletKeysProvider);
 
   @override
-  _i10.AccountDao get accountDao => (super.noSuchMethod(
-        Invocation.getter(#accountDao),
-        returnValue: _FakeAccountDao_8(
-          this,
-          Invocation.getter(#accountDao),
-        ),
-      ) as _i10.AccountDao);
+  _i10.AccountDao get accountDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountDao),
+            returnValue: _FakeAccountDao_8(
+              this,
+              Invocation.getter(#accountDao),
+            ),
+          )
+          as _i10.AccountDao);
 
   @override
-  _i24.WalletDao get walletDao => (super.noSuchMethod(
-        Invocation.getter(#walletDao),
-        returnValue: _FakeWalletDao_23(
-          this,
-          Invocation.getter(#walletDao),
-        ),
-      ) as _i24.WalletDao);
+  _i24.WalletDao get walletDao =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletDao),
+            returnValue: _FakeWalletDao_23(this, Invocation.getter(#walletDao)),
+          )
+          as _i24.WalletDao);
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
   _i4.Future<String> getAccountLabelWithID(String? accountID) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getAccountLabelWithID,
-          [accountID],
-        ),
-        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getAccountLabelWithID,
-            [accountID],
-          ),
-        )),
-      ) as _i4.Future<String>);
+            Invocation.method(#getAccountLabelWithID, [accountID]),
+            returnValue: _i4.Future<String>.value(
+              _i53.dummyValue<String>(
+                this,
+                Invocation.method(#getAccountLabelWithID, [accountID]),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 
   @override
-  _i4.Future<String> getNameWithID(String? walletID) => (super.noSuchMethod(
-        Invocation.method(
-          #getNameWithID,
-          [walletID],
-        ),
-        returnValue: _i4.Future<String>.value(_i53.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getNameWithID,
-            [walletID],
-          ),
-        )),
-      ) as _i4.Future<String>);
+  _i4.Future<String> getNameWithID(String? walletID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getNameWithID, [walletID]),
+            returnValue: _i4.Future<String>.value(
+              _i53.dummyValue<String>(
+                this,
+                Invocation.method(#getNameWithID, [walletID]),
+              ),
+            ),
+          )
+          as _i4.Future<String>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }
 
 /// A class which mocks [WalletPassphraseProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockWalletPassphraseProvider extends _i1.Mock
-    implements _i79.WalletPassphraseProvider {
+    implements _i80.WalletPassphraseProvider {
   MockWalletPassphraseProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.SecureStorageManager get storage => (super.noSuchMethod(
-        Invocation.getter(#storage),
-        returnValue: _FakeSecureStorageManager_4(
-          this,
-          Invocation.getter(#storage),
-        ),
-      ) as _i6.SecureStorageManager);
+  _i6.SecureStorageManager get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSecureStorageManager_4(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i6.SecureStorageManager);
 
   @override
-  String get key => (super.noSuchMethod(
-        Invocation.getter(#key),
-        returnValue: _i53.dummyValue<String>(
-          this,
-          Invocation.getter(#key),
-        ),
-      ) as String);
+  String get key =>
+      (super.noSuchMethod(
+            Invocation.getter(#key),
+            returnValue: _i53.dummyValue<String>(this, Invocation.getter(#key)),
+          )
+          as String);
 
   @override
   _i4.StreamController<_i2.DataUpdated<dynamic>> get dataUpdateController =>
       (super.noSuchMethod(
-        Invocation.getter(#dataUpdateController),
-        returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
-          this,
-          Invocation.getter(#dataUpdateController),
-        ),
-      ) as _i4.StreamController<_i2.DataUpdated<dynamic>>);
+            Invocation.getter(#dataUpdateController),
+            returnValue: _FakeStreamController_2<_i2.DataUpdated<dynamic>>(
+              this,
+              Invocation.getter(#dataUpdateController),
+            ),
+          )
+          as _i4.StreamController<_i2.DataUpdated<dynamic>>);
 
   @override
-  set walletPassphrases(List<_i80.WalletPassphrase>? value) =>
+  set walletPassphrases(List<_i81.WalletPassphrase>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #walletPassphrases,
-          value,
-        ),
+        Invocation.setter(#walletPassphrases, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set dataUpdateController(
-          _i4.StreamController<_i2.DataUpdated<dynamic>>? value) =>
-      super.noSuchMethod(
-        Invocation.setter(
-          #dataUpdateController,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    _i4.StreamController<_i2.DataUpdated<dynamic>>? value,
+  ) => super.noSuchMethod(
+    Invocation.setter(#dataUpdateController, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.DataState get state => (super.noSuchMethod(
-        Invocation.getter(#state),
-        returnValue: _FakeDataState_0(
-          this,
-          Invocation.getter(#state),
-        ),
-      ) as _i2.DataState);
+  _i2.DataState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeDataState_0(this, Invocation.getter(#state)),
+          )
+          as _i2.DataState);
 
   @override
-  _i4.Stream<_i2.DataState> get stream => (super.noSuchMethod(
-        Invocation.getter(#stream),
-        returnValue: _i4.Stream<_i2.DataState>.empty(),
-      ) as _i4.Stream<_i2.DataState>);
+  _i4.Stream<_i2.DataState> get stream =>
+      (super.noSuchMethod(
+            Invocation.getter(#stream),
+            returnValue: _i4.Stream<_i2.DataState>.empty(),
+          )
+          as _i4.Stream<_i2.DataState>);
 
   @override
-  bool get isClosed => (super.noSuchMethod(
-        Invocation.getter(#isClosed),
-        returnValue: false,
-      ) as bool);
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
+          as bool);
 
   @override
-  _i4.Future<String?> getPassphrase(String? walletID) => (super.noSuchMethod(
-        Invocation.method(
-          #getPassphrase,
-          [walletID],
-        ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+  _i4.Future<String?> getPassphrase(String? walletID) =>
+      (super.noSuchMethod(
+            Invocation.method(#getPassphrase, [walletID]),
+            returnValue: _i4.Future<String?>.value(),
+          )
+          as _i4.Future<String?>);
 
   @override
   _i4.Future<void> saveWalletPassphrase(
-          _i80.WalletPassphrase? walletPassphrase) =>
+    _i81.WalletPassphrase? walletPassphrase,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveWalletPassphrase,
-          [walletPassphrase],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+            Invocation.method(#saveWalletPassphrase, [walletPassphrase]),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> clear() => (super.noSuchMethod(
-        Invocation.method(
-          #clear,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> clear() =>
+      (super.noSuchMethod(
+            Invocation.method(#clear, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
-  _i4.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void emitState(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emitState,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emitState, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void add(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #add,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#add, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onEvent(_i2.DataEvent? event) => super.noSuchMethod(
-        Invocation.method(
-          #onEvent,
-          [event],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onEvent, [event]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void emit(_i2.DataState? state) => super.noSuchMethod(
-        Invocation.method(
-          #emit,
-          [state],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#emit, [state]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void on<E extends _i2.DataEvent>(
     _i51.EventHandler<E, _i2.DataState>? handler, {
     _i51.EventTransformer<E>? transformer,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #on,
-          [handler],
-          {#transformer: transformer},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(#on, [handler], {#transformer: transformer}),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void onTransition(
-          _i51.Transition<_i2.DataEvent, _i2.DataState>? transition) =>
+    _i51.Transition<_i2.DataEvent, _i2.DataState>? transition,
+  ) => super.noSuchMethod(
+    Invocation.method(#onTransition, [transition]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onDone(_i2.DataEvent? event, [Object? error, StackTrace? stackTrace]) =>
       super.noSuchMethod(
-        Invocation.method(
-          #onTransition,
-          [transition],
-        ),
+        Invocation.method(#onDone, [event, error, stackTrace]),
         returnValueForMissingStub: null,
       );
 
   @override
-  void onDone(
-    _i2.DataEvent? event, [
-    Object? error,
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onDone,
-          [
-            event,
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i4.Future<void> close() => (super.noSuchMethod(
-        Invocation.method(
-          #close,
-          [],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+  _i4.Future<void> close() =>
+      (super.noSuchMethod(
+            Invocation.method(#close, []),
+            returnValue: _i4.Future<void>.value(),
+            returnValueForMissingStub: _i4.Future<void>.value(),
+          )
+          as _i4.Future<void>);
 
   @override
   void onChange(_i51.Change<_i2.DataState>? change) => super.noSuchMethod(
-        Invocation.method(
-          #onChange,
-          [change],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#onChange, [change]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void addError(
-    Object? error, [
-    StackTrace? stackTrace,
-  ]) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #addError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void addError(Object? error, [StackTrace? stackTrace]) => super.noSuchMethod(
+    Invocation.method(#addError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void onError(
-    Object? error,
-    StackTrace? stackTrace,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #onError,
-          [
-            error,
-            stackTrace,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  void onError(Object? error, StackTrace? stackTrace) => super.noSuchMethod(
+    Invocation.method(#onError, [error, stackTrace]),
+    returnValueForMissingStub: null,
+  );
 }

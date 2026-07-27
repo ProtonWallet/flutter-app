@@ -1,5 +1,4 @@
 {
-  "originHash" : "71f1377ac8cf8750b617bfd38275e3c637bdf329b97a7dfdda70ce4b1f3165c8",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -26,6 +25,41 @@
       "state" : {
         "revision" : "c9c3df6ab812de32bae61fc0cd1bf6d45170ebf0",
         "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "csqlite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/simolus3/CSQLite.git",
+      "state" : {
+        "revision" : "1ee46d19a4f451a7aa64ffc64fc99b4748131e62"
+      }
+    },
+    {
+      "identity" : "dkcamera",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zhangao0086/DKCamera",
+      "state" : {
+        "branch" : "master",
+        "revision" : "5c691d11014b910aff69f960475d70e65d9dcc96"
+      }
+    },
+    {
+      "identity" : "dkimagepickercontroller",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zhangao0086/DKImagePickerController",
+      "state" : {
+        "branch" : "4.3.9",
+        "revision" : "0bdfeacefa308545adde07bef86e349186335915"
+      }
+    },
+    {
+      "identity" : "dkphotogallery",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/zhangao0086/DKPhotoGallery",
+      "state" : {
+        "branch" : "master",
+        "revision" : "311c1bc7a94f1538f82773a79c84374b12a2ef3d"
       }
     },
     {
@@ -119,6 +153,24 @@
       }
     },
     {
+      "identity" : "swiftygif",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kirualex/SwiftyGif.git",
+      "state" : {
+        "revision" : "4430cbc148baa3907651d40562d96325426f409a",
+        "version" : "5.4.5"
+      }
+    },
+    {
+      "identity" : "tocropviewcontroller",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TimOliver/TOCropViewController",
+      "state" : {
+        "revision" : "d4a6d8100f4b886fdbc8ae399bf144ff3e9afb7e",
+        "version" : "2.8.0"
+      }
+    },
+    {
       "identity" : "trustkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ProtonMail/TrustKit",
@@ -137,5 +189,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

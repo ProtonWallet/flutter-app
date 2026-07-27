@@ -35,26 +35,21 @@ class MockDiscoveryContentClient extends _i1.Mock
   }
 
   @override
-  bool get isDisposed => (super.noSuchMethod(
-        Invocation.getter(#isDisposed),
-        returnValue: false,
-      ) as bool);
+  bool get isDisposed =>
+      (super.noSuchMethod(Invocation.getter(#isDisposed), returnValue: false)
+          as bool);
 
   @override
-  _i3.Future<List<_i4.Content>> getDiscoveryContents() => (super.noSuchMethod(
-        Invocation.method(
-          #getDiscoveryContents,
-          [],
-        ),
-        returnValue: _i3.Future<List<_i4.Content>>.value(<_i4.Content>[]),
-      ) as _i3.Future<List<_i4.Content>>);
+  _i3.Future<List<_i4.Content>> getDiscoveryContents() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDiscoveryContents, []),
+            returnValue: _i3.Future<List<_i4.Content>>.value(<_i4.Content>[]),
+          )
+          as _i3.Future<List<_i4.Content>>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 }

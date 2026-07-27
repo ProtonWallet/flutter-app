@@ -268,6 +268,7 @@
   "todos_backup_proton_account": "Backup your Proton account",
   "todos_backup_wallet_mnemonic": "Backup this wallet’s seed phrases",
   "todos_setup_2fa": "Set up 2FA to secure your account",
+  "todos_enable_biometric_unlock": "Enable biometric unlock",
   "todos_setup_email_integration": "Setup Bitcoin via Email",
   "todos_setup_fiat": "Set your preferred Fiat currency",
   "view_wallet_mnemonic": "View wallet seed phrases",

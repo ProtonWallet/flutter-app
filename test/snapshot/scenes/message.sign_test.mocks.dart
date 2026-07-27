@@ -34,24 +34,14 @@ import 'package:wallet/scenes/message.sign/message.sign.viewmodel.dart' as _i4;
 
 class _FakeTextEditingController_0 extends _i1.SmartFake
     implements _i2.TextEditingController {
-  _FakeTextEditingController_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeTextEditingController_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeMessageSignCoordinator_1 extends _i1.SmartFake
     implements _i3.MessageSignCoordinator {
-  _FakeMessageSignCoordinator_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeMessageSignCoordinator_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [MessageSignViewModel].
@@ -60,211 +50,231 @@ class _FakeMessageSignCoordinator_1 extends _i1.SmartFake
 class MockMessageSignViewModel extends _i1.Mock
     implements _i4.MessageSignViewModel {
   @override
-  String get address => (super.noSuchMethod(
-        Invocation.getter(#address),
-        returnValue: _i5.dummyValue<String>(
-          this,
-          Invocation.getter(#address),
-        ),
-        returnValueForMissingStub: _i5.dummyValue<String>(
-          this,
-          Invocation.getter(#address),
-        ),
-      ) as String);
+  String get address =>
+      (super.noSuchMethod(
+            Invocation.getter(#address),
+            returnValue: _i5.dummyValue<String>(
+              this,
+              Invocation.getter(#address),
+            ),
+            returnValueForMissingStub: _i5.dummyValue<String>(
+              this,
+              Invocation.getter(#address),
+            ),
+          )
+          as String);
 
   @override
-  _i2.TextEditingController get messageController => (super.noSuchMethod(
-        Invocation.getter(#messageController),
-        returnValue: _FakeTextEditingController_0(
-          this,
-          Invocation.getter(#messageController),
-        ),
-        returnValueForMissingStub: _FakeTextEditingController_0(
-          this,
-          Invocation.getter(#messageController),
-        ),
-      ) as _i2.TextEditingController);
+  _i2.TextEditingController get messageController =>
+      (super.noSuchMethod(
+            Invocation.getter(#messageController),
+            returnValue: _FakeTextEditingController_0(
+              this,
+              Invocation.getter(#messageController),
+            ),
+            returnValueForMissingStub: _FakeTextEditingController_0(
+              this,
+              Invocation.getter(#messageController),
+            ),
+          )
+          as _i2.TextEditingController);
 
   @override
-  _i2.TextEditingController get signatureController => (super.noSuchMethod(
-        Invocation.getter(#signatureController),
-        returnValue: _FakeTextEditingController_0(
-          this,
-          Invocation.getter(#signatureController),
-        ),
-        returnValueForMissingStub: _FakeTextEditingController_0(
-          this,
-          Invocation.getter(#signatureController),
-        ),
-      ) as _i2.TextEditingController);
+  _i2.TextEditingController get signatureController =>
+      (super.noSuchMethod(
+            Invocation.getter(#signatureController),
+            returnValue: _FakeTextEditingController_0(
+              this,
+              Invocation.getter(#signatureController),
+            ),
+            returnValueForMissingStub: _FakeTextEditingController_0(
+              this,
+              Invocation.getter(#signatureController),
+            ),
+          )
+          as _i2.TextEditingController);
 
   @override
-  bool get showSignature => (super.noSuchMethod(
-        Invocation.getter(#showSignature),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get showSignature =>
+      (super.noSuchMethod(
+            Invocation.getter(#showSignature),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get isLoading => (super.noSuchMethod(
-        Invocation.getter(#isLoading),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get isLoading =>
+      (super.noSuchMethod(
+            Invocation.getter(#isLoading),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  String get signature => (super.noSuchMethod(
-        Invocation.getter(#signature),
-        returnValue: _i5.dummyValue<String>(
-          this,
-          Invocation.getter(#signature),
-        ),
-        returnValueForMissingStub: _i5.dummyValue<String>(
-          this,
-          Invocation.getter(#signature),
-        ),
-      ) as String);
+  String get signature =>
+      (super.noSuchMethod(
+            Invocation.getter(#signature),
+            returnValue: _i5.dummyValue<String>(
+              this,
+              Invocation.getter(#signature),
+            ),
+            returnValueForMissingStub: _i5.dummyValue<String>(
+              this,
+              Invocation.getter(#signature),
+            ),
+          )
+          as String);
 
   @override
-  _i3.MessageSignCoordinator get coordinator => (super.noSuchMethod(
-        Invocation.getter(#coordinator),
-        returnValue: _FakeMessageSignCoordinator_1(
-          this,
-          Invocation.getter(#coordinator),
-        ),
-        returnValueForMissingStub: _FakeMessageSignCoordinator_1(
-          this,
-          Invocation.getter(#coordinator),
-        ),
-      ) as _i3.MessageSignCoordinator);
+  _i3.MessageSignCoordinator get coordinator =>
+      (super.noSuchMethod(
+            Invocation.getter(#coordinator),
+            returnValue: _FakeMessageSignCoordinator_1(
+              this,
+              Invocation.getter(#coordinator),
+            ),
+            returnValueForMissingStub: _FakeMessageSignCoordinator_1(
+              this,
+              Invocation.getter(#coordinator),
+            ),
+          )
+          as _i3.MessageSignCoordinator);
 
   @override
   _i6.Stream<_i7.ViewModel<_i8.Coordinator>> get datasourceChanged =>
       (super.noSuchMethod(
-        Invocation.getter(#datasourceChanged),
-        returnValue: _i6.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
-        returnValueForMissingStub:
-            _i6.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
-      ) as _i6.Stream<_i7.ViewModel<_i8.Coordinator>>);
+            Invocation.getter(#datasourceChanged),
+            returnValue: _i6.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
+            returnValueForMissingStub:
+                _i6.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
+          )
+          as _i6.Stream<_i7.ViewModel<_i8.Coordinator>>);
 
   @override
-  bool get isMobileSize => (super.noSuchMethod(
-        Invocation.getter(#isMobileSize),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get isMobileSize =>
+      (super.noSuchMethod(
+            Invocation.getter(#isMobileSize),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get keepAlive => (super.noSuchMethod(
-        Invocation.getter(#keepAlive),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get keepAlive =>
+      (super.noSuchMethod(
+            Invocation.getter(#keepAlive),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get mobile => (super.noSuchMethod(
-        Invocation.getter(#mobile),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get mobile =>
+      (super.noSuchMethod(
+            Invocation.getter(#mobile),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get desktop => (super.noSuchMethod(
-        Invocation.getter(#desktop),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get desktop =>
+      (super.noSuchMethod(
+            Invocation.getter(#desktop),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get android => (super.noSuchMethod(
-        Invocation.getter(#android),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get android =>
+      (super.noSuchMethod(
+            Invocation.getter(#android),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get iOS => (super.noSuchMethod(
-        Invocation.getter(#iOS),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get iOS =>
+      (super.noSuchMethod(
+            Invocation.getter(#iOS),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get macOS => (super.noSuchMethod(
-        Invocation.getter(#macOS),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get macOS =>
+      (super.noSuchMethod(
+            Invocation.getter(#macOS),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get apple => (super.noSuchMethod(
-        Invocation.getter(#apple),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get apple =>
+      (super.noSuchMethod(
+            Invocation.getter(#apple),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
-  bool get screenSizeState => (super.noSuchMethod(
-        Invocation.getter(#screenSizeState),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
+  bool get screenSizeState =>
+      (super.noSuchMethod(
+            Invocation.getter(#screenSizeState),
+            returnValue: false,
+            returnValueForMissingStub: false,
+          )
+          as bool);
 
   @override
   set currentSize(_i9.ViewSize? value) => super.noSuchMethod(
-        Invocation.setter(
-          #currentSize,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#currentSize, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i6.Future<bool> signMessage(_i10.SigningType? signingType) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #signMessage,
-          [signingType],
-        ),
-        returnValue: _i6.Future<bool>.value(false),
-        returnValueForMissingStub: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+            Invocation.method(#signMessage, [signingType]),
+            returnValue: _i6.Future<bool>.value(false),
+            returnValueForMissingStub: _i6.Future<bool>.value(false),
+          )
+          as _i6.Future<bool>);
 
   @override
   void sinkAddSafe() => super.noSuchMethod(
-        Invocation.method(
-          #sinkAddSafe,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#sinkAddSafe, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i6.Future<void> loadData() => (super.noSuchMethod(
-        Invocation.method(
-          #loadData,
-          [],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+  _i6.Future<void> loadData() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadData, []),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i6.Future<void> move(_i11.NavID? to) => (super.noSuchMethod(
-        Invocation.method(
-          #move,
-          [to],
-        ),
-        returnValue: _i6.Future<void>.value(),
-        returnValueForMissingStub: _i6.Future<void>.value(),
-      ) as _i6.Future<void>);
+  _i6.Future<void> move(_i11.NavID? to) =>
+      (super.noSuchMethod(
+            Invocation.method(#move, [to]),
+            returnValue: _i6.Future<void>.value(),
+            returnValueForMissingStub: _i6.Future<void>.value(),
+          )
+          as _i6.Future<void>);
 }

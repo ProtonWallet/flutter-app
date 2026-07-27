@@ -1,4 +1,5 @@
 pub mod binary;
+pub mod pgp_lock;
 pub mod errors;
 pub mod label;
 pub mod message;

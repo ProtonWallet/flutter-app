@@ -39,44 +39,24 @@ import 'package:wallet/scenes/paper.wallet/paper.wallet.viewmodel.dart' as _i11;
 // ignore_for_file: invalid_use_of_internal_member
 
 class _FakeWalletModel_0 extends _i1.SmartFake implements _i2.WalletModel {
-  _FakeWalletModel_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletModel_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAccountModel_1 extends _i1.SmartFake implements _i3.AccountModel {
-  _FakeAccountModel_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAccountModel_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeTextEditingController_2 extends _i1.SmartFake
     implements _i4.TextEditingController {
-  _FakeTextEditingController_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeTextEditingController_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFocusNode_3 extends _i1.SmartFake implements _i4.FocusNode {
-  _FakeFocusNode_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFocusNode_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i4.DiagnosticLevel? minLevel = _i4.DiagnosticLevel.info}) =>
@@ -85,35 +65,21 @@ class _FakeFocusNode_3 extends _i1.SmartFake implements _i4.FocusNode {
 
 class _FakePaperWalletCoordinator_4 extends _i1.SmartFake
     implements _i5.PaperWalletCoordinator {
-  _FakePaperWalletCoordinator_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePaperWalletCoordinator_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonExchangeRate_5 extends _i1.SmartFake
     implements _i6.ProtonExchangeRate {
-  _FakeProtonExchangeRate_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonExchangeRate_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeViewBase_6<V extends _i7.ViewModel<_i8.Coordinator>>
-    extends _i1.SmartFake implements _i9.ViewBase<V> {
-  _FakeViewBase_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i9.ViewBase<V> {
+  _FakeViewBase_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 
   @override
   String toString({_i4.DiagnosticLevel? minLevel = _i4.DiagnosticLevel.info}) =>
@@ -121,25 +87,16 @@ class _FakeViewBase_6<V extends _i7.ViewModel<_i8.Coordinator>>
 }
 
 class _FakeGlobalKey_7<T extends _i4.State<_i4.StatefulWidget>>
-    extends _i1.SmartFake implements _i4.GlobalKey<T> {
-  _FakeGlobalKey_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+    extends _i1.SmartFake
+    implements _i4.GlobalKey<T> {
+  _FakeGlobalKey_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeManagerFactory_8 extends _i1.SmartFake
     implements _i10.ManagerFactory {
-  _FakeManagerFactory_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeManagerFactory_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [PaperWalletViewModel].
@@ -152,388 +109,345 @@ class MockPaperWalletViewModel extends _i1.Mock
   }
 
   @override
-  _i2.WalletModel get walletModel => (super.noSuchMethod(
-        Invocation.getter(#walletModel),
-        returnValue: _FakeWalletModel_0(
-          this,
-          Invocation.getter(#walletModel),
-        ),
-      ) as _i2.WalletModel);
+  _i2.WalletModel get walletModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletModel),
+            returnValue: _FakeWalletModel_0(
+              this,
+              Invocation.getter(#walletModel),
+            ),
+          )
+          as _i2.WalletModel);
 
   @override
-  _i3.AccountModel get accountModel => (super.noSuchMethod(
-        Invocation.getter(#accountModel),
-        returnValue: _FakeAccountModel_1(
-          this,
-          Invocation.getter(#accountModel),
-        ),
-      ) as _i3.AccountModel);
+  _i3.AccountModel get accountModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountModel),
+            returnValue: _FakeAccountModel_1(
+              this,
+              Invocation.getter(#accountModel),
+            ),
+          )
+          as _i3.AccountModel);
 
   @override
-  int get receiveAddressIndex => (super.noSuchMethod(
-        Invocation.getter(#receiveAddressIndex),
-        returnValue: 0,
-      ) as int);
+  int get receiveAddressIndex =>
+      (super.noSuchMethod(
+            Invocation.getter(#receiveAddressIndex),
+            returnValue: 0,
+          )
+          as int);
 
   @override
-  _i11.PageStatus get pageStatus => (super.noSuchMethod(
-        Invocation.getter(#pageStatus),
-        returnValue: _i11.PageStatus.importPaperWallet,
-      ) as _i11.PageStatus);
+  _i11.PageStatus get pageStatus =>
+      (super.noSuchMethod(
+            Invocation.getter(#pageStatus),
+            returnValue: _i11.PageStatus.importPaperWallet,
+          )
+          as _i11.PageStatus);
 
   @override
-  String get importedError => (super.noSuchMethod(
-        Invocation.getter(#importedError),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#importedError),
-        ),
-      ) as String);
+  String get importedError =>
+      (super.noSuchMethod(
+            Invocation.getter(#importedError),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#importedError),
+            ),
+          )
+          as String);
 
   @override
-  String get walletName => (super.noSuchMethod(
-        Invocation.getter(#walletName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#walletName),
-        ),
-      ) as String);
+  String get walletName =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#walletName),
+            ),
+          )
+          as String);
 
   @override
-  String get accountName => (super.noSuchMethod(
-        Invocation.getter(#accountName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#accountName),
-        ),
-      ) as String);
+  String get accountName =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#accountName),
+            ),
+          )
+          as String);
 
   @override
-  _i4.TextEditingController get privateKeyController => (super.noSuchMethod(
-        Invocation.getter(#privateKeyController),
-        returnValue: _FakeTextEditingController_2(
-          this,
-          Invocation.getter(#privateKeyController),
-        ),
-      ) as _i4.TextEditingController);
+  _i4.TextEditingController get privateKeyController =>
+      (super.noSuchMethod(
+            Invocation.getter(#privateKeyController),
+            returnValue: _FakeTextEditingController_2(
+              this,
+              Invocation.getter(#privateKeyController),
+            ),
+          )
+          as _i4.TextEditingController);
 
   @override
-  _i4.FocusNode get privateKeyFocusNode => (super.noSuchMethod(
-        Invocation.getter(#privateKeyFocusNode),
-        returnValue: _FakeFocusNode_3(
-          this,
-          Invocation.getter(#privateKeyFocusNode),
-        ),
-      ) as _i4.FocusNode);
+  _i4.FocusNode get privateKeyFocusNode =>
+      (super.noSuchMethod(
+            Invocation.getter(#privateKeyFocusNode),
+            returnValue: _FakeFocusNode_3(
+              this,
+              Invocation.getter(#privateKeyFocusNode),
+            ),
+          )
+          as _i4.FocusNode);
 
   @override
   set draftPsbt(_i13.FrbPsbt? value) => super.noSuchMethod(
-        Invocation.setter(
-          #draftPsbt,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#draftPsbt, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set pageStatus(_i11.PageStatus? value) => super.noSuchMethod(
-        Invocation.setter(
-          #pageStatus,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#pageStatus, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set importedError(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #importedError,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#importedError, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set walletName(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #walletName,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#walletName, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set accountName(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #accountName,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#accountName, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set privateKeyController(_i4.TextEditingController? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #privateKeyController,
-          value,
-        ),
+        Invocation.setter(#privateKeyController, value),
         returnValueForMissingStub: null,
       );
 
   @override
   set privateKeyFocusNode(_i4.FocusNode? value) => super.noSuchMethod(
-        Invocation.setter(
-          #privateKeyFocusNode,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#privateKeyFocusNode, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.PaperWalletCoordinator get coordinator => (super.noSuchMethod(
-        Invocation.getter(#coordinator),
-        returnValue: _FakePaperWalletCoordinator_4(
-          this,
-          Invocation.getter(#coordinator),
-        ),
-      ) as _i5.PaperWalletCoordinator);
+  _i5.PaperWalletCoordinator get coordinator =>
+      (super.noSuchMethod(
+            Invocation.getter(#coordinator),
+            returnValue: _FakePaperWalletCoordinator_4(
+              this,
+              Invocation.getter(#coordinator),
+            ),
+          )
+          as _i5.PaperWalletCoordinator);
 
   @override
   _i14.Stream<_i7.ViewModel<_i8.Coordinator>> get datasourceChanged =>
       (super.noSuchMethod(
-        Invocation.getter(#datasourceChanged),
-        returnValue: _i14.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
-      ) as _i14.Stream<_i7.ViewModel<_i8.Coordinator>>);
+            Invocation.getter(#datasourceChanged),
+            returnValue: _i14.Stream<_i7.ViewModel<_i8.Coordinator>>.empty(),
+          )
+          as _i14.Stream<_i7.ViewModel<_i8.Coordinator>>);
 
   @override
-  bool get isMobileSize => (super.noSuchMethod(
-        Invocation.getter(#isMobileSize),
-        returnValue: false,
-      ) as bool);
+  bool get isMobileSize =>
+      (super.noSuchMethod(Invocation.getter(#isMobileSize), returnValue: false)
+          as bool);
 
   @override
-  bool get keepAlive => (super.noSuchMethod(
-        Invocation.getter(#keepAlive),
-        returnValue: false,
-      ) as bool);
+  bool get keepAlive =>
+      (super.noSuchMethod(Invocation.getter(#keepAlive), returnValue: false)
+          as bool);
 
   @override
-  bool get mobile => (super.noSuchMethod(
-        Invocation.getter(#mobile),
-        returnValue: false,
-      ) as bool);
+  bool get mobile =>
+      (super.noSuchMethod(Invocation.getter(#mobile), returnValue: false)
+          as bool);
 
   @override
-  bool get desktop => (super.noSuchMethod(
-        Invocation.getter(#desktop),
-        returnValue: false,
-      ) as bool);
+  bool get desktop =>
+      (super.noSuchMethod(Invocation.getter(#desktop), returnValue: false)
+          as bool);
 
   @override
-  bool get android => (super.noSuchMethod(
-        Invocation.getter(#android),
-        returnValue: false,
-      ) as bool);
+  bool get android =>
+      (super.noSuchMethod(Invocation.getter(#android), returnValue: false)
+          as bool);
 
   @override
-  bool get iOS => (super.noSuchMethod(
-        Invocation.getter(#iOS),
-        returnValue: false,
-      ) as bool);
+  bool get iOS =>
+      (super.noSuchMethod(Invocation.getter(#iOS), returnValue: false) as bool);
 
   @override
-  bool get macOS => (super.noSuchMethod(
-        Invocation.getter(#macOS),
-        returnValue: false,
-      ) as bool);
+  bool get macOS =>
+      (super.noSuchMethod(Invocation.getter(#macOS), returnValue: false)
+          as bool);
 
   @override
-  bool get apple => (super.noSuchMethod(
-        Invocation.getter(#apple),
-        returnValue: false,
-      ) as bool);
+  bool get apple =>
+      (super.noSuchMethod(Invocation.getter(#apple), returnValue: false)
+          as bool);
 
   @override
-  bool get screenSizeState => (super.noSuchMethod(
-        Invocation.getter(#screenSizeState),
-        returnValue: false,
-      ) as bool);
+  bool get screenSizeState =>
+      (super.noSuchMethod(
+            Invocation.getter(#screenSizeState),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   set currentSize(_i9.ViewSize? value) => super.noSuchMethod(
-        Invocation.setter(
-          #currentSize,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#currentSize, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void updatePageStatus(dynamic status) => super.noSuchMethod(
-        Invocation.method(
-          #updatePageStatus,
-          [status],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#updatePageStatus, [status]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  int getDisplayDigits() => (super.noSuchMethod(
-        Invocation.method(
-          #getDisplayDigits,
-          [],
-        ),
-        returnValue: 0,
-      ) as int);
+  int getDisplayDigits() =>
+      (super.noSuchMethod(
+            Invocation.method(#getDisplayDigits, []),
+            returnValue: 0,
+          )
+          as int);
 
   @override
-  String getFiatCurrencyName() => (super.noSuchMethod(
-        Invocation.method(
-          #getFiatCurrencyName,
-          [],
-        ),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFiatCurrencyName,
-            [],
-          ),
-        ),
-      ) as String);
+  String getFiatCurrencyName() =>
+      (super.noSuchMethod(
+            Invocation.method(#getFiatCurrencyName, []),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.method(#getFiatCurrencyName, []),
+            ),
+          )
+          as String);
 
   @override
-  String getFiatCurrencySign() => (super.noSuchMethod(
-        Invocation.method(
-          #getFiatCurrencySign,
-          [],
-        ),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getFiatCurrencySign,
-            [],
-          ),
-        ),
-      ) as String);
+  String getFiatCurrencySign() =>
+      (super.noSuchMethod(
+            Invocation.method(#getFiatCurrencySign, []),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.method(#getFiatCurrencySign, []),
+            ),
+          )
+          as String);
 
   @override
-  _i6.ProtonExchangeRate getExchangeRate() => (super.noSuchMethod(
-        Invocation.method(
-          #getExchangeRate,
-          [],
-        ),
-        returnValue: _FakeProtonExchangeRate_5(
-          this,
-          Invocation.method(
-            #getExchangeRate,
-            [],
-          ),
-        ),
-      ) as _i6.ProtonExchangeRate);
+  _i6.ProtonExchangeRate getExchangeRate() =>
+      (super.noSuchMethod(
+            Invocation.method(#getExchangeRate, []),
+            returnValue: _FakeProtonExchangeRate_5(
+              this,
+              Invocation.method(#getExchangeRate, []),
+            ),
+          )
+          as _i6.ProtonExchangeRate);
 
   @override
-  _i15.BitcoinUnit getBitcoinUnit() => (super.noSuchMethod(
-        Invocation.method(
-          #getBitcoinUnit,
-          [],
-        ),
-        returnValue: _i15.BitcoinUnit.btc,
-      ) as _i15.BitcoinUnit);
+  _i15.BitcoinUnit getBitcoinUnit() =>
+      (super.noSuchMethod(
+            Invocation.method(#getBitcoinUnit, []),
+            returnValue: _i15.BitcoinUnit.btc,
+          )
+          as _i15.BitcoinUnit);
 
   @override
-  int getTransactionAmount() => (super.noSuchMethod(
-        Invocation.method(
-          #getTransactionAmount,
-          [],
-        ),
-        returnValue: 0,
-      ) as int);
+  int getTransactionAmount() =>
+      (super.noSuchMethod(
+            Invocation.method(#getTransactionAmount, []),
+            returnValue: 0,
+          )
+          as int);
 
   @override
-  int getTransactionFee() => (super.noSuchMethod(
-        Invocation.method(
-          #getTransactionFee,
-          [],
-        ),
-        returnValue: 0,
-      ) as int);
+  int getTransactionFee() =>
+      (super.noSuchMethod(
+            Invocation.method(#getTransactionFee, []),
+            returnValue: 0,
+          )
+          as int);
 
   @override
   void clearImportedError() => super.noSuchMethod(
-        Invocation.method(
-          #clearImportedError,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#clearImportedError, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i14.Future<void> tryImportWithPrivateKey() => (super.noSuchMethod(
-        Invocation.method(
-          #tryImportWithPrivateKey,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> tryImportWithPrivateKey() =>
+      (super.noSuchMethod(
+            Invocation.method(#tryImportWithPrivateKey, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
-  _i14.Future<bool> broadcast() => (super.noSuchMethod(
-        Invocation.method(
-          #broadcast,
-          [],
-        ),
-        returnValue: _i14.Future<bool>.value(false),
-      ) as _i14.Future<bool>);
+  _i14.Future<bool> broadcast() =>
+      (super.noSuchMethod(
+            Invocation.method(#broadcast, []),
+            returnValue: _i14.Future<bool>.value(false),
+          )
+          as _i14.Future<bool>);
 
   @override
-  _i14.Future<void> onScanResult(dynamic scanResult) => (super.noSuchMethod(
-        Invocation.method(
-          #onScanResult,
-          [scanResult],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> onScanResult(dynamic scanResult) =>
+      (super.noSuchMethod(
+            Invocation.method(#onScanResult, [scanResult]),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
   void sinkAddSafe() => super.noSuchMethod(
-        Invocation.method(
-          #sinkAddSafe,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#sinkAddSafe, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i14.Future<void> loadData() => (super.noSuchMethod(
-        Invocation.method(
-          #loadData,
-          [],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> loadData() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadData, []),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i14.Future<void> move(_i16.NavID? to) => (super.noSuchMethod(
-        Invocation.method(
-          #move,
-          [to],
-        ),
-        returnValue: _i14.Future<void>.value(),
-        returnValueForMissingStub: _i14.Future<void>.value(),
-      ) as _i14.Future<void>);
+  _i14.Future<void> move(_i16.NavID? to) =>
+      (super.noSuchMethod(
+            Invocation.method(#move, [to]),
+            returnValue: _i14.Future<void>.value(),
+            returnValueForMissingStub: _i14.Future<void>.value(),
+          )
+          as _i14.Future<void>);
 }
 
 /// A class which mocks [PaperWalletCoordinator].
@@ -548,97 +462,97 @@ class MockPaperWalletCoordinator extends _i1.Mock
   @override
   _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>> get widget =>
       (super.noSuchMethod(
-        Invocation.getter(#widget),
-        returnValue: _FakeViewBase_6<_i7.ViewModel<_i8.Coordinator>>(
-          this,
-          Invocation.getter(#widget),
-        ),
-      ) as _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>>);
+            Invocation.getter(#widget),
+            returnValue: _FakeViewBase_6<_i7.ViewModel<_i8.Coordinator>>(
+              this,
+              Invocation.getter(#widget),
+            ),
+          )
+          as _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>>);
 
   @override
-  _i2.WalletModel get walletModel => (super.noSuchMethod(
-        Invocation.getter(#walletModel),
-        returnValue: _FakeWalletModel_0(
-          this,
-          Invocation.getter(#walletModel),
-        ),
-      ) as _i2.WalletModel);
+  _i2.WalletModel get walletModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#walletModel),
+            returnValue: _FakeWalletModel_0(
+              this,
+              Invocation.getter(#walletModel),
+            ),
+          )
+          as _i2.WalletModel);
 
   @override
-  _i3.AccountModel get accountModel => (super.noSuchMethod(
-        Invocation.getter(#accountModel),
-        returnValue: _FakeAccountModel_1(
-          this,
-          Invocation.getter(#accountModel),
-        ),
-      ) as _i3.AccountModel);
+  _i3.AccountModel get accountModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#accountModel),
+            returnValue: _FakeAccountModel_1(
+              this,
+              Invocation.getter(#accountModel),
+            ),
+          )
+          as _i3.AccountModel);
 
   @override
-  int get receiveAddressIndex => (super.noSuchMethod(
-        Invocation.getter(#receiveAddressIndex),
-        returnValue: 0,
-      ) as int);
+  int get receiveAddressIndex =>
+      (super.noSuchMethod(
+            Invocation.getter(#receiveAddressIndex),
+            returnValue: 0,
+          )
+          as int);
 
   @override
   set widget(_i9.ViewBase<_i7.ViewModel<_i8.Coordinator>>? value) =>
       super.noSuchMethod(
-        Invocation.setter(
-          #widget,
-          value,
-        ),
+        Invocation.setter(#widget, value),
         returnValueForMissingStub: null,
       );
 
   @override
-  _i4.GlobalKey<_i4.NavigatorState> get navigatorKey => (super.noSuchMethod(
-        Invocation.getter(#navigatorKey),
-        returnValue: _FakeGlobalKey_7<_i4.NavigatorState>(
-          this,
-          Invocation.getter(#navigatorKey),
-        ),
-      ) as _i4.GlobalKey<_i4.NavigatorState>);
+  _i4.GlobalKey<_i4.NavigatorState> get navigatorKey =>
+      (super.noSuchMethod(
+            Invocation.getter(#navigatorKey),
+            returnValue: _FakeGlobalKey_7<_i4.NavigatorState>(
+              this,
+              Invocation.getter(#navigatorKey),
+            ),
+          )
+          as _i4.GlobalKey<_i4.NavigatorState>);
 
   @override
-  _i10.ManagerFactory get serviceManager => (super.noSuchMethod(
-        Invocation.getter(#serviceManager),
-        returnValue: _FakeManagerFactory_8(
-          this,
-          Invocation.getter(#serviceManager),
-        ),
-      ) as _i10.ManagerFactory);
+  _i10.ManagerFactory get serviceManager =>
+      (super.noSuchMethod(
+            Invocation.getter(#serviceManager),
+            returnValue: _FakeManagerFactory_8(
+              this,
+              Invocation.getter(#serviceManager),
+            ),
+          )
+          as _i10.ManagerFactory);
 
   @override
   void end() => super.noSuchMethod(
-        Invocation.method(
-          #end,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#end, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>> start() => (super.noSuchMethod(
-        Invocation.method(
-          #start,
-          [],
-        ),
-        returnValue: _FakeViewBase_6<_i7.ViewModel<_i8.Coordinator>>(
-          this,
-          Invocation.method(
-            #start,
-            [],
-          ),
-        ),
-      ) as _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>>);
+  _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>> start() =>
+      (super.noSuchMethod(
+            Invocation.method(#start, []),
+            returnValue: _FakeViewBase_6<_i7.ViewModel<_i8.Coordinator>>(
+              this,
+              Invocation.method(#start, []),
+            ),
+          )
+          as _i9.ViewBase<_i7.ViewModel<_i8.Coordinator>>);
 
   @override
-  List<_i4.Widget> starts() => (super.noSuchMethod(
-        Invocation.method(
-          #starts,
-          [],
-        ),
-        returnValue: <_i4.Widget>[],
-      ) as List<_i4.Widget>);
+  List<_i4.Widget> starts() =>
+      (super.noSuchMethod(
+            Invocation.method(#starts, []),
+            returnValue: <_i4.Widget>[],
+          )
+          as List<_i4.Widget>);
 
   @override
   _i14.Future<bool> showInBottomSheet(
@@ -650,25 +564,23 @@ class MockPaperWalletCoordinator extends _i1.Mock
     bool? canPop = true,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showInBottomSheet,
-          [view],
-          {
-            #backgroundColor: backgroundColor,
-            #fullScreen: fullScreen,
-            #enableDrag: enableDrag,
-            #isDismissible: isDismissible,
-            #canPop: canPop,
-          },
-        ),
-        returnValue: _i14.Future<bool>.value(false),
-      ) as _i14.Future<bool>);
+            Invocation.method(
+              #showInBottomSheet,
+              [view],
+              {
+                #backgroundColor: backgroundColor,
+                #fullScreen: fullScreen,
+                #enableDrag: enableDrag,
+                #isDismissible: isDismissible,
+                #canPop: canPop,
+              },
+            ),
+            returnValue: _i14.Future<bool>.value(false),
+          )
+          as _i14.Future<bool>);
 
   @override
-  void pushReplacement(
-    _i4.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushReplacement(_i4.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushReplacement,
@@ -682,44 +594,30 @@ class MockPaperWalletCoordinator extends _i1.Mock
   void pushReplacementRemoveAll(
     _i4.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementRemoveAll,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementRemoveAll,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void push(
-    _i4.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void push(_i4.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
-        Invocation.method(
-          #push,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
+        Invocation.method(#push, [view], {#fullscreenDialog: fullscreenDialog}),
         returnValueForMissingStub: null,
       );
 
   @override
   void pop() => super.noSuchMethod(
-        Invocation.method(
-          #pop,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#pop, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  void pushCustom(
-    _i4.Widget? view, {
-    bool? fullscreenDialog = false,
-  }) =>
+  void pushCustom(_i4.Widget? view, {bool? fullscreenDialog = false}) =>
       super.noSuchMethod(
         Invocation.method(
           #pushCustom,
@@ -733,22 +631,18 @@ class MockPaperWalletCoordinator extends _i1.Mock
   void pushReplacementCustom(
     _i4.Widget? view, {
     bool? fullscreenDialog = false,
-  }) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #pushReplacementCustom,
-          [view],
-          {#fullscreenDialog: fullscreenDialog},
-        ),
-        returnValueForMissingStub: null,
-      );
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #pushReplacementCustom,
+      [view],
+      {#fullscreenDialog: fullscreenDialog},
+    ),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void showDialog1(_i4.Widget? view) => super.noSuchMethod(
-        Invocation.method(
-          #showDialog1,
-          [view],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#showDialog1, [view]),
+    returnValueForMissingStub: null,
+  );
 }

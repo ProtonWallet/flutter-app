@@ -35,74 +35,57 @@ class MockManagerFactory extends _i1.Mock implements _i2.ManagerFactory {
 
   @override
   void register<T extends _i3.Manager>(T? manager) => super.noSuchMethod(
-        Invocation.method(
-          #register,
-          [manager],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#register, [manager]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  T get<T extends _i3.Manager>() => (super.noSuchMethod(
-        Invocation.method(
-          #get,
-          [],
-        ),
-        returnValue: _i4.dummyValue<T>(
-          this,
-          Invocation.method(
-            #get,
-            [],
-          ),
-        ),
-      ) as T);
+  T get<T extends _i3.Manager>() =>
+      (super.noSuchMethod(
+            Invocation.method(#get, []),
+            returnValue: _i4.dummyValue<T>(this, Invocation.method(#get, [])),
+          )
+          as T);
 
   @override
   void unregister<T extends _i3.Manager>() => super.noSuchMethod(
-        Invocation.method(
-          #unregister,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#unregister, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.Future<void> init() => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> init() =>
+      (super.noSuchMethod(
+            Invocation.method(#init, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<void> dispose() => (super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<void> login(String? userID) => (super.noSuchMethod(
-        Invocation.method(
-          #login,
-          [userID],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> login(String? userID) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userID]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<void> logout() => (super.noSuchMethod(
-        Invocation.method(
-          #logout,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

@@ -14,12 +14,14 @@ class SecureYourWalletCoordinator extends Coordinator {
   final bool hadSetupRecovery;
   final bool showWalletRecovery;
   final bool hadSetup2FA;
+  final bool hadSetupBiometricUnlock;
 
   SecureYourWalletCoordinator(
     this.walletID, {
     required this.hadSetupRecovery,
     required this.showWalletRecovery,
     required this.hadSetup2FA,
+    required this.hadSetupBiometricUnlock,
   });
 
   void showSecuritySetting() {
@@ -49,6 +51,7 @@ class SecureYourWalletCoordinator extends Coordinator {
       hadSetupRecovery: hadSetupRecovery,
       showWalletRecovery: showWalletRecovery,
       hadSetup2FA: hadSetup2FA,
+      hadSetupBiometricUnlock: hadSetupBiometricUnlock,
     );
     widget = SecureYourWalletView(
       viewModel,

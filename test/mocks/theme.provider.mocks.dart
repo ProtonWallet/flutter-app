@@ -35,114 +35,95 @@ class MockThemeProvider extends _i1.Mock implements _i2.ThemeProvider {
   }
 
   @override
-  String get key => (super.noSuchMethod(
-        Invocation.getter(#key),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#key),
-        ),
-      ) as String);
+  String get key =>
+      (super.noSuchMethod(
+            Invocation.getter(#key),
+            returnValue: _i3.dummyValue<String>(this, Invocation.getter(#key)),
+          )
+          as String);
 
   @override
-  Map<dynamic, dynamic> get themeModeList => (super.noSuchMethod(
-        Invocation.getter(#themeModeList),
-        returnValue: <dynamic, dynamic>{},
-      ) as Map<dynamic, dynamic>);
+  Map<dynamic, dynamic> get themeModeList =>
+      (super.noSuchMethod(
+            Invocation.getter(#themeModeList),
+            returnValue: <dynamic, dynamic>{},
+          )
+          as Map<dynamic, dynamic>);
 
   @override
-  String get themeMode => (super.noSuchMethod(
-        Invocation.getter(#themeMode),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#themeMode),
-        ),
-      ) as String);
+  String get themeMode =>
+      (super.noSuchMethod(
+            Invocation.getter(#themeMode),
+            returnValue: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#themeMode),
+            ),
+          )
+          as String);
 
   @override
   set themeModeList(Map<dynamic, dynamic>? value) => super.noSuchMethod(
-        Invocation.setter(
-          #themeModeList,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#themeModeList, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  bool get hasListeners => (super.noSuchMethod(
-        Invocation.getter(#hasListeners),
-        returnValue: false,
-      ) as bool);
+  bool get hasListeners =>
+      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+          as bool);
 
   @override
-  _i4.ThemeMode getThemeMode(String? mode) => (super.noSuchMethod(
-        Invocation.method(
-          #getThemeMode,
-          [mode],
-        ),
-        returnValue: _i4.ThemeMode.system,
-      ) as _i4.ThemeMode);
+  _i4.ThemeMode getThemeMode(String? mode) =>
+      (super.noSuchMethod(
+            Invocation.method(#getThemeMode, [mode]),
+            returnValue: _i4.ThemeMode.system,
+          )
+          as _i4.ThemeMode);
 
   @override
-  _i5.Future<void> loadFromPreferences() => (super.noSuchMethod(
-        Invocation.method(
-          #loadFromPreferences,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> loadFromPreferences() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadFromPreferences, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   void toggleChangeTheme(dynamic val) => super.noSuchMethod(
-        Invocation.method(
-          #toggleChangeTheme,
-          [val],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#toggleChangeTheme, [val]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  bool isDarkMode() => (super.noSuchMethod(
-        Invocation.method(
-          #isDarkMode,
-          [],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isDarkMode() =>
+      (super.noSuchMethod(
+            Invocation.method(#isDarkMode, []),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
-        Invocation.method(
-          #addListener,
-          [listener],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#addListener, [listener]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
-        Invocation.method(
-          #removeListener,
-          [listener],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#removeListener, [listener]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void notifyListeners() => super.noSuchMethod(
-        Invocation.method(
-          #notifyListeners,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#notifyListeners, []),
+    returnValueForMissingStub: null,
+  );
 }

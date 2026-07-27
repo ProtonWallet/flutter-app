@@ -163,15 +163,6 @@ impl From<serde_json::Error> for BridgeError {
     }
 }
 
-impl From<andromeda_api::StoreError> for BridgeError {
-    fn from(value: andromeda_api::StoreError) -> Self {
-        BridgeError::SessionStore(format!(
-            "andromeda_api::StoreError occurred: {:?}",
-            value.source()
-        ))
-    }
-}
-
 impl From<std::str::Utf8Error> for BridgeError {
     fn from(value: std::str::Utf8Error) -> Self {
         BridgeError::Encoding(format!("Utf8Error occurred: {:?}", value.source()))
