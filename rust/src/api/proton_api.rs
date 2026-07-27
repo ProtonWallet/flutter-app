@@ -265,6 +265,7 @@ mod test {
             user_agent.clone(),
             store,
         )
+        .await
         .unwrap();
         client.set_proton_api().unwrap();
         let forked_session = fork(&app_version, &user_agent, "ios-wallet").await.unwrap();
@@ -289,6 +290,7 @@ mod test {
             user_agent.clone(),
             store,
         )
+        .await
         .unwrap();
         let auth_info = client.login(user, pass).await.unwrap();
         assert!(!auth_info.access_token.is_empty());

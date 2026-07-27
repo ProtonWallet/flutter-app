@@ -75,7 +75,7 @@ class ProtonApiServiceManager implements Manager {
           refresh: refreshToken,
           scopes: scopes.split(","));
       await authStore.setAuthDartCallback(callback: callback);
-      _apiService = ProtonApiService(
+      _apiService = await ProtonApiService.newInstance(
           env: env.toString(),
           appVersion: appVersion,
           userAgent: ua,

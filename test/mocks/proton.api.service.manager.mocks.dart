@@ -45,142 +45,77 @@ import 'package:wallet/rust/proton_api/auth_credential.dart' as _i17;
 
 class _FakeSecureStorageManager_0 extends _i1.SmartFake
     implements _i2.SecureStorageManager {
-  _FakeSecureStorageManager_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSecureStorageManager_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeApiEnv_1 extends _i1.SmartFake implements _i3.ApiEnv {
-  _FakeApiEnv_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeApiEnv_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeUserAgent_2 extends _i1.SmartFake implements _i4.UserAgent {
-  _FakeUserAgent_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeUserAgent_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonWalletAuthStore_3 extends _i1.SmartFake
     implements _i5.ProtonWalletAuthStore {
-  _FakeProtonWalletAuthStore_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonWalletAuthStore_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonApiService_4 extends _i1.SmartFake
     implements _i6.ProtonApiService {
-  _FakeProtonApiService_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonApiService_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonEmailAddressClient_5 extends _i1.SmartFake
     implements _i7.ProtonEmailAddressClient {
-  _FakeProtonEmailAddressClient_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonEmailAddressClient_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonUsersClient_6 extends _i1.SmartFake
     implements _i8.ProtonUsersClient {
-  _FakeProtonUsersClient_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonUsersClient_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWalletClient_7 extends _i1.SmartFake implements _i9.WalletClient {
-  _FakeWalletClient_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWalletClient_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeProtonSettingsClient_8 extends _i1.SmartFake
     implements _i10.ProtonSettingsClient {
-  _FakeProtonSettingsClient_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeProtonSettingsClient_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeSettingsClient_9 extends _i1.SmartFake
     implements _i11.SettingsClient {
-  _FakeSettingsClient_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeSettingsClient_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeTransactionClient_10 extends _i1.SmartFake
     implements _i12.TransactionClient {
-  _FakeTransactionClient_10(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeTransactionClient_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFrbUnleashClient_11 extends _i1.SmartFake
     implements _i13.FrbUnleashClient {
-  _FakeFrbUnleashClient_11(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFrbUnleashClient_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeDiscoveryContentClient_12 extends _i1.SmartFake
     implements _i14.DiscoveryContentClient {
-  _FakeDiscoveryContentClient_12(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeDiscoveryContentClient_12(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [ProtonApiServiceManager].
@@ -193,289 +128,235 @@ class MockProtonApiServiceManager extends _i1.Mock
   }
 
   @override
-  _i2.SecureStorageManager get storage => (super.noSuchMethod(
-        Invocation.getter(#storage),
-        returnValue: _FakeSecureStorageManager_0(
-          this,
-          Invocation.getter(#storage),
-        ),
-      ) as _i2.SecureStorageManager);
+  _i2.SecureStorageManager get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSecureStorageManager_0(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i2.SecureStorageManager);
 
   @override
-  _i3.ApiEnv get env => (super.noSuchMethod(
-        Invocation.getter(#env),
-        returnValue: _FakeApiEnv_1(
-          this,
-          Invocation.getter(#env),
-        ),
-      ) as _i3.ApiEnv);
+  _i3.ApiEnv get env =>
+      (super.noSuchMethod(
+            Invocation.getter(#env),
+            returnValue: _FakeApiEnv_1(this, Invocation.getter(#env)),
+          )
+          as _i3.ApiEnv);
 
   @override
-  _i4.UserAgent get userAgent => (super.noSuchMethod(
-        Invocation.getter(#userAgent),
-        returnValue: _FakeUserAgent_2(
-          this,
-          Invocation.getter(#userAgent),
-        ),
-      ) as _i4.UserAgent);
+  _i4.UserAgent get userAgent =>
+      (super.noSuchMethod(
+            Invocation.getter(#userAgent),
+            returnValue: _FakeUserAgent_2(this, Invocation.getter(#userAgent)),
+          )
+          as _i4.UserAgent);
 
   @override
-  _i5.ProtonWalletAuthStore get authStore => (super.noSuchMethod(
-        Invocation.getter(#authStore),
-        returnValue: _FakeProtonWalletAuthStore_3(
-          this,
-          Invocation.getter(#authStore),
-        ),
-      ) as _i5.ProtonWalletAuthStore);
+  _i5.ProtonWalletAuthStore get authStore =>
+      (super.noSuchMethod(
+            Invocation.getter(#authStore),
+            returnValue: _FakeProtonWalletAuthStore_3(
+              this,
+              Invocation.getter(#authStore),
+            ),
+          )
+          as _i5.ProtonWalletAuthStore);
 
   @override
   set userID(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #userID,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#userID, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   set authStore(_i5.ProtonWalletAuthStore? value) => super.noSuchMethod(
-        Invocation.setter(
-          #authStore,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#authStore, value),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i16.Future<String> callback(_i17.ChildSession? session) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #callback,
-          [session],
-        ),
-        returnValue: _i16.Future<String>.value(_i18.dummyValue<String>(
-          this,
-          Invocation.method(
-            #callback,
-            [session],
-          ),
-        )),
-      ) as _i16.Future<String>);
+            Invocation.method(#callback, [session]),
+            returnValue: _i16.Future<String>.value(
+              _i18.dummyValue<String>(
+                this,
+                Invocation.method(#callback, [session]),
+              ),
+            ),
+          )
+          as _i16.Future<String>);
 
   @override
   _i16.Future<void> saveSession(_i17.ChildSession? session) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #saveSession,
-          [session],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+            Invocation.method(#saveSession, [session]),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i16.Future<void> initalOldApiService() => (super.noSuchMethod(
-        Invocation.method(
-          #initalOldApiService,
-          [],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> initalOldApiService() =>
+      (super.noSuchMethod(
+            Invocation.method(#initalOldApiService, []),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i6.ProtonApiService getApiService() => (super.noSuchMethod(
-        Invocation.method(
-          #getApiService,
-          [],
-        ),
-        returnValue: _FakeProtonApiService_4(
-          this,
-          Invocation.method(
-            #getApiService,
-            [],
-          ),
-        ),
-      ) as _i6.ProtonApiService);
+  _i6.ProtonApiService getApiService() =>
+      (super.noSuchMethod(
+            Invocation.method(#getApiService, []),
+            returnValue: _FakeProtonApiService_4(
+              this,
+              Invocation.method(#getApiService, []),
+            ),
+          )
+          as _i6.ProtonApiService);
 
   @override
-  _i16.Future<void> dispose() => (super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i16.Future<void> init() => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> init() =>
+      (super.noSuchMethod(
+            Invocation.method(#init, []),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i16.Future<void> logout() => (super.noSuchMethod(
-        Invocation.method(
-          #logout,
-          [],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> logout() =>
+      (super.noSuchMethod(
+            Invocation.method(#logout, []),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i16.Future<void> login(String? userID) => (super.noSuchMethod(
-        Invocation.method(
-          #login,
-          [userID],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> login(String? userID) =>
+      (super.noSuchMethod(
+            Invocation.method(#login, [userID]),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
-  _i16.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i16.Future<void>.value(),
-        returnValueForMissingStub: _i16.Future<void>.value(),
-      ) as _i16.Future<void>);
+  _i16.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i16.Future<void>.value(),
+            returnValueForMissingStub: _i16.Future<void>.value(),
+          )
+          as _i16.Future<void>);
 
   @override
   _i7.ProtonEmailAddressClient getProtonEmailAddrApiClient() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getProtonEmailAddrApiClient,
-          [],
-        ),
-        returnValue: _FakeProtonEmailAddressClient_5(
-          this,
-          Invocation.method(
-            #getProtonEmailAddrApiClient,
-            [],
-          ),
-        ),
-      ) as _i7.ProtonEmailAddressClient);
+            Invocation.method(#getProtonEmailAddrApiClient, []),
+            returnValue: _FakeProtonEmailAddressClient_5(
+              this,
+              Invocation.method(#getProtonEmailAddrApiClient, []),
+            ),
+          )
+          as _i7.ProtonEmailAddressClient);
 
   @override
-  _i8.ProtonUsersClient getProtonUsersApiClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getProtonUsersApiClient,
-          [],
-        ),
-        returnValue: _FakeProtonUsersClient_6(
-          this,
-          Invocation.method(
-            #getProtonUsersApiClient,
-            [],
-          ),
-        ),
-      ) as _i8.ProtonUsersClient);
+  _i8.ProtonUsersClient getProtonUsersApiClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getProtonUsersApiClient, []),
+            returnValue: _FakeProtonUsersClient_6(
+              this,
+              Invocation.method(#getProtonUsersApiClient, []),
+            ),
+          )
+          as _i8.ProtonUsersClient);
 
   @override
-  _i9.WalletClient getWalletClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getWalletClient,
-          [],
-        ),
-        returnValue: _FakeWalletClient_7(
-          this,
-          Invocation.method(
-            #getWalletClient,
-            [],
-          ),
-        ),
-      ) as _i9.WalletClient);
+  _i9.WalletClient getWalletClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getWalletClient, []),
+            returnValue: _FakeWalletClient_7(
+              this,
+              Invocation.method(#getWalletClient, []),
+            ),
+          )
+          as _i9.WalletClient);
 
   @override
-  _i10.ProtonSettingsClient getProtonSettingsApiClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getProtonSettingsApiClient,
-          [],
-        ),
-        returnValue: _FakeProtonSettingsClient_8(
-          this,
-          Invocation.method(
-            #getProtonSettingsApiClient,
-            [],
-          ),
-        ),
-      ) as _i10.ProtonSettingsClient);
+  _i10.ProtonSettingsClient getProtonSettingsApiClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getProtonSettingsApiClient, []),
+            returnValue: _FakeProtonSettingsClient_8(
+              this,
+              Invocation.method(#getProtonSettingsApiClient, []),
+            ),
+          )
+          as _i10.ProtonSettingsClient);
 
   @override
-  _i11.SettingsClient getSettingsClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getSettingsClient,
-          [],
-        ),
-        returnValue: _FakeSettingsClient_9(
-          this,
-          Invocation.method(
-            #getSettingsClient,
-            [],
-          ),
-        ),
-      ) as _i11.SettingsClient);
+  _i11.SettingsClient getSettingsClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSettingsClient, []),
+            returnValue: _FakeSettingsClient_9(
+              this,
+              Invocation.method(#getSettingsClient, []),
+            ),
+          )
+          as _i11.SettingsClient);
 
   @override
-  _i12.TransactionClient getTransactionClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getTransactionClient,
-          [],
-        ),
-        returnValue: _FakeTransactionClient_10(
-          this,
-          Invocation.method(
-            #getTransactionClient,
-            [],
-          ),
-        ),
-      ) as _i12.TransactionClient);
+  _i12.TransactionClient getTransactionClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getTransactionClient, []),
+            returnValue: _FakeTransactionClient_10(
+              this,
+              Invocation.method(#getTransactionClient, []),
+            ),
+          )
+          as _i12.TransactionClient);
 
   @override
-  _i13.FrbUnleashClient getUnleashClient() => (super.noSuchMethod(
-        Invocation.method(
-          #getUnleashClient,
-          [],
-        ),
-        returnValue: _FakeFrbUnleashClient_11(
-          this,
-          Invocation.method(
-            #getUnleashClient,
-            [],
-          ),
-        ),
-      ) as _i13.FrbUnleashClient);
+  _i13.FrbUnleashClient getUnleashClient() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUnleashClient, []),
+            returnValue: _FakeFrbUnleashClient_11(
+              this,
+              Invocation.method(#getUnleashClient, []),
+            ),
+          )
+          as _i13.FrbUnleashClient);
 
   @override
   _i14.DiscoveryContentClient getDiscoveryContentClient() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getDiscoveryContentClient,
-          [],
-        ),
-        returnValue: _FakeDiscoveryContentClient_12(
-          this,
-          Invocation.method(
-            #getDiscoveryContentClient,
-            [],
-          ),
-        ),
-      ) as _i14.DiscoveryContentClient);
+            Invocation.method(#getDiscoveryContentClient, []),
+            returnValue: _FakeDiscoveryContentClient_12(
+              this,
+              Invocation.method(#getDiscoveryContentClient, []),
+            ),
+          )
+          as _i14.DiscoveryContentClient);
 
   @override
-  _i19.Priority getPriority() => (super.noSuchMethod(
-        Invocation.method(
-          #getPriority,
-          [],
-        ),
-        returnValue: _i19.Priority.level1,
-      ) as _i19.Priority);
+  _i19.Priority getPriority() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPriority, []),
+            returnValue: _i19.Priority.level1,
+          )
+          as _i19.Priority);
 }

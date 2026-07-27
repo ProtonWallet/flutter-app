@@ -17,7 +17,8 @@ use super::{
     proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
     proton_settings_client::ProtonSettingsClient, proton_users_client::ProtonUsersClient,
     settings_client::SettingsClient, transaction_client::TransactionClient,
-    unleash_client::FrbUnleashClient, wallet_auth_store::ProtonWalletAuthStore,
+    unleash_client::FrbUnleashClient,
+    wallet_auth_store::{set_api_client_initializing, ProtonWalletAuthStore},
     wallet_client::WalletClient,
 };
 use crate::{
@@ -38,8 +39,7 @@ pub struct ProtonAPIService {
 
 impl ProtonAPIService {
     // build functions
-    #[frb(sync)]
-    pub fn new(
+    pub async fn new(
         env: String,
         app_version: String,
         user_agent: String,
@@ -49,13 +49,12 @@ impl ProtonAPIService {
             "start fresh api client: app version:{} user_agent:{}",
             app_version, user_agent
         );
-        let box_store = Box::new(store.clone());
         let config = ApiConfig {
             spec: (app_version, user_agent),
             auth: None,
             url_prefix: None,
             env: Some(env),
-            store: Some(box_store),
+            store: Some(store.callback_store()),
             // proxy: Some(ProxyConfig {
             //     host: "192.168.1.138".into(),
             //     port: 9090,
@@ -63,7 +62,15 @@ impl ProtonAPIService {
             proxy: None,
         };
 
-        let inner_api = ProtonWalletApiClient::from_config(config)?;
+        set_api_client_initializing(true);
+        struct ApiClientInitializingGuard;
+        impl Drop for ApiClientInitializingGuard {
+            fn drop(&mut self) {
+                set_api_client_initializing(false);
+            }
+        }
+        let _initializing_guard = ApiClientInitializingGuard;
+        let inner_api = ProtonWalletApiClient::from_config_async(config).await?;
         let api: ProtonAPIService = ProtonAPIService {
             inner: Arc::new(inner_api),
             store: Arc::new(store),
@@ -108,7 +115,11 @@ impl ProtonAPIService {
         let session_id = auth.uid().unwrap().to_string();
         let acc_token = auth.tokens().unwrap().acc_tok().unwrap().to_string();
         let ref_token = auth.ref_tok().unwrap().to_string();
-        let scopes = auth.tokens().unwrap().scopes().unwrap();
+        let scopes = auth
+            .tokens()
+            .and_then(|t| t.scopes())
+            .map(|s| s.iter().cloned().collect())
+            .unwrap_or_default();
         info!("session_id: {:?}", session_id);
         Ok(AuthCredential {
             session_id,
@@ -119,7 +130,7 @@ impl ProtonAPIService {
             user_mail: user_data.user.email,
             user_name: user_data.user.name.clone(),
             display_name: user_data.user.name.clone(),
-            scops: scopes.into(),
+            scops: scopes,
             user_key_id: user_key.id.to_string(),
             user_private_key: user_key.private_key.to_string(),
             user_passphrase: mailboxpwd.to_string(),
@@ -277,8 +288,9 @@ mod test {
         let app_version = "android-wallet@1.0.0".to_string();
         let store = ProtonWalletAuthStore::new(env).unwrap();
 
-        let mut client =
-            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
+        let mut client = ProtonAPIService::new(env.to_string(), app_version, user_agent, store)
+            .await
+            .unwrap();
 
         client
             .update_auth(
@@ -305,8 +317,9 @@ mod test {
         let env = "atlas";
         let store = ProtonWalletAuthStore::new(env)?;
 
-        let client =
-            ProtonAPIService::new(env.to_string(), app_version, user_agent, store).unwrap();
+        let client = ProtonAPIService::new(env.to_string(), app_version, user_agent, store)
+            .await
+            .unwrap();
 
         let c = client.login(user.to_owned(), pass.to_owned()).await;
 

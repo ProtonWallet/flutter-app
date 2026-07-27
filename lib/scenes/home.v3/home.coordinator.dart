@@ -105,12 +105,14 @@ class HomeCoordinator extends Coordinator {
     required bool hadSetupRecovery,
     required bool showWalletRecovery,
     required bool hadSetup2FA,
+    required bool hadSetupBiometricUnlock,
   }) {
     final view = SecureYourWalletCoordinator(
       walletID,
       hadSetupRecovery: hadSetupRecovery,
       showWalletRecovery: showWalletRecovery,
       hadSetup2FA: hadSetup2FA,
+      hadSetupBiometricUnlock: hadSetupBiometricUnlock,
     ).start();
     showInBottomSheet(
       view,

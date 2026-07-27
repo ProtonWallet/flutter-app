@@ -36,109 +36,59 @@ import 'package:package_info_plus/package_info_plus.dart' as _i11;
 
 class _FakeAndroidDeviceInfo_0 extends _i1.SmartFake
     implements _i2.AndroidDeviceInfo {
-  _FakeAndroidDeviceInfo_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAndroidDeviceInfo_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeIosDeviceInfo_1 extends _i1.SmartFake implements _i3.IosDeviceInfo {
-  _FakeIosDeviceInfo_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeIosDeviceInfo_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeLinuxDeviceInfo_2 extends _i1.SmartFake
     implements _i4.LinuxDeviceInfo {
-  _FakeLinuxDeviceInfo_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeLinuxDeviceInfo_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWebBrowserInfo_3 extends _i1.SmartFake
     implements _i5.WebBrowserInfo {
-  _FakeWebBrowserInfo_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWebBrowserInfo_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeMacOsDeviceInfo_4 extends _i1.SmartFake
     implements _i6.MacOsDeviceInfo {
-  _FakeMacOsDeviceInfo_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeMacOsDeviceInfo_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWindowsDeviceInfo_5 extends _i1.SmartFake
     implements _i7.WindowsDeviceInfo {
-  _FakeWindowsDeviceInfo_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWindowsDeviceInfo_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeBaseDeviceInfo_6 extends _i1.SmartFake
     implements _i8.BaseDeviceInfo {
-  _FakeBaseDeviceInfo_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeBaseDeviceInfo_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeIosUtsname_7 extends _i1.SmartFake implements _i3.IosUtsname {
-  _FakeIosUtsname_7(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeIosUtsname_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeAndroidBuildVersion_8 extends _i1.SmartFake
     implements _i2.AndroidBuildVersion {
-  _FakeAndroidBuildVersion_8(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeAndroidBuildVersion_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeDateTime_9 extends _i1.SmartFake implements DateTime {
-  _FakeDateTime_9(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeDateTime_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [DeviceInfoPlugin].
@@ -150,73 +100,74 @@ class MockDeviceInfoPlugin extends _i1.Mock implements _i9.DeviceInfoPlugin {
   }
 
   @override
-  _i10.Future<_i2.AndroidDeviceInfo> get androidInfo => (super.noSuchMethod(
-        Invocation.getter(#androidInfo),
-        returnValue:
-            _i10.Future<_i2.AndroidDeviceInfo>.value(_FakeAndroidDeviceInfo_0(
-          this,
-          Invocation.getter(#androidInfo),
-        )),
-      ) as _i10.Future<_i2.AndroidDeviceInfo>);
+  _i10.Future<_i2.AndroidDeviceInfo> get androidInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#androidInfo),
+            returnValue: _i10.Future<_i2.AndroidDeviceInfo>.value(
+              _FakeAndroidDeviceInfo_0(this, Invocation.getter(#androidInfo)),
+            ),
+          )
+          as _i10.Future<_i2.AndroidDeviceInfo>);
 
   @override
-  _i10.Future<_i3.IosDeviceInfo> get iosInfo => (super.noSuchMethod(
-        Invocation.getter(#iosInfo),
-        returnValue: _i10.Future<_i3.IosDeviceInfo>.value(_FakeIosDeviceInfo_1(
-          this,
-          Invocation.getter(#iosInfo),
-        )),
-      ) as _i10.Future<_i3.IosDeviceInfo>);
+  _i10.Future<_i3.IosDeviceInfo> get iosInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#iosInfo),
+            returnValue: _i10.Future<_i3.IosDeviceInfo>.value(
+              _FakeIosDeviceInfo_1(this, Invocation.getter(#iosInfo)),
+            ),
+          )
+          as _i10.Future<_i3.IosDeviceInfo>);
 
   @override
-  _i10.Future<_i4.LinuxDeviceInfo> get linuxInfo => (super.noSuchMethod(
-        Invocation.getter(#linuxInfo),
-        returnValue:
-            _i10.Future<_i4.LinuxDeviceInfo>.value(_FakeLinuxDeviceInfo_2(
-          this,
-          Invocation.getter(#linuxInfo),
-        )),
-      ) as _i10.Future<_i4.LinuxDeviceInfo>);
+  _i10.Future<_i4.LinuxDeviceInfo> get linuxInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#linuxInfo),
+            returnValue: _i10.Future<_i4.LinuxDeviceInfo>.value(
+              _FakeLinuxDeviceInfo_2(this, Invocation.getter(#linuxInfo)),
+            ),
+          )
+          as _i10.Future<_i4.LinuxDeviceInfo>);
 
   @override
-  _i10.Future<_i5.WebBrowserInfo> get webBrowserInfo => (super.noSuchMethod(
-        Invocation.getter(#webBrowserInfo),
-        returnValue:
-            _i10.Future<_i5.WebBrowserInfo>.value(_FakeWebBrowserInfo_3(
-          this,
-          Invocation.getter(#webBrowserInfo),
-        )),
-      ) as _i10.Future<_i5.WebBrowserInfo>);
+  _i10.Future<_i5.WebBrowserInfo> get webBrowserInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#webBrowserInfo),
+            returnValue: _i10.Future<_i5.WebBrowserInfo>.value(
+              _FakeWebBrowserInfo_3(this, Invocation.getter(#webBrowserInfo)),
+            ),
+          )
+          as _i10.Future<_i5.WebBrowserInfo>);
 
   @override
-  _i10.Future<_i6.MacOsDeviceInfo> get macOsInfo => (super.noSuchMethod(
-        Invocation.getter(#macOsInfo),
-        returnValue:
-            _i10.Future<_i6.MacOsDeviceInfo>.value(_FakeMacOsDeviceInfo_4(
-          this,
-          Invocation.getter(#macOsInfo),
-        )),
-      ) as _i10.Future<_i6.MacOsDeviceInfo>);
+  _i10.Future<_i6.MacOsDeviceInfo> get macOsInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#macOsInfo),
+            returnValue: _i10.Future<_i6.MacOsDeviceInfo>.value(
+              _FakeMacOsDeviceInfo_4(this, Invocation.getter(#macOsInfo)),
+            ),
+          )
+          as _i10.Future<_i6.MacOsDeviceInfo>);
 
   @override
-  _i10.Future<_i7.WindowsDeviceInfo> get windowsInfo => (super.noSuchMethod(
-        Invocation.getter(#windowsInfo),
-        returnValue:
-            _i10.Future<_i7.WindowsDeviceInfo>.value(_FakeWindowsDeviceInfo_5(
-          this,
-          Invocation.getter(#windowsInfo),
-        )),
-      ) as _i10.Future<_i7.WindowsDeviceInfo>);
+  _i10.Future<_i7.WindowsDeviceInfo> get windowsInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#windowsInfo),
+            returnValue: _i10.Future<_i7.WindowsDeviceInfo>.value(
+              _FakeWindowsDeviceInfo_5(this, Invocation.getter(#windowsInfo)),
+            ),
+          )
+          as _i10.Future<_i7.WindowsDeviceInfo>);
 
   @override
-  _i10.Future<_i8.BaseDeviceInfo> get deviceInfo => (super.noSuchMethod(
-        Invocation.getter(#deviceInfo),
-        returnValue:
-            _i10.Future<_i8.BaseDeviceInfo>.value(_FakeBaseDeviceInfo_6(
-          this,
-          Invocation.getter(#deviceInfo),
-        )),
-      ) as _i10.Future<_i8.BaseDeviceInfo>);
+  _i10.Future<_i8.BaseDeviceInfo> get deviceInfo =>
+      (super.noSuchMethod(
+            Invocation.getter(#deviceInfo),
+            returnValue: _i10.Future<_i8.BaseDeviceInfo>.value(
+              _FakeBaseDeviceInfo_6(this, Invocation.getter(#deviceInfo)),
+            ),
+          )
+          as _i10.Future<_i8.BaseDeviceInfo>);
 }
 
 /// A class which mocks [PackageInfo].
@@ -228,55 +179,67 @@ class MockPackageInfo extends _i1.Mock implements _i11.PackageInfo {
   }
 
   @override
-  String get appName => (super.noSuchMethod(
-        Invocation.getter(#appName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#appName),
-        ),
-      ) as String);
+  String get appName =>
+      (super.noSuchMethod(
+            Invocation.getter(#appName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#appName),
+            ),
+          )
+          as String);
 
   @override
-  String get packageName => (super.noSuchMethod(
-        Invocation.getter(#packageName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#packageName),
-        ),
-      ) as String);
+  String get packageName =>
+      (super.noSuchMethod(
+            Invocation.getter(#packageName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#packageName),
+            ),
+          )
+          as String);
 
   @override
-  String get version => (super.noSuchMethod(
-        Invocation.getter(#version),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#version),
-        ),
-      ) as String);
+  String get version =>
+      (super.noSuchMethod(
+            Invocation.getter(#version),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#version),
+            ),
+          )
+          as String);
 
   @override
-  String get buildNumber => (super.noSuchMethod(
-        Invocation.getter(#buildNumber),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#buildNumber),
-        ),
-      ) as String);
+  String get buildNumber =>
+      (super.noSuchMethod(
+            Invocation.getter(#buildNumber),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#buildNumber),
+            ),
+          )
+          as String);
 
   @override
-  String get buildSignature => (super.noSuchMethod(
-        Invocation.getter(#buildSignature),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#buildSignature),
-        ),
-      ) as String);
+  String get buildSignature =>
+      (super.noSuchMethod(
+            Invocation.getter(#buildSignature),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#buildSignature),
+            ),
+          )
+          as String);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [IosDeviceInfo].
@@ -288,124 +251,135 @@ class MockIosDeviceInfo extends _i1.Mock implements _i3.IosDeviceInfo {
   }
 
   @override
-  String get name => (super.noSuchMethod(
-        Invocation.getter(#name),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#name),
-        ),
-      ) as String);
+  String get name =>
+      (super.noSuchMethod(
+            Invocation.getter(#name),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#name),
+            ),
+          )
+          as String);
 
   @override
-  String get systemName => (super.noSuchMethod(
-        Invocation.getter(#systemName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#systemName),
-        ),
-      ) as String);
+  String get systemName =>
+      (super.noSuchMethod(
+            Invocation.getter(#systemName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#systemName),
+            ),
+          )
+          as String);
 
   @override
-  String get systemVersion => (super.noSuchMethod(
-        Invocation.getter(#systemVersion),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#systemVersion),
-        ),
-      ) as String);
+  String get systemVersion =>
+      (super.noSuchMethod(
+            Invocation.getter(#systemVersion),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#systemVersion),
+            ),
+          )
+          as String);
 
   @override
-  String get model => (super.noSuchMethod(
-        Invocation.getter(#model),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#model),
-        ),
-      ) as String);
+  String get model =>
+      (super.noSuchMethod(
+            Invocation.getter(#model),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#model),
+            ),
+          )
+          as String);
 
   @override
-  String get modelName => (super.noSuchMethod(
-        Invocation.getter(#modelName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#modelName),
-        ),
-      ) as String);
+  String get modelName =>
+      (super.noSuchMethod(
+            Invocation.getter(#modelName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#modelName),
+            ),
+          )
+          as String);
 
   @override
-  String get localizedModel => (super.noSuchMethod(
-        Invocation.getter(#localizedModel),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#localizedModel),
-        ),
-      ) as String);
+  String get localizedModel =>
+      (super.noSuchMethod(
+            Invocation.getter(#localizedModel),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#localizedModel),
+            ),
+          )
+          as String);
 
   @override
-  bool get isPhysicalDevice => (super.noSuchMethod(
-        Invocation.getter(#isPhysicalDevice),
-        returnValue: false,
-      ) as bool);
+  bool get isPhysicalDevice =>
+      (super.noSuchMethod(
+            Invocation.getter(#isPhysicalDevice),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  int get physicalRamSize => (super.noSuchMethod(
-        Invocation.getter(#physicalRamSize),
-        returnValue: 0,
-      ) as int);
+  int get physicalRamSize =>
+      (super.noSuchMethod(Invocation.getter(#physicalRamSize), returnValue: 0)
+          as int);
 
   @override
-  int get availableRamSize => (super.noSuchMethod(
-        Invocation.getter(#availableRamSize),
-        returnValue: 0,
-      ) as int);
+  int get availableRamSize =>
+      (super.noSuchMethod(Invocation.getter(#availableRamSize), returnValue: 0)
+          as int);
 
   @override
-  bool get isiOSAppOnMac => (super.noSuchMethod(
-        Invocation.getter(#isiOSAppOnMac),
-        returnValue: false,
-      ) as bool);
+  bool get isiOSAppOnMac =>
+      (super.noSuchMethod(Invocation.getter(#isiOSAppOnMac), returnValue: false)
+          as bool);
 
   @override
-  bool get isiOSAppOnVision => (super.noSuchMethod(
-        Invocation.getter(#isiOSAppOnVision),
-        returnValue: false,
-      ) as bool);
+  bool get isiOSAppOnVision =>
+      (super.noSuchMethod(
+            Invocation.getter(#isiOSAppOnVision),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  _i3.IosUtsname get utsname => (super.noSuchMethod(
-        Invocation.getter(#utsname),
-        returnValue: _FakeIosUtsname_7(
-          this,
-          Invocation.getter(#utsname),
-        ),
-      ) as _i3.IosUtsname);
+  _i3.IosUtsname get utsname =>
+      (super.noSuchMethod(
+            Invocation.getter(#utsname),
+            returnValue: _FakeIosUtsname_7(this, Invocation.getter(#utsname)),
+          )
+          as _i3.IosUtsname);
 
   @override
-  int get freeDiskSize => (super.noSuchMethod(
-        Invocation.getter(#freeDiskSize),
-        returnValue: 0,
-      ) as int);
+  int get freeDiskSize =>
+      (super.noSuchMethod(Invocation.getter(#freeDiskSize), returnValue: 0)
+          as int);
 
   @override
-  int get totalDiskSize => (super.noSuchMethod(
-        Invocation.getter(#totalDiskSize),
-        returnValue: 0,
-      ) as int);
+  int get totalDiskSize =>
+      (super.noSuchMethod(Invocation.getter(#totalDiskSize), returnValue: 0)
+          as int);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [AndroidDeviceInfo].
@@ -417,223 +391,261 @@ class MockAndroidDeviceInfo extends _i1.Mock implements _i2.AndroidDeviceInfo {
   }
 
   @override
-  _i2.AndroidBuildVersion get version => (super.noSuchMethod(
-        Invocation.getter(#version),
-        returnValue: _FakeAndroidBuildVersion_8(
-          this,
-          Invocation.getter(#version),
-        ),
-      ) as _i2.AndroidBuildVersion);
+  _i2.AndroidBuildVersion get version =>
+      (super.noSuchMethod(
+            Invocation.getter(#version),
+            returnValue: _FakeAndroidBuildVersion_8(
+              this,
+              Invocation.getter(#version),
+            ),
+          )
+          as _i2.AndroidBuildVersion);
 
   @override
-  String get board => (super.noSuchMethod(
-        Invocation.getter(#board),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#board),
-        ),
-      ) as String);
+  String get board =>
+      (super.noSuchMethod(
+            Invocation.getter(#board),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#board),
+            ),
+          )
+          as String);
 
   @override
-  String get bootloader => (super.noSuchMethod(
-        Invocation.getter(#bootloader),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#bootloader),
-        ),
-      ) as String);
+  String get bootloader =>
+      (super.noSuchMethod(
+            Invocation.getter(#bootloader),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#bootloader),
+            ),
+          )
+          as String);
 
   @override
-  String get brand => (super.noSuchMethod(
-        Invocation.getter(#brand),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#brand),
-        ),
-      ) as String);
+  String get brand =>
+      (super.noSuchMethod(
+            Invocation.getter(#brand),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#brand),
+            ),
+          )
+          as String);
 
   @override
-  String get device => (super.noSuchMethod(
-        Invocation.getter(#device),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#device),
-        ),
-      ) as String);
+  String get device =>
+      (super.noSuchMethod(
+            Invocation.getter(#device),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#device),
+            ),
+          )
+          as String);
 
   @override
-  String get display => (super.noSuchMethod(
-        Invocation.getter(#display),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#display),
-        ),
-      ) as String);
+  String get display =>
+      (super.noSuchMethod(
+            Invocation.getter(#display),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#display),
+            ),
+          )
+          as String);
 
   @override
-  String get fingerprint => (super.noSuchMethod(
-        Invocation.getter(#fingerprint),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#fingerprint),
-        ),
-      ) as String);
+  String get fingerprint =>
+      (super.noSuchMethod(
+            Invocation.getter(#fingerprint),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#fingerprint),
+            ),
+          )
+          as String);
 
   @override
-  String get hardware => (super.noSuchMethod(
-        Invocation.getter(#hardware),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#hardware),
-        ),
-      ) as String);
+  String get hardware =>
+      (super.noSuchMethod(
+            Invocation.getter(#hardware),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#hardware),
+            ),
+          )
+          as String);
 
   @override
-  String get host => (super.noSuchMethod(
-        Invocation.getter(#host),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#host),
-        ),
-      ) as String);
+  String get host =>
+      (super.noSuchMethod(
+            Invocation.getter(#host),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#host),
+            ),
+          )
+          as String);
 
   @override
-  String get id => (super.noSuchMethod(
-        Invocation.getter(#id),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#id),
-        ),
-      ) as String);
+  String get id =>
+      (super.noSuchMethod(
+            Invocation.getter(#id),
+            returnValue: _i12.dummyValue<String>(this, Invocation.getter(#id)),
+          )
+          as String);
 
   @override
-  String get manufacturer => (super.noSuchMethod(
-        Invocation.getter(#manufacturer),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#manufacturer),
-        ),
-      ) as String);
+  String get manufacturer =>
+      (super.noSuchMethod(
+            Invocation.getter(#manufacturer),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#manufacturer),
+            ),
+          )
+          as String);
 
   @override
-  String get model => (super.noSuchMethod(
-        Invocation.getter(#model),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#model),
-        ),
-      ) as String);
+  String get model =>
+      (super.noSuchMethod(
+            Invocation.getter(#model),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#model),
+            ),
+          )
+          as String);
 
   @override
-  String get product => (super.noSuchMethod(
-        Invocation.getter(#product),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#product),
-        ),
-      ) as String);
+  String get product =>
+      (super.noSuchMethod(
+            Invocation.getter(#product),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#product),
+            ),
+          )
+          as String);
 
   @override
-  String get name => (super.noSuchMethod(
-        Invocation.getter(#name),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#name),
-        ),
-      ) as String);
+  String get name =>
+      (super.noSuchMethod(
+            Invocation.getter(#name),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#name),
+            ),
+          )
+          as String);
 
   @override
-  List<String> get supported32BitAbis => (super.noSuchMethod(
-        Invocation.getter(#supported32BitAbis),
-        returnValue: <String>[],
-      ) as List<String>);
+  List<String> get supported32BitAbis =>
+      (super.noSuchMethod(
+            Invocation.getter(#supported32BitAbis),
+            returnValue: <String>[],
+          )
+          as List<String>);
 
   @override
-  List<String> get supported64BitAbis => (super.noSuchMethod(
-        Invocation.getter(#supported64BitAbis),
-        returnValue: <String>[],
-      ) as List<String>);
+  List<String> get supported64BitAbis =>
+      (super.noSuchMethod(
+            Invocation.getter(#supported64BitAbis),
+            returnValue: <String>[],
+          )
+          as List<String>);
 
   @override
-  List<String> get supportedAbis => (super.noSuchMethod(
-        Invocation.getter(#supportedAbis),
-        returnValue: <String>[],
-      ) as List<String>);
+  List<String> get supportedAbis =>
+      (super.noSuchMethod(
+            Invocation.getter(#supportedAbis),
+            returnValue: <String>[],
+          )
+          as List<String>);
 
   @override
-  String get tags => (super.noSuchMethod(
-        Invocation.getter(#tags),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#tags),
-        ),
-      ) as String);
+  String get tags =>
+      (super.noSuchMethod(
+            Invocation.getter(#tags),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#tags),
+            ),
+          )
+          as String);
 
   @override
-  String get type => (super.noSuchMethod(
-        Invocation.getter(#type),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#type),
-        ),
-      ) as String);
+  String get type =>
+      (super.noSuchMethod(
+            Invocation.getter(#type),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#type),
+            ),
+          )
+          as String);
 
   @override
-  bool get isPhysicalDevice => (super.noSuchMethod(
-        Invocation.getter(#isPhysicalDevice),
-        returnValue: false,
-      ) as bool);
+  bool get isPhysicalDevice =>
+      (super.noSuchMethod(
+            Invocation.getter(#isPhysicalDevice),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  int get freeDiskSize => (super.noSuchMethod(
-        Invocation.getter(#freeDiskSize),
-        returnValue: 0,
-      ) as int);
+  int get freeDiskSize =>
+      (super.noSuchMethod(Invocation.getter(#freeDiskSize), returnValue: 0)
+          as int);
 
   @override
-  int get totalDiskSize => (super.noSuchMethod(
-        Invocation.getter(#totalDiskSize),
-        returnValue: 0,
-      ) as int);
+  int get totalDiskSize =>
+      (super.noSuchMethod(Invocation.getter(#totalDiskSize), returnValue: 0)
+          as int);
 
   @override
-  List<String> get systemFeatures => (super.noSuchMethod(
-        Invocation.getter(#systemFeatures),
-        returnValue: <String>[],
-      ) as List<String>);
+  List<String> get systemFeatures =>
+      (super.noSuchMethod(
+            Invocation.getter(#systemFeatures),
+            returnValue: <String>[],
+          )
+          as List<String>);
 
   @override
-  bool get isLowRamDevice => (super.noSuchMethod(
-        Invocation.getter(#isLowRamDevice),
-        returnValue: false,
-      ) as bool);
+  bool get isLowRamDevice =>
+      (super.noSuchMethod(
+            Invocation.getter(#isLowRamDevice),
+            returnValue: false,
+          )
+          as bool);
 
   @override
-  int get physicalRamSize => (super.noSuchMethod(
-        Invocation.getter(#physicalRamSize),
-        returnValue: 0,
-      ) as int);
+  int get physicalRamSize =>
+      (super.noSuchMethod(Invocation.getter(#physicalRamSize), returnValue: 0)
+          as int);
 
   @override
-  int get availableRamSize => (super.noSuchMethod(
-        Invocation.getter(#availableRamSize),
-        returnValue: 0,
-      ) as int);
+  int get availableRamSize =>
+      (super.noSuchMethod(Invocation.getter(#availableRamSize), returnValue: 0)
+          as int);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [MacOsDeviceInfo].
@@ -645,118 +657,127 @@ class MockMacOsDeviceInfo extends _i1.Mock implements _i6.MacOsDeviceInfo {
   }
 
   @override
-  String get computerName => (super.noSuchMethod(
-        Invocation.getter(#computerName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#computerName),
-        ),
-      ) as String);
+  String get computerName =>
+      (super.noSuchMethod(
+            Invocation.getter(#computerName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#computerName),
+            ),
+          )
+          as String);
 
   @override
-  String get hostName => (super.noSuchMethod(
-        Invocation.getter(#hostName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#hostName),
-        ),
-      ) as String);
+  String get hostName =>
+      (super.noSuchMethod(
+            Invocation.getter(#hostName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#hostName),
+            ),
+          )
+          as String);
 
   @override
-  String get arch => (super.noSuchMethod(
-        Invocation.getter(#arch),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#arch),
-        ),
-      ) as String);
+  String get arch =>
+      (super.noSuchMethod(
+            Invocation.getter(#arch),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#arch),
+            ),
+          )
+          as String);
 
   @override
-  String get model => (super.noSuchMethod(
-        Invocation.getter(#model),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#model),
-        ),
-      ) as String);
+  String get model =>
+      (super.noSuchMethod(
+            Invocation.getter(#model),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#model),
+            ),
+          )
+          as String);
 
   @override
-  String get modelName => (super.noSuchMethod(
-        Invocation.getter(#modelName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#modelName),
-        ),
-      ) as String);
+  String get modelName =>
+      (super.noSuchMethod(
+            Invocation.getter(#modelName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#modelName),
+            ),
+          )
+          as String);
 
   @override
-  String get kernelVersion => (super.noSuchMethod(
-        Invocation.getter(#kernelVersion),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#kernelVersion),
-        ),
-      ) as String);
+  String get kernelVersion =>
+      (super.noSuchMethod(
+            Invocation.getter(#kernelVersion),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#kernelVersion),
+            ),
+          )
+          as String);
 
   @override
-  String get osRelease => (super.noSuchMethod(
-        Invocation.getter(#osRelease),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#osRelease),
-        ),
-      ) as String);
+  String get osRelease =>
+      (super.noSuchMethod(
+            Invocation.getter(#osRelease),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#osRelease),
+            ),
+          )
+          as String);
 
   @override
-  int get majorVersion => (super.noSuchMethod(
-        Invocation.getter(#majorVersion),
-        returnValue: 0,
-      ) as int);
+  int get majorVersion =>
+      (super.noSuchMethod(Invocation.getter(#majorVersion), returnValue: 0)
+          as int);
 
   @override
-  int get minorVersion => (super.noSuchMethod(
-        Invocation.getter(#minorVersion),
-        returnValue: 0,
-      ) as int);
+  int get minorVersion =>
+      (super.noSuchMethod(Invocation.getter(#minorVersion), returnValue: 0)
+          as int);
 
   @override
-  int get patchVersion => (super.noSuchMethod(
-        Invocation.getter(#patchVersion),
-        returnValue: 0,
-      ) as int);
+  int get patchVersion =>
+      (super.noSuchMethod(Invocation.getter(#patchVersion), returnValue: 0)
+          as int);
 
   @override
-  int get activeCPUs => (super.noSuchMethod(
-        Invocation.getter(#activeCPUs),
-        returnValue: 0,
-      ) as int);
+  int get activeCPUs =>
+      (super.noSuchMethod(Invocation.getter(#activeCPUs), returnValue: 0)
+          as int);
 
   @override
-  int get memorySize => (super.noSuchMethod(
-        Invocation.getter(#memorySize),
-        returnValue: 0,
-      ) as int);
+  int get memorySize =>
+      (super.noSuchMethod(Invocation.getter(#memorySize), returnValue: 0)
+          as int);
 
   @override
-  int get cpuFrequency => (super.noSuchMethod(
-        Invocation.getter(#cpuFrequency),
-        returnValue: 0,
-      ) as int);
+  int get cpuFrequency =>
+      (super.noSuchMethod(Invocation.getter(#cpuFrequency), returnValue: 0)
+          as int);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [IosUtsname].
@@ -768,49 +789,59 @@ class MockIosUtsname extends _i1.Mock implements _i3.IosUtsname {
   }
 
   @override
-  String get sysname => (super.noSuchMethod(
-        Invocation.getter(#sysname),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#sysname),
-        ),
-      ) as String);
+  String get sysname =>
+      (super.noSuchMethod(
+            Invocation.getter(#sysname),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#sysname),
+            ),
+          )
+          as String);
 
   @override
-  String get nodename => (super.noSuchMethod(
-        Invocation.getter(#nodename),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#nodename),
-        ),
-      ) as String);
+  String get nodename =>
+      (super.noSuchMethod(
+            Invocation.getter(#nodename),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#nodename),
+            ),
+          )
+          as String);
 
   @override
-  String get release => (super.noSuchMethod(
-        Invocation.getter(#release),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#release),
-        ),
-      ) as String);
+  String get release =>
+      (super.noSuchMethod(
+            Invocation.getter(#release),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#release),
+            ),
+          )
+          as String);
 
   @override
-  String get version => (super.noSuchMethod(
-        Invocation.getter(#version),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#version),
-        ),
-      ) as String);
+  String get version =>
+      (super.noSuchMethod(
+            Invocation.getter(#version),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#version),
+            ),
+          )
+          as String);
 
   @override
-  String get machine => (super.noSuchMethod(
-        Invocation.getter(#machine),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#machine),
-        ),
-      ) as String);
+  String get machine =>
+      (super.noSuchMethod(
+            Invocation.getter(#machine),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#machine),
+            ),
+          )
+          as String);
 }
 
 /// A class which mocks [AndroidBuildVersion].
@@ -823,46 +854,49 @@ class MockAndroidBuildVersion extends _i1.Mock
   }
 
   @override
-  String get codename => (super.noSuchMethod(
-        Invocation.getter(#codename),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#codename),
-        ),
-      ) as String);
+  String get codename =>
+      (super.noSuchMethod(
+            Invocation.getter(#codename),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#codename),
+            ),
+          )
+          as String);
 
   @override
-  String get incremental => (super.noSuchMethod(
-        Invocation.getter(#incremental),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#incremental),
-        ),
-      ) as String);
+  String get incremental =>
+      (super.noSuchMethod(
+            Invocation.getter(#incremental),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#incremental),
+            ),
+          )
+          as String);
 
   @override
-  String get release => (super.noSuchMethod(
-        Invocation.getter(#release),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#release),
-        ),
-      ) as String);
+  String get release =>
+      (super.noSuchMethod(
+            Invocation.getter(#release),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#release),
+            ),
+          )
+          as String);
 
   @override
-  int get sdkInt => (super.noSuchMethod(
-        Invocation.getter(#sdkInt),
-        returnValue: 0,
-      ) as int);
+  int get sdkInt =>
+      (super.noSuchMethod(Invocation.getter(#sdkInt), returnValue: 0) as int);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [LinuxDeviceInfo].
@@ -874,46 +908,50 @@ class MockLinuxDeviceInfo extends _i1.Mock implements _i4.LinuxDeviceInfo {
   }
 
   @override
-  String get name => (super.noSuchMethod(
-        Invocation.getter(#name),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#name),
-        ),
-      ) as String);
+  String get name =>
+      (super.noSuchMethod(
+            Invocation.getter(#name),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#name),
+            ),
+          )
+          as String);
 
   @override
-  String get id => (super.noSuchMethod(
-        Invocation.getter(#id),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#id),
-        ),
-      ) as String);
+  String get id =>
+      (super.noSuchMethod(
+            Invocation.getter(#id),
+            returnValue: _i12.dummyValue<String>(this, Invocation.getter(#id)),
+          )
+          as String);
 
   @override
-  String get prettyName => (super.noSuchMethod(
-        Invocation.getter(#prettyName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#prettyName),
-        ),
-      ) as String);
+  String get prettyName =>
+      (super.noSuchMethod(
+            Invocation.getter(#prettyName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#prettyName),
+            ),
+          )
+          as String);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [WindowsDeviceInfo].
@@ -925,206 +963,222 @@ class MockWindowsDeviceInfo extends _i1.Mock implements _i7.WindowsDeviceInfo {
   }
 
   @override
-  String get computerName => (super.noSuchMethod(
-        Invocation.getter(#computerName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#computerName),
-        ),
-      ) as String);
+  String get computerName =>
+      (super.noSuchMethod(
+            Invocation.getter(#computerName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#computerName),
+            ),
+          )
+          as String);
 
   @override
-  int get numberOfCores => (super.noSuchMethod(
-        Invocation.getter(#numberOfCores),
-        returnValue: 0,
-      ) as int);
+  int get numberOfCores =>
+      (super.noSuchMethod(Invocation.getter(#numberOfCores), returnValue: 0)
+          as int);
 
   @override
-  int get systemMemoryInMegabytes => (super.noSuchMethod(
-        Invocation.getter(#systemMemoryInMegabytes),
-        returnValue: 0,
-      ) as int);
+  int get systemMemoryInMegabytes =>
+      (super.noSuchMethod(
+            Invocation.getter(#systemMemoryInMegabytes),
+            returnValue: 0,
+          )
+          as int);
 
   @override
-  String get userName => (super.noSuchMethod(
-        Invocation.getter(#userName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#userName),
-        ),
-      ) as String);
+  String get userName =>
+      (super.noSuchMethod(
+            Invocation.getter(#userName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#userName),
+            ),
+          )
+          as String);
 
   @override
-  int get majorVersion => (super.noSuchMethod(
-        Invocation.getter(#majorVersion),
-        returnValue: 0,
-      ) as int);
+  int get majorVersion =>
+      (super.noSuchMethod(Invocation.getter(#majorVersion), returnValue: 0)
+          as int);
 
   @override
-  int get minorVersion => (super.noSuchMethod(
-        Invocation.getter(#minorVersion),
-        returnValue: 0,
-      ) as int);
+  int get minorVersion =>
+      (super.noSuchMethod(Invocation.getter(#minorVersion), returnValue: 0)
+          as int);
 
   @override
-  int get buildNumber => (super.noSuchMethod(
-        Invocation.getter(#buildNumber),
-        returnValue: 0,
-      ) as int);
+  int get buildNumber =>
+      (super.noSuchMethod(Invocation.getter(#buildNumber), returnValue: 0)
+          as int);
 
   @override
-  int get platformId => (super.noSuchMethod(
-        Invocation.getter(#platformId),
-        returnValue: 0,
-      ) as int);
+  int get platformId =>
+      (super.noSuchMethod(Invocation.getter(#platformId), returnValue: 0)
+          as int);
 
   @override
-  String get csdVersion => (super.noSuchMethod(
-        Invocation.getter(#csdVersion),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#csdVersion),
-        ),
-      ) as String);
+  String get csdVersion =>
+      (super.noSuchMethod(
+            Invocation.getter(#csdVersion),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#csdVersion),
+            ),
+          )
+          as String);
 
   @override
-  int get servicePackMajor => (super.noSuchMethod(
-        Invocation.getter(#servicePackMajor),
-        returnValue: 0,
-      ) as int);
+  int get servicePackMajor =>
+      (super.noSuchMethod(Invocation.getter(#servicePackMajor), returnValue: 0)
+          as int);
 
   @override
-  int get servicePackMinor => (super.noSuchMethod(
-        Invocation.getter(#servicePackMinor),
-        returnValue: 0,
-      ) as int);
+  int get servicePackMinor =>
+      (super.noSuchMethod(Invocation.getter(#servicePackMinor), returnValue: 0)
+          as int);
 
   @override
-  int get suitMask => (super.noSuchMethod(
-        Invocation.getter(#suitMask),
-        returnValue: 0,
-      ) as int);
+  int get suitMask =>
+      (super.noSuchMethod(Invocation.getter(#suitMask), returnValue: 0) as int);
 
   @override
-  int get productType => (super.noSuchMethod(
-        Invocation.getter(#productType),
-        returnValue: 0,
-      ) as int);
+  int get productType =>
+      (super.noSuchMethod(Invocation.getter(#productType), returnValue: 0)
+          as int);
 
   @override
-  int get reserved => (super.noSuchMethod(
-        Invocation.getter(#reserved),
-        returnValue: 0,
-      ) as int);
+  int get reserved =>
+      (super.noSuchMethod(Invocation.getter(#reserved), returnValue: 0) as int);
 
   @override
-  String get buildLab => (super.noSuchMethod(
-        Invocation.getter(#buildLab),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#buildLab),
-        ),
-      ) as String);
+  String get buildLab =>
+      (super.noSuchMethod(
+            Invocation.getter(#buildLab),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#buildLab),
+            ),
+          )
+          as String);
 
   @override
-  String get buildLabEx => (super.noSuchMethod(
-        Invocation.getter(#buildLabEx),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#buildLabEx),
-        ),
-      ) as String);
+  String get buildLabEx =>
+      (super.noSuchMethod(
+            Invocation.getter(#buildLabEx),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#buildLabEx),
+            ),
+          )
+          as String);
 
   @override
-  _i13.Uint8List get digitalProductId => (super.noSuchMethod(
-        Invocation.getter(#digitalProductId),
-        returnValue: _i13.Uint8List(0),
-      ) as _i13.Uint8List);
+  _i13.Uint8List get digitalProductId =>
+      (super.noSuchMethod(
+            Invocation.getter(#digitalProductId),
+            returnValue: _i13.Uint8List(0),
+          )
+          as _i13.Uint8List);
 
   @override
-  String get displayVersion => (super.noSuchMethod(
-        Invocation.getter(#displayVersion),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#displayVersion),
-        ),
-      ) as String);
+  String get displayVersion =>
+      (super.noSuchMethod(
+            Invocation.getter(#displayVersion),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#displayVersion),
+            ),
+          )
+          as String);
 
   @override
-  String get editionId => (super.noSuchMethod(
-        Invocation.getter(#editionId),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#editionId),
-        ),
-      ) as String);
+  String get editionId =>
+      (super.noSuchMethod(
+            Invocation.getter(#editionId),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#editionId),
+            ),
+          )
+          as String);
 
   @override
-  DateTime get installDate => (super.noSuchMethod(
-        Invocation.getter(#installDate),
-        returnValue: _FakeDateTime_9(
-          this,
-          Invocation.getter(#installDate),
-        ),
-      ) as DateTime);
+  DateTime get installDate =>
+      (super.noSuchMethod(
+            Invocation.getter(#installDate),
+            returnValue: _FakeDateTime_9(this, Invocation.getter(#installDate)),
+          )
+          as DateTime);
 
   @override
-  String get productId => (super.noSuchMethod(
-        Invocation.getter(#productId),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#productId),
-        ),
-      ) as String);
+  String get productId =>
+      (super.noSuchMethod(
+            Invocation.getter(#productId),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#productId),
+            ),
+          )
+          as String);
 
   @override
-  String get productName => (super.noSuchMethod(
-        Invocation.getter(#productName),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#productName),
-        ),
-      ) as String);
+  String get productName =>
+      (super.noSuchMethod(
+            Invocation.getter(#productName),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#productName),
+            ),
+          )
+          as String);
 
   @override
-  String get registeredOwner => (super.noSuchMethod(
-        Invocation.getter(#registeredOwner),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#registeredOwner),
-        ),
-      ) as String);
+  String get registeredOwner =>
+      (super.noSuchMethod(
+            Invocation.getter(#registeredOwner),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#registeredOwner),
+            ),
+          )
+          as String);
 
   @override
-  String get releaseId => (super.noSuchMethod(
-        Invocation.getter(#releaseId),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#releaseId),
-        ),
-      ) as String);
+  String get releaseId =>
+      (super.noSuchMethod(
+            Invocation.getter(#releaseId),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#releaseId),
+            ),
+          )
+          as String);
 
   @override
-  String get deviceId => (super.noSuchMethod(
-        Invocation.getter(#deviceId),
-        returnValue: _i12.dummyValue<String>(
-          this,
-          Invocation.getter(#deviceId),
-        ),
-      ) as String);
+  String get deviceId =>
+      (super.noSuchMethod(
+            Invocation.getter(#deviceId),
+            returnValue: _i12.dummyValue<String>(
+              this,
+              Invocation.getter(#deviceId),
+            ),
+          )
+          as String);
 
   @override
-  Map<String, dynamic> get data => (super.noSuchMethod(
-        Invocation.getter(#data),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> get data =>
+      (super.noSuchMethod(
+            Invocation.getter(#data),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 
   @override
-  Map<String, dynamic> toMap() => (super.noSuchMethod(
-        Invocation.method(
-          #toMap,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() =>
+      (super.noSuchMethod(
+            Invocation.method(#toMap, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }

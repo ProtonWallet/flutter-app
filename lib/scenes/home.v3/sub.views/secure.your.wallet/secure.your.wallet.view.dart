@@ -131,6 +131,33 @@ class SecureYourWalletView extends ViewBase<SecureYourWalletViewModel> {
           }
         },
       ),
+      const Divider(
+        height: 0.3,
+        thickness: 0.3,
+      ),
+      ListTile(
+        leading: Icon(
+            !viewModel.hadSetupBiometricUnlock
+                ? Icons.circle_outlined
+                : Icons.check_circle_outline_rounded,
+            color: ProtonColors.protonBlue,
+            size: 20),
+        minLeadingWidth: 10,
+        title: Text(context.local.todos_enable_biometric_unlock,
+            style: !viewModel.hadSetupBiometricUnlock
+                ? ProtonStyles.body2Medium(color: ProtonColors.protonBlue)
+                : ProtonStyles.body2Medium(
+                    color: ProtonColors.protonBlue,
+                    decoration: TextDecoration.lineThrough)),
+        trailing: Icon(Icons.arrow_forward_ios_rounded,
+            color: ProtonColors.textDisable, size: 16),
+        onTap: () {
+          if (!viewModel.hadSetupBiometricUnlock) {
+            Navigator.of(context).pop();
+            viewModel.showSecuritySetting();
+          }
+        },
+      ),
     ]);
   }
 }

@@ -100,11 +100,13 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/discover_proton_wallet_launch.png
   AssetGenImage get discoverProtonWalletLaunch => const AssetGenImage(
-      'assets/images/icon/discover_proton_wallet_launch.png');
+    'assets/images/icon/discover_proton_wallet_launch.png',
+  );
 
   /// File path: assets/images/icon/discover_proton_wallet_security.png
   AssetGenImage get discoverProtonWalletSecurity => const AssetGenImage(
-      'assets/images/icon/discover_proton_wallet_security.png');
+    'assets/images/icon/discover_proton_wallet_security.png',
+  );
 
   /// File path: assets/images/icon/discover_what_is_bitcoin.png
   AssetGenImage get discoverWhatIsBitcoin =>
@@ -155,7 +157,8 @@ class $AssetsImagesIconGen {
 
   /// File path: assets/images/icon/ic_arrow_out_from_rectanglesignout.svg
   SvgGenImage get icArrowOutFromRectanglesignout => const SvgGenImage(
-      'assets/images/icon/ic_arrow_out_from_rectanglesignout.svg');
+    'assets/images/icon/ic_arrow_out_from_rectanglesignout.svg',
+  );
 
   /// File path: assets/images/icon/ic_arrow_out_square.svg
   SvgGenImage get icArrowOutSquare =>
@@ -446,110 +449,110 @@ class $AssetsImagesIconGen {
 
   /// List of all assets
   List<dynamic> get values => [
-        addAccount,
-        alertWarning,
-        applePay,
-        banxa,
-        bitcoin,
-        bitcoinBigIcon,
-        bitcoinBigIconDark,
-        creditCard,
-        deleteWarning,
-        deleteWarningDark,
-        discoverBitcoinGuide,
-        discoverBve,
-        discoverHowToProtect,
-        discoverProtonWalletLaunch,
-        discoverProtonWalletSecurity,
-        discoverWhatIsBitcoin,
-        doTransactions,
-        download,
-        downloadButton,
-        downloadButtonDark,
-        downloadDark,
-        drawerMenu,
-        drawerMenuDark,
-        earlyAccess,
-        earlyAccessDark,
-        errorMessage,
-        euro,
-        icArrowOutFromRectanglesignout,
-        icArrowOutSquare,
-        icArrowRotateRight,
-        icBugreport,
-        icCheckmark,
-        icChevronTinyDown,
-        icCogWheel,
-        icCopy,
-        icCopyDark,
-        icCross,
-        icDiamondwalletPlus,
-        icInfoCircle,
-        icInfoCircleDark,
-        icMessage,
-        icPlusCircle,
-        icQrCode,
-        icQrCodeDark,
-        icShield,
-        icSign,
-        icSignDark,
-        icSquares,
-        icSquaresInSquarediscover,
-        key,
-        keyDark,
-        launchIcon,
-        lock,
-        lockDark,
-        logoText,
-        moonpay,
-        noWalletFound,
-        note,
-        noteDark,
-        paperPlane,
-        paperPlaneDark,
-        pencil,
-        pencilDark,
-        protonCalendar,
-        protonDrive,
-        protonForBusiness,
-        protonMail,
-        protonPass,
-        ramp,
-        receive,
-        receiveDark,
-        search,
-        searchDark,
-        send,
-        send1,
-        sendDark,
-        setupPreference,
-        setupPreferenceDark,
-        signHeader,
-        signHeaderDark,
-        star,
-        user,
-        userDark,
-        visibility,
-        visibilityOff,
-        wallet,
-        wallet0,
-        wallet0Dark,
-        wallet1,
-        wallet1Dark,
-        wallet2,
-        wallet2Dark,
-        wallet3,
-        wallet3Dark,
-        wallet4,
-        wallet4Dark,
-        walletAccount0,
-        walletAccount1,
-        walletAccount2,
-        walletAccount3,
-        walletAccount4,
-        walletEdit,
-        walletEditDark
-      ];
+    addAccount,
+    alertWarning,
+    applePay,
+    banxa,
+    bitcoin,
+    bitcoinBigIcon,
+    bitcoinBigIconDark,
+    creditCard,
+    deleteWarning,
+    deleteWarningDark,
+    discoverBitcoinGuide,
+    discoverBve,
+    discoverHowToProtect,
+    discoverProtonWalletLaunch,
+    discoverProtonWalletSecurity,
+    discoverWhatIsBitcoin,
+    doTransactions,
+    download,
+    downloadButton,
+    downloadButtonDark,
+    downloadDark,
+    drawerMenu,
+    drawerMenuDark,
+    earlyAccess,
+    earlyAccessDark,
+    errorMessage,
+    euro,
+    icArrowOutFromRectanglesignout,
+    icArrowOutSquare,
+    icArrowRotateRight,
+    icBugreport,
+    icCheckmark,
+    icChevronTinyDown,
+    icCogWheel,
+    icCopy,
+    icCopyDark,
+    icCross,
+    icDiamondwalletPlus,
+    icInfoCircle,
+    icInfoCircleDark,
+    icMessage,
+    icPlusCircle,
+    icQrCode,
+    icQrCodeDark,
+    icShield,
+    icSign,
+    icSignDark,
+    icSquares,
+    icSquaresInSquarediscover,
+    key,
+    keyDark,
+    launchIcon,
+    lock,
+    lockDark,
+    logoText,
+    moonpay,
+    noWalletFound,
+    note,
+    noteDark,
+    paperPlane,
+    paperPlaneDark,
+    pencil,
+    pencilDark,
+    protonCalendar,
+    protonDrive,
+    protonForBusiness,
+    protonMail,
+    protonPass,
+    ramp,
+    receive,
+    receiveDark,
+    search,
+    searchDark,
+    send,
+    send1,
+    sendDark,
+    setupPreference,
+    setupPreferenceDark,
+    signHeader,
+    signHeaderDark,
+    star,
+    user,
+    userDark,
+    visibility,
+    visibilityOff,
+    wallet,
+    wallet0,
+    wallet0Dark,
+    wallet1,
+    wallet1Dark,
+    wallet2,
+    wallet2Dark,
+    wallet3,
+    wallet3Dark,
+    wallet4,
+    wallet4Dark,
+    walletAccount0,
+    walletAccount1,
+    walletAccount2,
+    walletAccount3,
+    walletAccount4,
+    walletEdit,
+    walletEditDark,
+  ];
 }
 
 class $AssetsImagesLogosGen {
@@ -584,11 +587,13 @@ class $AssetsImagesWalletCreationGen {
 
   /// File path: assets/images/wallet_creation/proton_wallet_logo_dark.svg
   SvgGenImage get protonWalletLogoDark => const SvgGenImage(
-      'assets/images/wallet_creation/proton_wallet_logo_dark.svg');
+    'assets/images/wallet_creation/proton_wallet_logo_dark.svg',
+  );
 
   /// File path: assets/images/wallet_creation/proton_wallet_logo_light.svg
   SvgGenImage get protonWalletLogoLight => const SvgGenImage(
-      'assets/images/wallet_creation/proton_wallet_logo_light.svg');
+    'assets/images/wallet_creation/proton_wallet_logo_light.svg',
+  );
 
   /// File path: assets/images/wallet_creation/title.svg
   SvgGenImage get title =>
@@ -600,15 +605,15 @@ class $AssetsImagesWalletCreationGen {
 
   /// List of all assets
   List<SvgGenImage> get values => [
-        bg,
-        card,
-        logo,
-        passphraseIcon,
-        protonWalletLogoDark,
-        protonWalletLogoLight,
-        title,
-        wallet
-      ];
+    bg,
+    card,
+    logo,
+    passphraseIcon,
+    protonWalletLogoDark,
+    protonWalletLogoLight,
+    title,
+    wallet,
+  ];
 }
 
 class $AssetsImagesWelcomeGen {
@@ -616,7 +621,8 @@ class $AssetsImagesWelcomeGen {
 
   /// File path: assets/images/welcome/proton_privacy_by_default_footer.svg
   SvgGenImage get protonPrivacyByDefaultFooter => const SvgGenImage(
-      'assets/images/welcome/proton_privacy_by_default_footer.svg');
+    'assets/images/welcome/proton_privacy_by_default_footer.svg',
+  );
 
   /// File path: assets/images/welcome/proton_wallet_logo_mark.svg
   SvgGenImage get protonWalletLogoMark =>
@@ -644,14 +650,14 @@ class $AssetsImagesWelcomeGen {
 
   /// List of all assets
   List<dynamic> get values => [
-        protonPrivacyByDefaultFooter,
-        protonWalletLogoMark,
-        walletWelcomeHeadJpg,
-        walletWelcomeHeadPng,
-        walletWelcomeHeadSvg,
-        walletWelcomeHeadCover,
-        walletWelcomeHeadDark
-      ];
+    protonPrivacyByDefaultFooter,
+    protonWalletLogoMark,
+    walletWelcomeHeadJpg,
+    walletWelcomeHeadPng,
+    walletWelcomeHeadSvg,
+    walletWelcomeHeadCover,
+    walletWelcomeHeadDark,
+  ];
 }
 
 class Assets {
@@ -728,15 +734,8 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
@@ -757,17 +756,11 @@ class AssetGenImageAnimation {
 }
 
 class SvgGenImage {
-  const SvgGenImage(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = false;
+  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = false;
 
-  const SvgGenImage.vec(
-    this._assetName, {
-    this.size,
-    this.flavors = const {},
-  }) : _isVecFormat = true;
+  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = true;
 
   final String _assetName;
   final Size? size;
@@ -823,7 +816,8 @@ class SvgGenImage {
       placeholderBuilder: placeholderBuilder,
       semanticsLabel: semanticsLabel,
       excludeFromSemantics: excludeFromSemantics,
-      colorFilter: colorFilter ??
+      colorFilter:
+          colorFilter ??
           (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
