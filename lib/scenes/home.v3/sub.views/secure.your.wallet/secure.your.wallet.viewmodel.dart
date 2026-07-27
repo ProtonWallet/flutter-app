@@ -9,12 +9,14 @@ abstract class SecureYourWalletViewModel
   final bool hadSetupRecovery;
   final bool showWalletRecovery;
   final bool hadSetup2FA;
+  final bool hadSetupBiometricUnlock;
 
   SecureYourWalletViewModel(
     super.coordinator, {
     required this.hadSetupRecovery,
     required this.showWalletRecovery,
     required this.hadSetup2FA,
+    required this.hadSetupBiometricUnlock,
   });
 
   void showSecuritySetting() {
@@ -36,6 +38,7 @@ class SecureYourWalletViewModelImpl extends SecureYourWalletViewModel {
     required super.hadSetupRecovery,
     required super.showWalletRecovery,
     required super.hadSetup2FA,
+    required super.hadSetupBiometricUnlock,
   });
 
   @override

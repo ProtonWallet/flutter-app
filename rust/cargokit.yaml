@@ -1,5 +1,5 @@
 cargo:
   debug:
-    toolchain: stable-1.85.0
+    toolchain: stable-1.95.0
   release:
-    toolchain: stable-1.85.0
+    toolchain: stable-1.95.0

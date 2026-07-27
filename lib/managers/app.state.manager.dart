@@ -88,6 +88,10 @@ class AppUnlockForceLogoutState extends AppState {
   List<Object?> get props => [];
 }
 
+class UnlockTypeUpdated extends DataUpdated<UnlockType> {
+  UnlockTypeUpdated({required UnlockType updatedData}) : super(updatedData);
+}
+
 class AppStateManager extends DataProvider implements Manager {
   final bool appInBetaState = true;
   bool isHomeInitialed = false;
@@ -180,6 +184,7 @@ class AppStateManager extends DataProvider implements Manager {
   Future<void> saveUnlockType(UnlockModel model) async {
     final save = model.toString();
     await secureStore.set(unlockKey, save);
+    emitState(UnlockTypeUpdated(updatedData: model.type));
   }
 
   Future<LockTimer> getLockTimer() async {

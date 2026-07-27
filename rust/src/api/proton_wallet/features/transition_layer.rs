@@ -13,6 +13,7 @@ use proton_crypto_account::{
 
 use crate::{
     api::proton_wallet::crypto::wallet_key::{FrbLockedWalletKey, FrbUnlockedWalletKey},
+    proton_wallet::crypto::pgp_lock::pgp_global_lock,
     proton_address::ProtonAddressKey,
     proton_wallet::{
         crypto::{
@@ -66,6 +67,7 @@ impl FrbTransitionLayer {
         user_key_password: String,
         enc_transaction_ids: Vec<FrbTLEncryptedTransactionID>,
     ) -> Result<Vec<FrbTLTransactionID>, BridgeError> {
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let user_key_secret = KeySecret::new(user_key_password.into_bytes());
 
@@ -99,6 +101,7 @@ impl FrbTransitionLayer {
         user_key_password: String,
         enc_transaction_id: String,
     ) -> Result<String, BridgeError> {
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let user_key_secret = KeySecret::new(user_key_password.into_bytes());
 
@@ -126,6 +129,7 @@ impl FrbTransitionLayer {
         enc_sender: Option<String>,
         enc_body: Option<String>,
     ) -> Result<FrbSenderBody, BridgeError> {
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let user_key_secret = KeySecret::new(user_key_password.into_bytes());
 
@@ -179,6 +183,7 @@ impl FrbTransitionLayer {
         user_key_password: Option<String>,
     ) -> Result<String, BridgeError> {
         let message = WalletMessage::new_from_str(&message);
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let mut encryptor_keys = PublicKeys::default();
         for private_key in private_keys {
@@ -209,6 +214,7 @@ impl FrbTransitionLayer {
         message: String,
     ) -> Result<String, BridgeError> {
         let message = WalletMessage::new_from_str(&message);
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let mut encryptor_keys = PublicKeys::default();
         let locked_address_keys = AddressKeys(UserKeysWrap::new(vec![user_key]).into());
@@ -226,6 +232,7 @@ impl FrbTransitionLayer {
     ) -> Result<FrbUnlockedWalletKey, BridgeError> {
         let locked_keys = LockedPrivateKeys::from_primary(UserKeyWrap::new(user_key).into());
         let user_key_secret = KeySecret::new(user_key_passphrase.into_bytes());
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let unlocked_user_keys = locked_keys.unlock_with(&provider, &user_key_secret);
         let locked_wallet_key = LockedWalletKey::from(wallet_key);
@@ -247,6 +254,7 @@ impl FrbTransitionLayer {
         let locked_private_keys = LockedPrivateKeys::from_user_keys(crypto_user_keys);
         let user_key_secret = KeySecret::new(user_key_password.into_bytes());
 
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let unlocked_private_keys = locked_private_keys.unlock_with(&provider, &user_key_secret);
 
@@ -266,6 +274,7 @@ impl FrbTransitionLayer {
     ) -> Result<FrbLockedWalletKey, BridgeError> {
         let locked_keys = LockedPrivateKeys::from_primary(UserKeyWrap::new(user_key).into());
         let user_key_secret = KeySecret::new(user_key_passphrase.into_bytes());
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let unlocked_user_keys = locked_keys.unlock_with(&provider, &user_key_secret);
         let first_key = unlocked_user_keys
@@ -286,6 +295,7 @@ impl FrbTransitionLayer {
         signature: String,
         context: String,
     ) -> Result<bool, BridgeError> {
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let bitcoin_addr = WalletBTCAddress::new_from_str(&message);
         let mut pub_keys = PublicKeys::default();
@@ -305,6 +315,7 @@ impl FrbTransitionLayer {
         message: String,
         context: String,
     ) -> Result<String, BridgeError> {
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let user_key_secret = KeySecret::new(user_key_password.into_bytes());
 

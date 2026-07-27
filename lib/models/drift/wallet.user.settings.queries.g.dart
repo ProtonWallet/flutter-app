@@ -15,5 +15,7 @@ class WalletUserSettingsQueriesManager {
   WalletUserSettingsQueriesManager(this._db);
   $$WalletUserSettingsTableTableTableManager get walletUserSettingsTable =>
       $$WalletUserSettingsTableTableTableManager(
-          _db.attachedDatabase, _db.walletUserSettingsTable);
+        _db.attachedDatabase,
+        _db.walletUserSettingsTable,
+      );
 }

@@ -12,241 +12,352 @@ class $UsersTableTable extends UsersTable
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 100),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _usedSpaceMeta =
-      const VerificationMeta('usedSpace');
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 100,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _usedSpaceMeta = const VerificationMeta(
+    'usedSpace',
+  );
   @override
   late final GeneratedColumn<BigInt> usedSpace = GeneratedColumn<BigInt>(
-      'used_space', aliasedName, false,
-      type: DriftSqlType.bigInt, requiredDuringInsert: true);
-  static const VerificationMeta _currencyMeta =
-      const VerificationMeta('currency');
+    'used_space',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currencyMeta = const VerificationMeta(
+    'currency',
+  );
   @override
   late final GeneratedColumn<String> currency = GeneratedColumn<String>(
-      'currency', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
+    'currency',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 32,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _creditMeta = const VerificationMeta('credit');
   @override
   late final GeneratedColumn<int> credit = GeneratedColumn<int>(
-      'credit', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _createTimeMeta =
-      const VerificationMeta('createTime');
+    'credit',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createTimeMeta = const VerificationMeta(
+    'createTime',
+  );
   @override
   late final GeneratedColumn<BigInt> createTime = GeneratedColumn<BigInt>(
-      'create_time', aliasedName, false,
-      type: DriftSqlType.bigInt, requiredDuringInsert: true);
-  static const VerificationMeta _maxSpaceMeta =
-      const VerificationMeta('maxSpace');
+    'create_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maxSpaceMeta = const VerificationMeta(
+    'maxSpace',
+  );
   @override
   late final GeneratedColumn<BigInt> maxSpace = GeneratedColumn<BigInt>(
-      'max_space', aliasedName, false,
-      type: DriftSqlType.bigInt, requiredDuringInsert: true);
-  static const VerificationMeta _maxUploadMeta =
-      const VerificationMeta('maxUpload');
+    'max_space',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _maxUploadMeta = const VerificationMeta(
+    'maxUpload',
+  );
   @override
   late final GeneratedColumn<BigInt> maxUpload = GeneratedColumn<BigInt>(
-      'max_upload', aliasedName, false,
-      type: DriftSqlType.bigInt, requiredDuringInsert: true);
+    'max_upload',
+    aliasedName,
+    false,
+    type: DriftSqlType.bigInt,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
   @override
   late final GeneratedColumn<int> role = GeneratedColumn<int>(
-      'role', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _privateMeta =
-      const VerificationMeta('private');
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _privateMeta = const VerificationMeta(
+    'private',
+  );
   @override
   late final GeneratedColumn<int> private = GeneratedColumn<int>(
-      'private', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _subscribedMeta =
-      const VerificationMeta('subscribed');
+    'private',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _subscribedMeta = const VerificationMeta(
+    'subscribed',
+  );
   @override
   late final GeneratedColumn<int> subscribed = GeneratedColumn<int>(
-      'subscribed', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _servicesMeta =
-      const VerificationMeta('services');
+    'subscribed',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _servicesMeta = const VerificationMeta(
+    'services',
+  );
   @override
   late final GeneratedColumn<int> services = GeneratedColumn<int>(
-      'services', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _delinquentMeta =
-      const VerificationMeta('delinquent');
+    'services',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _delinquentMeta = const VerificationMeta(
+    'delinquent',
+  );
   @override
   late final GeneratedColumn<int> delinquent = GeneratedColumn<int>(
-      'delinquent', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+    'delinquent',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _organizationPrivateKeyMeta =
       const VerificationMeta('organizationPrivateKey');
   @override
   late final GeneratedColumn<String> organizationPrivateKey =
-      GeneratedColumn<String>('organization_private_key', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+      GeneratedColumn<String>(
+        'organization_private_key',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
-      'email', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _displayNameMeta =
-      const VerificationMeta('displayName');
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _displayNameMeta = const VerificationMeta(
+    'displayName',
+  );
   @override
   late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
-      'display_name', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'display_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        userId,
-        name,
-        usedSpace,
-        currency,
-        credit,
-        createTime,
-        maxSpace,
-        maxUpload,
-        role,
-        private,
-        subscribed,
-        services,
-        delinquent,
-        organizationPrivateKey,
-        email,
-        displayName
-      ];
+    id,
+    userId,
+    name,
+    usedSpace,
+    currency,
+    credit,
+    createTime,
+    maxSpace,
+    maxUpload,
+    role,
+    private,
+    subscribed,
+    services,
+    delinquent,
+    organizationPrivateKey,
+    email,
+    displayName,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'users_table';
   @override
-  VerificationContext validateIntegrity(Insertable<DriftProtonUser> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<DriftProtonUser> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('used_space')) {
-      context.handle(_usedSpaceMeta,
-          usedSpace.isAcceptableOrUnknown(data['used_space']!, _usedSpaceMeta));
+      context.handle(
+        _usedSpaceMeta,
+        usedSpace.isAcceptableOrUnknown(data['used_space']!, _usedSpaceMeta),
+      );
     } else if (isInserting) {
       context.missing(_usedSpaceMeta);
     }
     if (data.containsKey('currency')) {
-      context.handle(_currencyMeta,
-          currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta));
+      context.handle(
+        _currencyMeta,
+        currency.isAcceptableOrUnknown(data['currency']!, _currencyMeta),
+      );
     } else if (isInserting) {
       context.missing(_currencyMeta);
     }
     if (data.containsKey('credit')) {
-      context.handle(_creditMeta,
-          credit.isAcceptableOrUnknown(data['credit']!, _creditMeta));
+      context.handle(
+        _creditMeta,
+        credit.isAcceptableOrUnknown(data['credit']!, _creditMeta),
+      );
     } else if (isInserting) {
       context.missing(_creditMeta);
     }
     if (data.containsKey('create_time')) {
       context.handle(
-          _createTimeMeta,
-          createTime.isAcceptableOrUnknown(
-              data['create_time']!, _createTimeMeta));
+        _createTimeMeta,
+        createTime.isAcceptableOrUnknown(data['create_time']!, _createTimeMeta),
+      );
     } else if (isInserting) {
       context.missing(_createTimeMeta);
     }
     if (data.containsKey('max_space')) {
-      context.handle(_maxSpaceMeta,
-          maxSpace.isAcceptableOrUnknown(data['max_space']!, _maxSpaceMeta));
+      context.handle(
+        _maxSpaceMeta,
+        maxSpace.isAcceptableOrUnknown(data['max_space']!, _maxSpaceMeta),
+      );
     } else if (isInserting) {
       context.missing(_maxSpaceMeta);
     }
     if (data.containsKey('max_upload')) {
-      context.handle(_maxUploadMeta,
-          maxUpload.isAcceptableOrUnknown(data['max_upload']!, _maxUploadMeta));
+      context.handle(
+        _maxUploadMeta,
+        maxUpload.isAcceptableOrUnknown(data['max_upload']!, _maxUploadMeta),
+      );
     } else if (isInserting) {
       context.missing(_maxUploadMeta);
     }
     if (data.containsKey('role')) {
       context.handle(
-          _roleMeta, role.isAcceptableOrUnknown(data['role']!, _roleMeta));
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
     } else if (isInserting) {
       context.missing(_roleMeta);
     }
     if (data.containsKey('private')) {
-      context.handle(_privateMeta,
-          private.isAcceptableOrUnknown(data['private']!, _privateMeta));
+      context.handle(
+        _privateMeta,
+        private.isAcceptableOrUnknown(data['private']!, _privateMeta),
+      );
     } else if (isInserting) {
       context.missing(_privateMeta);
     }
     if (data.containsKey('subscribed')) {
       context.handle(
-          _subscribedMeta,
-          subscribed.isAcceptableOrUnknown(
-              data['subscribed']!, _subscribedMeta));
+        _subscribedMeta,
+        subscribed.isAcceptableOrUnknown(data['subscribed']!, _subscribedMeta),
+      );
     } else if (isInserting) {
       context.missing(_subscribedMeta);
     }
     if (data.containsKey('services')) {
-      context.handle(_servicesMeta,
-          services.isAcceptableOrUnknown(data['services']!, _servicesMeta));
+      context.handle(
+        _servicesMeta,
+        services.isAcceptableOrUnknown(data['services']!, _servicesMeta),
+      );
     } else if (isInserting) {
       context.missing(_servicesMeta);
     }
     if (data.containsKey('delinquent')) {
       context.handle(
-          _delinquentMeta,
-          delinquent.isAcceptableOrUnknown(
-              data['delinquent']!, _delinquentMeta));
+        _delinquentMeta,
+        delinquent.isAcceptableOrUnknown(data['delinquent']!, _delinquentMeta),
+      );
     } else if (isInserting) {
       context.missing(_delinquentMeta);
     }
     if (data.containsKey('organization_private_key')) {
       context.handle(
+        _organizationPrivateKeyMeta,
+        organizationPrivateKey.isAcceptableOrUnknown(
+          data['organization_private_key']!,
           _organizationPrivateKeyMeta,
-          organizationPrivateKey.isAcceptableOrUnknown(
-              data['organization_private_key']!, _organizationPrivateKeyMeta));
+        ),
+      );
     }
     if (data.containsKey('email')) {
       context.handle(
-          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
     }
     if (data.containsKey('display_name')) {
       context.handle(
+        _displayNameMeta,
+        displayName.isAcceptableOrUnknown(
+          data['display_name']!,
           _displayNameMeta,
-          displayName.isAcceptableOrUnknown(
-              data['display_name']!, _displayNameMeta));
+        ),
+      );
     }
     return context;
   }
@@ -257,41 +368,74 @@ class $UsersTableTable extends UsersTable
   DriftProtonUser map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DriftProtonUser(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      usedSpace: attachedDatabase.typeMapping
-          .read(DriftSqlType.bigInt, data['${effectivePrefix}used_space'])!,
-      currency: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}currency'])!,
-      credit: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}credit'])!,
-      createTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.bigInt, data['${effectivePrefix}create_time'])!,
-      maxSpace: attachedDatabase.typeMapping
-          .read(DriftSqlType.bigInt, data['${effectivePrefix}max_space'])!,
-      maxUpload: attachedDatabase.typeMapping
-          .read(DriftSqlType.bigInt, data['${effectivePrefix}max_upload'])!,
-      role: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}role'])!,
-      private: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}private'])!,
-      subscribed: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}subscribed'])!,
-      services: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}services'])!,
-      delinquent: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}delinquent'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      usedSpace: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}used_space'],
+      )!,
+      currency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}currency'],
+      )!,
+      credit: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}credit'],
+      )!,
+      createTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}create_time'],
+      )!,
+      maxSpace: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}max_space'],
+      )!,
+      maxUpload: attachedDatabase.typeMapping.read(
+        DriftSqlType.bigInt,
+        data['${effectivePrefix}max_upload'],
+      )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}role'],
+      )!,
+      private: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}private'],
+      )!,
+      subscribed: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}subscribed'],
+      )!,
+      services: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}services'],
+      )!,
+      delinquent: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}delinquent'],
+      )!,
       organizationPrivateKey: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}organization_private_key']),
-      email: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}email']),
-      displayName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}display_name']),
+        DriftSqlType.string,
+        data['${effectivePrefix}organization_private_key'],
+      ),
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      displayName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}display_name'],
+      ),
     );
   }
 
@@ -319,24 +463,25 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
   final String? organizationPrivateKey;
   final String? email;
   final String? displayName;
-  const DriftProtonUser(
-      {required this.id,
-      required this.userId,
-      required this.name,
-      required this.usedSpace,
-      required this.currency,
-      required this.credit,
-      required this.createTime,
-      required this.maxSpace,
-      required this.maxUpload,
-      required this.role,
-      required this.private,
-      required this.subscribed,
-      required this.services,
-      required this.delinquent,
-      this.organizationPrivateKey,
-      this.email,
-      this.displayName});
+  const DriftProtonUser({
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.usedSpace,
+    required this.currency,
+    required this.credit,
+    required this.createTime,
+    required this.maxSpace,
+    required this.maxUpload,
+    required this.role,
+    required this.private,
+    required this.subscribed,
+    required this.services,
+    required this.delinquent,
+    this.organizationPrivateKey,
+    this.email,
+    this.displayName,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -355,8 +500,9 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
     map['services'] = Variable<int>(services);
     map['delinquent'] = Variable<int>(delinquent);
     if (!nullToAbsent || organizationPrivateKey != null) {
-      map['organization_private_key'] =
-          Variable<String>(organizationPrivateKey);
+      map['organization_private_key'] = Variable<String>(
+        organizationPrivateKey,
+      );
     }
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String>(email);
@@ -386,16 +532,19 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
       organizationPrivateKey: organizationPrivateKey == null && nullToAbsent
           ? const Value.absent()
           : Value(organizationPrivateKey),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      email: email == null && nullToAbsent
+          ? const Value.absent()
+          : Value(email),
       displayName: displayName == null && nullToAbsent
           ? const Value.absent()
           : Value(displayName),
     );
   }
 
-  factory DriftProtonUser.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory DriftProtonUser.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DriftProtonUser(
       id: serializer.fromJson<int>(json['id']),
@@ -412,8 +561,9 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
       subscribed: serializer.fromJson<int>(json['subscribed']),
       services: serializer.fromJson<int>(json['services']),
       delinquent: serializer.fromJson<int>(json['delinquent']),
-      organizationPrivateKey:
-          serializer.fromJson<String?>(json['organizationPrivateKey']),
+      organizationPrivateKey: serializer.fromJson<String?>(
+        json['organizationPrivateKey'],
+      ),
       email: serializer.fromJson<String?>(json['email']),
       displayName: serializer.fromJson<String?>(json['displayName']),
     );
@@ -436,52 +586,53 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
       'subscribed': serializer.toJson<int>(subscribed),
       'services': serializer.toJson<int>(services),
       'delinquent': serializer.toJson<int>(delinquent),
-      'organizationPrivateKey':
-          serializer.toJson<String?>(organizationPrivateKey),
+      'organizationPrivateKey': serializer.toJson<String?>(
+        organizationPrivateKey,
+      ),
       'email': serializer.toJson<String?>(email),
       'displayName': serializer.toJson<String?>(displayName),
     };
   }
 
-  DriftProtonUser copyWith(
-          {int? id,
-          String? userId,
-          String? name,
-          BigInt? usedSpace,
-          String? currency,
-          int? credit,
-          BigInt? createTime,
-          BigInt? maxSpace,
-          BigInt? maxUpload,
-          int? role,
-          int? private,
-          int? subscribed,
-          int? services,
-          int? delinquent,
-          Value<String?> organizationPrivateKey = const Value.absent(),
-          Value<String?> email = const Value.absent(),
-          Value<String?> displayName = const Value.absent()}) =>
-      DriftProtonUser(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        name: name ?? this.name,
-        usedSpace: usedSpace ?? this.usedSpace,
-        currency: currency ?? this.currency,
-        credit: credit ?? this.credit,
-        createTime: createTime ?? this.createTime,
-        maxSpace: maxSpace ?? this.maxSpace,
-        maxUpload: maxUpload ?? this.maxUpload,
-        role: role ?? this.role,
-        private: private ?? this.private,
-        subscribed: subscribed ?? this.subscribed,
-        services: services ?? this.services,
-        delinquent: delinquent ?? this.delinquent,
-        organizationPrivateKey: organizationPrivateKey.present
-            ? organizationPrivateKey.value
-            : this.organizationPrivateKey,
-        email: email.present ? email.value : this.email,
-        displayName: displayName.present ? displayName.value : this.displayName,
-      );
+  DriftProtonUser copyWith({
+    int? id,
+    String? userId,
+    String? name,
+    BigInt? usedSpace,
+    String? currency,
+    int? credit,
+    BigInt? createTime,
+    BigInt? maxSpace,
+    BigInt? maxUpload,
+    int? role,
+    int? private,
+    int? subscribed,
+    int? services,
+    int? delinquent,
+    Value<String?> organizationPrivateKey = const Value.absent(),
+    Value<String?> email = const Value.absent(),
+    Value<String?> displayName = const Value.absent(),
+  }) => DriftProtonUser(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    usedSpace: usedSpace ?? this.usedSpace,
+    currency: currency ?? this.currency,
+    credit: credit ?? this.credit,
+    createTime: createTime ?? this.createTime,
+    maxSpace: maxSpace ?? this.maxSpace,
+    maxUpload: maxUpload ?? this.maxUpload,
+    role: role ?? this.role,
+    private: private ?? this.private,
+    subscribed: subscribed ?? this.subscribed,
+    services: services ?? this.services,
+    delinquent: delinquent ?? this.delinquent,
+    organizationPrivateKey: organizationPrivateKey.present
+        ? organizationPrivateKey.value
+        : this.organizationPrivateKey,
+    email: email.present ? email.value : this.email,
+    displayName: displayName.present ? displayName.value : this.displayName,
+  );
   DriftProtonUser copyWithCompanion(UsersTableCompanion data) {
     return DriftProtonUser(
       id: data.id.present ? data.id.value : this.id,
@@ -490,23 +641,27 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
       usedSpace: data.usedSpace.present ? data.usedSpace.value : this.usedSpace,
       currency: data.currency.present ? data.currency.value : this.currency,
       credit: data.credit.present ? data.credit.value : this.credit,
-      createTime:
-          data.createTime.present ? data.createTime.value : this.createTime,
+      createTime: data.createTime.present
+          ? data.createTime.value
+          : this.createTime,
       maxSpace: data.maxSpace.present ? data.maxSpace.value : this.maxSpace,
       maxUpload: data.maxUpload.present ? data.maxUpload.value : this.maxUpload,
       role: data.role.present ? data.role.value : this.role,
       private: data.private.present ? data.private.value : this.private,
-      subscribed:
-          data.subscribed.present ? data.subscribed.value : this.subscribed,
+      subscribed: data.subscribed.present
+          ? data.subscribed.value
+          : this.subscribed,
       services: data.services.present ? data.services.value : this.services,
-      delinquent:
-          data.delinquent.present ? data.delinquent.value : this.delinquent,
+      delinquent: data.delinquent.present
+          ? data.delinquent.value
+          : this.delinquent,
       organizationPrivateKey: data.organizationPrivateKey.present
           ? data.organizationPrivateKey.value
           : this.organizationPrivateKey,
       email: data.email.present ? data.email.value : this.email,
-      displayName:
-          data.displayName.present ? data.displayName.value : this.displayName,
+      displayName: data.displayName.present
+          ? data.displayName.value
+          : this.displayName,
     );
   }
 
@@ -536,23 +691,24 @@ class DriftProtonUser extends DataClass implements Insertable<DriftProtonUser> {
 
   @override
   int get hashCode => Object.hash(
-      id,
-      userId,
-      name,
-      usedSpace,
-      currency,
-      credit,
-      createTime,
-      maxSpace,
-      maxUpload,
-      role,
-      private,
-      subscribed,
-      services,
-      delinquent,
-      organizationPrivateKey,
-      email,
-      displayName);
+    id,
+    userId,
+    name,
+    usedSpace,
+    currency,
+    credit,
+    createTime,
+    maxSpace,
+    maxUpload,
+    role,
+    private,
+    subscribed,
+    services,
+    delinquent,
+    organizationPrivateKey,
+    email,
+    displayName,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -631,19 +787,19 @@ class UsersTableCompanion extends UpdateCompanion<DriftProtonUser> {
     this.organizationPrivateKey = const Value.absent(),
     this.email = const Value.absent(),
     this.displayName = const Value.absent(),
-  })  : userId = Value(userId),
-        name = Value(name),
-        usedSpace = Value(usedSpace),
-        currency = Value(currency),
-        credit = Value(credit),
-        createTime = Value(createTime),
-        maxSpace = Value(maxSpace),
-        maxUpload = Value(maxUpload),
-        role = Value(role),
-        private = Value(private),
-        subscribed = Value(subscribed),
-        services = Value(services),
-        delinquent = Value(delinquent);
+  }) : userId = Value(userId),
+       name = Value(name),
+       usedSpace = Value(usedSpace),
+       currency = Value(currency),
+       credit = Value(credit),
+       createTime = Value(createTime),
+       maxSpace = Value(maxSpace),
+       maxUpload = Value(maxUpload),
+       role = Value(role),
+       private = Value(private),
+       subscribed = Value(subscribed),
+       services = Value(services),
+       delinquent = Value(delinquent);
   static Insertable<DriftProtonUser> custom({
     Expression<int>? id,
     Expression<String>? userId,
@@ -685,24 +841,25 @@ class UsersTableCompanion extends UpdateCompanion<DriftProtonUser> {
     });
   }
 
-  UsersTableCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? userId,
-      Value<String>? name,
-      Value<BigInt>? usedSpace,
-      Value<String>? currency,
-      Value<int>? credit,
-      Value<BigInt>? createTime,
-      Value<BigInt>? maxSpace,
-      Value<BigInt>? maxUpload,
-      Value<int>? role,
-      Value<int>? private,
-      Value<int>? subscribed,
-      Value<int>? services,
-      Value<int>? delinquent,
-      Value<String?>? organizationPrivateKey,
-      Value<String?>? email,
-      Value<String?>? displayName}) {
+  UsersTableCompanion copyWith({
+    Value<int>? id,
+    Value<String>? userId,
+    Value<String>? name,
+    Value<BigInt>? usedSpace,
+    Value<String>? currency,
+    Value<int>? credit,
+    Value<BigInt>? createTime,
+    Value<BigInt>? maxSpace,
+    Value<BigInt>? maxUpload,
+    Value<int>? role,
+    Value<int>? private,
+    Value<int>? subscribed,
+    Value<int>? services,
+    Value<int>? delinquent,
+    Value<String?>? organizationPrivateKey,
+    Value<String?>? email,
+    Value<String?>? displayName,
+  }) {
     return UsersTableCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
@@ -771,8 +928,9 @@ class UsersTableCompanion extends UpdateCompanion<DriftProtonUser> {
       map['delinquent'] = Variable<int>(delinquent.value);
     }
     if (organizationPrivateKey.present) {
-      map['organization_private_key'] =
-          Variable<String>(organizationPrivateKey.value);
+      map['organization_private_key'] = Variable<String>(
+        organizationPrivateKey.value,
+      );
     }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
@@ -817,128 +975,190 @@ class $UserKeysTableTable extends UserKeysTable
   static const VerificationMeta _keyIdMeta = const VerificationMeta('keyId');
   @override
   late final GeneratedColumn<String> keyId = GeneratedColumn<String>(
-      'key_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'key_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _versionMeta =
-      const VerificationMeta('version');
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _versionMeta = const VerificationMeta(
+    'version',
+  );
   @override
   late final GeneratedColumn<int> version = GeneratedColumn<int>(
-      'version', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _privateKeyMeta =
-      const VerificationMeta('privateKey');
+    'version',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _privateKeyMeta = const VerificationMeta(
+    'privateKey',
+  );
   @override
   late final GeneratedColumn<String> privateKey = GeneratedColumn<String>(
-      'private_key', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'private_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _tokenMeta = const VerificationMeta('token');
   @override
   late final GeneratedColumn<String> token = GeneratedColumn<String>(
-      'token', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fingerprintMeta =
-      const VerificationMeta('fingerprint');
+    'token',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fingerprintMeta = const VerificationMeta(
+    'fingerprint',
+  );
   @override
   late final GeneratedColumn<String> fingerprint = GeneratedColumn<String>(
-      'fingerprint', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _recoverySecretMeta =
-      const VerificationMeta('recoverySecret');
+    'fingerprint',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recoverySecretMeta = const VerificationMeta(
+    'recoverySecret',
+  );
   @override
   late final GeneratedColumn<String> recoverySecret = GeneratedColumn<String>(
-      'recovery_secret', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'recovery_secret',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _recoverySecretSignatureMeta =
       const VerificationMeta('recoverySecretSignature');
   @override
   late final GeneratedColumn<String> recoverySecretSignature =
-      GeneratedColumn<String>('recovery_secret_signature', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _primaryMeta =
-      const VerificationMeta('primary');
+      GeneratedColumn<String>(
+        'recovery_secret_signature',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _primaryMeta = const VerificationMeta(
+    'primary',
+  );
   @override
   late final GeneratedColumn<int> primary = GeneratedColumn<int>(
-      'primary', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+    'primary',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        keyId,
-        userId,
-        version,
-        privateKey,
-        token,
-        fingerprint,
-        recoverySecret,
-        recoverySecretSignature,
-        primary
-      ];
+    keyId,
+    userId,
+    version,
+    privateKey,
+    token,
+    fingerprint,
+    recoverySecret,
+    recoverySecretSignature,
+    primary,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'user_keys_table';
   @override
-  VerificationContext validateIntegrity(Insertable<DriftUserKey> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<DriftUserKey> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('key_id')) {
       context.handle(
-          _keyIdMeta, keyId.isAcceptableOrUnknown(data['key_id']!, _keyIdMeta));
+        _keyIdMeta,
+        keyId.isAcceptableOrUnknown(data['key_id']!, _keyIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_keyIdMeta);
     }
     if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
     if (data.containsKey('version')) {
-      context.handle(_versionMeta,
-          version.isAcceptableOrUnknown(data['version']!, _versionMeta));
+      context.handle(
+        _versionMeta,
+        version.isAcceptableOrUnknown(data['version']!, _versionMeta),
+      );
     } else if (isInserting) {
       context.missing(_versionMeta);
     }
     if (data.containsKey('private_key')) {
       context.handle(
-          _privateKeyMeta,
-          privateKey.isAcceptableOrUnknown(
-              data['private_key']!, _privateKeyMeta));
+        _privateKeyMeta,
+        privateKey.isAcceptableOrUnknown(data['private_key']!, _privateKeyMeta),
+      );
     } else if (isInserting) {
       context.missing(_privateKeyMeta);
     }
     if (data.containsKey('token')) {
       context.handle(
-          _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
+        _tokenMeta,
+        token.isAcceptableOrUnknown(data['token']!, _tokenMeta),
+      );
     }
     if (data.containsKey('fingerprint')) {
       context.handle(
+        _fingerprintMeta,
+        fingerprint.isAcceptableOrUnknown(
+          data['fingerprint']!,
           _fingerprintMeta,
-          fingerprint.isAcceptableOrUnknown(
-              data['fingerprint']!, _fingerprintMeta));
+        ),
+      );
     }
     if (data.containsKey('recovery_secret')) {
       context.handle(
+        _recoverySecretMeta,
+        recoverySecret.isAcceptableOrUnknown(
+          data['recovery_secret']!,
           _recoverySecretMeta,
-          recoverySecret.isAcceptableOrUnknown(
-              data['recovery_secret']!, _recoverySecretMeta));
+        ),
+      );
     }
     if (data.containsKey('recovery_secret_signature')) {
       context.handle(
+        _recoverySecretSignatureMeta,
+        recoverySecretSignature.isAcceptableOrUnknown(
+          data['recovery_secret_signature']!,
           _recoverySecretSignatureMeta,
-          recoverySecretSignature.isAcceptableOrUnknown(
-              data['recovery_secret_signature']!,
-              _recoverySecretSignatureMeta));
+        ),
+      );
     }
     if (data.containsKey('primary')) {
-      context.handle(_primaryMeta,
-          primary.isAcceptableOrUnknown(data['primary']!, _primaryMeta));
+      context.handle(
+        _primaryMeta,
+        primary.isAcceptableOrUnknown(data['primary']!, _primaryMeta),
+      );
     } else if (isInserting) {
       context.missing(_primaryMeta);
     }
@@ -951,25 +1171,42 @@ class $UserKeysTableTable extends UserKeysTable
   DriftUserKey map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return DriftUserKey(
-      keyId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}key_id'])!,
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      version: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
-      privateKey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}private_key'])!,
-      token: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}token']),
-      fingerprint: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fingerprint']),
-      recoverySecret: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}recovery_secret']),
+      keyId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key_id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      version: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}version'],
+      )!,
+      privateKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}private_key'],
+      )!,
+      token: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}token'],
+      ),
+      fingerprint: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fingerprint'],
+      ),
+      recoverySecret: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recovery_secret'],
+      ),
       recoverySecretSignature: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}recovery_secret_signature']),
-      primary: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}primary'])!,
+        DriftSqlType.string,
+        data['${effectivePrefix}recovery_secret_signature'],
+      ),
+      primary: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}primary'],
+      )!,
     );
   }
 
@@ -989,16 +1226,17 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
   final String? recoverySecret;
   final String? recoverySecretSignature;
   final int primary;
-  const DriftUserKey(
-      {required this.keyId,
-      required this.userId,
-      required this.version,
-      required this.privateKey,
-      this.token,
-      this.fingerprint,
-      this.recoverySecret,
-      this.recoverySecretSignature,
-      required this.primary});
+  const DriftUserKey({
+    required this.keyId,
+    required this.userId,
+    required this.version,
+    required this.privateKey,
+    this.token,
+    this.fingerprint,
+    this.recoverySecret,
+    this.recoverySecretSignature,
+    required this.primary,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1016,8 +1254,9 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
       map['recovery_secret'] = Variable<String>(recoverySecret);
     }
     if (!nullToAbsent || recoverySecretSignature != null) {
-      map['recovery_secret_signature'] =
-          Variable<String>(recoverySecretSignature);
+      map['recovery_secret_signature'] = Variable<String>(
+        recoverySecretSignature,
+      );
     }
     map['primary'] = Variable<int>(primary);
     return map;
@@ -1029,8 +1268,9 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
       userId: Value(userId),
       version: Value(version),
       privateKey: Value(privateKey),
-      token:
-          token == null && nullToAbsent ? const Value.absent() : Value(token),
+      token: token == null && nullToAbsent
+          ? const Value.absent()
+          : Value(token),
       fingerprint: fingerprint == null && nullToAbsent
           ? const Value.absent()
           : Value(fingerprint),
@@ -1044,8 +1284,10 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
     );
   }
 
-  factory DriftUserKey.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory DriftUserKey.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return DriftUserKey(
       keyId: serializer.fromJson<String>(json['keyId']),
@@ -1055,8 +1297,9 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
       token: serializer.fromJson<String?>(json['token']),
       fingerprint: serializer.fromJson<String?>(json['fingerprint']),
       recoverySecret: serializer.fromJson<String?>(json['recoverySecret']),
-      recoverySecretSignature:
-          serializer.fromJson<String?>(json['recoverySecretSignature']),
+      recoverySecretSignature: serializer.fromJson<String?>(
+        json['recoverySecretSignature'],
+      ),
       primary: serializer.fromJson<int>(json['primary']),
     );
   }
@@ -1071,46 +1314,50 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
       'token': serializer.toJson<String?>(token),
       'fingerprint': serializer.toJson<String?>(fingerprint),
       'recoverySecret': serializer.toJson<String?>(recoverySecret),
-      'recoverySecretSignature':
-          serializer.toJson<String?>(recoverySecretSignature),
+      'recoverySecretSignature': serializer.toJson<String?>(
+        recoverySecretSignature,
+      ),
       'primary': serializer.toJson<int>(primary),
     };
   }
 
-  DriftUserKey copyWith(
-          {String? keyId,
-          String? userId,
-          int? version,
-          String? privateKey,
-          Value<String?> token = const Value.absent(),
-          Value<String?> fingerprint = const Value.absent(),
-          Value<String?> recoverySecret = const Value.absent(),
-          Value<String?> recoverySecretSignature = const Value.absent(),
-          int? primary}) =>
-      DriftUserKey(
-        keyId: keyId ?? this.keyId,
-        userId: userId ?? this.userId,
-        version: version ?? this.version,
-        privateKey: privateKey ?? this.privateKey,
-        token: token.present ? token.value : this.token,
-        fingerprint: fingerprint.present ? fingerprint.value : this.fingerprint,
-        recoverySecret:
-            recoverySecret.present ? recoverySecret.value : this.recoverySecret,
-        recoverySecretSignature: recoverySecretSignature.present
-            ? recoverySecretSignature.value
-            : this.recoverySecretSignature,
-        primary: primary ?? this.primary,
-      );
+  DriftUserKey copyWith({
+    String? keyId,
+    String? userId,
+    int? version,
+    String? privateKey,
+    Value<String?> token = const Value.absent(),
+    Value<String?> fingerprint = const Value.absent(),
+    Value<String?> recoverySecret = const Value.absent(),
+    Value<String?> recoverySecretSignature = const Value.absent(),
+    int? primary,
+  }) => DriftUserKey(
+    keyId: keyId ?? this.keyId,
+    userId: userId ?? this.userId,
+    version: version ?? this.version,
+    privateKey: privateKey ?? this.privateKey,
+    token: token.present ? token.value : this.token,
+    fingerprint: fingerprint.present ? fingerprint.value : this.fingerprint,
+    recoverySecret: recoverySecret.present
+        ? recoverySecret.value
+        : this.recoverySecret,
+    recoverySecretSignature: recoverySecretSignature.present
+        ? recoverySecretSignature.value
+        : this.recoverySecretSignature,
+    primary: primary ?? this.primary,
+  );
   DriftUserKey copyWithCompanion(UserKeysTableCompanion data) {
     return DriftUserKey(
       keyId: data.keyId.present ? data.keyId.value : this.keyId,
       userId: data.userId.present ? data.userId.value : this.userId,
       version: data.version.present ? data.version.value : this.version,
-      privateKey:
-          data.privateKey.present ? data.privateKey.value : this.privateKey,
+      privateKey: data.privateKey.present
+          ? data.privateKey.value
+          : this.privateKey,
       token: data.token.present ? data.token.value : this.token,
-      fingerprint:
-          data.fingerprint.present ? data.fingerprint.value : this.fingerprint,
+      fingerprint: data.fingerprint.present
+          ? data.fingerprint.value
+          : this.fingerprint,
       recoverySecret: data.recoverySecret.present
           ? data.recoverySecret.value
           : this.recoverySecret,
@@ -1138,8 +1385,17 @@ class DriftUserKey extends DataClass implements Insertable<DriftUserKey> {
   }
 
   @override
-  int get hashCode => Object.hash(keyId, userId, version, privateKey, token,
-      fingerprint, recoverySecret, recoverySecretSignature, primary);
+  int get hashCode => Object.hash(
+    keyId,
+    userId,
+    version,
+    privateKey,
+    token,
+    fingerprint,
+    recoverySecret,
+    recoverySecretSignature,
+    primary,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1189,11 +1445,11 @@ class UserKeysTableCompanion extends UpdateCompanion<DriftUserKey> {
     this.recoverySecretSignature = const Value.absent(),
     required int primary,
     this.rowid = const Value.absent(),
-  })  : keyId = Value(keyId),
-        userId = Value(userId),
-        version = Value(version),
-        privateKey = Value(privateKey),
-        primary = Value(primary);
+  }) : keyId = Value(keyId),
+       userId = Value(userId),
+       version = Value(version),
+       privateKey = Value(privateKey),
+       primary = Value(primary);
   static Insertable<DriftUserKey> custom({
     Expression<String>? keyId,
     Expression<String>? userId,
@@ -1221,17 +1477,18 @@ class UserKeysTableCompanion extends UpdateCompanion<DriftUserKey> {
     });
   }
 
-  UserKeysTableCompanion copyWith(
-      {Value<String>? keyId,
-      Value<String>? userId,
-      Value<int>? version,
-      Value<String>? privateKey,
-      Value<String?>? token,
-      Value<String?>? fingerprint,
-      Value<String?>? recoverySecret,
-      Value<String?>? recoverySecretSignature,
-      Value<int>? primary,
-      Value<int>? rowid}) {
+  UserKeysTableCompanion copyWith({
+    Value<String>? keyId,
+    Value<String>? userId,
+    Value<int>? version,
+    Value<String>? privateKey,
+    Value<String?>? token,
+    Value<String?>? fingerprint,
+    Value<String?>? recoverySecret,
+    Value<String?>? recoverySecretSignature,
+    Value<int>? primary,
+    Value<int>? rowid,
+  }) {
     return UserKeysTableCompanion(
       keyId: keyId ?? this.keyId,
       userId: userId ?? this.userId,
@@ -1272,8 +1529,9 @@ class UserKeysTableCompanion extends UpdateCompanion<DriftUserKey> {
       map['recovery_secret'] = Variable<String>(recoverySecret.value);
     }
     if (recoverySecretSignature.present) {
-      map['recovery_secret_signature'] =
-          Variable<String>(recoverySecretSignature.value);
+      map['recovery_secret_signature'] = Variable<String>(
+        recoverySecretSignature.value,
+      );
     }
     if (primary.present) {
       map['primary'] = Variable<int>(primary.value);
@@ -1311,190 +1569,265 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-      'user_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _bitcoinUnitMeta =
-      const VerificationMeta('bitcoinUnit');
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bitcoinUnitMeta = const VerificationMeta(
+    'bitcoinUnit',
+  );
   @override
   late final GeneratedColumn<String> bitcoinUnit = GeneratedColumn<String>(
-      'bitcoin_unit', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _fiatCurrencyMeta =
-      const VerificationMeta('fiatCurrency');
+    'bitcoin_unit',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 32,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fiatCurrencyMeta = const VerificationMeta(
+    'fiatCurrency',
+  );
   @override
   late final GeneratedColumn<String> fiatCurrency = GeneratedColumn<String>(
-      'fiat_currency', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
+    'fiat_currency',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 32,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _hideEmptyUsedAddressesMeta =
       const VerificationMeta('hideEmptyUsedAddresses');
   @override
   late final GeneratedColumn<bool> hideEmptyUsedAddresses =
-      GeneratedColumn<bool>('hide_empty_used_addresses', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'CHECK ("hide_empty_used_addresses" IN (0, 1))'));
+      GeneratedColumn<bool>(
+        'hide_empty_used_addresses',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: true,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("hide_empty_used_addresses" IN (0, 1))',
+        ),
+      );
   static const VerificationMeta _showWalletRecoveryMeta =
       const VerificationMeta('showWalletRecovery');
   @override
   late final GeneratedColumn<bool> showWalletRecovery = GeneratedColumn<bool>(
-      'show_wallet_recovery', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("show_wallet_recovery" IN (0, 1))'));
+    'show_wallet_recovery',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_wallet_recovery" IN (0, 1))',
+    ),
+  );
   static const VerificationMeta _twoFactorAmountThresholdMeta =
       const VerificationMeta('twoFactorAmountThreshold');
   @override
   late final GeneratedColumn<double> twoFactorAmountThreshold =
-      GeneratedColumn<double>('two_factor_amount_threshold', aliasedName, false,
-          type: DriftSqlType.double, requiredDuringInsert: true);
+      GeneratedColumn<double>(
+        'two_factor_amount_threshold',
+        aliasedName,
+        false,
+        type: DriftSqlType.double,
+        requiredDuringInsert: true,
+      );
   static const VerificationMeta _receiveInviterNotificationMeta =
       const VerificationMeta('receiveInviterNotification');
   @override
   late final GeneratedColumn<bool> receiveInviterNotification =
-      GeneratedColumn<bool>('receive_inviter_notification', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'CHECK ("receive_inviter_notification" IN (0, 1))'));
+      GeneratedColumn<bool>(
+        'receive_inviter_notification',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: true,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("receive_inviter_notification" IN (0, 1))',
+        ),
+      );
   static const VerificationMeta _receiveEmailIntegrationNotificationMeta =
       const VerificationMeta('receiveEmailIntegrationNotification');
   @override
   late final GeneratedColumn<bool> receiveEmailIntegrationNotification =
       GeneratedColumn<bool>(
-          'receive_email_integration_notification', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'CHECK ("receive_email_integration_notification" IN (0, 1))'));
-  static const VerificationMeta _walletCreatedMeta =
-      const VerificationMeta('walletCreated');
+        'receive_email_integration_notification',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: true,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("receive_email_integration_notification" IN (0, 1))',
+        ),
+      );
+  static const VerificationMeta _walletCreatedMeta = const VerificationMeta(
+    'walletCreated',
+  );
   @override
   late final GeneratedColumn<bool> walletCreated = GeneratedColumn<bool>(
-      'wallet_created', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("wallet_created" IN (0, 1))'));
+    'wallet_created',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("wallet_created" IN (0, 1))',
+    ),
+  );
   static const VerificationMeta _acceptTermsAndConditionsMeta =
       const VerificationMeta('acceptTermsAndConditions');
   @override
   late final GeneratedColumn<bool> acceptTermsAndConditions =
       GeneratedColumn<bool>(
-          'accept_terms_and_conditions', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'CHECK ("accept_terms_and_conditions" IN (0, 1))'));
+        'accept_terms_and_conditions',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: true,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("accept_terms_and_conditions" IN (0, 1))',
+        ),
+      );
   @override
   List<GeneratedColumn> get $columns => [
-        userId,
-        bitcoinUnit,
-        fiatCurrency,
-        hideEmptyUsedAddresses,
-        showWalletRecovery,
-        twoFactorAmountThreshold,
-        receiveInviterNotification,
-        receiveEmailIntegrationNotification,
-        walletCreated,
-        acceptTermsAndConditions
-      ];
+    userId,
+    bitcoinUnit,
+    fiatCurrency,
+    hideEmptyUsedAddresses,
+    showWalletRecovery,
+    twoFactorAmountThreshold,
+    receiveInviterNotification,
+    receiveEmailIntegrationNotification,
+    walletCreated,
+    acceptTermsAndConditions,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'wallet_user_settings_table';
   @override
-  VerificationContext validateIntegrity(Insertable<WalletUserSettings> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<WalletUserSettings> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('user_id')) {
-      context.handle(_userIdMeta,
-          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_userIdMeta);
     }
     if (data.containsKey('bitcoin_unit')) {
       context.handle(
+        _bitcoinUnitMeta,
+        bitcoinUnit.isAcceptableOrUnknown(
+          data['bitcoin_unit']!,
           _bitcoinUnitMeta,
-          bitcoinUnit.isAcceptableOrUnknown(
-              data['bitcoin_unit']!, _bitcoinUnitMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_bitcoinUnitMeta);
     }
     if (data.containsKey('fiat_currency')) {
       context.handle(
+        _fiatCurrencyMeta,
+        fiatCurrency.isAcceptableOrUnknown(
+          data['fiat_currency']!,
           _fiatCurrencyMeta,
-          fiatCurrency.isAcceptableOrUnknown(
-              data['fiat_currency']!, _fiatCurrencyMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_fiatCurrencyMeta);
     }
     if (data.containsKey('hide_empty_used_addresses')) {
       context.handle(
+        _hideEmptyUsedAddressesMeta,
+        hideEmptyUsedAddresses.isAcceptableOrUnknown(
+          data['hide_empty_used_addresses']!,
           _hideEmptyUsedAddressesMeta,
-          hideEmptyUsedAddresses.isAcceptableOrUnknown(
-              data['hide_empty_used_addresses']!, _hideEmptyUsedAddressesMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_hideEmptyUsedAddressesMeta);
     }
     if (data.containsKey('show_wallet_recovery')) {
       context.handle(
+        _showWalletRecoveryMeta,
+        showWalletRecovery.isAcceptableOrUnknown(
+          data['show_wallet_recovery']!,
           _showWalletRecoveryMeta,
-          showWalletRecovery.isAcceptableOrUnknown(
-              data['show_wallet_recovery']!, _showWalletRecoveryMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_showWalletRecoveryMeta);
     }
     if (data.containsKey('two_factor_amount_threshold')) {
       context.handle(
+        _twoFactorAmountThresholdMeta,
+        twoFactorAmountThreshold.isAcceptableOrUnknown(
+          data['two_factor_amount_threshold']!,
           _twoFactorAmountThresholdMeta,
-          twoFactorAmountThreshold.isAcceptableOrUnknown(
-              data['two_factor_amount_threshold']!,
-              _twoFactorAmountThresholdMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_twoFactorAmountThresholdMeta);
     }
     if (data.containsKey('receive_inviter_notification')) {
       context.handle(
+        _receiveInviterNotificationMeta,
+        receiveInviterNotification.isAcceptableOrUnknown(
+          data['receive_inviter_notification']!,
           _receiveInviterNotificationMeta,
-          receiveInviterNotification.isAcceptableOrUnknown(
-              data['receive_inviter_notification']!,
-              _receiveInviterNotificationMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_receiveInviterNotificationMeta);
     }
     if (data.containsKey('receive_email_integration_notification')) {
       context.handle(
+        _receiveEmailIntegrationNotificationMeta,
+        receiveEmailIntegrationNotification.isAcceptableOrUnknown(
+          data['receive_email_integration_notification']!,
           _receiveEmailIntegrationNotificationMeta,
-          receiveEmailIntegrationNotification.isAcceptableOrUnknown(
-              data['receive_email_integration_notification']!,
-              _receiveEmailIntegrationNotificationMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_receiveEmailIntegrationNotificationMeta);
     }
     if (data.containsKey('wallet_created')) {
       context.handle(
+        _walletCreatedMeta,
+        walletCreated.isAcceptableOrUnknown(
+          data['wallet_created']!,
           _walletCreatedMeta,
-          walletCreated.isAcceptableOrUnknown(
-              data['wallet_created']!, _walletCreatedMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_walletCreatedMeta);
     }
     if (data.containsKey('accept_terms_and_conditions')) {
       context.handle(
+        _acceptTermsAndConditionsMeta,
+        acceptTermsAndConditions.isAcceptableOrUnknown(
+          data['accept_terms_and_conditions']!,
           _acceptTermsAndConditionsMeta,
-          acceptTermsAndConditions.isAcceptableOrUnknown(
-              data['accept_terms_and_conditions']!,
-              _acceptTermsAndConditionsMeta));
+        ),
+      );
     } else if (isInserting) {
       context.missing(_acceptTermsAndConditionsMeta);
     }
@@ -1507,31 +1840,46 @@ class $WalletUserSettingsTableTable extends WalletUserSettingsTable
   WalletUserSettings map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return WalletUserSettings(
-      userId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user_id'])!,
-      bitcoinUnit: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}bitcoin_unit'])!,
-      fiatCurrency: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fiat_currency'])!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      bitcoinUnit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}bitcoin_unit'],
+      )!,
+      fiatCurrency: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fiat_currency'],
+      )!,
       hideEmptyUsedAddresses: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}hide_empty_used_addresses'])!,
+        DriftSqlType.bool,
+        data['${effectivePrefix}hide_empty_used_addresses'],
+      )!,
       showWalletRecovery: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}show_wallet_recovery'])!,
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_wallet_recovery'],
+      )!,
       twoFactorAmountThreshold: attachedDatabase.typeMapping.read(
-          DriftSqlType.double,
-          data['${effectivePrefix}two_factor_amount_threshold'])!,
+        DriftSqlType.double,
+        data['${effectivePrefix}two_factor_amount_threshold'],
+      )!,
       receiveInviterNotification: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}receive_inviter_notification'])!,
+        DriftSqlType.bool,
+        data['${effectivePrefix}receive_inviter_notification'],
+      )!,
       receiveEmailIntegrationNotification: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}receive_email_integration_notification'])!,
-      walletCreated: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}wallet_created'])!,
+        DriftSqlType.bool,
+        data['${effectivePrefix}receive_email_integration_notification'],
+      )!,
+      walletCreated: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}wallet_created'],
+      )!,
       acceptTermsAndConditions: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}accept_terms_and_conditions'])!,
+        DriftSqlType.bool,
+        data['${effectivePrefix}accept_terms_and_conditions'],
+      )!,
     );
   }
 
@@ -1553,17 +1901,18 @@ class WalletUserSettings extends DataClass
   final bool receiveEmailIntegrationNotification;
   final bool walletCreated;
   final bool acceptTermsAndConditions;
-  const WalletUserSettings(
-      {required this.userId,
-      required this.bitcoinUnit,
-      required this.fiatCurrency,
-      required this.hideEmptyUsedAddresses,
-      required this.showWalletRecovery,
-      required this.twoFactorAmountThreshold,
-      required this.receiveInviterNotification,
-      required this.receiveEmailIntegrationNotification,
-      required this.walletCreated,
-      required this.acceptTermsAndConditions});
+  const WalletUserSettings({
+    required this.userId,
+    required this.bitcoinUnit,
+    required this.fiatCurrency,
+    required this.hideEmptyUsedAddresses,
+    required this.showWalletRecovery,
+    required this.twoFactorAmountThreshold,
+    required this.receiveInviterNotification,
+    required this.receiveEmailIntegrationNotification,
+    required this.walletCreated,
+    required this.acceptTermsAndConditions,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1572,15 +1921,19 @@ class WalletUserSettings extends DataClass
     map['fiat_currency'] = Variable<String>(fiatCurrency);
     map['hide_empty_used_addresses'] = Variable<bool>(hideEmptyUsedAddresses);
     map['show_wallet_recovery'] = Variable<bool>(showWalletRecovery);
-    map['two_factor_amount_threshold'] =
-        Variable<double>(twoFactorAmountThreshold);
-    map['receive_inviter_notification'] =
-        Variable<bool>(receiveInviterNotification);
-    map['receive_email_integration_notification'] =
-        Variable<bool>(receiveEmailIntegrationNotification);
+    map['two_factor_amount_threshold'] = Variable<double>(
+      twoFactorAmountThreshold,
+    );
+    map['receive_inviter_notification'] = Variable<bool>(
+      receiveInviterNotification,
+    );
+    map['receive_email_integration_notification'] = Variable<bool>(
+      receiveEmailIntegrationNotification,
+    );
     map['wallet_created'] = Variable<bool>(walletCreated);
-    map['accept_terms_and_conditions'] =
-        Variable<bool>(acceptTermsAndConditions);
+    map['accept_terms_and_conditions'] = Variable<bool>(
+      acceptTermsAndConditions,
+    );
     return map;
   }
 
@@ -1593,32 +1946,40 @@ class WalletUserSettings extends DataClass
       showWalletRecovery: Value(showWalletRecovery),
       twoFactorAmountThreshold: Value(twoFactorAmountThreshold),
       receiveInviterNotification: Value(receiveInviterNotification),
-      receiveEmailIntegrationNotification:
-          Value(receiveEmailIntegrationNotification),
+      receiveEmailIntegrationNotification: Value(
+        receiveEmailIntegrationNotification,
+      ),
       walletCreated: Value(walletCreated),
       acceptTermsAndConditions: Value(acceptTermsAndConditions),
     );
   }
 
-  factory WalletUserSettings.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory WalletUserSettings.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WalletUserSettings(
       userId: serializer.fromJson<String>(json['userId']),
       bitcoinUnit: serializer.fromJson<String>(json['bitcoinUnit']),
       fiatCurrency: serializer.fromJson<String>(json['fiatCurrency']),
-      hideEmptyUsedAddresses:
-          serializer.fromJson<bool>(json['hideEmptyUsedAddresses']),
+      hideEmptyUsedAddresses: serializer.fromJson<bool>(
+        json['hideEmptyUsedAddresses'],
+      ),
       showWalletRecovery: serializer.fromJson<bool>(json['showWalletRecovery']),
-      twoFactorAmountThreshold:
-          serializer.fromJson<double>(json['twoFactorAmountThreshold']),
-      receiveInviterNotification:
-          serializer.fromJson<bool>(json['receiveInviterNotification']),
-      receiveEmailIntegrationNotification: serializer
-          .fromJson<bool>(json['receiveEmailIntegrationNotification']),
+      twoFactorAmountThreshold: serializer.fromJson<double>(
+        json['twoFactorAmountThreshold'],
+      ),
+      receiveInviterNotification: serializer.fromJson<bool>(
+        json['receiveInviterNotification'],
+      ),
+      receiveEmailIntegrationNotification: serializer.fromJson<bool>(
+        json['receiveEmailIntegrationNotification'],
+      ),
       walletCreated: serializer.fromJson<bool>(json['walletCreated']),
-      acceptTermsAndConditions:
-          serializer.fromJson<bool>(json['acceptTermsAndConditions']),
+      acceptTermsAndConditions: serializer.fromJson<bool>(
+        json['acceptTermsAndConditions'],
+      ),
     );
   }
   @override
@@ -1630,52 +1991,57 @@ class WalletUserSettings extends DataClass
       'fiatCurrency': serializer.toJson<String>(fiatCurrency),
       'hideEmptyUsedAddresses': serializer.toJson<bool>(hideEmptyUsedAddresses),
       'showWalletRecovery': serializer.toJson<bool>(showWalletRecovery),
-      'twoFactorAmountThreshold':
-          serializer.toJson<double>(twoFactorAmountThreshold),
-      'receiveInviterNotification':
-          serializer.toJson<bool>(receiveInviterNotification),
-      'receiveEmailIntegrationNotification':
-          serializer.toJson<bool>(receiveEmailIntegrationNotification),
+      'twoFactorAmountThreshold': serializer.toJson<double>(
+        twoFactorAmountThreshold,
+      ),
+      'receiveInviterNotification': serializer.toJson<bool>(
+        receiveInviterNotification,
+      ),
+      'receiveEmailIntegrationNotification': serializer.toJson<bool>(
+        receiveEmailIntegrationNotification,
+      ),
       'walletCreated': serializer.toJson<bool>(walletCreated),
-      'acceptTermsAndConditions':
-          serializer.toJson<bool>(acceptTermsAndConditions),
+      'acceptTermsAndConditions': serializer.toJson<bool>(
+        acceptTermsAndConditions,
+      ),
     };
   }
 
-  WalletUserSettings copyWith(
-          {String? userId,
-          String? bitcoinUnit,
-          String? fiatCurrency,
-          bool? hideEmptyUsedAddresses,
-          bool? showWalletRecovery,
-          double? twoFactorAmountThreshold,
-          bool? receiveInviterNotification,
-          bool? receiveEmailIntegrationNotification,
-          bool? walletCreated,
-          bool? acceptTermsAndConditions}) =>
-      WalletUserSettings(
-        userId: userId ?? this.userId,
-        bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
-        fiatCurrency: fiatCurrency ?? this.fiatCurrency,
-        hideEmptyUsedAddresses:
-            hideEmptyUsedAddresses ?? this.hideEmptyUsedAddresses,
-        showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
-        twoFactorAmountThreshold:
-            twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
-        receiveInviterNotification:
-            receiveInviterNotification ?? this.receiveInviterNotification,
-        receiveEmailIntegrationNotification:
-            receiveEmailIntegrationNotification ??
-                this.receiveEmailIntegrationNotification,
-        walletCreated: walletCreated ?? this.walletCreated,
-        acceptTermsAndConditions:
-            acceptTermsAndConditions ?? this.acceptTermsAndConditions,
-      );
+  WalletUserSettings copyWith({
+    String? userId,
+    String? bitcoinUnit,
+    String? fiatCurrency,
+    bool? hideEmptyUsedAddresses,
+    bool? showWalletRecovery,
+    double? twoFactorAmountThreshold,
+    bool? receiveInviterNotification,
+    bool? receiveEmailIntegrationNotification,
+    bool? walletCreated,
+    bool? acceptTermsAndConditions,
+  }) => WalletUserSettings(
+    userId: userId ?? this.userId,
+    bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
+    fiatCurrency: fiatCurrency ?? this.fiatCurrency,
+    hideEmptyUsedAddresses:
+        hideEmptyUsedAddresses ?? this.hideEmptyUsedAddresses,
+    showWalletRecovery: showWalletRecovery ?? this.showWalletRecovery,
+    twoFactorAmountThreshold:
+        twoFactorAmountThreshold ?? this.twoFactorAmountThreshold,
+    receiveInviterNotification:
+        receiveInviterNotification ?? this.receiveInviterNotification,
+    receiveEmailIntegrationNotification:
+        receiveEmailIntegrationNotification ??
+        this.receiveEmailIntegrationNotification,
+    walletCreated: walletCreated ?? this.walletCreated,
+    acceptTermsAndConditions:
+        acceptTermsAndConditions ?? this.acceptTermsAndConditions,
+  );
   WalletUserSettings copyWithCompanion(WalletUserSettingsTableCompanion data) {
     return WalletUserSettings(
       userId: data.userId.present ? data.userId.value : this.userId,
-      bitcoinUnit:
-          data.bitcoinUnit.present ? data.bitcoinUnit.value : this.bitcoinUnit,
+      bitcoinUnit: data.bitcoinUnit.present
+          ? data.bitcoinUnit.value
+          : this.bitcoinUnit,
       fiatCurrency: data.fiatCurrency.present
           ? data.fiatCurrency.value
           : this.fiatCurrency,
@@ -1693,8 +2059,8 @@ class WalletUserSettings extends DataClass
           : this.receiveInviterNotification,
       receiveEmailIntegrationNotification:
           data.receiveEmailIntegrationNotification.present
-              ? data.receiveEmailIntegrationNotification.value
-              : this.receiveEmailIntegrationNotification,
+          ? data.receiveEmailIntegrationNotification.value
+          : this.receiveEmailIntegrationNotification,
       walletCreated: data.walletCreated.present
           ? data.walletCreated.value
           : this.walletCreated,
@@ -1715,7 +2081,8 @@ class WalletUserSettings extends DataClass
           ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold, ')
           ..write('receiveInviterNotification: $receiveInviterNotification, ')
           ..write(
-              'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ')
+            'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ',
+          )
           ..write('walletCreated: $walletCreated, ')
           ..write('acceptTermsAndConditions: $acceptTermsAndConditions')
           ..write(')'))
@@ -1724,16 +2091,17 @@ class WalletUserSettings extends DataClass
 
   @override
   int get hashCode => Object.hash(
-      userId,
-      bitcoinUnit,
-      fiatCurrency,
-      hideEmptyUsedAddresses,
-      showWalletRecovery,
-      twoFactorAmountThreshold,
-      receiveInviterNotification,
-      receiveEmailIntegrationNotification,
-      walletCreated,
-      acceptTermsAndConditions);
+    userId,
+    bitcoinUnit,
+    fiatCurrency,
+    hideEmptyUsedAddresses,
+    showWalletRecovery,
+    twoFactorAmountThreshold,
+    receiveInviterNotification,
+    receiveEmailIntegrationNotification,
+    walletCreated,
+    acceptTermsAndConditions,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1789,17 +2157,18 @@ class WalletUserSettingsTableCompanion
     required bool walletCreated,
     required bool acceptTermsAndConditions,
     this.rowid = const Value.absent(),
-  })  : userId = Value(userId),
-        bitcoinUnit = Value(bitcoinUnit),
-        fiatCurrency = Value(fiatCurrency),
-        hideEmptyUsedAddresses = Value(hideEmptyUsedAddresses),
-        showWalletRecovery = Value(showWalletRecovery),
-        twoFactorAmountThreshold = Value(twoFactorAmountThreshold),
-        receiveInviterNotification = Value(receiveInviterNotification),
-        receiveEmailIntegrationNotification =
-            Value(receiveEmailIntegrationNotification),
-        walletCreated = Value(walletCreated),
-        acceptTermsAndConditions = Value(acceptTermsAndConditions);
+  }) : userId = Value(userId),
+       bitcoinUnit = Value(bitcoinUnit),
+       fiatCurrency = Value(fiatCurrency),
+       hideEmptyUsedAddresses = Value(hideEmptyUsedAddresses),
+       showWalletRecovery = Value(showWalletRecovery),
+       twoFactorAmountThreshold = Value(twoFactorAmountThreshold),
+       receiveInviterNotification = Value(receiveInviterNotification),
+       receiveEmailIntegrationNotification = Value(
+         receiveEmailIntegrationNotification,
+       ),
+       walletCreated = Value(walletCreated),
+       acceptTermsAndConditions = Value(acceptTermsAndConditions);
   static Insertable<WalletUserSettings> custom({
     Expression<String>? userId,
     Expression<String>? bitcoinUnit,
@@ -1835,18 +2204,19 @@ class WalletUserSettingsTableCompanion
     });
   }
 
-  WalletUserSettingsTableCompanion copyWith(
-      {Value<String>? userId,
-      Value<String>? bitcoinUnit,
-      Value<String>? fiatCurrency,
-      Value<bool>? hideEmptyUsedAddresses,
-      Value<bool>? showWalletRecovery,
-      Value<double>? twoFactorAmountThreshold,
-      Value<bool>? receiveInviterNotification,
-      Value<bool>? receiveEmailIntegrationNotification,
-      Value<bool>? walletCreated,
-      Value<bool>? acceptTermsAndConditions,
-      Value<int>? rowid}) {
+  WalletUserSettingsTableCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? bitcoinUnit,
+    Value<String>? fiatCurrency,
+    Value<bool>? hideEmptyUsedAddresses,
+    Value<bool>? showWalletRecovery,
+    Value<double>? twoFactorAmountThreshold,
+    Value<bool>? receiveInviterNotification,
+    Value<bool>? receiveEmailIntegrationNotification,
+    Value<bool>? walletCreated,
+    Value<bool>? acceptTermsAndConditions,
+    Value<int>? rowid,
+  }) {
     return WalletUserSettingsTableCompanion(
       userId: userId ?? this.userId,
       bitcoinUnit: bitcoinUnit ?? this.bitcoinUnit,
@@ -1860,7 +2230,7 @@ class WalletUserSettingsTableCompanion
           receiveInviterNotification ?? this.receiveInviterNotification,
       receiveEmailIntegrationNotification:
           receiveEmailIntegrationNotification ??
-              this.receiveEmailIntegrationNotification,
+          this.receiveEmailIntegrationNotification,
       walletCreated: walletCreated ?? this.walletCreated,
       acceptTermsAndConditions:
           acceptTermsAndConditions ?? this.acceptTermsAndConditions,
@@ -1881,30 +2251,35 @@ class WalletUserSettingsTableCompanion
       map['fiat_currency'] = Variable<String>(fiatCurrency.value);
     }
     if (hideEmptyUsedAddresses.present) {
-      map['hide_empty_used_addresses'] =
-          Variable<bool>(hideEmptyUsedAddresses.value);
+      map['hide_empty_used_addresses'] = Variable<bool>(
+        hideEmptyUsedAddresses.value,
+      );
     }
     if (showWalletRecovery.present) {
       map['show_wallet_recovery'] = Variable<bool>(showWalletRecovery.value);
     }
     if (twoFactorAmountThreshold.present) {
-      map['two_factor_amount_threshold'] =
-          Variable<double>(twoFactorAmountThreshold.value);
+      map['two_factor_amount_threshold'] = Variable<double>(
+        twoFactorAmountThreshold.value,
+      );
     }
     if (receiveInviterNotification.present) {
-      map['receive_inviter_notification'] =
-          Variable<bool>(receiveInviterNotification.value);
+      map['receive_inviter_notification'] = Variable<bool>(
+        receiveInviterNotification.value,
+      );
     }
     if (receiveEmailIntegrationNotification.present) {
-      map['receive_email_integration_notification'] =
-          Variable<bool>(receiveEmailIntegrationNotification.value);
+      map['receive_email_integration_notification'] = Variable<bool>(
+        receiveEmailIntegrationNotification.value,
+      );
     }
     if (walletCreated.present) {
       map['wallet_created'] = Variable<bool>(walletCreated.value);
     }
     if (acceptTermsAndConditions.present) {
-      map['accept_terms_and_conditions'] =
-          Variable<bool>(acceptTermsAndConditions.value);
+      map['accept_terms_and_conditions'] = Variable<bool>(
+        acceptTermsAndConditions.value,
+      );
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1923,7 +2298,8 @@ class WalletUserSettingsTableCompanion
           ..write('twoFactorAmountThreshold: $twoFactorAmountThreshold, ')
           ..write('receiveInviterNotification: $receiveInviterNotification, ')
           ..write(
-              'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ')
+            'receiveEmailIntegrationNotification: $receiveEmailIntegrationNotification, ',
+          )
           ..write('walletCreated: $walletCreated, ')
           ..write('acceptTermsAndConditions: $acceptTermsAndConditions, ')
           ..write('rowid: $rowid')
@@ -1940,53 +2316,61 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WalletUserSettingsTableTable walletUserSettingsTable =
       $WalletUserSettingsTableTable(this);
   late final Index userIdIndex = Index(
-      'user_id_index', 'CREATE INDEX user_id_index ON users_table (user_id)');
+    'user_id_index',
+    'CREATE INDEX user_id_index ON users_table (user_id)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [usersTable, userKeysTable, walletUserSettingsTable, userIdIndex];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    usersTable,
+    userKeysTable,
+    walletUserSettingsTable,
+    userIdIndex,
+  ];
 }
 
-typedef $$UsersTableTableCreateCompanionBuilder = UsersTableCompanion Function({
-  Value<int> id,
-  required String userId,
-  required String name,
-  required BigInt usedSpace,
-  required String currency,
-  required int credit,
-  required BigInt createTime,
-  required BigInt maxSpace,
-  required BigInt maxUpload,
-  required int role,
-  required int private,
-  required int subscribed,
-  required int services,
-  required int delinquent,
-  Value<String?> organizationPrivateKey,
-  Value<String?> email,
-  Value<String?> displayName,
-});
-typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
-  Value<int> id,
-  Value<String> userId,
-  Value<String> name,
-  Value<BigInt> usedSpace,
-  Value<String> currency,
-  Value<int> credit,
-  Value<BigInt> createTime,
-  Value<BigInt> maxSpace,
-  Value<BigInt> maxUpload,
-  Value<int> role,
-  Value<int> private,
-  Value<int> subscribed,
-  Value<int> services,
-  Value<int> delinquent,
-  Value<String?> organizationPrivateKey,
-  Value<String?> email,
-  Value<String?> displayName,
-});
+typedef $$UsersTableTableCreateCompanionBuilder =
+    UsersTableCompanion Function({
+      Value<int> id,
+      required String userId,
+      required String name,
+      required BigInt usedSpace,
+      required String currency,
+      required int credit,
+      required BigInt createTime,
+      required BigInt maxSpace,
+      required BigInt maxUpload,
+      required int role,
+      required int private,
+      required int subscribed,
+      required int services,
+      required int delinquent,
+      Value<String?> organizationPrivateKey,
+      Value<String?> email,
+      Value<String?> displayName,
+    });
+typedef $$UsersTableTableUpdateCompanionBuilder =
+    UsersTableCompanion Function({
+      Value<int> id,
+      Value<String> userId,
+      Value<String> name,
+      Value<BigInt> usedSpace,
+      Value<String> currency,
+      Value<int> credit,
+      Value<BigInt> createTime,
+      Value<BigInt> maxSpace,
+      Value<BigInt> maxUpload,
+      Value<int> role,
+      Value<int> private,
+      Value<int> subscribed,
+      Value<int> services,
+      Value<int> delinquent,
+      Value<String?> organizationPrivateKey,
+      Value<String?> email,
+      Value<String?> displayName,
+    });
 
 class $$UsersTableTableFilterComposer
     extends Composer<_$AppDatabase, $UsersTableTable> {
@@ -1998,56 +2382,89 @@ class $$UsersTableTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<BigInt> get usedSpace => $composableBuilder(
-      column: $table.usedSpace, builder: (column) => ColumnFilters(column));
+    column: $table.usedSpace,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get currency => $composableBuilder(
-      column: $table.currency, builder: (column) => ColumnFilters(column));
+    column: $table.currency,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get credit => $composableBuilder(
-      column: $table.credit, builder: (column) => ColumnFilters(column));
+    column: $table.credit,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<BigInt> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnFilters(column));
+    column: $table.createTime,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<BigInt> get maxSpace => $composableBuilder(
-      column: $table.maxSpace, builder: (column) => ColumnFilters(column));
+    column: $table.maxSpace,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<BigInt> get maxUpload => $composableBuilder(
-      column: $table.maxUpload, builder: (column) => ColumnFilters(column));
+    column: $table.maxUpload,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get role => $composableBuilder(
-      column: $table.role, builder: (column) => ColumnFilters(column));
+    column: $table.role,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get private => $composableBuilder(
-      column: $table.private, builder: (column) => ColumnFilters(column));
+    column: $table.private,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get subscribed => $composableBuilder(
-      column: $table.subscribed, builder: (column) => ColumnFilters(column));
+    column: $table.subscribed,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get services => $composableBuilder(
-      column: $table.services, builder: (column) => ColumnFilters(column));
+    column: $table.services,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get delinquent => $composableBuilder(
-      column: $table.delinquent, builder: (column) => ColumnFilters(column));
+    column: $table.delinquent,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get organizationPrivateKey => $composableBuilder(
-      column: $table.organizationPrivateKey,
-      builder: (column) => ColumnFilters(column));
+    column: $table.organizationPrivateKey,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get email => $composableBuilder(
-      column: $table.email, builder: (column) => ColumnFilters(column));
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get displayName => $composableBuilder(
-      column: $table.displayName, builder: (column) => ColumnFilters(column));
+    column: $table.displayName,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$UsersTableTableOrderingComposer
@@ -2060,56 +2477,89 @@ class $$UsersTableTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<BigInt> get usedSpace => $composableBuilder(
-      column: $table.usedSpace, builder: (column) => ColumnOrderings(column));
+    column: $table.usedSpace,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get currency => $composableBuilder(
-      column: $table.currency, builder: (column) => ColumnOrderings(column));
+    column: $table.currency,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get credit => $composableBuilder(
-      column: $table.credit, builder: (column) => ColumnOrderings(column));
+    column: $table.credit,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<BigInt> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => ColumnOrderings(column));
+    column: $table.createTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<BigInt> get maxSpace => $composableBuilder(
-      column: $table.maxSpace, builder: (column) => ColumnOrderings(column));
+    column: $table.maxSpace,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<BigInt> get maxUpload => $composableBuilder(
-      column: $table.maxUpload, builder: (column) => ColumnOrderings(column));
+    column: $table.maxUpload,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get role => $composableBuilder(
-      column: $table.role, builder: (column) => ColumnOrderings(column));
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get private => $composableBuilder(
-      column: $table.private, builder: (column) => ColumnOrderings(column));
+    column: $table.private,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get subscribed => $composableBuilder(
-      column: $table.subscribed, builder: (column) => ColumnOrderings(column));
+    column: $table.subscribed,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get services => $composableBuilder(
-      column: $table.services, builder: (column) => ColumnOrderings(column));
+    column: $table.services,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get delinquent => $composableBuilder(
-      column: $table.delinquent, builder: (column) => ColumnOrderings(column));
+    column: $table.delinquent,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get organizationPrivateKey => $composableBuilder(
-      column: $table.organizationPrivateKey,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.organizationPrivateKey,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get email => $composableBuilder(
-      column: $table.email, builder: (column) => ColumnOrderings(column));
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get displayName => $composableBuilder(
-      column: $table.displayName, builder: (column) => ColumnOrderings(column));
+    column: $table.displayName,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UsersTableTableAnnotationComposer
@@ -2140,7 +2590,9 @@ class $$UsersTableTableAnnotationComposer
       $composableBuilder(column: $table.credit, builder: (column) => column);
 
   GeneratedColumn<BigInt> get createTime => $composableBuilder(
-      column: $table.createTime, builder: (column) => column);
+    column: $table.createTime,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<BigInt> get maxSpace =>
       $composableBuilder(column: $table.maxSpace, builder: (column) => column);
@@ -2155,41 +2607,53 @@ class $$UsersTableTableAnnotationComposer
       $composableBuilder(column: $table.private, builder: (column) => column);
 
   GeneratedColumn<int> get subscribed => $composableBuilder(
-      column: $table.subscribed, builder: (column) => column);
+    column: $table.subscribed,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get services =>
       $composableBuilder(column: $table.services, builder: (column) => column);
 
   GeneratedColumn<int> get delinquent => $composableBuilder(
-      column: $table.delinquent, builder: (column) => column);
+    column: $table.delinquent,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get organizationPrivateKey => $composableBuilder(
-      column: $table.organizationPrivateKey, builder: (column) => column);
+    column: $table.organizationPrivateKey,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get email =>
       $composableBuilder(column: $table.email, builder: (column) => column);
 
   GeneratedColumn<String> get displayName => $composableBuilder(
-      column: $table.displayName, builder: (column) => column);
+    column: $table.displayName,
+    builder: (column) => column,
+  );
 }
 
-class $$UsersTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $UsersTableTable,
-    DriftProtonUser,
-    $$UsersTableTableFilterComposer,
-    $$UsersTableTableOrderingComposer,
-    $$UsersTableTableAnnotationComposer,
-    $$UsersTableTableCreateCompanionBuilder,
-    $$UsersTableTableUpdateCompanionBuilder,
-    (
-      DriftProtonUser,
-      BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>
-    ),
-    DriftProtonUser,
-    PrefetchHooks Function()> {
+class $$UsersTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UsersTableTable,
+          DriftProtonUser,
+          $$UsersTableTableFilterComposer,
+          $$UsersTableTableOrderingComposer,
+          $$UsersTableTableAnnotationComposer,
+          $$UsersTableTableCreateCompanionBuilder,
+          $$UsersTableTableUpdateCompanionBuilder,
+          (
+            DriftProtonUser,
+            BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>,
+          ),
+          DriftProtonUser,
+          PrefetchHooks Function()
+        > {
   $$UsersTableTableTableManager(_$AppDatabase db, $UsersTableTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2198,130 +2662,133 @@ class $$UsersTableTableTableManager extends RootTableManager<
               $$UsersTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$UsersTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> userId = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<BigInt> usedSpace = const Value.absent(),
-            Value<String> currency = const Value.absent(),
-            Value<int> credit = const Value.absent(),
-            Value<BigInt> createTime = const Value.absent(),
-            Value<BigInt> maxSpace = const Value.absent(),
-            Value<BigInt> maxUpload = const Value.absent(),
-            Value<int> role = const Value.absent(),
-            Value<int> private = const Value.absent(),
-            Value<int> subscribed = const Value.absent(),
-            Value<int> services = const Value.absent(),
-            Value<int> delinquent = const Value.absent(),
-            Value<String?> organizationPrivateKey = const Value.absent(),
-            Value<String?> email = const Value.absent(),
-            Value<String?> displayName = const Value.absent(),
-          }) =>
-              UsersTableCompanion(
-            id: id,
-            userId: userId,
-            name: name,
-            usedSpace: usedSpace,
-            currency: currency,
-            credit: credit,
-            createTime: createTime,
-            maxSpace: maxSpace,
-            maxUpload: maxUpload,
-            role: role,
-            private: private,
-            subscribed: subscribed,
-            services: services,
-            delinquent: delinquent,
-            organizationPrivateKey: organizationPrivateKey,
-            email: email,
-            displayName: displayName,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String userId,
-            required String name,
-            required BigInt usedSpace,
-            required String currency,
-            required int credit,
-            required BigInt createTime,
-            required BigInt maxSpace,
-            required BigInt maxUpload,
-            required int role,
-            required int private,
-            required int subscribed,
-            required int services,
-            required int delinquent,
-            Value<String?> organizationPrivateKey = const Value.absent(),
-            Value<String?> email = const Value.absent(),
-            Value<String?> displayName = const Value.absent(),
-          }) =>
-              UsersTableCompanion.insert(
-            id: id,
-            userId: userId,
-            name: name,
-            usedSpace: usedSpace,
-            currency: currency,
-            credit: credit,
-            createTime: createTime,
-            maxSpace: maxSpace,
-            maxUpload: maxUpload,
-            role: role,
-            private: private,
-            subscribed: subscribed,
-            services: services,
-            delinquent: delinquent,
-            organizationPrivateKey: organizationPrivateKey,
-            email: email,
-            displayName: displayName,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<BigInt> usedSpace = const Value.absent(),
+                Value<String> currency = const Value.absent(),
+                Value<int> credit = const Value.absent(),
+                Value<BigInt> createTime = const Value.absent(),
+                Value<BigInt> maxSpace = const Value.absent(),
+                Value<BigInt> maxUpload = const Value.absent(),
+                Value<int> role = const Value.absent(),
+                Value<int> private = const Value.absent(),
+                Value<int> subscribed = const Value.absent(),
+                Value<int> services = const Value.absent(),
+                Value<int> delinquent = const Value.absent(),
+                Value<String?> organizationPrivateKey = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> displayName = const Value.absent(),
+              }) => UsersTableCompanion(
+                id: id,
+                userId: userId,
+                name: name,
+                usedSpace: usedSpace,
+                currency: currency,
+                credit: credit,
+                createTime: createTime,
+                maxSpace: maxSpace,
+                maxUpload: maxUpload,
+                role: role,
+                private: private,
+                subscribed: subscribed,
+                services: services,
+                delinquent: delinquent,
+                organizationPrivateKey: organizationPrivateKey,
+                email: email,
+                displayName: displayName,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String userId,
+                required String name,
+                required BigInt usedSpace,
+                required String currency,
+                required int credit,
+                required BigInt createTime,
+                required BigInt maxSpace,
+                required BigInt maxUpload,
+                required int role,
+                required int private,
+                required int subscribed,
+                required int services,
+                required int delinquent,
+                Value<String?> organizationPrivateKey = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<String?> displayName = const Value.absent(),
+              }) => UsersTableCompanion.insert(
+                id: id,
+                userId: userId,
+                name: name,
+                usedSpace: usedSpace,
+                currency: currency,
+                credit: credit,
+                createTime: createTime,
+                maxSpace: maxSpace,
+                maxUpload: maxUpload,
+                role: role,
+                private: private,
+                subscribed: subscribed,
+                services: services,
+                delinquent: delinquent,
+                organizationPrivateKey: organizationPrivateKey,
+                email: email,
+                displayName: displayName,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$UsersTableTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $UsersTableTable,
-    DriftProtonUser,
-    $$UsersTableTableFilterComposer,
-    $$UsersTableTableOrderingComposer,
-    $$UsersTableTableAnnotationComposer,
-    $$UsersTableTableCreateCompanionBuilder,
-    $$UsersTableTableUpdateCompanionBuilder,
-    (
+typedef $$UsersTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UsersTableTable,
       DriftProtonUser,
-      BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>
-    ),
-    DriftProtonUser,
-    PrefetchHooks Function()>;
-typedef $$UserKeysTableTableCreateCompanionBuilder = UserKeysTableCompanion
-    Function({
-  required String keyId,
-  required String userId,
-  required int version,
-  required String privateKey,
-  Value<String?> token,
-  Value<String?> fingerprint,
-  Value<String?> recoverySecret,
-  Value<String?> recoverySecretSignature,
-  required int primary,
-  Value<int> rowid,
-});
-typedef $$UserKeysTableTableUpdateCompanionBuilder = UserKeysTableCompanion
-    Function({
-  Value<String> keyId,
-  Value<String> userId,
-  Value<int> version,
-  Value<String> privateKey,
-  Value<String?> token,
-  Value<String?> fingerprint,
-  Value<String?> recoverySecret,
-  Value<String?> recoverySecretSignature,
-  Value<int> primary,
-  Value<int> rowid,
-});
+      $$UsersTableTableFilterComposer,
+      $$UsersTableTableOrderingComposer,
+      $$UsersTableTableAnnotationComposer,
+      $$UsersTableTableCreateCompanionBuilder,
+      $$UsersTableTableUpdateCompanionBuilder,
+      (
+        DriftProtonUser,
+        BaseReferences<_$AppDatabase, $UsersTableTable, DriftProtonUser>,
+      ),
+      DriftProtonUser,
+      PrefetchHooks Function()
+    >;
+typedef $$UserKeysTableTableCreateCompanionBuilder =
+    UserKeysTableCompanion Function({
+      required String keyId,
+      required String userId,
+      required int version,
+      required String privateKey,
+      Value<String?> token,
+      Value<String?> fingerprint,
+      Value<String?> recoverySecret,
+      Value<String?> recoverySecretSignature,
+      required int primary,
+      Value<int> rowid,
+    });
+typedef $$UserKeysTableTableUpdateCompanionBuilder =
+    UserKeysTableCompanion Function({
+      Value<String> keyId,
+      Value<String> userId,
+      Value<int> version,
+      Value<String> privateKey,
+      Value<String?> token,
+      Value<String?> fingerprint,
+      Value<String?> recoverySecret,
+      Value<String?> recoverySecretSignature,
+      Value<int> primary,
+      Value<int> rowid,
+    });
 
 class $$UserKeysTableTableFilterComposer
     extends Composer<_$AppDatabase, $UserKeysTableTable> {
@@ -2333,33 +2800,49 @@ class $$UserKeysTableTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get keyId => $composableBuilder(
-      column: $table.keyId, builder: (column) => ColumnFilters(column));
+    column: $table.keyId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnFilters(column));
+    column: $table.version,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get privateKey => $composableBuilder(
-      column: $table.privateKey, builder: (column) => ColumnFilters(column));
+    column: $table.privateKey,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get token => $composableBuilder(
-      column: $table.token, builder: (column) => ColumnFilters(column));
+    column: $table.token,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get fingerprint => $composableBuilder(
-      column: $table.fingerprint, builder: (column) => ColumnFilters(column));
+    column: $table.fingerprint,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get recoverySecret => $composableBuilder(
-      column: $table.recoverySecret,
-      builder: (column) => ColumnFilters(column));
+    column: $table.recoverySecret,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get recoverySecretSignature => $composableBuilder(
-      column: $table.recoverySecretSignature,
-      builder: (column) => ColumnFilters(column));
+    column: $table.recoverySecretSignature,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get primary => $composableBuilder(
-      column: $table.primary, builder: (column) => ColumnFilters(column));
+    column: $table.primary,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$UserKeysTableTableOrderingComposer
@@ -2372,33 +2855,49 @@ class $$UserKeysTableTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get keyId => $composableBuilder(
-      column: $table.keyId, builder: (column) => ColumnOrderings(column));
+    column: $table.keyId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get version => $composableBuilder(
-      column: $table.version, builder: (column) => ColumnOrderings(column));
+    column: $table.version,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get privateKey => $composableBuilder(
-      column: $table.privateKey, builder: (column) => ColumnOrderings(column));
+    column: $table.privateKey,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get token => $composableBuilder(
-      column: $table.token, builder: (column) => ColumnOrderings(column));
+    column: $table.token,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get fingerprint => $composableBuilder(
-      column: $table.fingerprint, builder: (column) => ColumnOrderings(column));
+    column: $table.fingerprint,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get recoverySecret => $composableBuilder(
-      column: $table.recoverySecret,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.recoverySecret,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get recoverySecretSignature => $composableBuilder(
-      column: $table.recoverySecretSignature,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.recoverySecretSignature,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get primary => $composableBuilder(
-      column: $table.primary, builder: (column) => ColumnOrderings(column));
+    column: $table.primary,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UserKeysTableTableAnnotationComposer
@@ -2420,41 +2919,53 @@ class $$UserKeysTableTableAnnotationComposer
       $composableBuilder(column: $table.version, builder: (column) => column);
 
   GeneratedColumn<String> get privateKey => $composableBuilder(
-      column: $table.privateKey, builder: (column) => column);
+    column: $table.privateKey,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get token =>
       $composableBuilder(column: $table.token, builder: (column) => column);
 
   GeneratedColumn<String> get fingerprint => $composableBuilder(
-      column: $table.fingerprint, builder: (column) => column);
+    column: $table.fingerprint,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get recoverySecret => $composableBuilder(
-      column: $table.recoverySecret, builder: (column) => column);
+    column: $table.recoverySecret,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get recoverySecretSignature => $composableBuilder(
-      column: $table.recoverySecretSignature, builder: (column) => column);
+    column: $table.recoverySecretSignature,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get primary =>
       $composableBuilder(column: $table.primary, builder: (column) => column);
 }
 
-class $$UserKeysTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $UserKeysTableTable,
-    DriftUserKey,
-    $$UserKeysTableTableFilterComposer,
-    $$UserKeysTableTableOrderingComposer,
-    $$UserKeysTableTableAnnotationComposer,
-    $$UserKeysTableTableCreateCompanionBuilder,
-    $$UserKeysTableTableUpdateCompanionBuilder,
-    (
-      DriftUserKey,
-      BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>
-    ),
-    DriftUserKey,
-    PrefetchHooks Function()> {
+class $$UserKeysTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserKeysTableTable,
+          DriftUserKey,
+          $$UserKeysTableTableFilterComposer,
+          $$UserKeysTableTableOrderingComposer,
+          $$UserKeysTableTableAnnotationComposer,
+          $$UserKeysTableTableCreateCompanionBuilder,
+          $$UserKeysTableTableUpdateCompanionBuilder,
+          (
+            DriftUserKey,
+            BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>,
+          ),
+          DriftUserKey,
+          PrefetchHooks Function()
+        > {
   $$UserKeysTableTableTableManager(_$AppDatabase db, $UserKeysTableTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2463,104 +2974,107 @@ class $$UserKeysTableTableTableManager extends RootTableManager<
               $$UserKeysTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$UserKeysTableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> keyId = const Value.absent(),
-            Value<String> userId = const Value.absent(),
-            Value<int> version = const Value.absent(),
-            Value<String> privateKey = const Value.absent(),
-            Value<String?> token = const Value.absent(),
-            Value<String?> fingerprint = const Value.absent(),
-            Value<String?> recoverySecret = const Value.absent(),
-            Value<String?> recoverySecretSignature = const Value.absent(),
-            Value<int> primary = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              UserKeysTableCompanion(
-            keyId: keyId,
-            userId: userId,
-            version: version,
-            privateKey: privateKey,
-            token: token,
-            fingerprint: fingerprint,
-            recoverySecret: recoverySecret,
-            recoverySecretSignature: recoverySecretSignature,
-            primary: primary,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String keyId,
-            required String userId,
-            required int version,
-            required String privateKey,
-            Value<String?> token = const Value.absent(),
-            Value<String?> fingerprint = const Value.absent(),
-            Value<String?> recoverySecret = const Value.absent(),
-            Value<String?> recoverySecretSignature = const Value.absent(),
-            required int primary,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              UserKeysTableCompanion.insert(
-            keyId: keyId,
-            userId: userId,
-            version: version,
-            privateKey: privateKey,
-            token: token,
-            fingerprint: fingerprint,
-            recoverySecret: recoverySecret,
-            recoverySecretSignature: recoverySecretSignature,
-            primary: primary,
-            rowid: rowid,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<String> keyId = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<int> version = const Value.absent(),
+                Value<String> privateKey = const Value.absent(),
+                Value<String?> token = const Value.absent(),
+                Value<String?> fingerprint = const Value.absent(),
+                Value<String?> recoverySecret = const Value.absent(),
+                Value<String?> recoverySecretSignature = const Value.absent(),
+                Value<int> primary = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserKeysTableCompanion(
+                keyId: keyId,
+                userId: userId,
+                version: version,
+                privateKey: privateKey,
+                token: token,
+                fingerprint: fingerprint,
+                recoverySecret: recoverySecret,
+                recoverySecretSignature: recoverySecretSignature,
+                primary: primary,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String keyId,
+                required String userId,
+                required int version,
+                required String privateKey,
+                Value<String?> token = const Value.absent(),
+                Value<String?> fingerprint = const Value.absent(),
+                Value<String?> recoverySecret = const Value.absent(),
+                Value<String?> recoverySecretSignature = const Value.absent(),
+                required int primary,
+                Value<int> rowid = const Value.absent(),
+              }) => UserKeysTableCompanion.insert(
+                keyId: keyId,
+                userId: userId,
+                version: version,
+                privateKey: privateKey,
+                token: token,
+                fingerprint: fingerprint,
+                recoverySecret: recoverySecret,
+                recoverySecretSignature: recoverySecretSignature,
+                primary: primary,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$UserKeysTableTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $UserKeysTableTable,
-    DriftUserKey,
-    $$UserKeysTableTableFilterComposer,
-    $$UserKeysTableTableOrderingComposer,
-    $$UserKeysTableTableAnnotationComposer,
-    $$UserKeysTableTableCreateCompanionBuilder,
-    $$UserKeysTableTableUpdateCompanionBuilder,
-    (
+typedef $$UserKeysTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserKeysTableTable,
       DriftUserKey,
-      BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>
-    ),
-    DriftUserKey,
-    PrefetchHooks Function()>;
-typedef $$WalletUserSettingsTableTableCreateCompanionBuilder
-    = WalletUserSettingsTableCompanion Function({
-  required String userId,
-  required String bitcoinUnit,
-  required String fiatCurrency,
-  required bool hideEmptyUsedAddresses,
-  required bool showWalletRecovery,
-  required double twoFactorAmountThreshold,
-  required bool receiveInviterNotification,
-  required bool receiveEmailIntegrationNotification,
-  required bool walletCreated,
-  required bool acceptTermsAndConditions,
-  Value<int> rowid,
-});
-typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder
-    = WalletUserSettingsTableCompanion Function({
-  Value<String> userId,
-  Value<String> bitcoinUnit,
-  Value<String> fiatCurrency,
-  Value<bool> hideEmptyUsedAddresses,
-  Value<bool> showWalletRecovery,
-  Value<double> twoFactorAmountThreshold,
-  Value<bool> receiveInviterNotification,
-  Value<bool> receiveEmailIntegrationNotification,
-  Value<bool> walletCreated,
-  Value<bool> acceptTermsAndConditions,
-  Value<int> rowid,
-});
+      $$UserKeysTableTableFilterComposer,
+      $$UserKeysTableTableOrderingComposer,
+      $$UserKeysTableTableAnnotationComposer,
+      $$UserKeysTableTableCreateCompanionBuilder,
+      $$UserKeysTableTableUpdateCompanionBuilder,
+      (
+        DriftUserKey,
+        BaseReferences<_$AppDatabase, $UserKeysTableTable, DriftUserKey>,
+      ),
+      DriftUserKey,
+      PrefetchHooks Function()
+    >;
+typedef $$WalletUserSettingsTableTableCreateCompanionBuilder =
+    WalletUserSettingsTableCompanion Function({
+      required String userId,
+      required String bitcoinUnit,
+      required String fiatCurrency,
+      required bool hideEmptyUsedAddresses,
+      required bool showWalletRecovery,
+      required double twoFactorAmountThreshold,
+      required bool receiveInviterNotification,
+      required bool receiveEmailIntegrationNotification,
+      required bool walletCreated,
+      required bool acceptTermsAndConditions,
+      Value<int> rowid,
+    });
+typedef $$WalletUserSettingsTableTableUpdateCompanionBuilder =
+    WalletUserSettingsTableCompanion Function({
+      Value<String> userId,
+      Value<String> bitcoinUnit,
+      Value<String> fiatCurrency,
+      Value<bool> hideEmptyUsedAddresses,
+      Value<bool> showWalletRecovery,
+      Value<double> twoFactorAmountThreshold,
+      Value<bool> receiveInviterNotification,
+      Value<bool> receiveEmailIntegrationNotification,
+      Value<bool> walletCreated,
+      Value<bool> acceptTermsAndConditions,
+      Value<int> rowid,
+    });
 
 class $$WalletUserSettingsTableTableFilterComposer
     extends Composer<_$AppDatabase, $WalletUserSettingsTableTable> {
@@ -2572,41 +3086,55 @@ class $$WalletUserSettingsTableTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get bitcoinUnit => $composableBuilder(
-      column: $table.bitcoinUnit, builder: (column) => ColumnFilters(column));
+    column: $table.bitcoinUnit,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get fiatCurrency => $composableBuilder(
-      column: $table.fiatCurrency, builder: (column) => ColumnFilters(column));
+    column: $table.fiatCurrency,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get hideEmptyUsedAddresses => $composableBuilder(
-      column: $table.hideEmptyUsedAddresses,
-      builder: (column) => ColumnFilters(column));
+    column: $table.hideEmptyUsedAddresses,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get showWalletRecovery => $composableBuilder(
-      column: $table.showWalletRecovery,
-      builder: (column) => ColumnFilters(column));
+    column: $table.showWalletRecovery,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<double> get twoFactorAmountThreshold => $composableBuilder(
-      column: $table.twoFactorAmountThreshold,
-      builder: (column) => ColumnFilters(column));
+    column: $table.twoFactorAmountThreshold,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get receiveInviterNotification => $composableBuilder(
-      column: $table.receiveInviterNotification,
-      builder: (column) => ColumnFilters(column));
+    column: $table.receiveInviterNotification,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get receiveEmailIntegrationNotification =>
       $composableBuilder(
-          column: $table.receiveEmailIntegrationNotification,
-          builder: (column) => ColumnFilters(column));
+        column: $table.receiveEmailIntegrationNotification,
+        builder: (column) => ColumnFilters(column),
+      );
 
   ColumnFilters<bool> get walletCreated => $composableBuilder(
-      column: $table.walletCreated, builder: (column) => ColumnFilters(column));
+    column: $table.walletCreated,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get acceptTermsAndConditions => $composableBuilder(
-      column: $table.acceptTermsAndConditions,
-      builder: (column) => ColumnFilters(column));
+    column: $table.acceptTermsAndConditions,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$WalletUserSettingsTableTableOrderingComposer
@@ -2619,43 +3147,55 @@ class $$WalletUserSettingsTableTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get bitcoinUnit => $composableBuilder(
-      column: $table.bitcoinUnit, builder: (column) => ColumnOrderings(column));
+    column: $table.bitcoinUnit,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get fiatCurrency => $composableBuilder(
-      column: $table.fiatCurrency,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.fiatCurrency,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get hideEmptyUsedAddresses => $composableBuilder(
-      column: $table.hideEmptyUsedAddresses,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.hideEmptyUsedAddresses,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get showWalletRecovery => $composableBuilder(
-      column: $table.showWalletRecovery,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.showWalletRecovery,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<double> get twoFactorAmountThreshold => $composableBuilder(
-      column: $table.twoFactorAmountThreshold,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.twoFactorAmountThreshold,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get receiveInviterNotification => $composableBuilder(
-      column: $table.receiveInviterNotification,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.receiveInviterNotification,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get receiveEmailIntegrationNotification =>
       $composableBuilder(
-          column: $table.receiveEmailIntegrationNotification,
-          builder: (column) => ColumnOrderings(column));
+        column: $table.receiveEmailIntegrationNotification,
+        builder: (column) => ColumnOrderings(column),
+      );
 
   ColumnOrderings<bool> get walletCreated => $composableBuilder(
-      column: $table.walletCreated,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.walletCreated,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get acceptTermsAndConditions => $composableBuilder(
-      column: $table.acceptTermsAndConditions,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.acceptTermsAndConditions,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WalletUserSettingsTableTableAnnotationComposer
@@ -2671,144 +3211,180 @@ class $$WalletUserSettingsTableTableAnnotationComposer
       $composableBuilder(column: $table.userId, builder: (column) => column);
 
   GeneratedColumn<String> get bitcoinUnit => $composableBuilder(
-      column: $table.bitcoinUnit, builder: (column) => column);
+    column: $table.bitcoinUnit,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get fiatCurrency => $composableBuilder(
-      column: $table.fiatCurrency, builder: (column) => column);
+    column: $table.fiatCurrency,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get hideEmptyUsedAddresses => $composableBuilder(
-      column: $table.hideEmptyUsedAddresses, builder: (column) => column);
+    column: $table.hideEmptyUsedAddresses,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get showWalletRecovery => $composableBuilder(
-      column: $table.showWalletRecovery, builder: (column) => column);
+    column: $table.showWalletRecovery,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<double> get twoFactorAmountThreshold => $composableBuilder(
-      column: $table.twoFactorAmountThreshold, builder: (column) => column);
+    column: $table.twoFactorAmountThreshold,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get receiveInviterNotification => $composableBuilder(
-      column: $table.receiveInviterNotification, builder: (column) => column);
+    column: $table.receiveInviterNotification,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get receiveEmailIntegrationNotification =>
       $composableBuilder(
-          column: $table.receiveEmailIntegrationNotification,
-          builder: (column) => column);
+        column: $table.receiveEmailIntegrationNotification,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<bool> get walletCreated => $composableBuilder(
-      column: $table.walletCreated, builder: (column) => column);
+    column: $table.walletCreated,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get acceptTermsAndConditions => $composableBuilder(
-      column: $table.acceptTermsAndConditions, builder: (column) => column);
+    column: $table.acceptTermsAndConditions,
+    builder: (column) => column,
+  );
 }
 
-class $$WalletUserSettingsTableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $WalletUserSettingsTableTable,
-    WalletUserSettings,
-    $$WalletUserSettingsTableTableFilterComposer,
-    $$WalletUserSettingsTableTableOrderingComposer,
-    $$WalletUserSettingsTableTableAnnotationComposer,
-    $$WalletUserSettingsTableTableCreateCompanionBuilder,
-    $$WalletUserSettingsTableTableUpdateCompanionBuilder,
-    (
-      WalletUserSettings,
-      BaseReferences<_$AppDatabase, $WalletUserSettingsTableTable,
-          WalletUserSettings>
-    ),
-    WalletUserSettings,
-    PrefetchHooks Function()> {
+class $$WalletUserSettingsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WalletUserSettingsTableTable,
+          WalletUserSettings,
+          $$WalletUserSettingsTableTableFilterComposer,
+          $$WalletUserSettingsTableTableOrderingComposer,
+          $$WalletUserSettingsTableTableAnnotationComposer,
+          $$WalletUserSettingsTableTableCreateCompanionBuilder,
+          $$WalletUserSettingsTableTableUpdateCompanionBuilder,
+          (
+            WalletUserSettings,
+            BaseReferences<
+              _$AppDatabase,
+              $WalletUserSettingsTableTable,
+              WalletUserSettings
+            >,
+          ),
+          WalletUserSettings,
+          PrefetchHooks Function()
+        > {
   $$WalletUserSettingsTableTableTableManager(
-      _$AppDatabase db, $WalletUserSettingsTableTable table)
-      : super(TableManagerState(
+    _$AppDatabase db,
+    $WalletUserSettingsTableTable table,
+  ) : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
               $$WalletUserSettingsTableTableFilterComposer(
-                  $db: db, $table: table),
+                $db: db,
+                $table: table,
+              ),
           createOrderingComposer: () =>
               $$WalletUserSettingsTableTableOrderingComposer(
-                  $db: db, $table: table),
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer: () =>
               $$WalletUserSettingsTableTableAnnotationComposer(
-                  $db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> userId = const Value.absent(),
-            Value<String> bitcoinUnit = const Value.absent(),
-            Value<String> fiatCurrency = const Value.absent(),
-            Value<bool> hideEmptyUsedAddresses = const Value.absent(),
-            Value<bool> showWalletRecovery = const Value.absent(),
-            Value<double> twoFactorAmountThreshold = const Value.absent(),
-            Value<bool> receiveInviterNotification = const Value.absent(),
-            Value<bool> receiveEmailIntegrationNotification =
-                const Value.absent(),
-            Value<bool> walletCreated = const Value.absent(),
-            Value<bool> acceptTermsAndConditions = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              WalletUserSettingsTableCompanion(
-            userId: userId,
-            bitcoinUnit: bitcoinUnit,
-            fiatCurrency: fiatCurrency,
-            hideEmptyUsedAddresses: hideEmptyUsedAddresses,
-            showWalletRecovery: showWalletRecovery,
-            twoFactorAmountThreshold: twoFactorAmountThreshold,
-            receiveInviterNotification: receiveInviterNotification,
-            receiveEmailIntegrationNotification:
-                receiveEmailIntegrationNotification,
-            walletCreated: walletCreated,
-            acceptTermsAndConditions: acceptTermsAndConditions,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String userId,
-            required String bitcoinUnit,
-            required String fiatCurrency,
-            required bool hideEmptyUsedAddresses,
-            required bool showWalletRecovery,
-            required double twoFactorAmountThreshold,
-            required bool receiveInviterNotification,
-            required bool receiveEmailIntegrationNotification,
-            required bool walletCreated,
-            required bool acceptTermsAndConditions,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              WalletUserSettingsTableCompanion.insert(
-            userId: userId,
-            bitcoinUnit: bitcoinUnit,
-            fiatCurrency: fiatCurrency,
-            hideEmptyUsedAddresses: hideEmptyUsedAddresses,
-            showWalletRecovery: showWalletRecovery,
-            twoFactorAmountThreshold: twoFactorAmountThreshold,
-            receiveInviterNotification: receiveInviterNotification,
-            receiveEmailIntegrationNotification:
-                receiveEmailIntegrationNotification,
-            walletCreated: walletCreated,
-            acceptTermsAndConditions: acceptTermsAndConditions,
-            rowid: rowid,
-          ),
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> bitcoinUnit = const Value.absent(),
+                Value<String> fiatCurrency = const Value.absent(),
+                Value<bool> hideEmptyUsedAddresses = const Value.absent(),
+                Value<bool> showWalletRecovery = const Value.absent(),
+                Value<double> twoFactorAmountThreshold = const Value.absent(),
+                Value<bool> receiveInviterNotification = const Value.absent(),
+                Value<bool> receiveEmailIntegrationNotification =
+                    const Value.absent(),
+                Value<bool> walletCreated = const Value.absent(),
+                Value<bool> acceptTermsAndConditions = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WalletUserSettingsTableCompanion(
+                userId: userId,
+                bitcoinUnit: bitcoinUnit,
+                fiatCurrency: fiatCurrency,
+                hideEmptyUsedAddresses: hideEmptyUsedAddresses,
+                showWalletRecovery: showWalletRecovery,
+                twoFactorAmountThreshold: twoFactorAmountThreshold,
+                receiveInviterNotification: receiveInviterNotification,
+                receiveEmailIntegrationNotification:
+                    receiveEmailIntegrationNotification,
+                walletCreated: walletCreated,
+                acceptTermsAndConditions: acceptTermsAndConditions,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                required String bitcoinUnit,
+                required String fiatCurrency,
+                required bool hideEmptyUsedAddresses,
+                required bool showWalletRecovery,
+                required double twoFactorAmountThreshold,
+                required bool receiveInviterNotification,
+                required bool receiveEmailIntegrationNotification,
+                required bool walletCreated,
+                required bool acceptTermsAndConditions,
+                Value<int> rowid = const Value.absent(),
+              }) => WalletUserSettingsTableCompanion.insert(
+                userId: userId,
+                bitcoinUnit: bitcoinUnit,
+                fiatCurrency: fiatCurrency,
+                hideEmptyUsedAddresses: hideEmptyUsedAddresses,
+                showWalletRecovery: showWalletRecovery,
+                twoFactorAmountThreshold: twoFactorAmountThreshold,
+                receiveInviterNotification: receiveInviterNotification,
+                receiveEmailIntegrationNotification:
+                    receiveEmailIntegrationNotification,
+                walletCreated: walletCreated,
+                acceptTermsAndConditions: acceptTermsAndConditions,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$WalletUserSettingsTableTableProcessedTableManager
-    = ProcessedTableManager<
-        _$AppDatabase,
-        $WalletUserSettingsTableTable,
+typedef $$WalletUserSettingsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WalletUserSettingsTableTable,
+      WalletUserSettings,
+      $$WalletUserSettingsTableTableFilterComposer,
+      $$WalletUserSettingsTableTableOrderingComposer,
+      $$WalletUserSettingsTableTableAnnotationComposer,
+      $$WalletUserSettingsTableTableCreateCompanionBuilder,
+      $$WalletUserSettingsTableTableUpdateCompanionBuilder,
+      (
         WalletUserSettings,
-        $$WalletUserSettingsTableTableFilterComposer,
-        $$WalletUserSettingsTableTableOrderingComposer,
-        $$WalletUserSettingsTableTableAnnotationComposer,
-        $$WalletUserSettingsTableTableCreateCompanionBuilder,
-        $$WalletUserSettingsTableTableUpdateCompanionBuilder,
-        (
-          WalletUserSettings,
-          BaseReferences<_$AppDatabase, $WalletUserSettingsTableTable,
-              WalletUserSettings>
-        ),
-        WalletUserSettings,
-        PrefetchHooks Function()>;
+        BaseReferences<
+          _$AppDatabase,
+          $WalletUserSettingsTableTable,
+          WalletUserSettings
+        >,
+      ),
+      WalletUserSettings,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2819,5 +3395,7 @@ class $AppDatabaseManager {
       $$UserKeysTableTableTableManager(_db, _db.userKeysTable);
   $$WalletUserSettingsTableTableTableManager get walletUserSettingsTable =>
       $$WalletUserSettingsTableTableTableManager(
-          _db, _db.walletUserSettingsTable);
+        _db,
+        _db.walletUserSettingsTable,
+      );
 }

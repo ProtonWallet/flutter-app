@@ -10,6 +10,7 @@ use crate::proton_wallet::crypto::{
     private_key::LockedPrivateKeys,
 };
 use async_trait::async_trait;
+use crate::proton_wallet::crypto::pgp_lock::pgp_global_lock;
 use proton_crypto::new_pgp_provider;
 
 #[async_trait]
@@ -69,6 +70,7 @@ impl WalletMnemonicProvider for WalletMnemonicProviderImpl {
             let key_secret = self.user_keys_provider.get_user_key_passphrase().await?;
 
             // Unlock private keys and decrypt the legacy mnemonic.
+            let _pgp_guard = pgp_global_lock();
             let provider = new_pgp_provider();
             let unlocked_private_keys = locked_private_keys.unlock_with(&provider, &key_secret);
             let legacy_mnemonic = EncryptedWalletMnemonicLegacy::new_from_base64(&wallet_mnemonic)?;
