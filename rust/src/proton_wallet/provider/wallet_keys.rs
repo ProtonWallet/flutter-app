@@ -11,6 +11,7 @@ use crate::proton_wallet::{
     storage::wallet_key::WalletKeyStore,
 };
 use andromeda_api::{wallet::ApiWalletKey, wallet_ext::WalletClientExt};
+use crate::proton_wallet::crypto::pgp_lock::pgp_global_lock;
 use proton_crypto::new_pgp_provider;
 
 /// Implementation of the wallet keys provider that handles key retrieval, unlocking, and caching.
@@ -54,6 +55,7 @@ impl WalletKeysProvider for WalletKeysProviderImpl {
         let key_secret = self.user_keys_provider.get_user_key_passphrase().await?;
 
         // Unlock the user keys and wallet key
+        let _pgp_guard = pgp_global_lock();
         let provider = new_pgp_provider();
         let unlocked_private_keys = locked_private_keys.unlock_with(&provider, &key_secret);
         let unlocked_wallet_key =

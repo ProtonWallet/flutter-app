@@ -18,20 +18,15 @@ pub use crate::proton_api::*;
 
 pub use andromeda_api::wallet::CreateWalletAccountRequestBody;
 
-/// this part is for android jni env initialization. muon reqires
-#[cfg(target_os = "android")]
-use {
-    andromeda_api::{jboolean, JClass, JNIEnv, JObject},
-    tracing::info,
-};
-
+/// Android JNI hook kept for backwards compatibility with the Kotlin plugin.
+/// muon 2.x uses rustls-platform-verifier and no longer requires java_init.
 #[cfg(target_os = "android")]
 #[no_mangle]
 pub extern "system" fn Java_me_proton_wallet_android_WalletFlutterPlugin_init_1android(
-    env: JNIEnv,
-    class: JClass,
-    ctx: JObject,
-) -> jboolean {
-    info!("init_android called from rust lib.rs file.");
-    return andromeda_api::init_android(env, class, ctx);
+    _env: jni::sys::JNIEnv,
+    _class: jni::sys::jclass,
+    _ctx: jni::sys::jobject,
+) -> jni::sys::jboolean {
+    tracing::info!("init_android: no-op (muon 2.x)");
+    1
 }

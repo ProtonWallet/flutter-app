@@ -33,50 +33,59 @@ class MockProtonExchangeRate extends _i1.Mock
   }
 
   @override
-  String get id => (super.noSuchMethod(
-        Invocation.getter(#id),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#id),
-        ),
-      ) as String);
+  String get id =>
+      (super.noSuchMethod(
+            Invocation.getter(#id),
+            returnValue: _i3.dummyValue<String>(this, Invocation.getter(#id)),
+          )
+          as String);
 
   @override
-  _i4.BitcoinUnit get bitcoinUnit => (super.noSuchMethod(
-        Invocation.getter(#bitcoinUnit),
-        returnValue: _i4.BitcoinUnit.btc,
-      ) as _i4.BitcoinUnit);
+  _i4.BitcoinUnit get bitcoinUnit =>
+      (super.noSuchMethod(
+            Invocation.getter(#bitcoinUnit),
+            returnValue: _i4.BitcoinUnit.btc,
+          )
+          as _i4.BitcoinUnit);
 
   @override
-  _i4.FiatCurrency get fiatCurrency => (super.noSuchMethod(
-        Invocation.getter(#fiatCurrency),
-        returnValue: _i4.FiatCurrency.all,
-      ) as _i4.FiatCurrency);
+  _i4.FiatCurrency get fiatCurrency =>
+      (super.noSuchMethod(
+            Invocation.getter(#fiatCurrency),
+            returnValue: _i4.FiatCurrency.all,
+          )
+          as _i4.FiatCurrency);
 
   @override
-  String get exchangeRateTime => (super.noSuchMethod(
-        Invocation.getter(#exchangeRateTime),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#exchangeRateTime),
-        ),
-      ) as String);
+  String get exchangeRateTime =>
+      (super.noSuchMethod(
+            Invocation.getter(#exchangeRateTime),
+            returnValue: _i3.dummyValue<String>(
+              this,
+              Invocation.getter(#exchangeRateTime),
+            ),
+          )
+          as String);
 
   @override
-  BigInt get exchangeRate => (super.noSuchMethod(
-        Invocation.getter(#exchangeRate),
-        returnValue: _i3.dummyValue<BigInt>(
-          this,
-          Invocation.getter(#exchangeRate),
-        ),
-      ) as BigInt);
+  BigInt get exchangeRate =>
+      (super.noSuchMethod(
+            Invocation.getter(#exchangeRate),
+            returnValue: _i3.dummyValue<BigInt>(
+              this,
+              Invocation.getter(#exchangeRate),
+            ),
+          )
+          as BigInt);
 
   @override
-  BigInt get cents => (super.noSuchMethod(
-        Invocation.getter(#cents),
-        returnValue: _i3.dummyValue<BigInt>(
-          this,
-          Invocation.getter(#cents),
-        ),
-      ) as BigInt);
+  BigInt get cents =>
+      (super.noSuchMethod(
+            Invocation.getter(#cents),
+            returnValue: _i3.dummyValue<BigInt>(
+              this,
+              Invocation.getter(#cents),
+            ),
+          )
+          as BigInt);
 }

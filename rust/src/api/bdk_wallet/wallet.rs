@@ -180,7 +180,9 @@ mod test {
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let store = ProtonWalletAuthStore::new("atlas").unwrap();
         let api_service = Arc::new(
-            ProtonAPIService::new("atlas".to_string(), app_version, user_agent, store).unwrap(),
+            ProtonAPIService::new("atlas".to_string(), app_version, user_agent, store)
+                .await
+                .unwrap(),
         );
         let _ = api_service
             .login("pro".to_string(), "pro".to_string())
@@ -287,7 +289,9 @@ mod test {
         let user_agent = "ProtonWallet/1.0.0 (iOS/17.4; arm64)".to_string();
         let store = ProtonWalletAuthStore::new("prod").unwrap();
         let api_service = Arc::new(
-            ProtonAPIService::new("prod".to_string(), app_version, user_agent, store).unwrap(),
+            ProtonAPIService::new("prod".to_string(), app_version, user_agent, store)
+                .await
+                .unwrap(),
         );
         let _ = api_service
             .login("feng200".to_string(), "12345678".to_string())
