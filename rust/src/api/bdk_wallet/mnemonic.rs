@@ -59,3 +59,43 @@ impl FrbMnemonic {
         get_words_autocomplete(word_start)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    const ITERATIONS: usize = 1_000_000;
+    const PROGRESS_EVERY: usize = 10_000;
+
+    #[test]
+    fn bip39_mnemonic_no_collision_1m() {
+        let mut seen: HashMap<String, usize> = HashMap::new();
+
+        for iteration in 1..=ITERATIONS {
+            let mnemonic = FrbMnemonic::new(WordCount::Words12)
+                .expect("failed to generate mnemonic")
+                .as_string();
+
+            if let Some(first_iteration) = seen.get(&mnemonic) {
+                panic!(
+                    "BIP39 mnemonic collision at iteration {iteration} \
+                     (same as iteration {first_iteration}): {mnemonic}"
+                );
+            }
+            seen.insert(mnemonic, iteration);
+
+            if iteration % PROGRESS_EVERY == 0 {
+                eprintln!(
+                    "[bip39-collision] iteration {iteration}/{ITERATIONS} | unique: {}",
+                    seen.len()
+                );
+            }
+        }
+
+        assert_eq!(seen.len(), ITERATIONS);
+        eprintln!(
+            "[bip39-collision] passed: {ITERATIONS} iterations, all mnemonics unique"
+        );
+    }
+}
