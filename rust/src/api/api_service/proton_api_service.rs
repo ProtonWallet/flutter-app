@@ -9,14 +9,22 @@ use std::sync::Arc;
 use tracing::info;
 
 use super::{
-    address_client::AddressClient, bitcoin_address_client::BitcoinAddressClient,
-    block_client::BlockClient, discovery_content_client::DiscoveryContentClient,
-    email_integration_client::EmailIntegrationClient, event_client::EventClient,
-    exchange_rate_client::ExchangeRateClient, invite_client::InviteClient,
-    onramp_gateway_client::OnRampGatewayClient, price_graph_client::PriceGraphClient,
-    proton_contacts_client::ContactsClient, proton_email_addr_client::ProtonEmailAddressClient,
-    proton_settings_client::ProtonSettingsClient, proton_users_client::ProtonUsersClient,
-    settings_client::SettingsClient, transaction_client::TransactionClient,
+    address_client::AddressClient,
+    bitcoin_address_client::BitcoinAddressClient,
+    block_client::BlockClient,
+    discovery_content_client::DiscoveryContentClient,
+    email_integration_client::EmailIntegrationClient,
+    event_client::EventClient,
+    exchange_rate_client::ExchangeRateClient,
+    invite_client::InviteClient,
+    onramp_gateway_client::OnRampGatewayClient,
+    price_graph_client::PriceGraphClient,
+    proton_contacts_client::ContactsClient,
+    proton_email_addr_client::ProtonEmailAddressClient,
+    proton_settings_client::ProtonSettingsClient,
+    proton_users_client::ProtonUsersClient,
+    settings_client::SettingsClient,
+    transaction_client::TransactionClient,
     unleash_client::FrbUnleashClient,
     wallet_auth_store::{set_api_client_initializing, ProtonWalletAuthStore},
     wallet_client::WalletClient,
@@ -118,7 +126,7 @@ impl ProtonAPIService {
         let scopes = auth
             .tokens()
             .and_then(|t| t.scopes())
-            .map(|s| s.iter().cloned().collect())
+            .map(|s| s.to_vec())
             .unwrap_or_default();
         info!("session_id: {:?}", session_id);
         Ok(AuthCredential {

@@ -87,10 +87,7 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
       for (DataPoint dataPoint in priceGraph.graphData) {
         final double price = dataPoint.exchangeRate / widget.exchangeRate.cents;
         prices.add(price);
-        spots.add(FlSpot(
-          index.toDouble(),
-          price,
-        ));
+        spots.add(FlSpot(index.toDouble(), price));
         index++;
       }
     }
@@ -99,7 +96,11 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
       setState(() {
         dataPoints = spots;
         isLoading = false;
-        priceChange = (prices.last - prices.first) / prices.first * 100;
+        if (prices.isNotEmpty && prices.first != 0) {
+          priceChange = (prices.last - prices.first) / prices.first * 100;
+        } else {
+          priceChange = 0.0;
+        }
         if (prices.isNotEmpty) {
           prices.sort();
           percentile25 = prices[(prices.length * 0.25).floor()];
@@ -115,68 +116,64 @@ class BitcoinPriceHomepageChartState extends State<BitcoinPriceHomepageChart> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 40,
-      child: Row(children: [
-        Column(children: [
-          Container(
-            width: Responsive.isDesktop(context)
-                ? MediaQuery.of(context).size.width - drawerMaxWidth - 256
-                : MediaQuery.of(context).size.width - 256,
-            padding: const EdgeInsets.only(
-              left: 10,
-            ),
-            height: 40,
-            child: isLoading
-                ? SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: ProtonColors.protonBlue,
-                      ),
-                    ),
-                  )
-                : LineChart(
-                    LineChartData(
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: dataPoints,
-                          dotData: const FlDotData(
-                            show: false,
+      child: Row(
+        children: [
+          Column(
+            children: [
+              Container(
+                width: Responsive.isDesktop(context)
+                    ? MediaQuery.of(context).size.width - drawerMaxWidth - 256
+                    : MediaQuery.of(context).size.width - 256,
+                padding: const EdgeInsets.only(left: 10),
+                height: 40,
+                child: isLoading
+                    ? SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: ProtonColors.protonBlue,
                           ),
-                          color: widget.priceChange >= 0
-                              ? ProtonColors.notificationSuccess
-                              : ProtonColors.notificationError,
                         ),
-                      ],
-                      borderData: FlBorderData(
-                        show: false,
+                      )
+                    : LineChart(
+                        LineChartData(
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: dataPoints,
+                              dotData: const FlDotData(show: false),
+                              color: widget.priceChange >= 0
+                                  ? ProtonColors.notificationSuccess
+                                  : ProtonColors.notificationError,
+                            ),
+                          ],
+                          borderData: FlBorderData(show: false),
+                          lineTouchData: const LineTouchData(enabled: false),
+                          gridData: const FlGridData(
+                            drawVerticalLine: false,
+                            drawHorizontalLine: false,
+                          ),
+                          titlesData: const FlTitlesData(
+                            leftTitles: AxisTitles(),
+                            bottomTitles: AxisTitles(),
+                            rightTitles: AxisTitles(),
+                            topTitles: AxisTitles(),
+                          ),
+                        ),
                       ),
-                      lineTouchData: const LineTouchData(
-                        enabled: false,
-                      ),
-                      gridData: const FlGridData(
-                        drawVerticalLine: false,
-                        drawHorizontalLine: false,
-                      ),
-                      titlesData: const FlTitlesData(
-                        leftTitles: AxisTitles(),
-                        bottomTitles: AxisTitles(),
-                        rightTitles: AxisTitles(),
-                        topTitles: AxisTitles(),
-                      ),
-                    ),
-                  ),
+              ),
+            ],
           ),
-        ]),
-        Transform.translate(
-          offset: const Offset(10, 0),
-          child: Icon(
-            Icons.keyboard_arrow_up_rounded,
-            size: 24,
-            color: ProtonColors.textHint,
+          Transform.translate(
+            offset: const Offset(10, 0),
+            child: Icon(
+              Icons.keyboard_arrow_up_rounded,
+              size: 24,
+              color: ProtonColors.textHint,
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
