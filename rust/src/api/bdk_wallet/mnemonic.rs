@@ -68,6 +68,12 @@ mod tests {
     const ITERATIONS: usize = 1_000_000;
     const PROGRESS_EVERY: usize = 10_000;
 
+    /// Based on the birthday paradox, the probability of a real BIP39 mnemonic
+    /// collision is extremely low (approximately 1.5 × 10⁻²⁷ for 1 million
+    /// generated 12-word mnemonics). This test is not intended to prove
+    /// cryptographic randomness; instead, it is designed to catch implementation
+    /// issues such as reused entropy, fixed seeds, or incorrect wallet
+    /// generation flows.
     #[test]
     fn bip39_mnemonic_no_collision_1m() {
         let mut seen: HashMap<String, usize> = HashMap::new();
