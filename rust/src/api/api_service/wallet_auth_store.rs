@@ -1,6 +1,4 @@
-use andromeda_api::{
-    Auth, ChildSession, EnvId, Store, StoreError, Tokens, WalletAuthStore,
-};
+use andromeda_api::{Auth, ChildSession, EnvId, Store, StoreError, Tokens, WalletAuthStore};
 use async_trait::async_trait;
 use flutter_rust_bridge::frb;
 use std::sync::{
@@ -39,6 +37,23 @@ fn auth_session_changed(previous: &Auth, updated: &Auth) -> bool {
         || previous.scopes() != updated.scopes()
 }
 
+async fn notify_auth_session_changed(previous: &Auth, updated: &Auth) {
+    if matches!(updated, Auth::None) {
+        info!("notify skipped: updated auth is None");
+        return;
+    }
+    if !auth_session_changed(previous, updated) {
+        info!("notify skipped: session tokens unchanged");
+        return;
+    }
+    if is_api_client_initializing() {
+        info!("notify skipped: api client initializing");
+        return;
+    }
+    info!("notify: session changed, scheduling dart callback");
+    refresh_auth_credential(updated.clone()).await;
+}
+
 /// Wraps [`WalletAuthStore`] to notify Dart when muon refreshes auth tokens.
 struct CallbackWalletAuthStore {
     inner: WalletAuthStore,
@@ -63,9 +78,7 @@ impl Store<()> for CallbackWalletAuthStore {
     async fn set_auth(&mut self, key: &(), auth: Auth) -> Result<(), StoreError> {
         let previous = self.inner.get_auth(key).await.unwrap_or(Auth::None);
         self.inner.set_auth(key, auth.clone()).await?;
-        if auth_session_changed(&previous, &auth) && !is_api_client_initializing() {
-            refresh_auth_credential(auth);
-        }
+        notify_auth_session_changed(&previous, &auth).await;
         Ok(())
     }
 
@@ -81,7 +94,12 @@ impl Store<()> for CallbackWalletAuthStore {
         &mut self,
         auth: std::collections::HashMap<(), Auth>,
     ) -> Result<(), StoreError> {
-        self.inner.set_all_auth(auth).await
+        let previous = self.inner.get_auth(&()).await.unwrap_or(Auth::None);
+        self.inner.set_all_auth(auth.clone()).await?;
+        if let Some(updated) = auth.get(&()) {
+            notify_auth_session_changed(&previous, updated).await;
+        }
+        Ok(())
     }
 
     async fn remove_all_auth(&mut self) -> Result<(), StoreError> {
@@ -173,31 +191,51 @@ impl ProtonWalletAuthStore {
     }
 }
 
-fn refresh_auth_credential(auth: Auth) {
+async fn refresh_auth_credential(auth: Auth) {
     info!("refresh_auth_credential start");
-    let Ok(handle) = tokio::runtime::Handle::try_current() else {
-        info!("refresh_auth_credential skipped: no tokio runtime");
-        return;
+    let callback_option = {
+        let guard = GLOBAL_SESSION_DART_CALLBACK.lock().await;
+        guard.as_ref().cloned()
     };
 
-    handle.spawn(async move {
-        tokio::task::yield_now().await;
-        info!("refresh_auth_credential run deferred callback");
-        let cb = GLOBAL_SESSION_DART_CALLBACK.lock().await;
-        if let Some(callback) = cb.as_ref() {
+    flutter_rust_bridge::spawn(async move {
+        if let Some(callback) = callback_option {
             info!("refresh_auth_credential found callback and calling it");
             let session = ChildSession {
-                scopes: auth
-                    .scopes()
-                    .map(|s| s.iter().cloned().collect())
-                    .unwrap_or_default(),
+                scopes: auth.scopes().map(|s| s.to_vec()).unwrap_or_default(),
                 session_id: auth.uid().unwrap_or_default().to_string(),
                 access_token: auth.acc_tok().unwrap_or_default().to_string(),
                 refresh_token: auth.ref_tok().unwrap_or_default().to_string(),
             };
             let msg = callback(session).await;
-            info!("refresh_auth_credential messageFromDart: {}", msg);
+            info!("refresh_auth_credential messageFromDart: {msg}");
+        } else {
+            info!("refresh_auth_credential skipped: no dart callback registered");
         }
     });
-    info!("refresh_auth_credential end");
+    info!("refresh_auth_credential end (spawn scheduled)");
+}
+
+/// test supports
+#[cfg(test)]
+pub(crate) mod test_exports {
+    use std::sync::Arc;
+
+    use super::*;
+
+    pub fn auth_session_changed(previous: &Auth, updated: &Auth) -> bool {
+        super::auth_session_changed(previous, updated)
+    }
+
+    pub fn set_api_client_initializing(initializing: bool) {
+        super::set_api_client_initializing(initializing);
+    }
+
+    pub fn global_session_dart_callback() -> &'static Mutex<Option<Arc<DartCallback>>> {
+        &GLOBAL_SESSION_DART_CALLBACK
+    }
+
+    pub fn new_callback_store(inner: WalletAuthStore) -> Box<dyn Store<()>> {
+        Box::new(CallbackWalletAuthStore::new(inner))
+    }
 }
