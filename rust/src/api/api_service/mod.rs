@@ -18,3 +18,6 @@ pub mod transaction_client;
 pub mod unleash_client;
 pub mod wallet_auth_store;
 pub mod wallet_client;
+
+#[cfg(test)]
+mod wallet_auth_store_test;
