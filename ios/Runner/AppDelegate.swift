@@ -328,7 +328,45 @@ import flutter_local_notifications
         navigationChannel?.invokeMethod("flutter.navigation.to.home", arguments: jsonData)
     }
 
+    // User-facing login handoff alert copy, not credentials or key material.
+    private enum LoginHandoffUserMessage {
+        static let title = "Almost there" // nosemgrep: hardcoded_secret
+        static let tryAgain = "Sign-in didn't finish. Please try again." // nosemgrep: hardcoded_secret
+        static let needsPassword = "Please try again with your password." // nosemgrep: hardcoded_secret
+    }
+
+    private func showLoginHandoffError(
+        _ logMessage: String,
+        userMessage: String = LoginHandoffUserMessage.tryAgain
+    ) {
+        PMLog.error(logMessage)
+        guard let rootViewController else {
+            return
+        }
+        showAlert(
+            title: LoginHandoffUserMessage.title,
+            message: userMessage,
+            actionTitle: "OK",
+            over: rootViewController
+        )
+    }
+
     func switchToFlutterView(loginData: LoginData) {
+        guard let userKey = loginData.user.keys.first else {
+            showLoginHandoffError("Login handoff failed: user has no keys")
+            return
+        }
+        guard let salt = loginData.salts.first else {
+            showLoginHandoffError("Login handoff failed: loginData.salts is empty")
+            return
+        }
+        guard let passphrase = loginData.passphrases[salt.ID], !passphrase.isEmpty else {
+            showLoginHandoffError(
+                "Login handoff failed: missing passphrase for salt \(salt.ID)",
+                userMessage: LoginHandoffUserMessage.needsPassword)
+            return
+        }
+
         let jsonObject: [String: Any?] = [
             "sessionId": loginData.credential.sessionID,
             "userId": loginData.credential.userID,
@@ -338,17 +376,23 @@ import flutter_local_notifications
             "accessToken": loginData.credential.accessToken,
             "refreshToken": loginData.credential.refreshToken,
             "scopes": loginData.scopes.joined(separator: ","),
-            "userKeyID": loginData.user.keys[0].keyID,
+            "userKeyID": userKey.keyID,
             "userPrivateKey": loginData.credential.privateKey,
-            "userPassphraseSalt": loginData.salts[0].keySalt,
-            "userPassphrase": loginData.passphrases[loginData.salts[0].ID],
+            "userPassphraseSalt": salt.keySalt,
+            "userPassphrase": passphrase,
             "mailboxpasswordKeySalt": loginData.credential.passwordKeySalt,
             "mailboxpassword": loginData.credential.mailboxpassword,
         ]
 
-        let jsonData = try! JSONSerialization.data(
-            withJSONObject: jsonObject, options: .prettyPrinted)
-        let convertedString = String(data: jsonData, encoding: .utf8)!
+        guard
+            let jsonData = try? JSONSerialization.data(
+                withJSONObject: jsonObject, options: .prettyPrinted),
+            let convertedString = String(data: jsonData, encoding: .utf8)
+        else {
+            showLoginHandoffError(
+                "Login handoff failed: could not serialize login payload for Flutter")
+            return
+        }
 
         sendDataToFlutter(jsonData: convertedString)
     }

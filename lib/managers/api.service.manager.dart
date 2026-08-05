@@ -61,25 +61,28 @@ class ProtonApiServiceManager implements Manager {
     if (apiService != null) {
       logger.w("ApiService already initalized, updating the session");
       await apiService.updateAuth(
-          userId: userId,
-          uid: uid,
-          access: accessToken,
-          refresh: refreshToken,
-          scopes: scopes.split(","));
+        userId: userId,
+        uid: uid,
+        access: accessToken,
+        refresh: refreshToken,
+        scopes: scopes.split(","),
+      );
     } else {
       authStore = ProtonWalletAuthStore.fromSession(
-          env: env.toString(),
-          userId: userId,
-          uid: uid,
-          access: accessToken,
-          refresh: refreshToken,
-          scopes: scopes.split(","));
+        env: env.toString(),
+        userId: userId,
+        uid: uid,
+        access: accessToken,
+        refresh: refreshToken,
+        scopes: scopes.split(","),
+      );
       await authStore.setAuthDartCallback(callback: callback);
       _apiService = await ProtonApiService.newInstance(
-          env: env.toString(),
-          appVersion: appVersion,
-          userAgent: ua,
-          store: authStore);
+        env: env.toString(),
+        appVersion: appVersion,
+        userAgent: ua,
+        store: authStore,
+      );
     }
     await _apiService?.setProtonApi();
   }
