@@ -68,6 +68,56 @@ mod tests {
     const ITERATIONS: usize = 1_000_000;
     const PROGRESS_EVERY: usize = 10_000;
 
+    /// BIP39 English test vectors
+    /// See: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#test-vectors
+    const BIP39_VECTORS: &[([u8; 16], &str)] = &[
+        (
+            [0x00; 16],
+            "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+        ),
+        (
+            [0x7f; 16],
+            "legal winner thank year wave sausage worth useful legal winner thank yellow",
+        ),
+        (
+            [0x80; 16],
+            "letter advice cage absurd amount doctor acoustic avoid letter advice cage above",
+        ),
+        (
+            [0xff; 16],
+            "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong",
+        ),
+    ];
+
+    /// Inject known entropy instead of calling the OS RNG.
+    /// `FrbMnemonic::new_with` is the FFI hook used here to supply mock entropy
+    /// bytes in unit tests. **Flutter does not call `newWith`** — wallet
+    /// create uses `FrbMnemonic(wordCount: WordCount.words12)` → `FrbMnemonic::new()`.
+    #[test]
+    fn bip39_official_vectors_via_new_with() {
+        for (entropy, expected) in BIP39_VECTORS {
+            let mnemonic = FrbMnemonic::new_with(entropy.to_vec())
+                .expect("new_with should accept 128-bit entropy")
+                .as_string();
+            assert_eq!(
+                mnemonic, *expected,
+                "FrbMnemonic::new_with should match BIP39 vector for entropy {entropy:02x?}"
+            );
+        }
+    }
+
+    /// Two different mocked seeds must produce different mnemonics.
+    #[test]
+    fn different_mock_seeds_produce_different_mnemonics() {
+        let a = FrbMnemonic::new_with(BIP39_VECTORS[0].0.to_vec())
+            .unwrap()
+            .as_string();
+        let b = FrbMnemonic::new_with(BIP39_VECTORS[1].0.to_vec())
+            .unwrap()
+            .as_string();
+        assert_ne!(a, b);
+    }
+
     /// Based on the birthday paradox, the probability of a real BIP39 mnemonic
     /// collision is extremely low (approximately 1.5 × 10⁻²⁷ for 1 million
     /// generated 12-word mnemonics). This test is not intended to prove
