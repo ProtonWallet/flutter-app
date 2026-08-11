@@ -1367,7 +1367,7 @@ class SendViewModelImpl extends SendViewModel {
     } else if (origMsg.toLowerCase().contains("insufficientfunds")) {
       if (context != null && context.mounted) {
         context.showSnackbar(
-          S.of(context).error_this_bitcoin_address_incorrect_checksum,
+          S.of(context).error_you_dont_have_sufficient_balance,
           isError: true,
         );
       }
