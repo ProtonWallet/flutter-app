@@ -11,6 +11,10 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These functions are ignored because they are not marked as `pub`: `from_str`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
+/// Generate a 12-word mnemonic on a fresh OS thread (for dev/testing).
+Future<String> testGenerateMnemonicOnNewThread() => RustLib.instance.api
+    .crateApiBdkWalletMnemonicTestGenerateMnemonicOnNewThread();
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<FrbMnemonic>>
 abstract class FrbMnemonic implements RustOpaqueInterface {
   /// Returns the Mnemonic as a string.

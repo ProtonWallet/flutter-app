@@ -158,7 +158,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1045793922;
+  int get rustContentHash => 1409957649;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -1978,6 +1978,8 @@ abstract class RustLibApi extends BaseApi {
   Future<EmailIntegrationBitcoinAddress> crateApiProtonApiLookupBitcoinAddress({
     required String email,
   });
+
+  Future<String> crateApiBdkWalletMnemonicTestGenerateMnemonicOnNewThread();
 
   Future<ApiWalletBitcoinAddress> crateApiProtonApiUpdateBitcoinAddress({
     required String walletId,
@@ -15875,6 +15877,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<String> crateApiBdkWalletMnemonicTestGenerateMnemonicOnNewThread() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 338,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_bridge_error,
+        ),
+        constMeta:
+            kCrateApiBdkWalletMnemonicTestGenerateMnemonicOnNewThreadConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiBdkWalletMnemonicTestGenerateMnemonicOnNewThreadConstMeta =>
+      const TaskConstMeta(
+        debugName: "test_generate_mnemonic_on_new_thread",
+        argNames: [],
+      );
+
+  @override
   Future<ApiWalletBitcoinAddress> crateApiProtonApiUpdateBitcoinAddress({
     required String walletId,
     required String walletAccountId,
@@ -15892,7 +15926,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 338,
+            funcId: 339,
             port: port_,
           );
         },
@@ -15936,7 +15970,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           return pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 339,
+            funcId: 340,
           )!;
         },
         codec: SseCodec(

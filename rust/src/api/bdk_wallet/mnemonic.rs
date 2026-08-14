@@ -60,6 +60,20 @@ impl FrbMnemonic {
     }
 }
 
+/// Generate a 12-word mnemonic on a fresh OS thread (for testing purposes).
+#[frb]
+pub async fn test_generate_mnemonic_on_new_thread() -> Result<String, BridgeError> {
+    let (tx, rx) = tokio::sync::oneshot::channel();
+    std::thread::spawn(move || {
+        let result = Mnemonic::new(WordCount::Words12.into()).map(|m| m.as_string());
+        let _ = tx.send(result);
+    });
+    let mnemonic = rx
+        .await
+        .map_err(|_| BridgeError::Generic("mnemonic generation thread dropped".into()))?;
+    mnemonic.map_err(Into::into)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
