@@ -14,6 +14,7 @@ import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/helper/exchange.caculator.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
 import 'package:wallet/helper/logger.dart';
@@ -27,6 +28,7 @@ import 'package:wallet/managers/services/exchange.rate.service.dart';
 import 'package:wallet/models/account.model.dart';
 import 'package:wallet/models/wallet.model.dart';
 import 'package:wallet/provider/theme.provider.dart';
+import 'package:wallet/rust/api/bdk_wallet/mnemonic.dart';
 import 'package:wallet/rust/api/errors.dart';
 import 'package:wallet/rust/proton_api/exchange_rate.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
@@ -1013,6 +1015,34 @@ Widget buildSidebar(BuildContext context, HomeViewModel viewModel) {
                                 },
                                 onSecurity: () {
                                   viewModel.move(NavID.securitySetting);
+                                },
+                                isMobileClientDebugMode: viewModel.isMobileClientDebugMode,
+                                onTestWalletCreate: () async {
+                                  try {
+                                    final mnemonic =
+                                        await testGenerateMnemonicOnNewThread();
+                                    if (context.mounted) {
+                                      LocalToast.showToast(
+                                        context,
+                                        mnemonic,
+                                        duration: 5,
+                                      );
+                                    }
+                                  } on BridgeError catch (e) {
+                                    if (context.mounted) {
+                                      LocalToast.showErrorToast(
+                                        context,
+                                        e.localizedString,
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      LocalToast.showErrorToast(
+                                        context,
+                                        e.toString(),
+                                      );
+                                    }
+                                  }
                                 },
                                 onRecovery: () {
                                   viewModel.move(NavID.recovery);

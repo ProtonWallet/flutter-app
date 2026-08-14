@@ -1,5 +1,6 @@
-// home.view.dart
+// home.menu.list.dart
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
@@ -12,11 +13,13 @@ class HomeMoreSettings extends StatelessWidget {
   final GestureTapCallback? onDiscover;
   final GestureTapCallback? onSettings;
   final GestureTapCallback? onSecurity;
+  final GestureTapCallback? onTestWalletCreate;
   final GestureTapCallback? onRecovery;
   final GestureTapCallback? onReportBug;
   final GestureTapCallback? onLogout;
   final bool hideReport = true;
   final bool hidePayment = true;
+  final bool isMobileClientDebugMode;
 
   const HomeMoreSettings({
     super.key,
@@ -24,9 +27,11 @@ class HomeMoreSettings extends StatelessWidget {
     this.onDiscover,
     this.onSettings,
     this.onSecurity,
+    this.onTestWalletCreate,
     this.onRecovery,
     this.onReportBug,
     this.onLogout,
+    this.isMobileClientDebugMode = false,
   });
 
   @override
@@ -72,6 +77,15 @@ class HomeMoreSettings extends StatelessWidget {
           icon: Assets.images.icon.icShield,
           text: S.of(context).security,
         ),
+
+        /// Show the test wallet create button if the debug mode is enabled (i.e. e2e testing account)
+        if (isMobileClientDebugMode)
+          _buildListTile(
+            context,
+            onTap: onTestWalletCreate,
+            icon: Assets.images.icon.icDiamondwalletPlus,
+            text: 'Test Wallet Create',
+          ),
         _buildListTile(
           context,
           onTap: onRecovery,

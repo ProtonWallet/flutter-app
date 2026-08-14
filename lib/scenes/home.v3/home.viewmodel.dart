@@ -277,6 +277,8 @@ abstract class HomeViewModel extends ViewModel<HomeCoordinator> {
 
   bool get isBuyMobileDisabled;
 
+  bool get isMobileClientDebugMode;
+
   Future<void> inAppReviewCheck({bool fromSend = false});
 
   Future<void> backupYourWalletCheck();
@@ -940,6 +942,11 @@ class HomeViewModelImpl extends HomeViewModel {
   bool get isBuyMobileDisabled {
     final check = unleashDataProvider.isBuyMobileDisabled();
     return check;
+  }
+
+  @override
+  bool get isMobileClientDebugMode {
+    return unleashDataProvider.isMobileClientDebugMode();
   }
 
   @override
