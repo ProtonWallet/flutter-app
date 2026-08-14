@@ -89,7 +89,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1045793922;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1409957649;
 
 // Section: executor
 
@@ -12590,6 +12590,44 @@ fn wire__crate__api__proton_api__lookup_bitcoin_address_impl(
         },
     )
 }
+fn wire__crate__api__bdk_wallet__mnemonic__test_generate_mnemonic_on_new_thread_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "test_generate_mnemonic_on_new_thread",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::errors::BridgeError>(
+                    (move || async move {
+                        let output_ok =
+                            crate::api::bdk_wallet::mnemonic::test_generate_mnemonic_on_new_thread(
+                            )
+                            .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__proton_api__update_bitcoin_address_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -18295,7 +18333,8 @@ fn pde_ffi_dispatcher_primary_impl(
 333 => wire__crate__api__proton_api__get_wallet_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
 334 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
 337 => wire__crate__api__proton_api__lookup_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
-338 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
+338 => wire__crate__api__bdk_wallet__mnemonic__test_generate_mnemonic_on_new_thread_impl(port, ptr, rust_vec_len, data_len),
+339 => wire__crate__api__proton_api__update_bitcoin_address_impl(port, ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
@@ -18442,7 +18481,7 @@ fn pde_ffi_dispatcher_sync_impl(
 329 => wire__crate__api__proton_wallet__crypto__wallet_key_helper__frb_wallet_key_helper_restore_impl(ptr, rust_vec_len, data_len),
 335 => wire__crate__api__logger__init_rust_logging_impl(ptr, rust_vec_len, data_len),
 336 => wire__crate__api__panic_hook__initialize_panic_hook_impl(ptr, rust_vec_len, data_len),
-339 => wire__crate__api__bdk_wallet__storage__wallet_mobile_persister_factory_new_impl(ptr, rust_vec_len, data_len),
+340 => wire__crate__api__bdk_wallet__storage__wallet_mobile_persister_factory_new_impl(ptr, rust_vec_len, data_len),
                         _ => unreachable!(),
                     }
 }
