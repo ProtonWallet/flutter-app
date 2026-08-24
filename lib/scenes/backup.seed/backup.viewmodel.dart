@@ -101,7 +101,8 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
           serverEphemeral: authInfo.serverEphemeral);
 
       /// password scop unlock password change  ---  add 2fa code if needed
-      final proofs = authInfo.twoFa.enabled != 0
+      /// `enabled` status: 0 = disabled, 1 = TOTP (authenticator app), 2 = security key (FIDO2), 3 = both.
+      final proofs = (authInfo.twoFa.enabled != 0 && authInfo.twoFa.enabled != 2)
           ? ProtonSrpClientProofs(
               clientEphemeral: clientProofs.clientEphemeral,
               clientProof: clientProofs.clientProof,
@@ -112,9 +113,12 @@ class SetupBackupViewModelImpl extends SetupBackupViewModel {
               clientProof: clientProofs.clientProof,
               srpSession: authInfo.srpSession);
 
-      final serverProofs = await protonUsersApi.unlockPasswordChange(
-        proofs: proofs,
-      );
+      /// Call `/unlock` API when user only enable FIDO2 key (i.e. enabled == 2)
+      /// Otherwise, call `/password` API
+      final serverProofs = authInfo.twoFa.enabled == 2
+          ? await protonUsersApi.unlockSensitiveSettings(proofs: proofs)
+          : await protonUsersApi.unlockPasswordChange(proofs: proofs);
+
 
       strMnemonic = await walletMnemonicService.getMnemonicWithID(walletID);
       strMnemonic.split(" ").forEachIndexed((index, element) {

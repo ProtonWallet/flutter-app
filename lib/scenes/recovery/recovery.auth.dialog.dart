@@ -22,6 +22,9 @@ Future<void> showAuthBottomSheet(
   final passwordController = TextEditingController();
   final twofaController = TextEditingController();
   final passwordFocusNode = FocusNode();
+
+  /// 0 for disabled, 1 for TOTP (authenticator app), 2 for security key (FIDO2), 3 for both
+  final shouldShowTwoFa = twoFaEnable != 0 && twoFaEnable != 2; // if 2FA is enabled and not only fido2 enabled, show the two-factor code
   Future.delayed(
       const Duration(milliseconds: 200), passwordFocusNode.requestFocus);
   return HomeModalBottomSheet.show(context,
@@ -66,7 +69,7 @@ Future<void> showAuthBottomSheet(
                   borderColor: ProtonColors.interActionWeakDisable,
                 ),
                 const SizedBox(height: 16),
-                if (twoFaEnable != 0)
+                if (shouldShowTwoFa)
                   Center(
                     child: Text(
                       S.of(context).two_factor_code,
@@ -75,8 +78,8 @@ Future<void> showAuthBottomSheet(
                       textAlign: TextAlign.center,
                     ),
                   ),
-                if (twoFaEnable != 0) const SizedBox(height: 16),
-                if (twoFaEnable != 0)
+                if (shouldShowTwoFa) const SizedBox(height: 16),
+                if (shouldShowTwoFa)
                   Center(
                     child: Text(
                       S.of(context).two_factor_code_desc,
@@ -85,8 +88,8 @@ Future<void> showAuthBottomSheet(
                       textAlign: TextAlign.center,
                     ),
                   ),
-                if (twoFaEnable != 0) const SizedBox(height: 8),
-                if (twoFaEnable != 0)
+                if (shouldShowTwoFa) const SizedBox(height: 8),
+                if (shouldShowTwoFa)
                   CupertinoTextField.borderless(
                     keyboardType: TextInputType.visiblePassword,
                     controller: twofaController,
