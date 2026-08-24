@@ -138,7 +138,9 @@ impl ProtonAuthProvider for ProtonAuthProviderImpl {
         srp_proof: &SRPProofB64,
     ) -> Result<ProtonSrpClientProofs> {
         // Check if 2FA is enabled and add the two-factor code if needed
-        let proofs = if auth_info.two_fa.Enabled != 0 {
+        // if 2FA is enabled and not only fido2 enabled, add the two-factor code
+        // `enabled` status: 0 = disabled, 1 = TOTP (authenticator app), 2 = security key (FIDO2), 3 = both.
+        let proofs = if auth_info.two_fa.Enabled != 0 && auth_info.two_fa.Enabled != 2  {
             ProtonSrpClientProofs {
                 ClientEphemeral: srp_proof.client_ephemeral.clone(),
                 ClientProof: srp_proof.client_proof.clone(),
@@ -242,6 +244,29 @@ mod tests {
         mock_client.expect_get_auth_info().returning(|_| {
             let mut info = mock_auth_info_response();
             info.two_fa.Enabled = 0;
+            Ok(info)
+        });
+        let auth_provider = ProtonAuthProviderImpl::new(Arc::new(mock_client));
+        let auth_info = auth_provider.auth_info().await.unwrap();
+        let proofs = auth_provider
+            .generate_srp_proofs("password", None)
+            .await
+            .unwrap();
+        let client_proofs = auth_provider
+            .build_client_proofs("123456", &auth_info, &proofs)
+            .unwrap();
+        assert!(!client_proofs.ClientEphemeral.is_empty());
+        assert!(!client_proofs.ClientProof.is_empty());
+        assert_eq!(client_proofs.SRPSession, "test_session");
+        assert!(client_proofs.TwoFactorCode.is_none());
+    }
+
+    #[tokio::test]
+    async fn test_build_client_proofs_without_2fa_when_only_fido2_enabled() {
+        let mut mock_client = MockProtonUsersClient::new();
+        mock_client.expect_get_auth_info().returning(|_| {
+            let mut info = mock_auth_info_response();
+            info.two_fa.Enabled = 2; // only fido2 enabled
             Ok(info)
         });
         let auth_provider = ProtonAuthProviderImpl::new(Arc::new(mock_client));
