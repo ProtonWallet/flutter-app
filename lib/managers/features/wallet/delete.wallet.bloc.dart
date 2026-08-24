@@ -1,8 +1,11 @@
+import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry/sentry.dart';
 import 'package:wallet/helper/exceptions.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/managers/app.state.manager.dart';
 import 'package:wallet/managers/providers/wallet.data.provider.dart';
 import 'package:wallet/models/wallet.model.dart';
@@ -116,8 +119,17 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
         try {
           final authInfo = await protonUsersApi.getAuthInfo(intent: "Proton");
 
-          /// 0 for disabled, 1 for OTP, 2 for FIDO2, 3 for both
+          /// 0 for disabled, 1 for TOTP (authenticator app), 2 for security key (FIDO2), 3 for both
           final twoFaEnable = authInfo.twoFa.enabled;
+
+          if (twoFaEnable == 2) {
+            throw Exception(
+              lookupS(
+                PlatformDispatcher.instance.locale,
+              ).delete_wallet_security_key_not_supported(ExternalUrl.shared.accountUrl),
+            );
+          }
+
           final authSetp = DeleteWalletAuthModel(
             requireAuth: true,
             twofaStatus: twoFaEnable,
