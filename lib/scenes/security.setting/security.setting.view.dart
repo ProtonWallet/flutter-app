@@ -3,6 +3,7 @@ import 'package:wallet/constants/constants.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/constants/text.style.dart';
 import 'package:wallet/helper/extension/build.context.extension.dart';
+import 'package:wallet/helper/external.url.dart';
 import 'package:wallet/helper/local_toast.dart';
 import 'package:wallet/l10n/generated/locale.dart';
 import 'package:wallet/models/unlock.timer.dart';
@@ -48,6 +49,15 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
             isLoading: viewModel.isLoading,
             isSwitched: viewModel.hadSetup2FATotp,
             onChanged: (bool newValue) {
+              if (viewModel.hadSetup2FASecurityKey) {
+                LocalToast.showErrorToast(
+                  context,
+                  context.local.security_key_not_supported(
+                    ExternalUrl.shared.accountUrl,
+                  ),
+                );
+                return;
+              }
               // try to disable recovery
               if (!newValue) {
                 viewModel.move(NavID.twoFactorAuthDisable);

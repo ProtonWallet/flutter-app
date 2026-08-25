@@ -399,7 +399,7 @@
   "confirm_to_delete_wallet": "Confirm to delete \"{walletName}\"",
   "confirm_to_delete_wallet_has_balance_warning": "This wallet seems to still have assets. We recommend you send the assets to another wallet before deleting.",
   "confirm_to_delete_wallet_content": "Deleting wallet will delete all data of this wallet from Proton's servers. Note that if you have this wallet's seed phrase, you can still recover this wallet later.",
-  "delete_wallet_security_key_not_supported": "Security key sign-in is not supported on this application, please use {accountUrl}",
+  "security_key_not_supported": "Security key sign-in is not supported on this application, please use {accountUrl}",
   "confirm_to_delete_wallet_account": "Confirm to delete \"{walletAccountName}\"",
   "confirm_to_delete_wallet_account_has_balance_warning": "This account seems to still have assets. We recommend you send the assets to another account before deleting.",
   "confirm_to_delete_wallet_account_content": "Deleting a BTC account will delete all of its metadata from Proton servers. You can still recover it later by adding it again with the right account index and address type.",
