@@ -126,7 +126,7 @@ class DeleteWalletBloc extends Bloc<DeleteWalletEvent, DeleteWalletState> {
             throw Exception(
               lookupS(
                 PlatformDispatcher.instance.locale,
-              ).delete_wallet_security_key_not_supported(ExternalUrl.shared.accountUrl),
+              ).security_key_not_supported(ExternalUrl.shared.accountUrl),
             );
           }
 
