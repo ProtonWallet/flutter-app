@@ -417,6 +417,8 @@ class HomeViewModelImpl extends HomeViewModel {
     /// user data
     _userDataSubscription = userDataProvider.stream.listen((state) {
       if (state is TwoFaUpdated) {
+        /// If user has setup security key, or authenticator app, then we mark 2FA as enabled
+        /// We don't need to ask user to setup 2FA again in security checklist
         hadSetup2FA = state.updatedData;
         checkPreference();
       } else if (state is RecoveryUpdated) {

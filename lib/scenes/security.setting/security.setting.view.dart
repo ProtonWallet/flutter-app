@@ -42,11 +42,11 @@ class SecuritySettingView extends ViewBase<SecuritySettingViewModel> {
             ),
           const SizedBox(height: 10),
           RecoverySection(
-            title: 'Two-factor authentication',
+            title: 'Two-factor authentication (Authenticator app)',
             description:
                 'Add another layer of security to your account. You’ll need to verify yourself with 2FA every time you sign in.',
             isLoading: viewModel.isLoading,
-            isSwitched: viewModel.hadSetup2FA,
+            isSwitched: viewModel.hadSetup2FATotp,
             onChanged: (bool newValue) {
               // try to disable recovery
               if (!newValue) {
