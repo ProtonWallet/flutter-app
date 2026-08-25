@@ -26,6 +26,9 @@ abstract class SecuritySettingViewModel
 
   /// This is only for TOTP (authenticator app), not for security key (FIDO2)
   bool hadSetup2FATotp = false;
+
+  bool hadSetup2FASecurityKey = false;
+
   String error = "";
 }
 
@@ -57,7 +60,7 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
   Future<void> loadData() async {
     protonUserDataSubscription = userDataProvider.stream.listen((state) async {
       if (state is TwoFaUpdated) {
-        await _check2FATotp();
+        await _check2FAStatus();
       }
     });
 
@@ -70,10 +73,10 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
 
     sinkAddSafe();
 
-    await _check2FATotp();
+    await _check2FAStatus();
   }
 
-  Future<void> _check2FATotp() async {
+  Future<void> _check2FAStatus() async {
     try {
       final protonUserSettings = await protonUserApi.getUserSettings();
       if (protonUserSettings.twoFa != null) {
@@ -81,6 +84,10 @@ class SecuritySettingViewModelImpl extends SecuritySettingViewModel {
         hadSetup2FATotp =
             protonUserSettings.twoFa!.enabled != 0 &&
             protonUserSettings.twoFa!.enabled != 2;
+
+        hadSetup2FASecurityKey =
+            protonUserSettings.twoFa!.enabled != 0 &&
+            protonUserSettings.twoFa!.enabled != 1;
       }
       isLoading = false;
     } on BridgeError catch (e) {
