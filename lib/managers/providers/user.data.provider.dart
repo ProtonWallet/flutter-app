@@ -98,6 +98,9 @@ class UserDataProvider extends DataProvider {
     bool enabled2FA = false;
     if (user.protonUserSettings != null) {
       if (user.protonUserSettings!.twoFa != null) {
+        /// If user has setup security key, or authenticator app, then we mark 2FA as enabled
+        /// We don't need to ask user to setup 2FA again in security checklist
+        /// 0 for disabled, 1 for TOTP (authenticator app), 2 for security key (FIDO2), 3 for both
         enabled2FA = user.protonUserSettings!.twoFa!.enabled != 0;
       }
     }
