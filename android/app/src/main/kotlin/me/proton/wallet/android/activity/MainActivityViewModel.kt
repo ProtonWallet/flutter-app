@@ -49,6 +49,7 @@ import me.proton.core.network.domain.session.SessionId
 import me.proton.core.network.domain.session.SessionProvider
 import me.proton.core.plan.presentation.PlansOrchestrator
 import me.proton.core.report.presentation.ReportOrchestrator
+import me.proton.core.report.presentation.entity.BugReportInput
 import me.proton.core.user.domain.UserManager
 import me.proton.core.user.domain.repository.PassphraseRepository
 import me.proton.core.usersettings.presentation.UserSettingsOrchestrator
@@ -140,8 +141,11 @@ class MainActivityViewModel @Inject constructor(
         plansOrchestrator.startUpgradeWorkflow(accountSession.account.userId)
     }
 
-    fun startReport() = viewModelScope.launch {
-        reportOrchestrator.startBugReport()
+    @Suppress("DEPRECATION")
+    fun startReport(username: String, email: String) = viewModelScope.launch {
+        reportOrchestrator.startBugReport(
+            BugReportInput(email = email, username = username)
+        )
     }
 
     fun startPasswordManagement(accountSession: AccountSession) = viewModelScope.launch {
