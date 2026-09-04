@@ -60,8 +60,8 @@ class MainActivity : FlutterFragmentActivity(), NativeCallHandler {
         viewModel.startSignUp()
     }
 
-    override fun startReport() {
-        viewModel.startReport()
+    override fun startReport(username: String, email: String) {
+        viewModel.startReport(username, email)
     }
 
     override fun startSubscription(accountSession: AccountSession) {

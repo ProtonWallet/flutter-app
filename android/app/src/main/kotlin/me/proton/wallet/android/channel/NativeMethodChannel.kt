@@ -35,7 +35,7 @@ import me.proton.wallet.android.WalletLogger
 interface NativeCallHandler {
     fun startLogin()
     fun startSignUp()
-    fun startReport()
+    fun startReport(username: String, email: String)
     fun startSubscription(accountSession: AccountSession)
     fun startUpgrade(accountSession: AccountSession)
     fun startChangePassword(accountSession: AccountSession)
@@ -76,7 +76,14 @@ class NativeMethodChannel(
                     )
                     "native.navigation.login" -> callHandler.startLogin()
                     "native.navigation.signup" -> callHandler.startSignUp()
-                    "native.navigation.report" -> callHandler.startReport()
+                    "native.navigation.report" -> {
+                        val email = arguments["email"] as? String
+                        val username = arguments["username"] as? String
+                        require(!email.isNullOrBlank() && !username.isNullOrBlank()) {
+                            "Missing username or email for bug report"
+                        }
+                        callHandler.startReport(username = username, email = email)
+                    }
                     "native.navigation.plan.subscription" -> callHandler.startSubscription(
                         getAccountSession(account, session)
                     )
