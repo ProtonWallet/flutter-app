@@ -49,30 +49,32 @@ class BackupMnemonicView extends StatelessWidget {
           const SizedBox(
             height: 16,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  for (int i = 0; i < itemList.length ~/ 2; i++)
-                    TagV2(
-                      width: 164,
-                      text: itemList[i].title!,
-                      index: i + 1,
-                    ),
-                ],
-              ),
-              Column(
-                children: [
-                  for (int i = itemList.length ~/ 2; i < itemList.length; i++)
-                    TagV2(
-                      width: 164,
-                      text: itemList[i].title!,
-                      index: i + 1,
-                    ),
-                ],
-              ),
-            ],
+          ExcludeSemantics(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    for (int i = 0; i < itemList.length ~/ 2; i++)
+                      TagV2(
+                        width: 164,
+                        text: itemList[i].title!,
+                        index: i + 1,
+                      ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    for (int i = itemList.length ~/ 2; i < itemList.length; i++)
+                      TagV2(
+                        width: 164,
+                        text: itemList[i].title!,
+                        index: i + 1,
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(
             height: 22,

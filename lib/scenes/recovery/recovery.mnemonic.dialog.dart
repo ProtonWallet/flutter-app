@@ -80,70 +80,72 @@ Future<void> showMnemonicDialog(
                 ),
               ),
               const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(16),
+              ExcludeSemantics(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
                   ),
-                  border: Border.all(
-                    color: ProtonColors.backgroundNorm,
-                    width: 1.6,
-                  ),
-                ),
-                width: MediaQuery.of(context).size.width,
-                child: Column(children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      S.of(context).recovery_phrase,
-                      style: ProtonStyles.body2Regular(
-                        color: ProtonColors.textWeak,
-                      ),
-                      textAlign: TextAlign.left,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(16),
+                    ),
+                    border: Border.all(
+                      color: ProtonColors.backgroundNorm,
+                      width: 1.6,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      Clipboard.setData(ClipboardData(text: mnemonic))
-                          .then((_) {
-                        if (context.mounted) {
-                          LocalToast.showToast(
-                            context,
-                            "Recovery phrase copied to clipboard",
-                          );
-                        }
-                      });
-                    },
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4),
-                              Text(
-                                mnemonic,
-                                style: ProtonStyles.body1Medium(
-                                  color: ProtonColors.textNorm,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                            ],
-                          ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        S.of(context).recovery_phrase,
+                        style: ProtonStyles.body2Regular(
+                          color: ProtonColors.textWeak,
                         ),
-                        Assets.images.icon.icSquares.svg(
-                          width: 24,
-                          height: 24,
-                          fit: BoxFit.fill,
-                        )
-                      ],
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                  ),
-                ]),
+                    GestureDetector(
+                      onTap: () async {
+                        Clipboard.setData(ClipboardData(text: mnemonic))
+                            .then((_) {
+                          if (context.mounted) {
+                            LocalToast.showToast(
+                              context,
+                              "Recovery phrase copied to clipboard",
+                            );
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(
+                                  mnemonic,
+                                  style: ProtonStyles.body1Medium(
+                                    color: ProtonColors.textNorm,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                              ],
+                            ),
+                          ),
+                          Assets.images.icon.icSquares.svg(
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.fill,
+                          )
+                        ],
+                      ),
+                    ),
+                  ]),
+                ),
               ),
               const SizedBox(
                 height: 40,
