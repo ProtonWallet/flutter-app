@@ -172,7 +172,7 @@ class HomeView extends ViewBase<HomeViewModel> {
                                           viewModel.move(NavID.send);
                                         },
                                         onBuy: () {
-                                          viewModel.move(NavID.buy);
+                                          viewModel.move(NavID.buyUnavailable);
                                         },
                                         onDisabledBuy: () {
                                           viewModel.move(NavID.buyUnavailable);
@@ -354,48 +354,6 @@ class HomeView extends ViewBase<HomeViewModel> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              if (!viewModel
-                                                  .isBuyMobileDisabled)
-                                                ButtonV5(
-                                                    enable: walletListState
-                                                        .initialized,
-                                                    onPressed: () {
-                                                      viewModel.move(NavID.buy);
-                                                    },
-                                                    onDisablePressed: () {
-                                                      viewModel.move(
-                                                          NavID.buyUnavailable);
-                                                    },
-                                                    textDisableStyle:
-                                                        ProtonStyles
-                                                            .body1Medium(
-                                                      color: ProtonColors
-                                                          .textDisable,
-                                                    ),
-                                                    disableWithAction: viewModel
-                                                        .isBuyMobileDisabled,
-                                                    backgroundColor: viewModel
-                                                            .isBuyMobileDisabled
-                                                        ? ProtonColors
-                                                            .interActionWeakDisable
-                                                        : ProtonColors.black,
-                                                    text: S.of(context).buy,
-                                                    width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width >
-                                                            424
-                                                        ? 180
-                                                        : MediaQuery.of(context)
-                                                                    .size
-                                                                    .width /
-                                                                2 -
-                                                            defaultPadding * 2,
-                                                    textStyle: ProtonStyles
-                                                        .body1Medium(
-                                                            color: ProtonColors
-                                                                .textInverted),
-                                                    height: 55),
                                             ]),
                                         const SizedBox(
                                           height: 10,

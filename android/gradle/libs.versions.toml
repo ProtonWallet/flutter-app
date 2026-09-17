@@ -56,10 +56,6 @@ kotlinx-serialization-json = "1.6.3"
 #rust layer
 rustls-platform-verifier = "latest.release"
 
-# OnRamp
-ramp = "4.0.1"
-moonpay = "1.1.2"
-
 # Sentry
 sentry = "8.29.0"
 
@@ -208,10 +204,6 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
-
-## OnRamp
-ramp-sdk-android = { module = "com.github.RampNetwork:ramp-sdk-android", version.ref = "ramp" }
-moonpay-sdk-android = { module = "com.moonpay.sdk:MoonPaySdk-android", version.ref = "moonpay" }
 
 #
 sentry-android-core = { module = "io.sentry:sentry-android-core", version.ref = "sentry" }

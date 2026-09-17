@@ -1,7 +1,6 @@
 import CommonCrypto
 import CryptoKit
 import Flutter
-import MoonPaySdk
 import ProtonCoreAuthentication
 import ProtonCoreChallenge
 import ProtonCoreCryptoGoImplementation
@@ -145,77 +144,6 @@ import flutter_local_notifications
                 print("native.account.logout triggered")
                 FeatureFlagsRepository.shared.clearUserId()
                 FeatureFlagsRepository.shared.resetFlags()
-            default:
-                result(FlutterMethodNotImplemented)
-            }
-        }
-
-        let moonPayChannel = FlutterMethodChannel(
-            name: "me.proton.wallet/onramp.moon.pay",
-            binaryMessenger: messenger)
-        moonPayChannel.setMethodCallHandler { [weak self] (call, result) in
-            guard let self = self else { return }
-            switch call.method {
-            case "moon.pay.show":
-                // These run in your application and are all the of handlers available to you.
-                let handlers = MoonPayHandlers(
-                    onAuthToken: { data in
-                        print("onAuthToken called", data)
-                    },
-                    onSwapsCustomerSetupComplete: {
-                        print("onSwapsCustomerSetupComplete called")
-                    },
-                    onUnsupportedRegion: {
-                        print("onUnsupportedRegion called")
-                    },
-                    onKmsWalletCreated: {
-                        print("onKmsWalletCreated called")
-                    },
-                    onLogin: { data in
-                        print("onLogin called", data)
-                    },
-                    onInitiateDeposit: { data in
-                        // place holder
-                        print("onInitiateDepositCalled")
-                        let response = OnInitiateDepositResponsePayload(depositId: "place holder")
-                        return response
-                    },
-                    onTransactionCreated: { data in
-                        print("onTransactionCreated called", data)
-                    },
-                    onTransactionCompleted: { data in
-                        print("onTransactionCompleted called", data)
-                    }
-                )
-
-                guard let configurationArguments = call.arguments as? [String: Any],
-                    let configuration = try? MoonPayConfiguration.from(configurationArguments)
-                else {
-                    return result(
-                        FlutterError(
-                            code: "INVALID_ARGUMENTS",
-                            message: "Can't parse arguments. \"moon.pay.show\".",
-                            details: nil))
-                }
-
-                let params = MoonPayBuyQueryParams(apiKey: configuration.hostApiKey)
-                params.setCurrencyCode(value: "btc")
-                params.setBaseCurrencyCode(value: configuration.fiatCurrency)
-                let mpsDoubleValue = KotlinDouble(value: configuration.fiatValue)
-                params.setBaseCurrencyAmount(value: mpsDoubleValue)
-                params.setPaymentMethod(value: configuration.paymentMethod)
-                params.setShowWalletAddressForm(value: configuration.showAddressForm)
-                params.setWalletAddress(value: configuration.userAddress)
-
-                let config = MoonPaySdkBuyConfig(
-                    debug: false,
-                    environment: MoonPayWidgetEnvironment.production,
-                    params: params,
-                    handlers: handlers
-                )
-                let moonPaySdk = MoonPayiOSSdk(config: config)
-                moonPaySdk.show(mode: MoonPayRenderingOptioniOS.WebViewOverlay())
-
             default:
                 result(FlutterMethodNotImplemented)
             }

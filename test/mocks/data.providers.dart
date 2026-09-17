@@ -6,7 +6,6 @@ import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exchange.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
-import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/pool.address.data.provider.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
@@ -31,7 +30,6 @@ import 'package:wallet/managers/providers/wallet.passphrase.provider.dart';
   ConnectivityProvider,
   ContactsDataProvider,
   ExclusiveInviteDataProvider,
-  GatewayDataProvider,
   LocalBitcoinAddressDataProvider,
   PoolAddressDataProvider,
   ProtonAddressProvider,

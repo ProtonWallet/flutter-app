@@ -13,10 +13,6 @@ PODS:
   - qr_code_scanner (0.2.0):
     - Flutter
     - MTBBarcodeScanner
-  - Ramp (4.0.2)
-  - ramp_flutter (1.0.1):
-    - Flutter
-    - Ramp
   - rust_builder (0.0.1):
     - Flutter
   - ScreenProtectorKit (1.3.1)
@@ -30,8 +26,6 @@ DEPENDENCIES:
   - no_screenshot (from `.symlinks/plugins/no_screenshot/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
-  - Ramp (from `https://github.com/RampNetwork/ramp-sdk-ios`, tag `4.0.2`)
-  - ramp_flutter (from `.symlinks/plugins/ramp_flutter/ios`)
   - rust_builder (from `.symlinks/plugins/rust_builder/ios`)
   - system_boot_time (from `.symlinks/plugins/system_boot_time/ios`)
 
@@ -53,35 +47,23 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
-  Ramp:
-    :git: https://github.com/RampNetwork/ramp-sdk-ios
-    :tag: 4.0.2
-  ramp_flutter:
-    :path: ".symlinks/plugins/ramp_flutter/ios"
   rust_builder:
     :path: ".symlinks/plugins/rust_builder/ios"
   system_boot_time:
     :path: ".symlinks/plugins/system_boot_time/ios"
 
-CHECKOUT OPTIONS:
-  Ramp:
-    :git: https://github.com/RampNetwork/ramp-sdk-ios
-    :tag: 4.0.2
-
 SPEC CHECKSUMS:
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   no_screenshot: 7db61a27b3d64967745fa7a268f85a3314df5384
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   qr_code_scanner: d77f94ecc9abf96d9b9b8fc04ef13f611e5a147a
-  Ramp: fb07b544581cc9ad0eb8b56b43c9d59ef6204ca2
-  ramp_flutter: 9811ca74c3348e29fb5331bdc47c6cc9f1ebf8a5
   rust_builder: aa3db59f427a2b0b0a901e85c2759608e724fa6f
   ScreenProtectorKit: 83a6281b02c7a5902ee6eac4f5045f674e902ae4
   system_boot_time: c02e6f8a4243c5e47c82b6006f7f4bf15824c7cc
 
-PODFILE CHECKSUM: 1faac139bb416a69b255a42100e6966f0b60ac0e
+PODFILE CHECKSUM: 749dfe1e81de551b2a28837b363fa51eab6b54a5
 
 COCOAPODS: 1.17.0
