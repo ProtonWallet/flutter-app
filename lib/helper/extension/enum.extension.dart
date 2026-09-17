@@ -1,9 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:wallet/constants/assets.gen.dart';
 import 'package:wallet/constants/constants.dart';
 import 'package:wallet/helper/common.helper.dart';
 import 'package:wallet/helper/fiat.currency.dart';
-import 'package:wallet/rust/proton_api/payment_gateway.dart';
 import 'package:wallet/rust/proton_api/user_settings.dart';
 
 extension StringToBitcoinUnitExtension on String {
@@ -34,112 +32,6 @@ extension BitcoinUnitToStringExtension on BitcoinUnit {
   }
 }
 
-extension GatewayProviderToStringExtension on GatewayProvider {
-  String enumToString() {
-    switch (this) {
-      case GatewayProvider.banxa:
-        return 'Banxa';
-      case GatewayProvider.ramp:
-        return 'Ramp';
-      case GatewayProvider.moonPay:
-        return 'MoonPay';
-      case GatewayProvider.unsupported:
-        return 'Unsupported';
-    }
-  }
-}
-
-extension GatewayProviderImageExtension on GatewayProvider {
-  Widget getIcon() {
-    switch (this) {
-      case GatewayProvider.banxa:
-        return Assets.images.icon.banxa.svg(
-          fit: BoxFit.fill,
-        );
-      case GatewayProvider.ramp:
-        break;
-      case GatewayProvider.moonPay:
-        return Assets.images.icon.moonpay.svg(
-          fit: BoxFit.fill,
-        );
-      case GatewayProvider.unsupported:
-        break;
-    }
-
-    /// default return ramp icon
-    return Assets.images.icon.ramp.svg(
-      fit: BoxFit.fill,
-    );
-  }
-}
-
-extension PaymentMethodToStringExtension on PaymentMethod {
-  String enumToString() {
-    switch (this) {
-      case PaymentMethod.applePay:
-        return "Apple Pay";
-      case PaymentMethod.bankTransfer:
-        return "Bank Transfer";
-      case PaymentMethod.card:
-        return "Credit Card";
-      case PaymentMethod.googlePay:
-        return "Google Pay";
-      case PaymentMethod.instantPayment:
-        return "Instant Payment";
-      case PaymentMethod.paypal:
-        return "Paypal";
-      case PaymentMethod.unsupported:
-        return "Unknown Payment Method";
-    }
-  }
-
-  String toMoonPayString() {
-    switch (this) {
-      case PaymentMethod.applePay:
-        return "mobile_wallet";
-      case PaymentMethod.bankTransfer:
-        return "gbp_bank_transfer";
-      case PaymentMethod.card:
-        return "credit_debit_card";
-      case PaymentMethod.googlePay:
-        return "mobile_wallet";
-      case PaymentMethod.instantPayment:
-        return "pix_instant_payment";
-      case PaymentMethod.paypal:
-        return "paypal";
-      case PaymentMethod.unsupported:
-        return "Unknown Payment Method";
-    }
-  }
-}
-
-extension PaymentMethodImageExtension on PaymentMethod {
-  Widget getIcon() {
-    switch (this) {
-      case PaymentMethod.applePay:
-        return Assets.images.icon.applePay.svg(
-          fit: BoxFit.fill,
-        );
-      case PaymentMethod.bankTransfer:
-        break;
-      case PaymentMethod.card:
-        break;
-      case PaymentMethod.googlePay:
-        break;
-      case PaymentMethod.instantPayment:
-        break;
-      case PaymentMethod.paypal:
-        break;
-      case PaymentMethod.unsupported:
-    }
-
-    /// default return card icon
-    return Assets.images.icon.creditCard.svg(
-      fit: BoxFit.fill,
-    );
-  }
-}
-
 extension FiatCurrencyWrapperFullNameExtension on FiatCurrencyWrapper {
   String toFullName() {
     if (bitcoinCurrency != null) {
@@ -164,7 +56,8 @@ extension FiatCurrencyWrapperShortNameExtension on FiatCurrencyWrapper {
       }
     }
     return FiatCurrencyHelper.getDisplayName(
-        fiatCurrency ?? defaultFiatCurrency);
+      fiatCurrency ?? defaultFiatCurrency,
+    );
   }
 }
 

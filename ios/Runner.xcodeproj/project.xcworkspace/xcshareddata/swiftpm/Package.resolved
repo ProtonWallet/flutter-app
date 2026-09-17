@@ -72,15 +72,6 @@
       }
     },
     {
-      "identity" : "mobile-sdk-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/moonpay/mobile-sdk-ios",
-      "state" : {
-        "revision" : "8f687fee8b6b39d57dc181f22959c746320d93cb",
-        "version" : "1.3.3"
-      }
-    },
-    {
       "identity" : "ohhttpstubs",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AliSoftware/OHHTTPStubs",

@@ -5,16 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:wallet/constants/proton.color.dart';
 import 'package:wallet/helper/logger.dart';
+import 'package:wallet/helper/secure.webview.dart';
 import 'package:wallet/scenes/components/custom.header.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Import for Android features.
 // ignore: depend_on_referenced_packages
 import 'package:webview_flutter_android/webview_flutter_android.dart';
-
-/// Import for iOS features.
-// ignore: depend_on_referenced_packages
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class AccountDeletionView extends StatefulWidget {
   final String checkoutUrl;
@@ -26,32 +23,24 @@ class AccountDeletionView extends StatefulWidget {
 }
 
 class _AccountDeletionViewState extends State<AccountDeletionView> {
-  late final WebViewController controller;
+  WebViewController? controller;
+  String? _loadError;
+
   @override
   void initState() {
     super.initState();
-    EasyLoading.show(maskType: EasyLoadingMaskType.black);
-
-    late final PlatformWebViewControllerCreationParams params;
-    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      params = WebKitWebViewControllerCreationParams(
-        allowsInlineMediaPlayback: true,
-        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-      );
-    } else {
-      params = const PlatformWebViewControllerCreationParams();
+    if (!isAllowedWebViewUrl(widget.checkoutUrl, protonAccountWebViewHosts)) {
+      _loadError = 'Account deletion is only available on Proton domains.';
+      return;
     }
 
-    controller = WebViewController.fromPlatformCreationParams(
-      params,
-      onPermissionRequest: (request) {
-        request.grant();
-      },
+    EasyLoading.show(maskType: EasyLoadingMaskType.black);
+
+    controller = WebViewController(
+      onPermissionRequest: denyWebViewPermissions,
     );
-    if (controller.platform is AndroidWebViewController) {
+    if (controller!.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(false);
-      (controller.platform as AndroidWebViewController)
-          .setMediaPlaybackRequiresUserGesture(false);
     }
 
     // Match the WKScriptMessageHandler name
@@ -61,8 +50,7 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
       channelName = "AndroidInterface";
     }
 
-    ///
-    controller
+    controller!
       ..clearCache()
       ..clearLocalStorage()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -75,12 +63,6 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {
-            //
-          },
           onPageFinished: (String url) {
             EasyLoading.dismiss();
           },
@@ -92,7 +74,10 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
             _showErrorDialog("Failed to load page: ${error.description}");
           },
           onNavigationRequest: (NavigationRequest request) {
-            return NavigationDecision.navigate;
+            return secureNavigationDecision(
+              request.url,
+              protonAccountWebViewHosts,
+            );
           },
         ),
       )
@@ -182,9 +167,11 @@ class _AccountDeletionViewState extends State<AccountDeletionView> {
                     buttonDirection: AxisDirection.right,
                   ),
                   Expanded(
-                    child: WebViewWidget(
-                      controller: controller,
-                    ),
+                    child: _loadError != null
+                        ? Center(child: Text(_loadError!))
+                        : WebViewWidget(
+                            controller: controller!,
+                          ),
                   ),
                 ],
               ),
