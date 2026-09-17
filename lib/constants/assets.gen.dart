@@ -37,11 +37,8 @@ class $AssetsJsonGen {
   /// File path: assets/json/custom_discovers.json
   String get customDiscovers => 'assets/json/custom_discovers.json';
 
-  /// File path: assets/json/ramp_countries.json
-  String get rampCountries => 'assets/json/ramp_countries.json';
-
   /// List of all assets
-  List<String> get values => [customDiscovers, rampCountries];
+  List<String> get values => [customDiscovers];
 }
 
 class $AssetsImagesIconGen {
@@ -58,9 +55,6 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/apple_pay.svg
   SvgGenImage get applePay =>
       const SvgGenImage('assets/images/icon/apple_pay.svg');
-
-  /// File path: assets/images/icon/banxa.svg
-  SvgGenImage get banxa => const SvgGenImage('assets/images/icon/banxa.svg');
 
   /// File path: assets/images/icon/bitcoin.svg
   SvgGenImage get bitcoin =>
@@ -264,10 +258,6 @@ class $AssetsImagesIconGen {
   SvgGenImage get logoText =>
       const SvgGenImage('assets/images/icon/logo_text.svg');
 
-  /// File path: assets/images/icon/moonpay.svg
-  SvgGenImage get moonpay =>
-      const SvgGenImage('assets/images/icon/moonpay.svg');
-
   /// File path: assets/images/icon/no_wallet_found.svg
   SvgGenImage get noWalletFound =>
       const SvgGenImage('assets/images/icon/no_wallet_found.svg');
@@ -313,9 +303,6 @@ class $AssetsImagesIconGen {
   /// File path: assets/images/icon/proton_pass.svg
   SvgGenImage get protonPass =>
       const SvgGenImage('assets/images/icon/proton_pass.svg');
-
-  /// File path: assets/images/icon/ramp.svg
-  SvgGenImage get ramp => const SvgGenImage('assets/images/icon/ramp.svg');
 
   /// File path: assets/images/icon/receive.svg
   SvgGenImage get receive =>
@@ -452,7 +439,6 @@ class $AssetsImagesIconGen {
     addAccount,
     alertWarning,
     applePay,
-    banxa,
     bitcoin,
     bitcoinBigIcon,
     bitcoinBigIconDark,
@@ -504,7 +490,6 @@ class $AssetsImagesIconGen {
     lock,
     lockDark,
     logoText,
-    moonpay,
     noWalletFound,
     note,
     noteDark,
@@ -517,7 +502,6 @@ class $AssetsImagesIconGen {
     protonForBusiness,
     protonMail,
     protonPass,
-    ramp,
     receive,
     receiveDark,
     search,

@@ -21,8 +21,6 @@ import 'package:wallet/managers/wallet/wallet.manager.dart';
 import 'package:wallet/models/native.session.model.dart';
 import 'package:wallet/rust/api/bdk_wallet/transaction_details.dart';
 import 'package:wallet/scenes/backup.seed/backup.coordinator.dart';
-import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
-import 'package:wallet/scenes/buy/buybitcoin.instruction.dart';
 import 'package:wallet/scenes/core/coordinator.dart';
 import 'package:wallet/scenes/core/view.dart';
 import 'package:wallet/scenes/core/viewmodel.dart';
@@ -156,18 +154,6 @@ class HomeCoordinator extends Coordinator {
   void showDiscover() {
     final view = DiscoverCoordinator().start();
     showInBottomSheet(view);
-  }
-
-  void showBuy(String walletID, String accountID) {
-    final instructionView = BuyBitcoinInstruction(
-      onConfirm: () {
-        final view = BuyBitcoinCoordinator(walletID, accountID).start();
-        showInBottomSheet(
-          view,
-        );
-      },
-    );
-    showInBottomSheet(instructionView);
   }
 
   void showSetupBackup(String walletID) {

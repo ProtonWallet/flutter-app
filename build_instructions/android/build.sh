@@ -4,8 +4,6 @@ set -e
 export WALLET_HOST="proton.me"
 export CARGO_REGISTRIES_PROTON_PUBLIC_INDEX="sparse+https://rust-registry.proton.me/index/"
 export GRADLE_USER_HOME=`pwd`/.gradle
-export RAMP_API_KEY=""
-export MOONPAY_API_KEY=""
 export SENTRY_API_KEY=""
 
 # 1. Configure Android SDK and NDK paths

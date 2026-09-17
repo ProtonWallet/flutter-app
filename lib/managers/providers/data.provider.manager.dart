@@ -15,7 +15,6 @@ import 'package:wallet/managers/providers/blockinfo.data.provider.dart';
 import 'package:wallet/managers/providers/connectivity.provider.dart';
 import 'package:wallet/managers/providers/contacts.data.provider.dart';
 import 'package:wallet/managers/providers/exclusive.invite.data.provider.dart';
-import 'package:wallet/managers/providers/gateway.data.provider.dart';
 import 'package:wallet/managers/providers/local.bitcoin.address.provider.dart';
 import 'package:wallet/managers/providers/pool.address.data.provider.dart';
 import 'package:wallet/managers/providers/price.graph.data.provider.dart';
@@ -146,7 +145,6 @@ class DataProviderManager extends Manager {
   late ServerTransactionDataProvider serverTransactionDataProvider;
   late BDKTransactionDataProvider bdkTransactionDataProvider;
   late LocalBitcoinAddressDataProvider localBitcoinAddressDataProvider;
-  late GatewayDataProvider gatewayDataProvider;
   late ProtonAddressProvider protonAddressProvider;
   late BlockInfoDataProvider blockInfoDataProvider;
   late BackupAlertTimerProvider backupAlertTimerProvider;
@@ -218,11 +216,6 @@ class DataProviderManager extends Manager {
       WalletUserSettingsQueries(dbConnection),
       apiServiceManager.getApiService().getSettingsClient(),
       shared,
-    );
-
-    /// on ramp gateway
-    gatewayDataProvider = GatewayDataProvider(
-      apiServiceManager.getApiService().getOnRampGatewayClient(),
     );
 
     /// address key
@@ -341,7 +334,6 @@ class DataProviderManager extends Manager {
     await serverTransactionDataProvider.clear();
     await bdkTransactionDataProvider.clear();
     await localBitcoinAddressDataProvider.clear();
-    await gatewayDataProvider.clear();
     await protonAddressProvider.clear();
     await blockInfoDataProvider.clear();
     await backupAlertTimerProvider.clear();
@@ -367,7 +359,6 @@ class DataProviderManager extends Manager {
     await serverTransactionDataProvider.reload();
     await bdkTransactionDataProvider.reload();
     await localBitcoinAddressDataProvider.reload();
-    await gatewayDataProvider.reload();
     await protonAddressProvider.reload();
     await blockInfoDataProvider.reload();
     await backupAlertTimerProvider.reload();

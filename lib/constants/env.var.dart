@@ -5,18 +5,6 @@ part 'env.var.g.dart';
 @Envied()
 abstract class Env {
   @EnviedField(
-    varName: 'RAMP_API_KEY',
-    optional: true,
-  )
-  static const String rampApiKey = _Env.rampApiKey;
-
-  @EnviedField(
-    varName: 'MOONPAY_API_KEY',
-    optional: true,
-  )
-  static const String moonPayApiKey = _Env.moonPayApiKey;
-
-  @EnviedField(
     varName: 'SENTRY_API_KEY',
     optional: true,
   )

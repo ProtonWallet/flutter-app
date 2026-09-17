@@ -4,7 +4,6 @@ import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wallet/managers/secure.storage/secure.storage.interface.dart';
 import 'package:wallet/rust/frb_generated.dart';
-import 'package:wallet/scenes/buy/buybitcoin.coordinator.dart';
 import 'package:wallet/scenes/welcome/welcome.coordinator.dart';
 
 import 'test.mocks.dart';
@@ -15,7 +14,6 @@ class MockSharedPreferences extends Mock implements SharedPreferences {}
 @GenerateMocks([
   SecureStorageInterface,
   WelcomeCoordinator,
-  BuyBitcoinCoordinator,
 ])
 void main() {
   late MockSecureStorageInterface mockStorage;

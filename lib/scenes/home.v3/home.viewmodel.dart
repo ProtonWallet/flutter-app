@@ -821,11 +821,6 @@ class HomeViewModelImpl extends HomeViewModel {
         coordinator.showTwoFactorAuthDisable();
       case NavID.discover:
         coordinator.showDiscover();
-      case NavID.buy:
-        coordinator.showBuy(
-          selectedWallet?.walletModel.walletID ?? "",
-          selectedAccount?.accountModel.accountID ?? "",
-        );
       case NavID.buyUnavailable:
         coordinator.showBuyUnavailableAlert();
       case NavID.nativeUpgrade:
