@@ -239,6 +239,7 @@
   "account_deleted": "Konto gelöscht",
   "account_label": "Kontoname",
   "accounts": "Konten",
+  "n_accounts": "{acc_count} Konten",
   "delete": "Löschen",
   "history": "Verlauf",
   "sync": "Synchronisieren",
@@ -267,6 +268,7 @@
   "todos_backup_proton_account": "Dein Proton-Konto sichern",
   "todos_backup_wallet_mnemonic": "Seed-Phrasen dieser Wallet sichern",
   "todos_setup_2fa": "2FA einrichten, um dein Konto zu schützen",
+  "todos_enable_biometric_unlock": "Biometrisches Entsperren aktivieren",
   "todos_setup_email_integration": "Bitcoin via E-Mail einrichten",
   "todos_setup_fiat": "Lege deine bevorzugte Fiat-Währung fest",
   "view_wallet_mnemonic": "Wallet-Seed-Phrasen anzeigen",
@@ -397,6 +399,7 @@
   "confirm_to_delete_wallet": "Löschen von „{walletName}“ bestätigen",
   "confirm_to_delete_wallet_has_balance_warning": "Diese Wallet scheint noch Guthaben zu enthalten. Wir empfehlen dir, das Guthaben vor dem Löschen an eine andere Wallet zu senden.",
   "confirm_to_delete_wallet_content": "Wenn du die Wallet löschst, werden alle Daten dieser Wallet von den Proton-Servern gelöscht. Beachte, dass du diese Wallet später abrufen kannst, wenn du die Seed-Phrase dieser Wallet hast.",
+  "security_key_not_supported": "Das Anmelden mit einem Sicherheitsschlüssel wird in dieser Anwendung nicht unterstützt. Bitte {accountUrl} verwenden.",
   "confirm_to_delete_wallet_account": "Löschen von „{walletAccountName}“ bestätigen",
   "confirm_to_delete_wallet_account_has_balance_warning": "Dieses Konto scheint noch Guthaben zu enthalten. Wir empfehlen dir, das Guthaben vor dem Löschen an ein anderes Konto zu senden.",
   "confirm_to_delete_wallet_account_content": "Wenn du ein BTC-Konto löschst, werden alle seine Metadaten von den Proton-Servern gelöscht. Du kannst es später wiederherstellen, indem du es mit dem richtigen Kontoindex und Adresstyp wieder hinzufügst.",
@@ -596,7 +599,7 @@
   "bridge_error_api_deserialize": "Die Serverantwort konnte nicht analysiert (geparst) werden. Bitte versuche es erneut.",
   "bridge_error_bitcoin_deserialize": "Die Antwort des Bitcoin-Servers konnte nicht analysiert (geparst) werden. Bitte versuche es erneut.",
   "bridge_error_encoding": "Kodierungsfehler bei einer Zeichenfolge. Bitte versuche es erneut.",
-  "bridge_error_insufficient_funds_in_paper_wallet": "Diese Papier-Wallet verfügt nicht über genügend Guthaben. Bitte ein anderes versuchen.",
+  "bridge_error_insufficient_funds_in_paper_wallet": "Dieses Papier-Wallet hat nicht genügend Guthaben. Bitte versuche ein anderes.",
   "bridge_error_invalid_paper_wallet": "Ungültiger privater Schlüssel. Bitte versuche es erneut.",
   "bridge_error_features_bitcoin_error": "In der Andromeda-Funktion ist ein Bitcoinfehler aufgetreten. Bitte versuche es erneut.",
   "bridge_error_features_common_error": "In der Andromeda-Funktion ist ein allgemeiner Fehler aufgetreten. Bitte versuche es erneut.",
@@ -653,5 +656,5 @@
   "message_signed": "Nachricht signiert",
   "signing_type": "Art der Signierung",
   "signing_method": "Art der Signierung",
-  "signing_method_desc": "Es wird standardmäßig die Electrum-Signaturmethode verwendet, da dies die einfachste und von den Banken am häufigsten verlangte Methode ist. BIP 137 wird für die Offline-Signierung von Transaktionen verwendet und ist fortschrittlicher."
+  "signing_method_desc": "Wir wenden standardmäßig die Electrum-Signaturmethode an, da dies die einfachste und von den Banken am häufigsten verlangte Methode ist. BIP 137 wird für die Offline-Signierung von Transaktionen verwendet und ist fortschrittlicher."
 }
