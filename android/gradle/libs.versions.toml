@@ -39,6 +39,7 @@ desugaring = "2.1.4"
 # Google
 firebase-bom = "32.7.0"
 firebase-messaging = "23.2.1"
+android-billing = "8.0.0"
 
 # Gradle
 gradlePlugin-android = "8.9.1"
@@ -195,6 +196,8 @@ desugaring-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.r
 
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebase-messaging" }
+
+android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
 
 fusion = { module = "me.proton.test:fusion", version.ref = "fusion" }
 junit = { module = "junit:junit", version.ref = "junit" }
