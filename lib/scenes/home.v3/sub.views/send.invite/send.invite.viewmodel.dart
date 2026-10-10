@@ -110,8 +110,8 @@ class SendInviteViewModelImpl extends SendInviteViewModel {
 
   Future<void> loadProtonAddresses() async {
     try {
-      userAddresses =
-          await dataProviderManager.addressKeyProvider.getAddresses();
+      userAddresses = await dataProviderManager.addressKeyProvider
+          .getBitcoinViaEmailAddresses();
     } catch (e) {
       logger.e(e.toString());
     }

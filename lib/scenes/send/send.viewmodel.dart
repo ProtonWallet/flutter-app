@@ -323,7 +323,8 @@ class SendViewModelImpl extends SendViewModel {
 
       /// add anonymous to user address list, so user can send BvE as anonymous
       userAddresses =
-          [anonymousAddress] + await addressKeyProvider.getAddresses();
+          [anonymousAddress] +
+              await addressKeyProvider.getBitcoinViaEmailAddresses();
       userAddressValueNotifier = ValueNotifier(userAddresses.length > 1
           ? userAddresses[1]
           : userAddresses.firstOrNull);
