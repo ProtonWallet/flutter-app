@@ -7,6 +7,9 @@ import 'package:wallet/managers/users/user.manager.dart';
 import 'package:wallet/rust/api/api_service/proton_email_addr_client.dart';
 import 'package:wallet/rust/proton_api/proton_address.dart';
 
+const int addressTypeGroup = 6;
+const int addressTypeHandle = 7;
+
 extension ProtonAddressKeyJson on ProtonAddressKey {
   Map<String, dynamic> toJson() {
     return {
@@ -166,6 +169,16 @@ class AddressKeyProvider extends DataProvider {
       }
     }
     return addresses;
+  }
+
+  /// Group and handle addresses can't be linked to a wallet account nor used as sender
+  Future<List<ProtonAddress>> getBitcoinViaEmailAddresses() async {
+    final addresses = await getAddresses();
+    return addresses
+        .where((address) =>
+            address.type != addressTypeGroup &&
+            address.type != addressTypeHandle)
+        .toList();
   }
 
   Future<List<AllKeyAddressKey>> getAllPublicKeys(
